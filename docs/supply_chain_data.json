@@ -1,0 +1,227 @@
+{
+  "nodes": [
+    {
+      "data": {
+        "id": "1",
+        "name": "Samsung",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "2",
+        "name": "AMD",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "3",
+        "name": "SK Hynix",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "4",
+        "name": "Nvidia",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "5",
+        "name": "Micron Technology",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "6",
+        "name": "Intel",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "7",
+        "name": "TSMC",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "8",
+        "name": "Apple",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "9",
+        "name": "Sony",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "10",
+        "name": "Denso",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "11",
+        "name": "Toyota",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "12",
+        "name": "Government of Taiwan",
+        "type": "Company",
+        "level": 2
+      }
+    },
+    {
+      "data": {
+        "id": "13",
+        "name": "Government of Germany",
+        "type": "Company",
+        "level": 2
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "e_1",
+        "source": "1",
+        "target": "2",
+        "label": "Hardware",
+        "weight": 1.0
+      }
+    },
+    {
+      "data": {
+        "id": "e_2",
+        "source": "3",
+        "target": "2",
+        "label": "Data Center",
+        "weight": 1.0
+      }
+    },
+    {
+      "data": {
+        "id": "e_3",
+        "source": "1",
+        "target": "4",
+        "label": "Semiconductor",
+        "weight": 1.0
+      }
+    },
+    {
+      "data": {
+        "id": "e_4",
+        "source": "5",
+        "target": "4",
+        "label": "Semiconductor",
+        "weight": 1.0
+      }
+    },
+    {
+      "data": {
+        "id": "e_5",
+        "source": "3",
+        "target": "4",
+        "label": "Semiconductor",
+        "weight": 1.0
+      }
+    },
+    {
+      "data": {
+        "id": "e_6",
+        "source": "1",
+        "target": "6",
+        "label": "Data Center",
+        "weight": 1.0
+      }
+    },
+    {
+      "data": {
+        "id": "e_7",
+        "source": "7",
+        "target": "8",
+        "label": "Chip Production",
+        "weight": 0.8
+      }
+    },
+    {
+      "data": {
+        "id": "e_8",
+        "source": "7",
+        "target": "6",
+        "label": "Chip Production",
+        "weight": 0.7
+      }
+    },
+    {
+      "data": {
+        "id": "e_9",
+        "source": "7",
+        "target": "9",
+        "label": "Joint Venture",
+        "weight": 0.9
+      }
+    },
+    {
+      "data": {
+        "id": "e_10",
+        "source": "7",
+        "target": "10",
+        "label": "Joint Venture",
+        "weight": 0.9
+      }
+    },
+    {
+      "data": {
+        "id": "e_11",
+        "source": "7",
+        "target": "11",
+        "label": "Joint Venture",
+        "weight": 0.9
+      }
+    },
+    {
+      "data": {
+        "id": "e_12",
+        "source": "7",
+        "target": "12",
+        "label": "Subsidy",
+        "weight": 0.8
+      }
+    },
+    {
+      "data": {
+        "id": "e_13",
+        "source": "7",
+        "target": "13",
+        "label": "Subsidy",
+        "weight": 0.8
+      }
+    }
+  ]
+}
