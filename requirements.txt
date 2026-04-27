@@ -1,0 +1,11 @@
+# Database management
+SQLAlchemy>=2.0.0
+
+# HTTP requests for scraping
+requests>=2.31.0
+
+# LLM interaction (Ollama local API wrapper)
+ollama>=0.1.7
+
+# Pydantic for enforcing structured JSON output from the LLM
+pydantic>=2.5.0
