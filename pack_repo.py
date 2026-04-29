@@ -1,7 +1,7 @@
 import os
 
 # Files to ignore (compiled files, git, images, etc.)
-IGNORE_DIRS = {'.git', '__pycache__', 'assets', 'venv', 'env', 'results', 'database', 'build'}
+IGNORE_DIRS = {'.git', '__pycache__', 'assets', 'venv', 'env', 'results', 'database', 'build', "docs"}
 IGNORE_EXTENSIONS = {'.pyc', '.jpg', '.png', '.mp3', '.wav', '.zip', '.exe'}
 
 def pack_repo():

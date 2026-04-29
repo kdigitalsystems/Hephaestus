@@ -40,4 +40,7 @@ jobs:
         run: chmod +x run_pipeline.sh
 
       - name: Execute Hephaestus Pipeline
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: ./run_pipeline.sh

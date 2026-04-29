@@ -6,8 +6,35 @@ from alpaca.trading.client import TradingClient
 from alpaca.trading.requests import GetAssetsRequest
 from alpaca.trading.enums import AssetClass, AssetStatus
 
-API_KEY = "PKU4JFER6M3KG4N2ZGA9"
-SECRET_KEY = "1AEXwFm9h6u1MK7riEp9oZgF6hVt6eWDSn7PmHcg"
+
+def get_alpaca_credentials():
+    """Loads keys from the local SSH folder, falling back to env variables for GitHub Actions."""
+    api_key = os.environ.get("ALPACA_API_KEY")
+    secret_key = os.environ.get("ALPACA_SECRET_KEY")
+
+    # If environment variables exist (GitHub Actions), use them
+    if api_key and secret_key:
+        return api_key, secret_key
+
+    # Otherwise, read from the local Fulshear desktop file
+    key_path = os.path.expanduser("~/.ssh/alpaca_paper_keys")
+    if os.path.exists(key_path):
+        with open(key_path, "r") as f:
+            for line in f:
+                line = line.strip()
+                # Split by the first colon only
+                if line.startswith("Key:"):
+                    api_key = line.split(":", 1)[1].strip()
+                elif line.startswith("Secret_Key:"):
+                    secret_key = line.split(":", 1)[1].strip()
+
+    if not api_key or not secret_key:
+        raise ValueError("Missing Alpaca API credentials. Check ~/.ssh/alpaca_paper_keys or env vars.")
+        
+    return api_key, secret_key
+
+# Load the keys safely
+API_KEY, SECRET_KEY = get_alpaca_credentials()
 
 def seed_database_from_alpaca(limit=None):
     """Fetches active US equities from Alpaca and seeds the database."""
