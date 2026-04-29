@@ -3,110 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supply Chain Intelligence Dashboard</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+    <title>Hephaestus Dashboard</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #0d1117; /* Dark theme suitable for hardware tracking */
-            color: #c9d1d9;
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --green: #3fb950;
+            --red: #f85149;
         }
-        header {
-            padding: 20px;
-            background-color: #161b22;
-            border-bottom: 1px solid #30363d;
-            text-align: center;
-        }
-        #cy {
-            width: 100vw;
-            height: calc(100vh - 80px); /* Fill the screen below the header */
-            display: block;
-        }
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.2rem;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
+        header { padding: 20px 40px; background-color: var(--card-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        h1 { margin: 0; font-size: 1.5rem; color: var(--text-main); cursor: pointer; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .positive { color: var(--green); }
+        .negative { color: var(--red); }
+        .btn-back { background: none; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; }
+        .btn-back:hover { background-color: var(--border-color); }
+
+        /* Level 1: Industry Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 30px; text-align: center; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .card h2 { margin: 0 0 10px 0; font-size: 1.2rem; }
+        .card p { margin: 0; color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Level 2: Company Table */
+        table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background-color: #1c2128; color: var(--text-muted); font-weight: 600; }
+        tr:hover { background-color: #1c2128; cursor: pointer; }
+        
+        /* Level 3: Company Details */
+        .detail-header { display: flex; align-items: flex-end; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+        .detail-header h2 { margin: 0; font-size: 2.5rem; }
+        .detail-header .ticker { font-size: 1.5rem; color: var(--text-muted); }
+        .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .metric-box { background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; }
+        .metric-label { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 5px; }
+        .metric-value { font-size: 1.5rem; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Supply Chain Graph</h1>
-        <p>Mapping semiconductor dependencies and market signals</p>
+        <h1 onclick="renderLevel1()">⚙️ Hephaestus</h1>
+        <div style="color: var(--text-muted); font-size: 0.9rem;" id="last-updated">Updating...</div>
     </header>
 
-    <div id="loading" class="loading">Loading dependency data...</div>
-    <div id="cy"></div>
+    <div class="container">
+        <div id="view-industries">
+            <h2 style="margin-bottom: 20px;">Sectors</h2>
+            <div class="grid" id="industry-grid"></div>
+        </div>
+
+        <div id="view-companies" class="hidden">
+            <button class="btn-back" onclick="renderLevel1()">← Back to Sectors</button>
+            <h2 id="current-industry-title">Industry Name</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Symbol</th>
+                        <th>Price</th>
+                        <th>% Change</th>
+                        <th>Market Cap</th>
+                    </tr>
+                </thead>
+                <tbody id="company-table-body"></tbody>
+            </table>
+        </div>
+
+        <div id="view-details" class="hidden">
+            <button class="btn-back" onclick="document.getElementById('view-details').classList.add('hidden'); document.getElementById('view-companies').classList.remove('hidden');">← Back to List</button>
+            
+            <div class="detail-header">
+                <h2 id="detail-name">Company Name</h2>
+                <span class="ticker" id="detail-ticker">TICKER</span>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-label">Current Price</div>
+                    <div class="metric-value" id="detail-price">$0.00</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Today's Change</div>
+                    <div class="metric-value" id="detail-change">0.00%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Market Capitalization</div>
+                    <div class="metric-value" id="detail-mcap">$0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">CEO</div>
+                    <div class="metric-value" id="detail-ceo">Name</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Dividend Yield</div>
+                    <div class="metric-value" id="detail-dividend">0.00%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Data Last Updated</div>
+                    <div class="metric-value" style="font-size: 1.2rem;" id="detail-updated">Date</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Fetch the static JSON generated by your local 3080 Ti pipeline
-        fetch('supply_chain_data.json')
+        let globalData = {};
+
+        // Format large numbers (e.g., 545584414720 -> $545.58B)
+        const formatMarketCap = (num) => {
+            if (!num || num === 0) return "N/A";
+            if (num >= 1e12) return '$' + (num / 1e12).toFixed(2) + 'T';
+            if (num >= 1e9) return '$' + (num / 1e9).toFixed(2) + 'B';
+            if (num >= 1e6) return '$' + (num / 1e6).toFixed(2) + 'M';
+            return '$' + num.toLocaleString();
+        };
+
+        // Fetch the JSON payload
+        fetch('dashboard_data.json')
             .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
+                if (!response.ok) throw new Error("Could not load dashboard_data.json");
                 return response.json();
             })
             .then(data => {
-                // Hide loading text
-                document.getElementById('loading').style.display = 'none';
-
-                // Initialize Cytoscape
-                var cy = cytoscape({
-                    container: document.getElementById('cy'),
-                    
-                    elements: [
-                        ...data.nodes,
-                        ...data.edges
-                    ],
-
-                    style: [
-                        {
-                            selector: 'node',
-                            style: {
-                                'background-color': '#58a6ff',
-                                'label': 'data(name)',
-                                'color': '#c9d1d9',
-                                'text-valign': 'center',
-                                'text-halign': 'right',
-                                'text-margin-x': 10,
-                                'font-size': '14px'
-                            }
-                        },
-                        {
-                            selector: 'edge',
-                            style: {
-                                'width': 2,
-                                'line-color': '#30363d',
-                                'target-arrow-color': '#30363d',
-                                'target-arrow-shape': 'triangle',
-                                'curve-style': 'bezier',
-                                'label': 'data(label)',
-                                'font-size': '10px',
-                                'color': '#8b949e',
-                                'text-rotation': 'autorotate',
-                                'text-margin-y': -10
-                            }
-                        }
-                    ],
-
-                    layout: {
-                        name: 'cose', // Force-directed layout
-                        padding: 50,
-                        nodeRepulsion: 400000,
-                        idealEdgeLength: 100
-                    }
-                });
+                globalData = data.industries;
+                document.getElementById('last-updated').innerText = "Live Data Synced";
+                renderLevel1();
             })
             .catch(error => {
-                console.error("Error loading the supply chain data:", error);
-                document.getElementById('loading').innerText = "Failed to load data. Make sure export.py has been run.";
+                console.error("Data load failed:", error);
+                document.getElementById('last-updated').innerText = "Failed to load data";
             });
+
+        // LEVEL 1: Render Industry Grid
+        function renderLevel1() {
+            document.getElementById('view-industries').classList.remove('hidden');
+            document.getElementById('view-companies').classList.add('hidden');
+            document.getElementById('view-details').classList.add('hidden');
+
+            const grid = document.getElementById('industry-grid');
+            grid.innerHTML = '';
+
+            for (const [sector, companies] of Object.entries(globalData)) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => renderLevel2(sector);
+                card.innerHTML = `
+                    <h2>${sector}</h2>
+                    <p>${companies.length} Companies tracked</p>
+                `;
+                grid.appendChild(card);
+            }
+        }
+
+        // LEVEL 2: Render Company Table
+        function renderLevel2(sector) {
+            document.getElementById('view-industries').classList.add('hidden');
+            document.getElementById('view-companies').classList.remove('hidden');
+            document.getElementById('view-details').classList.add('hidden');
+            
+            document.getElementById('current-industry-title').innerText = sector;
+            const tbody = document.getElementById('company-table-body');
+            tbody.innerHTML = '';
+
+            const companies = globalData[sector];
+            companies.forEach(company => {
+                const tr = document.createElement('tr');
+                tr.onclick = () => renderLevel3(company);
+                
+                const changeClass = company.change >= 0 ? 'positive' : 'negative';
+                const sign = company.change > 0 ? '+' : '';
+
+                tr.innerHTML = `
+                    <td style="font-weight: bold; color: var(--accent);">${company.name}</td>
+                    <td>${company.ticker}</td>
+                    <td>$${company.price.toFixed(2)}</td>
+                    <td class="${changeClass}">${sign}${company.change.toFixed(2)}%</td>
+                    <td>${formatMarketCap(company.market_cap)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // LEVEL 3: Render Company Details
+        function renderLevel3(company) {
+            document.getElementById('view-companies').classList.add('hidden');
+            document.getElementById('view-details').classList.remove('hidden');
+
+            document.getElementById('detail-name').innerText = company.name;
+            document.getElementById('detail-ticker').innerText = company.ticker;
+            document.getElementById('detail-price').innerText = `$${company.price.toFixed(2)}`;
+            
+            const changeEl = document.getElementById('detail-change');
+            changeEl.innerText = `${company.change > 0 ? '+' : ''}${company.change.toFixed(2)}%`;
+            changeEl.className = `metric-value ${company.change >= 0 ? 'positive' : 'negative'}`;
+
+            document.getElementById('detail-mcap').innerText = formatMarketCap(company.market_cap);
+            document.getElementById('detail-ceo').innerText = company.ceo;
+            document.getElementById('detail-dividend').innerText = company.dividend;
+            document.getElementById('detail-updated').innerText = company.last_updated;
+        }
     </script>
 </body>
 </html>
