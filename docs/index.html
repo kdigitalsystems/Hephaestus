@@ -3,77 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hephaestus Dashboard</title>
+    <title>Hephaestus Terminal</title>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <style>
         :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --border-color: #30363d;
-            --text-main: #c9d1d9;
-            --text-muted: #8b949e;
-            --accent: #58a6ff;
-            --green: #3fb950;
-            --red: #f85149;
+            --bg-color: #0d1117; --card-bg: #161b22; --border-color: #30363d;
+            --text-main: #c9d1d9; --text-muted: #8b949e; --accent: #58a6ff;
+            --green: #3fb950; --red: #f85149; --bg-secondary: #1c2128;
         }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
         header { padding: 20px 40px; background-color: var(--card-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         h1 { margin: 0; font-size: 1.5rem; color: var(--text-main); cursor: pointer; }
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .container { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
         
-        /* Utility Classes */
         .hidden { display: none !important; }
         .positive { color: var(--green); }
         .negative { color: var(--red); }
-        .btn-back { background: none; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; }
+        .btn-back { background: none; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; transition: background 0.2s; }
         .btn-back:hover { background-color: var(--border-color); }
 
-        /* Level 1: Industry Grid */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        /* Grid & Cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 30px; text-align: center; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
-        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
-        .card h2 { margin: 0 0 10px 0; font-size: 1.2rem; }
-        .card p { margin: 0; color: var(--text-muted); font-size: 0.9rem; }
+        .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        .card h2 { margin: 0 0 10px 0; font-size: 1.3rem; }
 
-        /* Level 2: Company Table */
-        table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border-radius: 8px; overflow: hidden; }
+        /* Sortable Table */
+        table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border-radius: 8px; overflow: hidden; font-size: 0.95rem; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        th { background-color: #1c2128; color: var(--text-muted); font-weight: 600; }
-        tr:hover { background-color: #1c2128; cursor: pointer; }
+        th { background-color: var(--bg-secondary); color: var(--text-muted); font-weight: 600; cursor: pointer; user-select: none; }
+        th:hover { color: var(--accent); }
+        tr:hover { background-color: var(--bg-secondary); cursor: pointer; }
+        .sort-icon { font-size: 0.8rem; margin-left: 5px; opacity: 0.5; }
         
-        /* Level 3: Company Details */
-        .detail-header { display: flex; align-items: flex-end; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+        /* Level 3 Details */
+        .detail-header { display: flex; align-items: flex-end; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
         .detail-header h2 { margin: 0; font-size: 2.5rem; }
         .detail-header .ticker { font-size: 1.5rem; color: var(--text-muted); }
-        .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .metric-box { background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; }
-        .metric-label { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 5px; }
-        .metric-value { font-size: 1.5rem; font-weight: bold; }
+        
+        /* Chart Container */
+        .chart-wrapper { height: 400px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .metrics-section { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; }
+        .metrics-section h3 { margin-top: 0; color: var(--accent); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
+        
+        .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .metric-label { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 5px; }
+        .metric-value { font-size: 1.2rem; font-weight: bold; }
+        
+        .summary-box { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; line-height: 1.6; color: var(--text-main); font-size: 0.95rem; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1 onclick="renderLevel1()">⚙️ Hephaestus</h1>
+        <h1 onclick="renderLevel1()">⚙️ Hephaestus Terminal</h1>
         <div style="color: var(--text-muted); font-size: 0.9rem;" id="last-updated">Updating...</div>
     </header>
 
     <div class="container">
         <div id="view-industries">
-            <h2 style="margin-bottom: 20px;">Sectors</h2>
+            <h2 style="margin-bottom: 20px;">Macro Sectors</h2>
             <div class="grid" id="industry-grid"></div>
         </div>
 
         <div id="view-companies" class="hidden">
             <button class="btn-back" onclick="renderLevel1()">← Back to Sectors</button>
-            <h2 id="current-industry-title">Industry Name</h2>
+            <h2 id="current-industry-title">Sector Name</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Company</th>
-                        <th>Symbol</th>
-                        <th>Price</th>
-                        <th>% Change</th>
-                        <th>Market Cap</th>
+                        <th onclick="handleSort('name')">Company <span class="sort-icon" id="sort-name"></span></th>
+                        <th onclick="handleSort('ticker')">Symbol <span class="sort-icon" id="sort-ticker"></span></th>
+                        <th onclick="handleSort('price')">Price <span class="sort-icon" id="sort-price"></span></th>
+                        <th onclick="handleSort('change')">% Change <span class="sort-icon" id="sort-change"></span></th>
+                        <th onclick="handleSort('market_cap')">Market Cap <span class="sort-icon" id="sort-market_cap"></span></th>
+                        <th onclick="handleSort('trailing_pe')">P/E Ratio <span class="sort-icon" id="sort-trailing_pe"></span></th>
                     </tr>
                 </thead>
                 <tbody id="company-table-body"></tbody>
@@ -81,37 +87,63 @@
         </div>
 
         <div id="view-details" class="hidden">
-            <button class="btn-back" onclick="document.getElementById('view-details').classList.add('hidden'); document.getElementById('view-companies').classList.remove('hidden');">← Back to List</button>
+            <button class="btn-back" onclick="document.getElementById('view-details').classList.add('hidden'); document.getElementById('view-companies').classList.remove('hidden');">← Back to Screener</button>
             
             <div class="detail-header">
                 <h2 id="detail-name">Company Name</h2>
                 <span class="ticker" id="detail-ticker">TICKER</span>
+                <span class="ticker" style="font-size: 1rem; margin-left: auto;" id="detail-industry">Industry</span>
             </div>
 
-            <div class="metrics-grid">
-                <div class="metric-box">
-                    <div class="metric-label">Current Price</div>
-                    <div class="metric-value" id="detail-price">$0.00</div>
+            <div class="chart-wrapper" id="tv_chart_container"></div>
+
+            <div class="dashboard-grid">
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    
+                    <div class="metrics-section">
+                        <h3>Market Performance</h3>
+                        <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr);">
+                            <div><div class="metric-label">Current Price</div><div class="metric-value" id="detail-price">-</div></div>
+                            <div><div class="metric-label">Today's Change</div><div class="metric-value" id="detail-change">-</div></div>
+                            <div><div class="metric-label">52W High</div><div class="metric-value" id="detail-high">-</div></div>
+                            <div><div class="metric-label">52W Low</div><div class="metric-value" id="detail-low">-</div></div>
+                        </div>
+                    </div>
+
+                    <div class="metrics-section">
+                        <h3>Valuation & Health</h3>
+                        <div class="metrics-grid">
+                            <div><div class="metric-label">Market Cap</div><div class="metric-value" id="detail-mcap">-</div></div>
+                            <div><div class="metric-label">Enterprise Value</div><div class="metric-value" id="detail-ev">-</div></div>
+                            <div><div class="metric-label">Trailing P/E</div><div class="metric-value" id="detail-tpe">-</div></div>
+                            <div><div class="metric-label">Forward P/E</div><div class="metric-value" id="detail-fpe">-</div></div>
+                            <div><div class="metric-label">Total Revenue</div><div class="metric-value" id="detail-rev">-</div></div>
+                            <div><div class="metric-label">Gross Margin</div><div class="metric-value" id="detail-margin">-</div></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="metric-box">
-                    <div class="metric-label">Today's Change</div>
-                    <div class="metric-value" id="detail-change">0.00%</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">Market Capitalization</div>
-                    <div class="metric-value" id="detail-mcap">$0</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">CEO</div>
-                    <div class="metric-value" id="detail-ceo">Name</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">Dividend Yield</div>
-                    <div class="metric-value" id="detail-dividend">0.00%</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">Data Last Updated</div>
-                    <div class="metric-value" style="font-size: 1.2rem;" id="detail-updated">Date</div>
+
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="metrics-section">
+                        <h3>Sentiment & Yield</h3>
+                        <div class="metrics-grid">
+                            <div><div class="metric-label">Analyst Rec</div><div class="metric-value" id="detail-rec">-</div></div>
+                            <div><div class="metric-label">Target Price</div><div class="metric-value" id="detail-target">-</div></div>
+                            <div><div class="metric-label">Dividend Yield</div><div class="metric-value" id="detail-div">-</div></div>
+                            <div><div class="metric-label">Price to Book</div><div class="metric-value" id="detail-pb">-</div></div>
+                        </div>
+                    </div>
+
+                    <div class="summary-box">
+                        <div style="color: var(--accent); font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Corporate Profile</div>
+                        <div style="margin-bottom: 15px;">
+                            <span style="color: var(--text-muted);">CEO:</span> <span id="detail-ceo" style="font-weight: bold;">-</span><br>
+                            <span style="color: var(--text-muted);">Employees:</span> <span id="detail-emp" style="font-weight: bold;">-</span>
+                        </div>
+                        <div id="detail-summary" style="height: 200px; overflow-y: auto; padding-right: 10px;">
+                            Summary...
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -119,33 +151,31 @@
 
     <script>
         let globalData = {};
+        let currentSector = '';
+        
+        // Sorting State
+        let sortCol = 'market_cap';
+        let sortAsc = false;
 
-        // Format large numbers (e.g., 545584414720 -> $545.58B)
-        const formatMarketCap = (num) => {
-            if (!num || num === 0) return "N/A";
+        const formatNum = (num, type = 'currency') => {
+            if (num === null || num === undefined || isNaN(num)) return "N/A";
+            if (type === 'percent') return (num * 100).toFixed(2) + '%';
+            if (type === 'ratio') return num.toFixed(2);
             if (num >= 1e12) return '$' + (num / 1e12).toFixed(2) + 'T';
             if (num >= 1e9) return '$' + (num / 1e9).toFixed(2) + 'B';
             if (num >= 1e6) return '$' + (num / 1e6).toFixed(2) + 'M';
             return '$' + num.toLocaleString();
         };
 
-        // Fetch the JSON payload
         fetch('dashboard_data.json')
-            .then(response => {
-                if (!response.ok) throw new Error("Could not load dashboard_data.json");
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 globalData = data.industries;
                 document.getElementById('last-updated').innerText = "Live Data Synced";
                 renderLevel1();
             })
-            .catch(error => {
-                console.error("Data load failed:", error);
-                document.getElementById('last-updated').innerText = "Failed to load data";
-            });
+            .catch(error => console.error("Data load failed:", error));
 
-        // LEVEL 1: Render Industry Grid
         function renderLevel1() {
             document.getElementById('view-industries').classList.remove('hidden');
             document.getElementById('view-companies').classList.add('hidden');
@@ -154,29 +184,56 @@
             const grid = document.getElementById('industry-grid');
             grid.innerHTML = '';
 
-            for (const [sector, companies] of Object.entries(globalData)) {
+            const sortedSectors = Object.keys(globalData).sort();
+
+            sortedSectors.forEach(sector => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.onclick = () => renderLevel2(sector);
-                card.innerHTML = `
-                    <h2>${sector}</h2>
-                    <p>${companies.length} Companies tracked</p>
-                `;
+                card.onclick = () => { currentSector = sector; renderLevel2(); };
+                card.innerHTML = `<h2>${sector}</h2><p>${globalData[sector].length} Equities</p>`;
                 grid.appendChild(card);
-            }
+            });
         }
 
-        // LEVEL 2: Render Company Table
-        function renderLevel2(sector) {
+        function handleSort(col) {
+            if (sortCol === col) {
+                sortAsc = !sortAsc;
+            } else {
+                sortCol = col;
+                sortAsc = (col === 'name' || col === 'ticker'); 
+            }
+            renderLevel2();
+        }
+
+        function renderLevel2() {
             document.getElementById('view-industries').classList.add('hidden');
             document.getElementById('view-companies').classList.remove('hidden');
             document.getElementById('view-details').classList.add('hidden');
             
-            document.getElementById('current-industry-title').innerText = sector;
+            document.getElementById('current-industry-title').innerText = currentSector;
+            
+            document.querySelectorAll('.sort-icon').forEach(icon => icon.innerText = '');
+            document.getElementById(`sort-${sortCol}`).innerText = sortAsc ? '▲' : '▼';
+
+            let companies = [...globalData[currentSector]];
+            
+            companies.sort((a, b) => {
+                let valA = a[sortCol];
+                let valB = b[sortCol];
+                
+                if (valA === null || valA === undefined || valA === "N/A") valA = sortAsc ? Infinity : -Infinity;
+                if (valB === null || valB === undefined || valB === "N/A") valB = sortAsc ? Infinity : -Infinity;
+
+                if (typeof valA === 'string') {
+                    return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                } else {
+                    return sortAsc ? valA - valB : valB - valA;
+                }
+            });
+
             const tbody = document.getElementById('company-table-body');
             tbody.innerHTML = '';
 
-            const companies = globalData[sector];
             companies.forEach(company => {
                 const tr = document.createElement('tr');
                 tr.onclick = () => renderLevel3(company);
@@ -187,31 +244,64 @@
                 tr.innerHTML = `
                     <td style="font-weight: bold; color: var(--accent);">${company.name}</td>
                     <td>${company.ticker}</td>
-                    <td>$${company.price.toFixed(2)}</td>
-                    <td class="${changeClass}">${sign}${company.change.toFixed(2)}%</td>
-                    <td>${formatMarketCap(company.market_cap)}</td>
+                    <td>$${(company.price || 0).toFixed(2)}</td>
+                    <td class="${changeClass}">${sign}${(company.change || 0).toFixed(2)}%</td>
+                    <td>${formatNum(company.market_cap)}</td>
+                    <td>${formatNum(company.trailing_pe, 'ratio')}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        // LEVEL 3: Render Company Details
         function renderLevel3(company) {
             document.getElementById('view-companies').classList.add('hidden');
             document.getElementById('view-details').classList.remove('hidden');
 
             document.getElementById('detail-name').innerText = company.name;
             document.getElementById('detail-ticker').innerText = company.ticker;
-            document.getElementById('detail-price').innerText = `$${company.price.toFixed(2)}`;
+            document.getElementById('detail-industry').innerText = company.industry || 'Uncategorized';
             
-            const changeEl = document.getElementById('detail-change');
-            changeEl.innerText = `${company.change > 0 ? '+' : ''}${company.change.toFixed(2)}%`;
-            changeEl.className = `metric-value ${company.change >= 0 ? 'positive' : 'negative'}`;
+            // Render Robinhood-Style Chart
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": company.ticker,
+                "timezone": "America/New_York",
+                "theme": "dark",
+                "style": "3", // "3" is Area chart (Robinhood style)
+                "locale": "en",
+                "enable_publishing": false,
+                "backgroundColor": "#161b22", // Blends seamlessly into your card background
+                "gridColor": "#161b22", // Hides the grid lines for a clean look
+                "hide_top_toolbar": true, // Hides the complex trading tools
+                "hide_legend": true,
+                "save_image": false,
+                "container_id": "tv_chart_container",
+                "allow_symbol_change": false,
+                "range": "1M" // Default view is 1 Month (bottom selectors allow 1D to 5Y)
+            });
 
-            document.getElementById('detail-mcap').innerText = formatMarketCap(company.market_cap);
+            document.getElementById('detail-price').innerText = `$${(company.price || 0).toFixed(2)}`;
+            const changeEl = document.getElementById('detail-change');
+            changeEl.innerText = `${company.change > 0 ? '+' : ''}${(company.change || 0).toFixed(2)}%`;
+            changeEl.className = `metric-value ${company.change >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('detail-high').innerText = formatNum(company.high_52w, 'currency');
+            document.getElementById('detail-low').innerText = formatNum(company.low_52w, 'currency');
+
+            document.getElementById('detail-mcap').innerText = formatNum(company.market_cap);
+            document.getElementById('detail-ev').innerText = formatNum(company.enterprise_value);
+            document.getElementById('detail-tpe').innerText = formatNum(company.trailing_pe, 'ratio');
+            document.getElementById('detail-fpe').innerText = formatNum(company.forward_pe, 'ratio');
+            document.getElementById('detail-rev').innerText = formatNum(company.revenue);
+            document.getElementById('detail-margin').innerText = formatNum(company.margin, 'percent');
+
+            document.getElementById('detail-rec').innerText = company.recommendation;
+            document.getElementById('detail-target').innerText = formatNum(company.target_price, 'currency');
+            document.getElementById('detail-div').innerText = company.dividend;
+            document.getElementById('detail-pb').innerText = formatNum(company.price_to_book, 'ratio');
+
             document.getElementById('detail-ceo').innerText = company.ceo;
-            document.getElementById('detail-dividend').innerText = company.dividend;
-            document.getElementById('detail-updated').innerText = company.last_updated;
+            document.getElementById('detail-emp').innerText = company.employees ? company.employees.toLocaleString() : "N/A";
+            document.getElementById('detail-summary').innerText = company.summary;
         }
     </script>
 </body>
