@@ -19,7 +19,7 @@ class ExtractionResult(BaseModel):
 # 2. The function to route text to your local GPU
 #   Available models include llama3, mistral-nemo, qwen3:14b, deepseek-r1:14b, gemma4
 # Update the function signature to accept the target company and ticker
-def extract_dependencies(text: str, target_name: str = "the target company", target_ticker: str = "", model_name: str = "llama3") -> dict:
+def extract_dependencies(text: str, target_name: str = "the target company", target_ticker: str = "", model_name: str = "gemma4") -> dict:
     """
     Passes raw scraped text to the local Ollama model.
     Uses strict Ego-Centric instructions to prevent tangential data extraction.
