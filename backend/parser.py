@@ -18,38 +18,39 @@ class ExtractionResult(BaseModel):
 
 # 2. The function to route text to your local GPU
 #   Available models include llama3, mistral-nemo, qwen3:14b, deepseek-r1:14b, gemma4
-def extract_dependencies(text: str, model_name: str = "mistral-nemo") -> dict:
+# Update the function signature to accept the target company and ticker
+def extract_dependencies(text: str, target_name: str = "the target company", target_ticker: str = "", model_name: str = "llama3") -> dict:
     """
     Passes raw scraped text to the local Ollama model.
-    Uses strict system instructions to prevent 'History Hallucinations'.
+    Uses strict Ego-Centric instructions to prevent tangential data extraction.
     """
     
-    # This is the "Audit Firewall" that prevents the AI from getting sidetracked by history.
-    SYSTEM_PROMPT = """
-    You are a Wall Street Equity Analyst. Your job is to extract modern hardware supply chain links.
+    # Inject the specific company into the prompt rules
+    SYSTEM_PROMPT = f"""
+    You are a Wall Street Equity Analyst researching {target_name} ({target_ticker}). 
+    Your job is to extract modern hardware supply chain links ONLY for this specific company.
 
     STRICT RULES:
-    1. ONLY extract relationships between two SEPARATE public companies (e.g., Apple and TSMC).
-    2. IGNORE internal brands or subsidiaries (e.g., do NOT extract 'YouTube' as a supplier to 'Google').
-    3. IGNORE venture capital, funding rounds, or acquisitions (e.g., skip 'Series C funding').
-    4. IGNORE market research or historic events from over 5 years ago.
+    1. EGO-CENTRIC EXTRACTION: At least ONE of the companies in the relationship MUST be {target_name} or {target_ticker}. If a relationship does not directly involve them, IGNORE IT.
+    2. ONLY extract relationships between two SEPARATE public companies.
+    3. IGNORE internal brands or subsidiaries (e.g., do NOT extract 'YouTube' as a supplier to 'Alphabet').
+    4. IGNORE venture capital, funding rounds, or acquisitions.
     5. FOCUS on: Silicon, Manufacturing, Data Center Hardware, Infrastructure, and Energy.
-    6. If the supplier is a private company (like SpaceX), still extract it, but it will be filtered later.
+    6. If the supplier is a private company, still extract it, but it must be directly linked to {target_name}.
 
     Output JSON:
-    {"dependencies": [{"source_company": "Broadcom", "target_company": "Alphabet", "dependency_type": "Semiconductors", "product": "TPU AI Chips", "confidence_score": 0.9}]}
+    {{"dependencies": [{{"source_company": "Broadcom", "target_company": "Alphabet", "dependency_type": "Semiconductors", "product": "TPU AI Chips", "confidence_score": 0.9}}]}}
     """
 
     user_prompt = f"""
-    Analyze the following text for supply chain dependencies. 
-    Focus strictly on tech, hardware, and semiconductor links relevant to the stock market.
+    Analyze the following text for supply chain dependencies involving {target_name} ({target_ticker}). 
+    Focus strictly on tech, hardware, and semiconductor links.
 
     Text to analyze:
     {text}
     """
 
     try:
-        # Pinging your local Ollama server and enforcing the JSON schema
         response = ollama.chat(
             model=model_name,
             messages=[
@@ -65,7 +66,6 @@ def extract_dependencies(text: str, model_name: str = "mistral-nemo") -> dict:
             format=ExtractionResult.model_json_schema()
         )
         
-        # Parse the JSON string returned by the model
         raw_json = response['message']['content']
         parsed_data = json.loads(raw_json)
         return parsed_data

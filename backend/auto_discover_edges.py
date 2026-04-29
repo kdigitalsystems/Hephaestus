@@ -17,16 +17,87 @@ from yahooquery import Ticker, search as yq_search
 wikipedia.set_user_agent("HephaestusTerminal/1.0 (research@saqibdesktop.local)")
 warnings.filterwarnings("ignore", category=UserWarning, module='wikipedia')
 
+
 def clean_company_name(name):
+    """Aggressively strips Wall Street jargon, ADRs, and geographic tags."""
+    # 1. Chop off Alpaca's ADR and Share class explanations
+    name = re.sub(r'(?i)(American Depositary|ADR|Sponsored ADR|Unsponsored ADR|Representing|Each representing).*', '', name)
+    
+    # 2. Remove anything inside parentheses (e.g., "(Cayman Islands)")
+    name = re.sub(r'\(.*?\)', '', name)
+    
+    # 3. Strip standard corporate stopwords
     stopwords = [
         r'\bInc\.?\b', r'\bCorp\.?\b', r'\bCorporation\b', r'\bCompany\b',
-        r'\bLLC\b', r'\bPlc\b', r'\bLtd\.?\b', r'\bADR\b', r'\bCommon Stock\b',
-        r'\bClass A\b', r'\bClass B\b', r'\bOrdinary Shares\b', r'\bTrust\b'
+        r'\bLLC\b', r'\bPlc\b', r'\bLtd\.?\b', r'\bCommon Stock\b',
+        r'\bClass A\b', r'\bClass B\b', r'\bOrdinary Shares\b', r'\bTrust\b',
+        r'\bHoldings\b', r'\bHolding\b', r'\bGroup\b', r'\bS A\b', r'\bAG\b'
     ]
     clean_name = name
     for word in stopwords:
         clean_name = re.sub(word, '', clean_name, flags=re.IGNORECASE)
+        
     return clean_name.replace(',', '').strip()
+
+class IntelGatherer:
+    @staticmethod
+    def get_wiki_data(company_name, ticker):
+        try:
+            search_term = clean_company_name(company_name)
+            
+            # Cascade searches: Start specific, fall back to broad
+            search_queries = [
+                f"{search_term} {ticker} company",
+                f"{search_term} company",
+                search_term
+            ]
+            
+            wiki_results = []
+            for query in search_queries:
+                wiki_results = wikipedia.search(query)
+                if wiki_results:
+                    break
+                    
+            if not wiki_results:
+                return ""
+
+            # Safely handle Wikipedia's Disambiguation and Page Errors
+            try:
+                page = wikipedia.page(wiki_results[0], auto_suggest=False)
+            except wikipedia.DisambiguationError as e:
+                # If ambiguous (e.g., "Target"), grab the first suggested option
+                page = wikipedia.page(e.options[0], auto_suggest=False)
+            except wikipedia.PageError:
+                return ""
+            
+            content = page.content
+            
+            # Target specific hardware/supply chain sections
+            target_sections = ["Operations", "Products", "Supply chain", "Partnerships", "Customers", "Infrastructure", "Manufacturing"]
+            relevant_text = ""
+            for section in target_sections:
+                if section in content:
+                    start = content.find(section)
+                    relevant_text += content[start:start+2500]
+            
+            if not relevant_text:
+                relevant_text = page.summary + "\n" + content[:3500]
+
+            return f"SOURCE: WIKIPEDIA (Page: {page.title})\nDATA:\n{relevant_text}\n"
+        except Exception:
+            return ""
+
+    @staticmethod
+    def get_yahoo_news(ticker):
+        try:
+            t = Ticker(ticker)
+            news = t.news(count=5)
+            blob = "SOURCE: RECENT NEWS HEADLINES\n"
+            for article in news:
+                blob += f"- {article.get('title')}: {article.get('summary')}\n"
+            return blob
+        except:
+            return ""
 
 class EntityResolver:
     """
@@ -178,11 +249,14 @@ def auto_discover_supply_chain(limit=5, target_sectors=None):
                 print(f"  [-] Insufficient data found for {company.ticker}.")
                 continue
 
-            print(f"  [*] GPU is analyzing {len(intel_blob)} characters...")
-            extraction = extract_dependencies(intel_blob)
-            dependencies = extraction.get("dependencies", [])
+            # Clean the name before giving it to the AI so it doesn't regurgitate Wall Street jargon
+            clean_target_name = clean_company_name(company.name)
 
-            # ... [The rest of your existing dynamic resolution and saving logic remains exactly the same here] ...
+            print(f"  [*] GPU is analyzing {len(intel_blob)} characters for {company.ticker}...")
+
+            # Pass the CLEAN name to the parser
+            extraction = extract_dependencies(intel_blob, target_name=clean_target_name, target_ticker=company.ticker)
+            dependencies = extraction.get("dependencies", [])
 
             if dependencies:
                 print(f"  [AI FOUND]: {len(dependencies)} potential relationships.")
