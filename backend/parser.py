@@ -28,23 +28,22 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
     # Inject the specific company into the prompt rules
     SYSTEM_PROMPT = f"""
     You are a Wall Street Equity Analyst researching {target_name} ({target_ticker}). 
-    Your job is to extract modern hardware supply chain links ONLY for this specific company.
+    Your job is to extract modern B2B supply chain links ONLY for this specific company.
 
     STRICT RULES:
     1. EGO-CENTRIC EXTRACTION: At least ONE of the companies in the relationship MUST be {target_name} or {target_ticker}. If a relationship does not directly involve them, IGNORE IT.
     2. ONLY extract relationships between two SEPARATE public companies.
-    3. IGNORE internal brands or subsidiaries (e.g., do NOT extract 'YouTube' as a supplier to 'Alphabet').
+    3. IGNORE internal brands or subsidiaries.
     4. IGNORE venture capital, funding rounds, or acquisitions.
-    5. FOCUS on: Silicon, Manufacturing, Data Center Hardware, Infrastructure, and Energy.
+    5. FOCUS ON CORE OPERATIONS: Extract physical suppliers, raw material providers, manufacturing partners, logistics partners, and critical enterprise software/infrastructure.
     6. If the supplier is a private company, still extract it, but it must be directly linked to {target_name}.
 
     Output JSON:
-    {{"dependencies": [{{"source_company": "Broadcom", "target_company": "Alphabet", "dependency_type": "Semiconductors", "product": "TPU AI Chips", "confidence_score": 0.9}}]}}
+    {{"dependencies": [{{"source_company": "Supplier Name", "target_company": "{target_name}", "dependency_type": "Raw Materials", "product": "Lithium", "confidence_score": 0.9}}]}}
     """
 
     user_prompt = f"""
-    Analyze the following text for supply chain dependencies involving {target_name} ({target_ticker}). 
-    Focus strictly on tech, hardware, and semiconductor links.
+    Analyze the following text for supply chain, logistics, manufacturing, and operational dependencies involving {target_name} ({target_ticker}).
 
     Text to analyze:
     {text}
