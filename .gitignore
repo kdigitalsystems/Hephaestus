@@ -233,3 +233,5 @@ __pycache__/
 # IDE files
 .vscode/
 .idea/
+
+full_codebase.txt
