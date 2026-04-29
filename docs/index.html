@@ -4,65 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hephaestus Terminal</title>
+    <link rel="stylesheet" href="styles.css">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-    <style>
-        :root {
-            --bg-color: #0d1117; --card-bg: #161b22; --border-color: #30363d;
-            --text-main: #c9d1d9; --text-muted: #8b949e; --accent: #58a6ff;
-            --green: #3fb950; --red: #f85149; --bg-secondary: #1c2128;
-        }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
-        header { padding: 20px 40px; background-color: var(--card-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        h1 { margin: 0; font-size: 1.5rem; color: var(--text-main); cursor: pointer; }
-        .container { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
-        
-        .hidden { display: none !important; }
-        .positive { color: var(--green); }
-        .negative { color: var(--red); }
-        .btn-back { background: none; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; transition: background 0.2s; }
-        .btn-back:hover { background-color: var(--border-color); }
-
-        /* Search Bar */
-        .search-bar { width: 100%; padding: 15px 20px; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; font-size: 1.1rem; margin-bottom: 30px; box-sizing: border-box; transition: border-color 0.2s; }
-        .search-bar:focus { outline: none; border-color: var(--accent); }
-
-        /* Grid & Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 30px; text-align: center; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
-        .card:hover { transform: translateY(-3px); border-color: var(--accent); }
-        .card h2 { margin: 0 0 10px 0; font-size: 1.3rem; }
-
-        /* Sortable Table */
-        table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border-radius: 8px; overflow: hidden; font-size: 0.95rem; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        th { background-color: var(--bg-secondary); color: var(--text-muted); font-weight: 600; cursor: pointer; user-select: none; }
-        th:hover { color: var(--accent); }
-        tr:hover { background-color: var(--bg-secondary); cursor: pointer; }
-        .sort-icon { font-size: 0.8rem; margin-left: 5px; opacity: 0.5; }
-        
-        /* Level 3 Details */
-        .detail-header { display: flex; align-items: flex-end; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
-        .detail-header h2 { margin: 0; font-size: 2.5rem; }
-        .detail-header .ticker { font-size: 1.5rem; color: var(--text-muted); }
-        
-        .chart-wrapper { height: 400px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
-        
-        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        .metrics-section { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; }
-        .metrics-section h3 { margin-top: 0; color: var(--accent); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
-        
-        .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .metric-label { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 5px; }
-        .metric-value { font-size: 1.2rem; font-weight: bold; }
-        
-        .summary-box { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; line-height: 1.6; color: var(--text-main); font-size: 0.95rem; }
-    </style>
 </head>
 <body>
 
     <header>
         <h1 onclick="renderLevel1(); document.getElementById('search-input').value='';">⚙️ Hephaestus Terminal</h1>
-        <div style="color: var(--text-muted); font-size: 0.9rem;" id="last-updated">Updating...</div>
+        <div id="last-updated">Updating...</div>
     </header>
 
     <div class="container">
@@ -150,197 +99,29 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="metrics-section" style="grid-column: 1 / -1; margin-top: 10px;">
+                    <h3>Supply Chain X-Ray</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <div>
+                            <div style="color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; font-weight: bold;">
+                                ⬆️ Upstream (Suppliers / Vendors)
+                            </div>
+                            <div id="detail-upstream" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                        </div>
+                        <div>
+                            <div style="color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; font-weight: bold;">
+                                ⬇️ Downstream (Customers / Buyers)
+                            </div>
+                            <div id="detail-downstream" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <script>
-        let globalData = {};
-        let currentSector = '';
-        let currentCompaniesList = []; // Used for displaying the active list (Sector or Search)
-        
-        let sortCol = 'market_cap';
-        let sortAsc = false;
-
-        const formatNum = (num, type = 'currency') => {
-            if (num === null || num === undefined || isNaN(num)) return "N/A";
-            if (type === 'percent') return (num * 100).toFixed(2) + '%';
-            if (type === 'ratio') return num.toFixed(2);
-            if (num >= 1e12) return '$' + (num / 1e12).toFixed(2) + 'T';
-            if (num >= 1e9) return '$' + (num / 1e9).toFixed(2) + 'B';
-            if (num >= 1e6) return '$' + (num / 1e6).toFixed(2) + 'M';
-            return '$' + num.toLocaleString();
-        };
-
-        fetch('dashboard_data.json')
-            .then(response => response.json())
-            .then(data => {
-                globalData = data.industries;
-                document.getElementById('last-updated').innerText = "Live Data Synced";
-                renderLevel1();
-            })
-            .catch(error => console.error("Data load failed:", error));
-
-        function renderLevel1() {
-            document.getElementById('view-industries').classList.remove('hidden');
-            document.getElementById('view-companies').classList.add('hidden');
-            document.getElementById('view-details').classList.add('hidden');
-
-            const grid = document.getElementById('industry-grid');
-            grid.innerHTML = '';
-
-            const sortedSectors = Object.keys(globalData).sort();
-
-            sortedSectors.forEach(sector => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.onclick = () => { 
-                    currentSector = sector; 
-                    currentCompaniesList = [...globalData[sector]];
-                    document.getElementById('current-industry-title').innerText = sector;
-                    renderLevel2(); 
-                };
-                card.innerHTML = `<h2>${sector}</h2><p>${globalData[sector].length} Equities</p>`;
-                grid.appendChild(card);
-            });
-        }
-
-        // Global Search Function
-        function handleSearch() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            
-            if (query.length < 2) {
-                renderLevel1();
-                return;
-            }
-            
-            let results = [];
-            for (const [sector, companies] of Object.entries(globalData)) {
-                companies.forEach(c => {
-                    if (c.name.toLowerCase().includes(query) || c.ticker.toLowerCase().includes(query)) {
-                        results.push(c);
-                    }
-                });
-            }
-            
-            currentCompaniesList = results;
-            document.getElementById('current-industry-title').innerText = `Search Results (${results.length})`;
-            renderLevel2(true);
-        }
-
-        function handleSort(col) {
-            if (sortCol === col) {
-                sortAsc = !sortAsc;
-            } else {
-                sortCol = col;
-                sortAsc = (col === 'name' || col === 'ticker'); 
-            }
-            renderLevel2(false);
-        }
-
-        function renderLevel2(isSearch = false) {
-            if (isSearch) {
-                document.getElementById('view-industries').classList.add('hidden');
-                document.getElementById('view-companies').classList.remove('hidden');
-                document.getElementById('view-details').classList.add('hidden');
-            } else {
-                document.getElementById('view-industries').classList.add('hidden');
-                document.getElementById('view-companies').classList.remove('hidden');
-                document.getElementById('view-details').classList.add('hidden');
-            }
-            
-            document.querySelectorAll('.sort-icon').forEach(icon => icon.innerText = '');
-            document.getElementById(`sort-${sortCol}`).innerText = sortAsc ? '▲' : '▼';
-
-            let companies = currentCompaniesList;
-            
-            companies.sort((a, b) => {
-                let valA = a[sortCol];
-                let valB = b[sortCol];
-                
-                if (valA === null || valA === undefined || valA === "N/A") valA = sortAsc ? Infinity : -Infinity;
-                if (valB === null || valB === undefined || valB === "N/A") valB = sortAsc ? Infinity : -Infinity;
-
-                if (typeof valA === 'string') {
-                    return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
-                } else {
-                    return sortAsc ? valA - valB : valB - valA;
-                }
-            });
-
-            const tbody = document.getElementById('company-table-body');
-            tbody.innerHTML = '';
-
-            companies.forEach(company => {
-                const tr = document.createElement('tr');
-                tr.onclick = () => renderLevel3(company);
-                
-                const changeClass = company.change >= 0 ? 'positive' : 'negative';
-                const sign = company.change > 0 ? '+' : '';
-
-                tr.innerHTML = `
-                    <td style="font-weight: bold; color: var(--accent);">${company.name}</td>
-                    <td>${company.ticker}</td>
-                    <td>$${(company.price || 0).toFixed(2)}</td>
-                    <td class="${changeClass}">${sign}${(company.change || 0).toFixed(2)}%</td>
-                    <td>${formatNum(company.market_cap)}</td>
-                    <td>${formatNum(company.trailing_pe, 'ratio')}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderLevel3(company) {
-            document.getElementById('view-companies').classList.add('hidden');
-            document.getElementById('view-details').classList.remove('hidden');
-
-            document.getElementById('detail-name').innerText = company.name;
-            document.getElementById('detail-ticker').innerText = company.ticker;
-            document.getElementById('detail-industry').innerText = company.industry || 'Uncategorized';
-            
-            // Render Robinhood-Style Chart (Now Defaults to 5 Years / 60 Months)
-            document.getElementById('tv_chart_container').innerHTML = ''; // Clear old chart
-            new TradingView.widget({
-                "autosize": true,
-                "symbol": company.ticker,
-                "timezone": "America/New_York",
-                "theme": "dark",
-                "style": "3", 
-                "locale": "en",
-                "enable_publishing": false,
-                "backgroundColor": "#161b22", 
-                "gridColor": "#161b22", 
-                "hide_top_toolbar": true, 
-                "hide_legend": true,
-                "save_image": false,
-                "container_id": "tv_chart_container",
-                "allow_symbol_change": false,
-                "range": "60M" // Fix: Forces the default chart history to 5 Years
-            });
-
-            document.getElementById('detail-price').innerText = `$${(company.price || 0).toFixed(2)}`;
-            const changeEl = document.getElementById('detail-change');
-            changeEl.innerText = `${company.change > 0 ? '+' : ''}${(company.change || 0).toFixed(2)}%`;
-            changeEl.className = `metric-value ${company.change >= 0 ? 'positive' : 'negative'}`;
-            document.getElementById('detail-high').innerText = formatNum(company.high_52w, 'currency');
-            document.getElementById('detail-low').innerText = formatNum(company.low_52w, 'currency');
-
-            document.getElementById('detail-mcap').innerText = formatNum(company.market_cap);
-            document.getElementById('detail-ev').innerText = formatNum(company.enterprise_value);
-            document.getElementById('detail-tpe').innerText = formatNum(company.trailing_pe, 'ratio');
-            document.getElementById('detail-fpe').innerText = formatNum(company.forward_pe, 'ratio');
-            document.getElementById('detail-rev').innerText = formatNum(company.revenue);
-            document.getElementById('detail-margin').innerText = formatNum(company.margin, 'percent');
-
-            document.getElementById('detail-rec').innerText = company.recommendation;
-            document.getElementById('detail-target').innerText = formatNum(company.target_price, 'currency');
-            document.getElementById('detail-div').innerText = company.dividend;
-            document.getElementById('detail-pb').innerText = formatNum(company.price_to_book, 'ratio');
-
-            document.getElementById('detail-ceo').innerText = company.ceo;
-            document.getElementById('detail-emp').innerText = company.employees ? company.employees.toLocaleString() : "N/A";
-            document.getElementById('detail-summary').innerText = company.summary;
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
