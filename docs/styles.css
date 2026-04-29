@@ -199,3 +199,42 @@ tr:hover { background-color: var(--bg-secondary); cursor: pointer; }
     color: var(--text-main); 
     font-size: 0.95rem; 
 }
+
+/* X-Ray Interactive Cards */
+.xray-card {
+    background: var(--bg-secondary);
+    padding: 12px 15px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.xray-card:hover {
+    border-color: var(--accent);
+    transform: translateX(5px);
+    background: var(--card-bg);
+}
+
+.xray-card.upstream { border-left: 3px solid var(--red); }
+.xray-card.downstream { border-left: 3px solid var(--green); }
+
+/* Dependency Type Pill */
+.dep-pill {
+    background: rgba(88, 166, 255, 0.1);
+    color: var(--accent);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 1px solid rgba(88, 166, 255, 0.2);
+}
+
+.mini-metric {
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-left: 10px;
+}

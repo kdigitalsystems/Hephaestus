@@ -5,6 +5,7 @@ let currentCompaniesList = [];
 let sortCol = 'market_cap';
 let sortAsc = false;
 
+// Format numbers for currency, percentages, or standard ratios
 const formatNum = (num, type = 'currency') => {
     if (num === null || num === undefined || isNaN(num)) return "N/A";
     if (type === 'percent') return (num * 100).toFixed(2) + '%';
@@ -15,6 +16,7 @@ const formatNum = (num, type = 'currency') => {
     return '$' + num.toLocaleString();
 };
 
+// Fetch the exported backend data
 fetch('dashboard_data.json')
     .then(response => response.json())
     .then(data => {
@@ -22,8 +24,12 @@ fetch('dashboard_data.json')
         document.getElementById('last-updated').innerText = "Live Data Synced";
         renderLevel1();
     })
-    .catch(error => console.error("Data load failed:", error));
+    .catch(error => {
+        console.error("Data load failed:", error);
+        document.getElementById('last-updated').innerText = "Failed to load data";
+    });
 
+// LEVEL 1: Industry Grid
 function renderLevel1() {
     document.getElementById('view-industries').classList.remove('hidden');
     document.getElementById('view-companies').classList.add('hidden');
@@ -48,6 +54,7 @@ function renderLevel1() {
     });
 }
 
+// Global Search
 function handleSearch() {
     const query = document.getElementById('search-input').value.toLowerCase();
     
@@ -59,7 +66,7 @@ function handleSearch() {
     let results = [];
     for (const [sector, companies] of Object.entries(globalData)) {
         companies.forEach(c => {
-            if (c.name.toLowerCase().includes(query) || c.ticker.toLowerCase().includes(query)) {
+            if (c.name.toLowerCase().includes(query) || (c.ticker && c.ticker.toLowerCase().includes(query))) {
                 results.push(c);
             }
         });
@@ -70,6 +77,7 @@ function handleSearch() {
     renderLevel2(true);
 }
 
+// Table Sorting
 function handleSort(col) {
     if (sortCol === col) {
         sortAsc = !sortAsc;
@@ -80,6 +88,7 @@ function handleSort(col) {
     renderLevel2(false);
 }
 
+// LEVEL 2: Company Table
 function renderLevel2(isSearch = false) {
     if (isSearch) {
         document.getElementById('view-industries').classList.add('hidden');
@@ -132,6 +141,16 @@ function renderLevel2(isSearch = false) {
     });
 }
 
+// Helper function to find a company's live data by ticker for the X-Ray
+const getCompanyByTicker = (ticker) => {
+    for (const [sector, companies] of Object.entries(globalData)) {
+        const found = companies.find(c => c.ticker === ticker);
+        if (found) return found;
+    }
+    return null;
+};
+
+// LEVEL 3: Deep Dive Terminal
 function renderLevel3(company) {
     document.getElementById('view-companies').classList.add('hidden');
     document.getElementById('view-details').classList.remove('hidden');
@@ -140,25 +159,31 @@ function renderLevel3(company) {
     document.getElementById('detail-ticker').innerText = company.ticker;
     document.getElementById('detail-industry').innerText = company.industry || 'Uncategorized';
     
+    // Render Robinhood-Style TradingView Chart
     document.getElementById('tv_chart_container').innerHTML = ''; 
-    new TradingView.widget({
-        "autosize": true,
-        "symbol": company.ticker,
-        "timezone": "America/New_York",
-        "theme": "dark",
-        "style": "3", 
-        "locale": "en",
-        "enable_publishing": false,
-        "backgroundColor": "#161b22", 
-        "gridColor": "#161b22", 
-        "hide_top_toolbar": true, 
-        "hide_legend": true,
-        "save_image": false,
-        "container_id": "tv_chart_container",
-        "allow_symbol_change": false,
-        "range": "60M" 
-    });
+    if (company.ticker && company.ticker !== "N/A") {
+        new TradingView.widget({
+            "autosize": true,
+            "symbol": company.ticker,
+            "timezone": "America/New_York",
+            "theme": "dark",
+            "style": "3", 
+            "locale": "en",
+            "enable_publishing": false,
+            "backgroundColor": "#161b22", 
+            "gridColor": "#161b22", 
+            "hide_top_toolbar": true, 
+            "hide_legend": true,
+            "save_image": false,
+            "container_id": "tv_chart_container",
+            "allow_symbol_change": false,
+            "range": "60M" 
+        });
+    } else {
+        document.getElementById('tv_chart_container').innerHTML = '<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: var(--text-muted);">Chart unavailable for this entity</div>';
+    }
 
+    // Populate Metrics
     document.getElementById('detail-price').innerText = `$${(company.price || 0).toFixed(2)}`;
     const changeEl = document.getElementById('detail-change');
     changeEl.innerText = `${company.change > 0 ? '+' : ''}${(company.change || 0).toFixed(2)}%`;
@@ -182,32 +207,58 @@ function renderLevel3(company) {
     document.getElementById('detail-emp').innerText = company.employees ? company.employees.toLocaleString() : "N/A";
     document.getElementById('detail-summary').innerText = company.summary;
 
-    // Render Supply Chain X-Ray
+    // --- Render Supply Chain X-Ray ---
+    const renderXRayCard = (dep, directionClass) => {
+        const linkedCompany = getCompanyByTicker(dep.ticker);
+        
+        // Setup live metric if available
+        let miniMetricHtml = '';
+        if (linkedCompany) {
+            const changeClass = linkedCompany.change >= 0 ? 'positive' : 'negative';
+            const sign = linkedCompany.change > 0 ? '+' : '';
+            miniMetricHtml = `<span class="mini-metric ${changeClass}">${sign}${(linkedCompany.change || 0).toFixed(2)}%</span>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = `xray-card ${directionClass}`;
+        card.innerHTML = `
+            <div>
+                <span style="font-weight: bold; color: var(--text-main); font-size: 0.95rem;">${dep.name}</span>
+                <span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 5px;">${dep.ticker ? '('+dep.ticker+')' : ''}</span>
+                ${miniMetricHtml}
+            </div>
+            <span class="dep-pill">${dep.type}</span>
+        `;
+        
+        // Add jump navigation if tracked
+        if (linkedCompany) {
+            card.onclick = () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                renderLevel3(linkedCompany);
+            };
+        } else {
+            card.style.cursor = 'default';
+            card.title = "Detailed data not tracked for this entity.";
+        }
+        
+        return card;
+    };
+
+    // Populate Upstream
     const upContainer = document.getElementById('detail-upstream');
     upContainer.innerHTML = '';
     if (company.upstream && company.upstream.length > 0) {
-        company.upstream.forEach(dep => {
-            upContainer.innerHTML += `
-                <div style="background: var(--bg-secondary); padding: 10px 15px; border-radius: 6px; border-left: 3px solid var(--red); display: flex; justify-content: space-between;">
-                    <span style="font-weight: bold; color: var(--text-main);">${dep.name} <span style="color: var(--text-muted); font-weight: normal;">${dep.ticker ? '('+dep.ticker+')' : ''}</span></span>
-                    <span style="color: var(--text-muted); font-size: 0.85rem;">${dep.type}</span>
-                </div>`;
-        });
+        company.upstream.forEach(dep => upContainer.appendChild(renderXRayCard(dep, 'upstream')));
     } else {
-        upContainer.innerHTML = '<span style="color: var(--text-muted); font-style: italic;">No known upstream suppliers tracked.</span>';
+        upContainer.innerHTML = '<span style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">No known upstream suppliers tracked.</span>';
     }
 
+    // Populate Downstream
     const downContainer = document.getElementById('detail-downstream');
     downContainer.innerHTML = '';
     if (company.downstream && company.downstream.length > 0) {
-        company.downstream.forEach(dep => {
-            downContainer.innerHTML += `
-                <div style="background: var(--bg-secondary); padding: 10px 15px; border-radius: 6px; border-left: 3px solid var(--green); display: flex; justify-content: space-between;">
-                    <span style="font-weight: bold; color: var(--text-main);">${dep.name} <span style="color: var(--text-muted); font-weight: normal;">${dep.ticker ? '('+dep.ticker+')' : ''}</span></span>
-                    <span style="color: var(--text-muted); font-size: 0.85rem;">${dep.type}</span>
-                </div>`;
-        });
+        company.downstream.forEach(dep => downContainer.appendChild(renderXRayCard(dep, 'downstream')));
     } else {
-        downContainer.innerHTML = '<span style="color: var(--text-muted); font-style: italic;">No known downstream exposure tracked.</span>';
+        downContainer.innerHTML = '<span style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">No known downstream exposure tracked.</span>';
     }
 }
