@@ -1,0 +1,43 @@
+name: Daily Hephaestus Pipeline
+
+on:
+  schedule:
+    # Runs at 06:00 UTC every day (12:00 AM CST / 01:00 AM CDT)
+    - cron: '0 6 * * *'
+  
+  # This line allows you to manually trigger the workflow from the GitHub UI
+  workflow_dispatch: 
+
+permissions:
+  contents: write # Crucial: Gives the GitHub Action permission to push the JSON back to your repo
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip' # Caches your dependencies to make daily runs much faster
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Configure Git Identity
+        # Your run_pipeline.sh script creates a commit. Git needs to know "who" is committing.
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Make pipeline script executable
+        run: chmod +x run_pipeline.sh
+
+      - name: Execute Hephaestus Pipeline
+        run: ./run_pipeline.sh

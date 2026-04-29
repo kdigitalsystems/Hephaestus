@@ -1,29 +1,34 @@
 #!/bin/bash
 
-# Navigate to the project directory (Change this to your actual path)
-# cd /path/to/your/project/repository-name
-
 echo "======================================"
-echo "Starting Supply Chain Pipeline: $(date)"
+echo "Starting Hephaestus API Pipeline: $(date)"
 echo "======================================"
 
-# 1. Activate your virtual environment (if you are using one)
-# source venv/bin/activate
+# Check for optional limit parameter for development/debugging
+LIMIT_ARG=""
+if [ ! -z "$1" ]; then
+  LIMIT_ARG="--limit $1"
+  echo "⚠️ DEV MODE ACTIVE: Limiting processing to $1 companies."
+fi
 
-# 2. Run the extraction (assuming scraper and parser are integrated into a main.py, or run them sequentially)
-# For now, let's assume you have a script that runs the daily scrape & DB insertion
-# python backend/daily_job.py 
+# 1. Seed the database (Pulls the active US Equity roster from Alpaca)
+echo "Ensuring core companies are tracked..."
+python3 backend/seed_db.py $LIMIT_ARG
+
+# 2. Update Financial Metrics (Pulls Market Cap, Prices, and Sectors from Yahoo)
+echo "Updating live financial metrics..."
+python3 backend/update_metrics.py $LIMIT_ARG
 
 # 3. Export the local DB to the static JSON file
-echo "Exporting database to docs/supply_chain_data.json..."
-python backend/export.py
+echo "Exporting database to docs/dashboard_data.json..."
+python3 backend/export.py
 
 # 4. Git Automation: Push the static file to GitHub
 echo "Pushing updates to GitHub..."
-git add docs/supply_chain_data.json
-git commit -m "Automated data pipeline update: $(date +'%Y-%m-%d')"
+git add docs/dashboard_data.json
+git add docs/index.html
+git commit -m "Automated dashboard update: $(date +'%Y-%m-%d')"
 
-# Using '|| true' prevents the script from failing if there are no new changes to push
 git push origin main || true
 
 echo "Pipeline complete."
