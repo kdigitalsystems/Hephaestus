@@ -22,6 +22,10 @@
         .btn-back { background: none; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; transition: background 0.2s; }
         .btn-back:hover { background-color: var(--border-color); }
 
+        /* Search Bar */
+        .search-bar { width: 100%; padding: 15px 20px; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; font-size: 1.1rem; margin-bottom: 30px; box-sizing: border-box; transition: border-color 0.2s; }
+        .search-bar:focus { outline: none; border-color: var(--accent); }
+
         /* Grid & Cards */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 30px; text-align: center; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
@@ -41,7 +45,6 @@
         .detail-header h2 { margin: 0; font-size: 2.5rem; }
         .detail-header .ticker { font-size: 1.5rem; color: var(--text-muted); }
         
-        /* Chart Container */
         .chart-wrapper { height: 400px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
         
         .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
@@ -58,18 +61,21 @@
 <body>
 
     <header>
-        <h1 onclick="renderLevel1()">⚙️ Hephaestus Terminal</h1>
+        <h1 onclick="renderLevel1(); document.getElementById('search-input').value='';">⚙️ Hephaestus Terminal</h1>
         <div style="color: var(--text-muted); font-size: 0.9rem;" id="last-updated">Updating...</div>
     </header>
 
     <div class="container">
+        
+        <input type="text" id="search-input" class="search-bar" placeholder="Search for a company name or ticker (e.g. AMD, Super Micro)..." oninput="handleSearch()">
+
         <div id="view-industries">
             <h2 style="margin-bottom: 20px;">Macro Sectors</h2>
             <div class="grid" id="industry-grid"></div>
         </div>
 
         <div id="view-companies" class="hidden">
-            <button class="btn-back" onclick="renderLevel1()">← Back to Sectors</button>
+            <button class="btn-back" onclick="renderLevel1(); document.getElementById('search-input').value='';">← Back to Sectors</button>
             <h2 id="current-industry-title">Sector Name</h2>
             <table>
                 <thead>
@@ -99,7 +105,6 @@
 
             <div class="dashboard-grid">
                 <div style="display: flex; flex-direction: column; gap: 20px;">
-                    
                     <div class="metrics-section">
                         <h3>Market Performance</h3>
                         <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr);">
@@ -152,8 +157,8 @@
     <script>
         let globalData = {};
         let currentSector = '';
+        let currentCompaniesList = []; // Used for displaying the active list (Sector or Search)
         
-        // Sorting State
         let sortCol = 'market_cap';
         let sortAsc = false;
 
@@ -189,10 +194,38 @@
             sortedSectors.forEach(sector => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.onclick = () => { currentSector = sector; renderLevel2(); };
+                card.onclick = () => { 
+                    currentSector = sector; 
+                    currentCompaniesList = [...globalData[sector]];
+                    document.getElementById('current-industry-title').innerText = sector;
+                    renderLevel2(); 
+                };
                 card.innerHTML = `<h2>${sector}</h2><p>${globalData[sector].length} Equities</p>`;
                 grid.appendChild(card);
             });
+        }
+
+        // Global Search Function
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            
+            if (query.length < 2) {
+                renderLevel1();
+                return;
+            }
+            
+            let results = [];
+            for (const [sector, companies] of Object.entries(globalData)) {
+                companies.forEach(c => {
+                    if (c.name.toLowerCase().includes(query) || c.ticker.toLowerCase().includes(query)) {
+                        results.push(c);
+                    }
+                });
+            }
+            
+            currentCompaniesList = results;
+            document.getElementById('current-industry-title').innerText = `Search Results (${results.length})`;
+            renderLevel2(true);
         }
 
         function handleSort(col) {
@@ -202,20 +235,24 @@
                 sortCol = col;
                 sortAsc = (col === 'name' || col === 'ticker'); 
             }
-            renderLevel2();
+            renderLevel2(false);
         }
 
-        function renderLevel2() {
-            document.getElementById('view-industries').classList.add('hidden');
-            document.getElementById('view-companies').classList.remove('hidden');
-            document.getElementById('view-details').classList.add('hidden');
-            
-            document.getElementById('current-industry-title').innerText = currentSector;
+        function renderLevel2(isSearch = false) {
+            if (isSearch) {
+                document.getElementById('view-industries').classList.add('hidden');
+                document.getElementById('view-companies').classList.remove('hidden');
+                document.getElementById('view-details').classList.add('hidden');
+            } else {
+                document.getElementById('view-industries').classList.add('hidden');
+                document.getElementById('view-companies').classList.remove('hidden');
+                document.getElementById('view-details').classList.add('hidden');
+            }
             
             document.querySelectorAll('.sort-icon').forEach(icon => icon.innerText = '');
             document.getElementById(`sort-${sortCol}`).innerText = sortAsc ? '▲' : '▼';
 
-            let companies = [...globalData[currentSector]];
+            let companies = currentCompaniesList;
             
             companies.sort((a, b) => {
                 let valA = a[sortCol];
@@ -261,23 +298,24 @@
             document.getElementById('detail-ticker').innerText = company.ticker;
             document.getElementById('detail-industry').innerText = company.industry || 'Uncategorized';
             
-            // Render Robinhood-Style Chart
+            // Render Robinhood-Style Chart (Now Defaults to 5 Years / 60 Months)
+            document.getElementById('tv_chart_container').innerHTML = ''; // Clear old chart
             new TradingView.widget({
                 "autosize": true,
                 "symbol": company.ticker,
                 "timezone": "America/New_York",
                 "theme": "dark",
-                "style": "3", // "3" is Area chart (Robinhood style)
+                "style": "3", 
                 "locale": "en",
                 "enable_publishing": false,
-                "backgroundColor": "#161b22", // Blends seamlessly into your card background
-                "gridColor": "#161b22", // Hides the grid lines for a clean look
-                "hide_top_toolbar": true, // Hides the complex trading tools
+                "backgroundColor": "#161b22", 
+                "gridColor": "#161b22", 
+                "hide_top_toolbar": true, 
                 "hide_legend": true,
                 "save_image": false,
                 "container_id": "tv_chart_container",
                 "allow_symbol_change": false,
-                "range": "1M" // Default view is 1 Month (bottom selectors allow 1D to 5Y)
+                "range": "60M" // Fix: Forces the default chart history to 5 Years
             });
 
             document.getElementById('detail-price').innerText = `$${(company.price || 0).toFixed(2)}`;
