@@ -11,16 +11,13 @@ from thefuzz import fuzz
 from database import SessionLocal
 from models import Node, Edge
 from parser import extract_dependencies
-from yahooquery import Ticker
+from yahooquery import Ticker, search as yq_search
 
 # --- CONFIGURATION ---
-# Wikimedia requires a custom User-Agent to avoid 403 Forbidden errors
 wikipedia.set_user_agent("HephaestusTerminal/1.0 (research@saqibdesktop.local)")
-# Suppress BeautifulSoup warnings from the wikipedia library
 warnings.filterwarnings("ignore", category=UserWarning, module='wikipedia')
 
 def clean_company_name(name):
-    """Strips Wall Street jargon so Wikipedia/Search can find the actual entity."""
     stopwords = [
         r'\bInc\.?\b', r'\bCorp\.?\b', r'\bCorporation\b', r'\bCompany\b',
         r'\bLLC\b', r'\bPlc\b', r'\bLtd\.?\b', r'\bADR\b', r'\bCommon Stock\b',
@@ -33,8 +30,7 @@ def clean_company_name(name):
 
 class EntityResolver:
     """
-    The Dynamic Resolution Engine: Matches AI-extracted names to your 12,000 tickers.
-    Uses fuzzy logic + Market Cap weighting to resolve 'Google' to 'GOOGL' instead of 'GOOP'.
+    Dynamic Resolution Engine with Yahoo Finance API Fallback.
     """
     @staticmethod
     def resolve(session, name_or_ticker):
@@ -42,58 +38,66 @@ class EntityResolver:
             return None
         
         search_val = str(name_or_ticker).strip()
+        search_upper = search_val.upper()
 
-        # 1. ATTEMPT: Exact Ticker Match (Highest Priority)
-        node = session.query(Node).filter(Node.ticker == search_val.upper()).first()
+        # 1. ATTEMPT: Exact Ticker Match
+        node = session.query(Node).filter(Node.ticker == search_upper).first()
         if node:
             return node
 
-        # 2. ATTEMPT: Gather potentials for fuzzy matching
-        # We filter for companies > $100M to automatically ignore penny stocks/SPAC noise
+        # 2. ATTEMPT: Database Fuzzy Match
+        search_lower = search_val.lower()
         potentials = session.query(Node).filter(
             or_(
-                Node.name.ilike(f"%{search_val}%"),
-                Node.ticker.ilike(f"%{search_val}%")
+                Node.name.ilike(f"%{search_lower}%"),
+                Node.ticker.ilike(f"%{search_lower}%")
             )
         ).filter(Node.market_cap > 100_000_000).all()
 
-        if not potentials:
-            return None
-
-        # 3. ATTEMPT: Weighted Fuzzy Logic
-        best_match = None
-        highest_score = 0
-
-        for p in potentials:
-            # token_set_ratio handles "Google" matching "Alphabet Inc (Google)" perfectly
-            score = fuzz.token_set_ratio(search_val, p.name)
-            
-            # TIE-BREAKER: If scores are tied or very close, the company with the larger 
-            # Market Cap is likely the one the AI/News is talking about.
-            if score > highest_score:
-                highest_score = score
-                best_match = p
-            elif abs(score - highest_score) < 5 and best_match:
-                if (p.market_cap or 0) > (best_match.market_cap or 0):
+        if potentials:
+            best_match = None
+            highest_score = 0
+            for p in potentials:
+                score = fuzz.token_set_ratio(search_lower, p.name.lower())
+                
+                if score > highest_score:
+                    highest_score = score
                     best_match = p
+                elif abs(score - highest_score) < 5 and best_match:
+                    if (p.market_cap or 0) > (best_match.market_cap or 0):
+                        best_match = p
+            
+            if highest_score > 85:
+                return best_match
 
-        # We only accept the match if the fuzzy score is high enough (>85)
-        return best_match if highest_score > 85 else None
+        # 3. ATTEMPT: Dynamic Financial API Translation (Yahoo Finance)
+        try:
+            yq_results = yq_search(search_val)
+            quotes = yq_results.get('quotes', [])
+            
+            if quotes:
+                # Grab the most relevant ticker symbol
+                discovered_ticker = quotes[0].get('symbol')
+                if discovered_ticker:
+                    node = session.query(Node).filter(Node.ticker == discovered_ticker.upper()).first()
+                    if node:
+                        return node
+        except Exception:
+            pass # Fail silently on network errors
+
+        return None
 
 class IntelGatherer:
     @staticmethod
     def get_wiki_data(company_name, ticker):
-        """Fetches corporate Wikipedia data focusing on supply chain/operations."""
         try:
             search_term = clean_company_name(company_name)
-            # Add context keywords to force Wikipedia away from ancient history/biographies
-            search_query = f"{search_term} {ticker} corporate supply chain"
+            search_query = f"{search_term} {ticker} corporate supply chain operations"
             
             wiki_results = wikipedia.search(search_query)
             if not wiki_results:
                 return ""
 
-            # Try to pick the most 'corporate' looking title from top 3
             selected_title = wiki_results[0]
             for result in wiki_results[:3]:
                 if any(k in result.lower() for k in ["inc", "corp", "company", "corporation", "(company)"]):
@@ -103,7 +107,6 @@ class IntelGatherer:
             page = wikipedia.page(selected_title, auto_suggest=False)
             content = page.content
             
-            # Target specific sections likely to contain B2B relationships
             target_sections = ["Operations", "Products", "Supply chain", "Partnerships", "Customers", "Infrastructure"]
             relevant_text = ""
             for section in target_sections:
@@ -111,7 +114,6 @@ class IntelGatherer:
                     start = content.find(section)
                     relevant_text += content[start:start+2500]
             
-            # Fallback to summary and first chunk if specific sections aren't named
             if not relevant_text:
                 relevant_text = page.summary + "\n" + content[:3500]
 
@@ -121,7 +123,6 @@ class IntelGatherer:
 
     @staticmethod
     def get_yahoo_news(ticker):
-        """Fetches the latest 5 news headlines/summaries via YahooQuery."""
         try:
             t = Ticker(ticker)
             news = t.news(count=5)
@@ -132,78 +133,85 @@ class IntelGatherer:
         except:
             return ""
 
-def auto_discover_supply_chain(limit=5):
+
+def auto_discover_supply_chain(limit=5, target_sectors=None):
     print(f"--- Starting Refined Titan Queue (Limit: {limit}) ---")
+    if target_sectors:
+        print(f"--- Targeting Sectors: {', '.join(target_sectors)} ---")
+
     session = SessionLocal()
-    
-    # Noise sectors to skip (SPACs, Mutual Funds, Banks)
-    IGNORED_SECTORS = [
-        "Financial Services", "Real Estate", "Financial", 
-        "Asset Management", "Insurance", "Banks"
-    ]
 
     try:
-        # Research companies with high market cap that lack supply chain data
+        # Base query: Companies with no edges, > $1B Market Cap
         query = session.query(Node).outerjoin(
             Edge, or_(Node.id == Edge.source_id, Node.id == Edge.target_id)
         ).filter(
-            Edge.id == None, 
-            Node.market_cap > 1_000_000_000, # Start with $1B+ giants
-            ~Node.sector.in_(IGNORED_SECTORS)
-        ).order_by(Node.market_cap.desc())
-        
-        lonely_nodes = query.limit(limit).all()
+            Edge.id == None,
+            Node.market_cap > 1_000_000_000
+        )
+
+        # DYNAMIC FILTER: Apply sectors if provided via CLI
+        if target_sectors:
+            query = query.filter(Node.sector.in_(target_sectors))
+        else:
+            # If no sectors provided, just ignore the obvious noise (Banks, Shell Companies)
+            IGNORED_SECTORS = ["Financial Services", "Real Estate", "Financial", "Asset Management", "Insurance", "Banks", "Shell Companies"]
+            query = query.filter(~Node.sector.in_(IGNORED_SECTORS))
+
+        lonely_nodes = query.order_by(Node.market_cap.desc()).limit(limit).all()
 
         if not lonely_nodes:
-            print("All prime companies currently have tracked edges!")
+            print("No actionable companies found in queue!")
             return
 
         for company in lonely_nodes:
-            print(f"\n[?] Researching: {company.name} ({company.ticker})")
-            
-            # 1. Gather Intelligence
+            print(f"\n[?] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
+
             intel_blob = ""
             intel_blob += IntelGatherer.get_wiki_data(company.name, company.ticker)
             intel_blob += IntelGatherer.get_yahoo_news(company.ticker)
-            
+
+            # THE CONTEXT CAP: Prevent Ollama/GPU freeze on massive pages like Palantir
+            intel_blob = intel_blob[:6500]
+
             if len(intel_blob) < 400:
                 print(f"  [-] Insufficient data found for {company.ticker}.")
                 continue
 
-            # 2. GPU Extraction via parser.py
             print(f"  [*] GPU is analyzing {len(intel_blob)} characters...")
             extraction = extract_dependencies(intel_blob)
             dependencies = extraction.get("dependencies", [])
-            
+
+            # ... [The rest of your existing dynamic resolution and saving logic remains exactly the same here] ...
+
             if dependencies:
                 print(f"  [AI FOUND]: {len(dependencies)} potential relationships.")
             else:
                 print("  [-] No modern B2B relationships identified.")
                 continue
 
-            # 3. Dynamic Resolution and Database Linking
             for dep in dependencies:
-                # Try to resolve Source (Supplier)
                 s_node = EntityResolver.resolve(session, dep.get('source_ticker')) or \
                          EntityResolver.resolve(session, dep.get('source_company'))
-                
-                # Try to resolve Target (Customer)
+
                 t_node = EntityResolver.resolve(session, dep.get('target_ticker')) or \
                          EntityResolver.resolve(session, dep.get('target_company'))
 
                 if s_node and t_node:
-                    # Prevent circular or self-referential links
                     if s_node.id == t_node.id:
                         continue
 
-                    # Prevent duplicate edges
+                    # FOCUS CONSTRAINT
+                    if s_node.id != company.id and t_node.id != company.id:
+                        print(f"  [!] Ignored tangential competitor link: {s_node.ticker} ➔ {t_node.ticker}")
+                        continue
+
                     existing = session.query(Edge).filter(
-                        Edge.source_id == s_node.id, 
+                        Edge.source_id == s_node.id,
                         Edge.target_id == t_node.id
                     ).first()
 
                     if not existing:
-                        # Fix confidence scores (e.g., 90 -> 0.9)
                         conf = dep.get('confidence_score', 0.8)
                         if conf > 1: conf = conf / 100.0 if conf > 10 else conf / 10.0
 
@@ -217,13 +225,12 @@ def auto_discover_supply_chain(limit=5):
                         session.add(new_edge)
                         print(f"  [+] DYNAMICALLY LINKED: {s_node.ticker} ➔ {t_node.ticker} ({dep.get('product')})")
                 else:
-                    # Log the failure for debugging
                     s_name = dep.get('source_company')
                     t_name = dep.get('target_company')
                     print(f"  [!] Filtered non-equity or private entity: '{s_name}' or '{t_name}'")
-            
+
             session.commit()
-            time.sleep(1.5) # Prevent API rate limiting
+            time.sleep(1.5)
 
         print(f"\n--- Titan Queue Complete. Refresh your dashboard to see new X-Ray data. ---")
 
@@ -234,7 +241,9 @@ def auto_discover_supply_chain(limit=5):
         session.close()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Hephaestus Supply Chain Discovery Engine")
     parser.add_argument("--limit", type=int, default=5, help="Number of companies to research")
+    parser.add_argument("--sectors", nargs='*', default=None, help="Optional: Specific sectors to target (e.g. Technology Industrials)")
     args = parser.parse_args()
-    auto_discover_supply_chain(limit=args.limit)
+
+    auto_discover_supply_chain(limit=args.limit, target_sectors=args.sectors)
