@@ -17,7 +17,8 @@ class ExtractionResult(BaseModel):
     dependencies: List[Dependency]
 
 # 2. The function to route text to your local GPU
-def extract_dependencies(text: str, model_name: str = "llama3") -> dict:
+#   Available models include llama3, mistral-nemo, qwen3:14b, deepseek-r1:14b, gemma4
+def extract_dependencies(text: str, model_name: str = "mistral-nemo") -> dict:
     """
     Passes raw scraped text to the local Ollama model.
     Uses strict system instructions to prevent 'History Hallucinations'.
