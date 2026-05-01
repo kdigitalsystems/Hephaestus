@@ -27,29 +27,26 @@ jobs:
 
       - name: Load or Generate Persistent Database
         env:
-          # The seed scripts need Alpaca keys to pull the initial stock list
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
-          # Define the permanent safe haven on the runner's hard drive
           DB_DIR=~/hephaestus_data
           DB_PATH=$DB_DIR/supply_chain.db
           
-          # Ensure the directory exists
           mkdir -p $DB_DIR
           
-          # Check if the database already exists
           if [ -f "$DB_PATH" ]; then
             echo "Existing database found in $DB_DIR. Loading into workspace..."
-            cp $DB_PATH .
+            # FIX 1: Copy it directly into the backend folder where Python expects it
+            cp $DB_PATH backend/supply_chain.db
           else
             echo "No database found! Bootstrapping a fresh one..."
             venv/bin/python backend/database.py
             venv/bin/python backend/seed_db.py
             venv/bin/python backend/update_metrics.py
             
-            # Save the newly generated database to the safe haven for tomorrow
-            cp supply_chain.db $DB_PATH
+            # FIX 2: Copy from the backend folder to the safe haven
+            cp backend/supply_chain.db $DB_PATH
           fi
 
       - name: Execute Titan Queue & Export
@@ -66,7 +63,8 @@ jobs:
       - name: Save Persistent Database
         run: |
           echo "Saving the AI's new discoveries back to the runner's permanent storage..."
-          cp supply_chain.db ~/hephaestus_data/supply_chain.db
+          # FIX 3: Copy from the backend folder back to the safe haven
+          cp backend/supply_chain.db ~/hephaestus_data/supply_chain.db
 
       - name: Commit and Push Changes
         run: |
