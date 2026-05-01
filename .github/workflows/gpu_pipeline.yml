@@ -1,0 +1,53 @@
+name: Local GPU Titan Queue
+
+on:
+  workflow_dispatch: # Allows you to trigger it manually from the GitHub website
+  schedule:
+    # Optional: Runs automatically at 3:00 AM UTC (10:00 PM CDT in Texas)
+    - cron: '0 3 * * *'
+
+permissions:
+  contents: write # Required for the bot to push code back to your main branch
+
+jobs:
+  run-ai-discovery:
+    # THIS IS THE MAGIC LINE: It targets your personal machine instead of GitHub's cloud
+    runs-on: [self-hosted, nvidia-gpu] 
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # (Optional) If your self-hosted runner doesn't have the dependencies globally installed yet
+      - name: Ensure Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Execute Titan Queue & Export
+        env:
+          # Your local runner will pull these securely from your GitHub repo secrets
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: |
+          echo "Firing up the RTX 3080 Ti..."
+          python3 backend/auto_discover_edges.py --limit 5000
+          
+          echo "Exporting graph to JSON..."
+          python3 backend/export.py
+
+      - name: Commit and Push Changes
+        run: |
+          # Configure Git so it knows who is making the commit
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Stage the JSON file that export.py just updated
+          git add docs/dashboard_data.json
+          
+          # The Git Guard: Only attempt a commit if the file actually changed.
+          # If the AI didn't find any new links, this prevents the workflow from failing.
+          if ! git diff --cached --quiet; then
+            git commit -m "Automated GPU extraction: Updated Supply Chain X-Ray"
+            git push origin main
+          else
+            echo "No new edges discovered today. Skipping commit."
+          fi
