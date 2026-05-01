@@ -22,9 +22,35 @@ jobs:
           python3 -m venv venv
           
           echo "Installing dependencies inside venv..."
-          # Call the venv's specific pip executable
           venv/bin/pip install --upgrade pip
           venv/bin/pip install -r requirements.txt
+
+      - name: Load or Generate Persistent Database
+        env:
+          # The seed scripts need Alpaca keys to pull the initial stock list
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: |
+          # Define the permanent safe haven on the runner's hard drive
+          DB_DIR=~/hephaestus_data
+          DB_PATH=$DB_DIR/supply_chain.db
+          
+          # Ensure the directory exists
+          mkdir -p $DB_DIR
+          
+          # Check if the database already exists
+          if [ -f "$DB_PATH" ]; then
+            echo "Existing database found in $DB_DIR. Loading into workspace..."
+            cp $DB_PATH .
+          else
+            echo "No database found! Bootstrapping a fresh one..."
+            venv/bin/python backend/database.py
+            venv/bin/python backend/seed_db.py
+            venv/bin/python backend/update_metrics.py
+            
+            # Save the newly generated database to the safe haven for tomorrow
+            cp supply_chain.db $DB_PATH
+          fi
 
       - name: Execute Titan Queue & Export
         env:
@@ -32,11 +58,15 @@ jobs:
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
           echo "Firing up the RTX 3080 Ti..."
-          # Call the venv's specific python executable
           venv/bin/python backend/auto_discover_edges.py --limit 5000
           
           echo "Exporting graph to JSON..."
           venv/bin/python backend/export.py
+
+      - name: Save Persistent Database
+        run: |
+          echo "Saving the AI's new discoveries back to the runner's permanent storage..."
+          cp supply_chain.db ~/hephaestus_data/supply_chain.db
 
       - name: Commit and Push Changes
         run: |
