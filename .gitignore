@@ -222,9 +222,6 @@ venv/
 env/
 .env
 
-# Local Database
-*.sqlite3
-*.db
 
 # Python cache
 __pycache__/

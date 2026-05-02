@@ -59,10 +59,21 @@ def seed_database_from_alpaca(limit=None):
         
         new_nodes = []
         for asset in assets:
+            # 1. Filter out structural variants (Warrants, Preferred Shares, Class B)
             if '.' in asset.symbol or '-' in asset.symbol:
                 continue
                 
-            if asset.symbol not in existing_tickers and asset.tradable and asset.name not in seen_names:
+            # 2. Filter out OTC / Pink Sheets (Keep only Major Exchanges)
+            valid_exchanges = ['NASDAQ', 'NYSE', 'ARCA', 'BATS']
+            if asset.exchange not in valid_exchanges:
+                continue
+                
+            # 3. The Quality Filter: Must be marginable and tradable
+            if not asset.marginable or not asset.tradable:
+                continue
+                
+            # 4. Final check: Is it new to us?
+            if asset.symbol not in existing_tickers and asset.name not in seen_names:
                 new_node = Node(
                     name=asset.name,
                     ticker=asset.symbol,
@@ -71,7 +82,7 @@ def seed_database_from_alpaca(limit=None):
                 )
                 new_nodes.append(new_node)
                 seen_names.add(asset.name)
-        
+
         # Apply the development limit if provided
         if limit and len(new_nodes) > limit:
             new_nodes = new_nodes[:limit]

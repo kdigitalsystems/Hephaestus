@@ -25,26 +25,18 @@ jobs:
           venv/bin/pip install --upgrade pip
           venv/bin/pip install -r requirements.txt
 
-      - name: Load or Generate Persistent Database
+      - name: Update Market Metrics
         env:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
-          DB_DIR=~/hephaestus_data
-          DB_PATH=$DB_DIR/supply_chain.db
-          
-          mkdir -p $DB_DIR
-          
-          if [ -f "$DB_PATH" ]; then
-            echo "Existing database found in $DB_DIR. Loading into workspace..."
-            cp $DB_PATH backend/supply_chain.db
-          else
-            echo "No database found! Bootstrapping a fresh one..."
+          # Failsafe: Just in case the DB gets deleted from GitHub, rebuild it.
+          if [ ! -f "backend/supply_chain.db" ]; then
+            echo "No database found! Bootstrapping from scratch..."
             venv/bin/python backend/database.py
             venv/bin/python backend/seed_db.py
-            cp backend/supply_chain.db $DB_PATH
           fi
-
+          
           echo "Updating live financial metrics..."
           venv/bin/python backend/update_metrics.py
 
@@ -59,20 +51,17 @@ jobs:
           echo "Exporting graph to JSON..."
           venv/bin/python backend/export.py
 
-      - name: Save Persistent Database
-        run: |
-          echo "Saving the AI's new discoveries back to the runner's permanent storage..."
-          cp backend/supply_chain.db ~/hephaestus_data/supply_chain.db
-
-      - name: Commit and Push Changes
+      - name: Commit and Push Changes (JSON & Database)
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
+          # Stage both the frontend JSON and the backend SQLite database
           git add docs/dashboard_data.json
+          git add backend/supply_chain.db
           
           if ! git diff --cached --quiet; then
-            git commit -m "Automated GPU extraction: Updated Supply Chain X-Ray"
+            git commit -m "Automated AI extraction: Updated DB & Supply Chain X-Ray"
             git push origin main
           else
             echo "No new edges discovered today. Skipping commit."
