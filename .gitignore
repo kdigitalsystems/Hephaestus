@@ -235,3 +235,5 @@ __pycache__/
 .idea/
 
 full_codebase.txt
+
+*.cache

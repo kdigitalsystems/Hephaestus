@@ -27,7 +27,12 @@ python3 backend/export.py
 echo "Pushing updates to GitHub..."
 git add docs/dashboard_data.json
 git add docs/index.html
-git commit -m "Automated dashboard update: $(date +'%Y-%m-%d')"
+if ! git diff --cached --quiet; then
+  git commit -m "Automated dashboard update: $(date +'%Y-%m-%d')"
+  git push origin main || true
+else
+  echo "No changes to commit."
+fi
 
 git push origin main || true
 

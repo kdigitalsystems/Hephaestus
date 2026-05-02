@@ -238,3 +238,15 @@ tr:hover { background-color: var(--bg-secondary); cursor: pointer; }
     font-weight: bold;
     margin-left: 10px;
 }
+
+/* Search Bar Styling */
+.search-container { position: relative; margin-bottom: 15px; }
+#nodeSearch { width: 100%; padding: 10px; background: #1e1e1e; color: #fff; border: 1px solid #333; outline: none;}
+#nodeSearch:focus { border-color: #555; }
+.search-dropdown { position: absolute; width: 100%; background: #2a2a2a; border: 1px solid #444; border-top: none; z-index: 1000; max-height: 200px; overflow-y: auto; }
+.search-result-item { padding: 8px 10px; cursor: pointer; color: #ccc; border-bottom: 1px solid #333; font-size: 14px;}
+.search-result-item:hover { background: #444; color: #fff; }
+
+/* Graph Highlighting Logic */
+.dimmed { opacity: 0.15; transition: opacity 0.3s; }
+.highlighted { opacity: 1.0; transition: opacity 0.3s; z-index: 999; }

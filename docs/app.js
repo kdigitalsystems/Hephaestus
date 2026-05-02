@@ -262,3 +262,51 @@ function renderLevel3(company) {
         downContainer.innerHTML = '<span style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">No known downstream exposure tracked.</span>';
     }
 }
+
+// Hephaestus Dynamic Search & Spotlight
+const searchInput = document.getElementById('nodeSearch');
+const searchResults = document.getElementById('searchResults');
+
+if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase().trim();
+
+        if (searchTerm.length < 1) {
+            searchResults.innerHTML = '';
+            cy.elements().removeClass('dimmed').removeClass('highlighted');
+            return;
+        }
+
+        const matchedNodes = cy.nodes().filter(function(node) {
+            const name = (node.data('name') || '').toLowerCase();
+            const ticker = (node.data('ticker') || '').toLowerCase();
+            return name.includes(searchTerm) || ticker.includes(searchTerm);
+        });
+
+        searchResults.innerHTML = '';
+        matchedNodes.slice(0, 10).forEach(node => {
+            const div = document.createElement('div');
+            div.className = 'search-result-item';
+            div.innerText = `${node.data('name')} (${node.data('ticker')})`;
+
+            div.onclick = () => {
+                searchInput.value = node.data('ticker');
+                searchResults.innerHTML = '';
+
+                // Spotlight the node and its immediate supply chain
+                cy.elements().addClass('dimmed').removeClass('highlighted');
+                node.removeClass('dimmed').addClass('highlighted');
+                node.connectedEdges().removeClass('dimmed').addClass('highlighted');
+                node.connectedEdges().connectedNodes().removeClass('dimmed').addClass('highlighted');
+
+                // Fly the camera to the target
+                cy.animate({
+                    fit: { eles: node, padding: 50 },
+                    duration: 750,
+                    easing: 'ease-in-out'
+                });
+            };
+            searchResults.appendChild(div);
+        });
+    });
+}
