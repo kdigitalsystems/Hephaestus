@@ -46,7 +46,7 @@ jobs:
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
           echo "Firing up the RTX 3080 Ti..."
-          venv/bin/python backend/auto_discover_edges.py --limit 5000
+          venv/bin/python backend/auto_discover_edges.py --limit 50
           
           echo "Exporting graph to JSON..."
           venv/bin/python backend/export.py
