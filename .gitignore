@@ -234,3 +234,8 @@ __pycache__/
 full_codebase.txt
 
 *.cache
+
+# Local runtime data and credentials
+backend/supply_chain.db
+*.db-journal
+alpaca_paper_keys

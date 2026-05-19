@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Text
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Text, UniqueConstraint
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import datetime, timezone
 
@@ -54,6 +54,9 @@ class Node(Base):
 
 class Edge(Base):
     __tablename__ = 'edges'
+    __table_args__ = (
+        UniqueConstraint('source_id', 'target_id', 'dependency_type', name='uq_edge_dependency'),
+    )
     id = Column(Integer, primary_key=True, autoincrement=True)
     source_id = Column(Integer, ForeignKey('nodes.id'), nullable=False)
     target_id = Column(Integer, ForeignKey('nodes.id'), nullable=False)

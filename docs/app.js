@@ -1,236 +1,412 @@
 let globalData = {};
-let currentSector = '';
-let currentCompaniesList = []; 
-
+let allCompanies = [];
+let currentCompaniesList = [];
+let currentTitle = 'Companies';
 let sortCol = 'market_cap';
 let sortAsc = false;
 
-// Format numbers for currency, percentages, or standard ratios
-const formatNum = (num, type = 'currency') => {
-    if (num === null || num === undefined || isNaN(num)) return "N/A";
-    if (type === 'percent') return (num * 100).toFixed(2) + '%';
-    if (type === 'ratio') return num.toFixed(2);
-    if (num >= 1e12) return '$' + (num / 1e12).toFixed(2) + 'T';
-    if (num >= 1e9) return '$' + (num / 1e9).toFixed(2) + 'B';
-    if (num >= 1e6) return '$' + (num / 1e6).toFixed(2) + 'M';
-    return '$' + num.toLocaleString();
+const clearElement = (element) => {
+    while (element.firstChild) element.removeChild(element.firstChild);
 };
 
-// Fetch the exported backend data
+const makeElement = (tag, className, text) => {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (text !== undefined) element.textContent = text;
+    return element;
+};
+
+const setText = (id, value) => {
+    document.getElementById(id).textContent = value;
+};
+
+const formatNum = (num, type = 'currency') => {
+    if (num === null || num === undefined || isNaN(num)) return "N/A";
+    const value = Number(num);
+    if (type === 'percent') return (value * 100).toFixed(2) + '%';
+    if (type === 'ratio') return value.toFixed(2);
+    if (value >= 1e12) return '$' + (value / 1e12).toFixed(2) + 'T';
+    if (value >= 1e9) return '$' + (value / 1e9).toFixed(2) + 'B';
+    if (value >= 1e6) return '$' + (value / 1e6).toFixed(2) + 'M';
+    return '$' + value.toLocaleString();
+};
+
+const relationshipCount = (company) => (company.upstream?.length || 0) + (company.downstream?.length || 0);
+
+const hydrateCompanies = (data) => {
+    allCompanies = Object.entries(data).flatMap(([sector, companies]) =>
+        companies.map(company => ({
+            ...company,
+            sector,
+            connection_count: relationshipCount(company)
+        }))
+    );
+};
+
 fetch('dashboard_data.json')
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+    })
     .then(data => {
-        globalData = data.industries;
-        document.getElementById('last-updated').innerText = "Live Data Synced";
+        globalData = data.industries || {};
+        hydrateCompanies(globalData);
+        populateFilters();
+        renderOverview();
+        setText('last-updated', getLastUpdatedLabel());
         renderLevel1();
     })
     .catch(error => {
         console.error("Data load failed:", error);
-        document.getElementById('last-updated').innerText = "Failed to load data";
+        setText('last-updated', 'Failed to load data');
     });
 
-// LEVEL 1: Industry Grid
+function getLastUpdatedLabel() {
+    const dates = allCompanies.map(company => company.last_updated).filter(Boolean).sort().reverse();
+    return dates.length ? `Data synced ${dates[0]}` : 'Live Data Synced';
+}
+
+function resetDashboard() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('sector-filter').value = '';
+    document.getElementById('dependency-filter').value = '';
+    document.getElementById('connected-filter').checked = false;
+    renderLevel1();
+}
+
+function showCompanies() {
+    document.getElementById('view-industries').classList.add('hidden');
+    document.getElementById('view-companies').classList.remove('hidden');
+    document.getElementById('view-details').classList.add('hidden');
+}
+
+function renderOverview() {
+    const totalLinks = allCompanies.reduce((sum, company) => sum + relationshipCount(company), 0);
+    const mostConnected = [...allCompanies].sort((a, b) => b.connection_count - a.connection_count)[0];
+
+    setText('stat-companies', allCompanies.length.toLocaleString());
+    setText('stat-links', totalLinks.toLocaleString());
+    setText('stat-sectors', Object.keys(globalData).length.toLocaleString());
+    setText('stat-connected', mostConnected?.ticker || 'N/A');
+    renderConnectedList();
+}
+
+function populateFilters() {
+    const sectorFilter = document.getElementById('sector-filter');
+    const dependencyFilter = document.getElementById('dependency-filter');
+
+    Object.keys(globalData).sort().forEach(sector => {
+        const option = makeElement('option', '', sector);
+        option.value = sector;
+        sectorFilter.appendChild(option);
+    });
+
+    const dependencyTypes = new Set();
+    allCompanies.forEach(company => {
+        [...(company.upstream || []), ...(company.downstream || [])].forEach(dep => {
+            if (dep.type) dependencyTypes.add(dep.type);
+        });
+    });
+
+    [...dependencyTypes].sort().forEach(type => {
+        const option = makeElement('option', '', type);
+        option.value = type;
+        dependencyFilter.appendChild(option);
+    });
+}
+
+function renderConnectedList() {
+    const list = document.getElementById('connected-list');
+    clearElement(list);
+
+    const connected = [...allCompanies]
+        .filter(company => company.connection_count > 0)
+        .sort((a, b) => b.connection_count - a.connection_count)
+        .slice(0, 6);
+
+    if (!connected.length) {
+        list.appendChild(makeElement('span', 'empty-state', 'No supply-chain relationships exported yet.'));
+        return;
+    }
+
+    connected.forEach((company, index) => {
+        const row = makeElement('button', 'rank-item');
+        row.onclick = () => renderLevel3(company);
+        row.appendChild(makeElement('span', 'rank-index', String(index + 1)));
+        const body = makeElement('span', 'rank-body');
+        body.appendChild(makeElement('strong', '', company.name || 'Unknown'));
+        body.appendChild(makeElement('small', '', `${company.ticker || 'N/A'} · ${company.connection_count} links`));
+        row.appendChild(body);
+        list.appendChild(row);
+    });
+}
+
 function renderLevel1() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     document.getElementById('view-industries').classList.remove('hidden');
     document.getElementById('view-companies').classList.add('hidden');
     document.getElementById('view-details').classList.add('hidden');
 
     const grid = document.getElementById('industry-grid');
-    grid.innerHTML = '';
+    clearElement(grid);
 
-    const sortedSectors = Object.keys(globalData).sort();
-
-    sortedSectors.forEach(sector => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.onclick = () => { 
-            currentSector = sector; 
-            currentCompaniesList = [...globalData[sector]];
-            document.getElementById('current-industry-title').innerText = sector;
-            renderLevel2(); 
+    Object.keys(globalData).sort().forEach(sector => {
+        const companies = globalData[sector].map(company => ({
+            ...company,
+            sector,
+            connection_count: relationshipCount(company)
+        }));
+        const links = companies.reduce((sum, company) => sum + company.connection_count, 0);
+        const card = makeElement('button', 'card sector-card');
+        card.onclick = () => {
+            currentCompaniesList = companies;
+            currentTitle = sector;
+            setText('current-industry-title', sector);
+            renderLevel2();
         };
-        card.innerHTML = `<h2>${sector}</h2><p>${globalData[sector].length} Equities</p>`;
+        card.appendChild(makeElement('span', 'sector-name', sector));
+        card.appendChild(makeElement('span', 'sector-meta', `${companies.length} equities · ${links} links`));
         grid.appendChild(card);
     });
 }
 
-// Global Search
-function handleSearch() {
-    const query = document.getElementById('search-input').value.toLowerCase();
-    
-    if (query.length < 2) {
-        renderLevel1();
-        return;
-    }
-    
-    let results = [];
-    for (const [sector, companies] of Object.entries(globalData)) {
-        companies.forEach(c => {
-            if (c.name.toLowerCase().includes(query) || (c.ticker && c.ticker.toLowerCase().includes(query))) {
-                results.push(c);
-            }
-        });
-    }
-    
+function applyFilters() {
+    const query = document.getElementById('search-input').value.toLowerCase().trim();
+    const sector = document.getElementById('sector-filter').value;
+    const dependency = document.getElementById('dependency-filter').value;
+    const onlyConnected = document.getElementById('connected-filter').checked;
+
+    let results = allCompanies.filter(company => {
+        const matchesQuery = !query ||
+            (company.name || '').toLowerCase().includes(query) ||
+            (company.ticker || '').toLowerCase().includes(query);
+        const matchesSector = !sector || company.sector === sector;
+        const deps = [...(company.upstream || []), ...(company.downstream || [])];
+        const matchesDependency = !dependency || deps.some(dep => dep.type === dependency);
+        const matchesConnected = !onlyConnected || company.connection_count > 0;
+        return matchesQuery && matchesSector && matchesDependency && matchesConnected;
+    });
+
     currentCompaniesList = results;
-    document.getElementById('current-industry-title').innerText = `Search Results (${results.length})`;
-    renderLevel2(true);
+    currentTitle = query ? `Search Results (${results.length})` : sector || 'All Companies';
+    setText('current-industry-title', currentTitle);
+    renderLevel2();
 }
 
-// Table Sorting
 function handleSort(col) {
     if (sortCol === col) {
         sortAsc = !sortAsc;
     } else {
         sortCol = col;
-        sortAsc = (col === 'name' || col === 'ticker'); 
+        sortAsc = (col === 'name' || col === 'ticker');
     }
-    renderLevel2(false);
+    renderLevel2();
 }
 
-// LEVEL 2: Company Table
-function renderLevel2(isSearch = false) {
-    if (isSearch) {
-        document.getElementById('view-industries').classList.add('hidden');
-        document.getElementById('view-companies').classList.remove('hidden');
-        document.getElementById('view-details').classList.add('hidden');
-    } else {
-        document.getElementById('view-industries').classList.add('hidden');
-        document.getElementById('view-companies').classList.remove('hidden');
-        document.getElementById('view-details').classList.add('hidden');
-    }
-    
-    document.querySelectorAll('.sort-icon').forEach(icon => icon.innerText = '');
-    document.getElementById(`sort-${sortCol}`).innerText = sortAsc ? '▲' : '▼';
+function renderLevel2() {
+    showCompanies();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    let companies = currentCompaniesList;
-    
+    document.querySelectorAll('.sort-icon').forEach(icon => icon.textContent = '');
+    setText(`sort-${sortCol}`, sortAsc ? '^' : 'v');
+    setText('result-count', `${currentCompaniesList.length} results`);
+
+    const companies = [...currentCompaniesList];
     companies.sort((a, b) => {
         let valA = a[sortCol];
         let valB = b[sortCol];
-        
+
         if (valA === null || valA === undefined || valA === "N/A") valA = sortAsc ? Infinity : -Infinity;
         if (valB === null || valB === undefined || valB === "N/A") valB = sortAsc ? Infinity : -Infinity;
 
         if (typeof valA === 'string') {
             return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
-        } else {
-            return sortAsc ? valA - valB : valB - valA;
         }
+        return sortAsc ? valA - valB : valB - valA;
     });
 
     const tbody = document.getElementById('company-table-body');
-    tbody.innerHTML = '';
+    clearElement(tbody);
+
+    if (!companies.length) {
+        const tr = document.createElement('tr');
+        const td = makeElement('td', 'table-empty', 'No companies match the current filters.');
+        td.colSpan = 7;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+    }
 
     companies.forEach(company => {
         const tr = document.createElement('tr');
         tr.onclick = () => renderLevel3(company);
-        
+
         const changeClass = company.change >= 0 ? 'positive' : 'negative';
         const sign = company.change > 0 ? '+' : '';
+        const nameCell = makeElement('td', 'company-cell', company.name || '');
 
-        tr.innerHTML = `
-            <td style="font-weight: bold; color: var(--accent);">${company.name}</td>
-            <td>${company.ticker}</td>
-            <td>$${(company.price || 0).toFixed(2)}</td>
-            <td class="${changeClass}">${sign}${(company.change || 0).toFixed(2)}%</td>
-            <td>${formatNum(company.market_cap)}</td>
-            <td>${formatNum(company.trailing_pe, 'ratio')}</td>
-        `;
+        tr.appendChild(nameCell);
+        tr.appendChild(makeElement('td', '', company.ticker || ''));
+        tr.appendChild(makeElement('td', '', `$${(company.price || 0).toFixed(2)}`));
+        tr.appendChild(makeElement('td', changeClass, `${sign}${(company.change || 0).toFixed(2)}%`));
+        tr.appendChild(makeElement('td', '', formatNum(company.market_cap)));
+        tr.appendChild(makeElement('td', '', String(company.connection_count || 0)));
+        tr.appendChild(makeElement('td', '', formatNum(company.trailing_pe, 'ratio')));
         tbody.appendChild(tr);
     });
 }
 
-// Helper function to find a company's live data by ticker for the X-Ray
-const getCompanyByTicker = (ticker) => {
-    for (const [sector, companies] of Object.entries(globalData)) {
-        const found = companies.find(c => c.ticker === ticker);
-        if (found) return found;
-    }
-    return null;
-};
+const getCompanyByTicker = (ticker) => allCompanies.find(company => company.ticker === ticker) || null;
 
-// LEVEL 3: Deep Dive Terminal
 function renderLevel3(company) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('view-industries').classList.add('hidden');
     document.getElementById('view-companies').classList.add('hidden');
     document.getElementById('view-details').classList.remove('hidden');
 
-    document.getElementById('detail-name').innerText = company.name;
-    document.getElementById('detail-ticker').innerText = company.ticker;
-    document.getElementById('detail-industry').innerText = company.industry || 'Uncategorized';
-    
-    // Render Robinhood-Style TradingView Chart
-    document.getElementById('tv_chart_container').innerHTML = ''; 
-    if (company.ticker && company.ticker !== "N/A") {
-        new TradingView.widget({
-            "autosize": true,
-            "symbol": company.ticker,
-            "timezone": "America/New_York",
-            "theme": "dark",
-            "style": "3", 
-            "locale": "en",
-            "enable_publishing": false,
-            "backgroundColor": "#161b22", 
-            "gridColor": "#161b22", 
-            "hide_top_toolbar": true, 
-            "hide_legend": true,
-            "save_image": false,
-            "container_id": "tv_chart_container",
-            "allow_symbol_change": false,
-            "range": "60M" 
+    setText('detail-name', company.name || 'N/A');
+    setText('detail-ticker', company.ticker || 'N/A');
+    setText('detail-industry', company.industry || company.sector || 'Uncategorized');
+
+    renderStory(company);
+    renderChart(company);
+    renderMetrics(company);
+    renderSupplyMap(company);
+    renderXRay(company);
+}
+
+function renderStory(company) {
+    const upstream = company.upstream || [];
+    const downstream = company.downstream || [];
+    const primarySupplier = upstream[0]?.name;
+    const primaryCustomer = downstream[0]?.name;
+
+    setText('detail-up-count', upstream.length);
+    setText('detail-down-count', downstream.length);
+    setText('detail-link-count', upstream.length + downstream.length);
+    setText('detail-story-title', `${company.ticker || company.name} dependency snapshot`);
+
+    let story = `${company.name} has ${upstream.length} tracked upstream supplier relationship${upstream.length === 1 ? '' : 's'} and ${downstream.length} tracked downstream customer relationship${downstream.length === 1 ? '' : 's'}.`;
+    if (primarySupplier) story += ` Its upstream exposure includes ${primarySupplier}.`;
+    if (primaryCustomer) story += ` Its downstream exposure includes ${primaryCustomer}.`;
+    if (!upstream.length && !downstream.length) story += ' This company is a good candidate for the next discovery pass.';
+    setText('detail-story', story);
+}
+
+function renderChart(company) {
+    const chartContainer = document.getElementById('tv_chart_container');
+    clearElement(chartContainer);
+    if (company.ticker && company.ticker !== "N/A" && window.TradingView) {
+        new window.TradingView.widget({
+            autosize: true,
+            symbol: company.ticker,
+            timezone: "America/New_York",
+            theme: "dark",
+            style: "3",
+            locale: "en",
+            enable_publishing: false,
+            backgroundColor: "#151a20",
+            gridColor: "#242c35",
+            hide_top_toolbar: true,
+            hide_legend: true,
+            save_image: false,
+            container_id: "tv_chart_container",
+            allow_symbol_change: false,
+            range: "60M"
         });
     } else {
-        document.getElementById('tv_chart_container').innerHTML = '<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: var(--text-muted);">Chart unavailable for this entity</div>';
+        chartContainer.appendChild(makeElement('div', 'chart-unavailable', 'Chart unavailable for this entity'));
+    }
+}
+
+function renderMetrics(company) {
+    setText('detail-price', `$${(company.price || 0).toFixed(2)}`);
+    const changeEl = document.getElementById('detail-change');
+    changeEl.textContent = `${company.change > 0 ? '+' : ''}${(company.change || 0).toFixed(2)}%`;
+    changeEl.className = `metric-value ${company.change >= 0 ? 'positive' : 'negative'}`;
+    setText('detail-high', formatNum(company.high_52w, 'currency'));
+    setText('detail-low', formatNum(company.low_52w, 'currency'));
+    setText('detail-mcap', formatNum(company.market_cap));
+    setText('detail-ev', formatNum(company.enterprise_value));
+    setText('detail-tpe', formatNum(company.trailing_pe, 'ratio'));
+    setText('detail-fpe', formatNum(company.forward_pe, 'ratio'));
+    setText('detail-rev', formatNum(company.revenue));
+    setText('detail-margin', formatNum(company.margin, 'percent'));
+    setText('detail-rec', company.recommendation || 'N/A');
+    setText('detail-target', formatNum(company.target_price, 'currency'));
+    setText('detail-div', company.dividend || 'N/A');
+    setText('detail-pb', formatNum(company.price_to_book, 'ratio'));
+    setText('detail-ceo', company.ceo || 'N/A');
+    setText('detail-emp', company.employees ? company.employees.toLocaleString() : "N/A");
+    setText('detail-summary', company.summary || 'No summary available.');
+}
+
+function renderSupplyMap(company) {
+    const map = document.getElementById('supply-map');
+    clearElement(map);
+
+    const upstream = (company.upstream || []).slice(0, 6);
+    const downstream = (company.downstream || []).slice(0, 6);
+
+    map.appendChild(renderMapColumn('Suppliers', upstream, 'upstream'));
+    map.appendChild(renderMapCenter(company));
+    map.appendChild(renderMapColumn('Customers', downstream, 'downstream'));
+}
+
+function renderMapColumn(title, deps, direction) {
+    const column = makeElement('div', `map-column ${direction}`);
+    column.appendChild(makeElement('span', 'map-title', title));
+    if (!deps.length) {
+        column.appendChild(makeElement('span', 'empty-state', 'No tracked links'));
+        return column;
     }
 
-    // Populate Metrics
-    document.getElementById('detail-price').innerText = `$${(company.price || 0).toFixed(2)}`;
-    const changeEl = document.getElementById('detail-change');
-    changeEl.innerText = `${company.change > 0 ? '+' : ''}${(company.change || 0).toFixed(2)}%`;
-    changeEl.className = `metric-value ${company.change >= 0 ? 'positive' : 'negative'}`;
-    document.getElementById('detail-high').innerText = formatNum(company.high_52w, 'currency');
-    document.getElementById('detail-low').innerText = formatNum(company.low_52w, 'currency');
+    deps.forEach(dep => {
+        const node = makeElement('button', 'map-node');
+        const linkedCompany = getCompanyByTicker(dep.ticker);
+        if (linkedCompany) node.onclick = () => renderLevel3(linkedCompany);
+        node.appendChild(makeElement('strong', '', dep.ticker || dep.name || 'Unknown'));
+        node.appendChild(makeElement('small', '', dep.type || 'Supply Link'));
+        column.appendChild(node);
+    });
+    return column;
+}
 
-    document.getElementById('detail-mcap').innerText = formatNum(company.market_cap);
-    document.getElementById('detail-ev').innerText = formatNum(company.enterprise_value);
-    document.getElementById('detail-tpe').innerText = formatNum(company.trailing_pe, 'ratio');
-    document.getElementById('detail-fpe').innerText = formatNum(company.forward_pe, 'ratio');
-    document.getElementById('detail-rev').innerText = formatNum(company.revenue);
-    document.getElementById('detail-margin').innerText = formatNum(company.margin, 'percent');
+function renderMapCenter(company) {
+    const center = makeElement('div', 'map-center');
+    center.appendChild(makeElement('span', 'center-ticker', company.ticker || 'N/A'));
+    center.appendChild(makeElement('strong', '', company.name || 'Unknown'));
+    center.appendChild(makeElement('small', '', `${company.connection_count || 0} tracked links`));
+    return center;
+}
 
-    document.getElementById('detail-rec').innerText = company.recommendation;
-    document.getElementById('detail-target').innerText = formatNum(company.target_price, 'currency');
-    document.getElementById('detail-div').innerText = company.dividend;
-    document.getElementById('detail-pb').innerText = formatNum(company.price_to_book, 'ratio');
-
-    document.getElementById('detail-ceo').innerText = company.ceo;
-    document.getElementById('detail-emp').innerText = company.employees ? company.employees.toLocaleString() : "N/A";
-    document.getElementById('detail-summary').innerText = company.summary;
-
-    // --- Render Supply Chain X-Ray ---
+function renderXRay(company) {
     const renderXRayCard = (dep, directionClass) => {
         const linkedCompany = getCompanyByTicker(dep.ticker);
-        
-        // Setup live metric if available
-        let miniMetricHtml = '';
+        const card = makeElement('div', `xray-card ${directionClass}`);
+
+        const topLine = makeElement('div', 'xray-topline');
+        const companyLine = makeElement('div', 'xray-company-line');
+        companyLine.appendChild(makeElement('span', 'xray-name', dep.name || 'Unknown'));
+        companyLine.appendChild(makeElement('span', 'xray-ticker', dep.ticker ? `(${dep.ticker})` : ''));
+
         if (linkedCompany) {
             const changeClass = linkedCompany.change >= 0 ? 'positive' : 'negative';
             const sign = linkedCompany.change > 0 ? '+' : '';
-            miniMetricHtml = `<span class="mini-metric ${changeClass}">${sign}${(linkedCompany.change || 0).toFixed(2)}%</span>`;
+            companyLine.appendChild(makeElement('span', `mini-metric ${changeClass}`, `${sign}${(linkedCompany.change || 0).toFixed(2)}%`));
         }
 
-        const card = document.createElement('div');
-        card.className = `xray-card ${directionClass}`;
-        card.innerHTML = `
-            <div>
-                <span style="font-weight: bold; color: var(--text-main); font-size: 0.95rem;">${dep.name}</span>
-                <span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 5px;">${dep.ticker ? '('+dep.ticker+')' : ''}</span>
-                ${miniMetricHtml}
-            </div>
-            <span class="dep-pill">${dep.type}</span>
-        `;
-        
-        // Add jump navigation if tracked
+        topLine.appendChild(companyLine);
+        topLine.appendChild(makeElement('span', 'dep-pill', dep.type || 'Supply Link'));
+        card.appendChild(topLine);
+
+        const meta = makeElement('div', 'relationship-meta');
+        const confidence = dep.confidence === null || dep.confidence === undefined ? 'N/A' : `${Math.round(Number(dep.confidence) * 100)}%`;
+        meta.appendChild(makeElement('span', 'source-badge', dep.source_type || 'Source'));
+        meta.appendChild(makeElement('span', '', `Confidence ${confidence}`));
+        meta.appendChild(makeElement('span', '', `Verified ${dep.last_verified || 'N/A'}`));
+        card.appendChild(meta);
+
         if (linkedCompany) {
             card.onclick = () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -238,75 +414,25 @@ function renderLevel3(company) {
             };
         } else {
             card.style.cursor = 'default';
-            card.title = "Detailed data not tracked for this entity.";
+            card.title = dep.source || "Detailed data not tracked for this entity.";
         }
-        
+
         return card;
     };
 
-    // Populate Upstream
     const upContainer = document.getElementById('detail-upstream');
-    upContainer.innerHTML = '';
+    clearElement(upContainer);
     if (company.upstream && company.upstream.length > 0) {
         company.upstream.forEach(dep => upContainer.appendChild(renderXRayCard(dep, 'upstream')));
     } else {
-        upContainer.innerHTML = '<span style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">No known upstream suppliers tracked.</span>';
+        upContainer.appendChild(makeElement('span', 'empty-state', 'No known upstream suppliers tracked.'));
     }
 
-    // Populate Downstream
     const downContainer = document.getElementById('detail-downstream');
-    downContainer.innerHTML = '';
+    clearElement(downContainer);
     if (company.downstream && company.downstream.length > 0) {
         company.downstream.forEach(dep => downContainer.appendChild(renderXRayCard(dep, 'downstream')));
     } else {
-        downContainer.innerHTML = '<span style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">No known downstream exposure tracked.</span>';
+        downContainer.appendChild(makeElement('span', 'empty-state', 'No known downstream exposure tracked.'));
     }
-}
-
-// Hephaestus Dynamic Search & Spotlight
-const searchInput = document.getElementById('nodeSearch');
-const searchResults = document.getElementById('searchResults');
-
-if (searchInput) {
-    searchInput.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase().trim();
-
-        if (searchTerm.length < 1) {
-            searchResults.innerHTML = '';
-            cy.elements().removeClass('dimmed').removeClass('highlighted');
-            return;
-        }
-
-        const matchedNodes = cy.nodes().filter(function(node) {
-            const name = (node.data('name') || '').toLowerCase();
-            const ticker = (node.data('ticker') || '').toLowerCase();
-            return name.includes(searchTerm) || ticker.includes(searchTerm);
-        });
-
-        searchResults.innerHTML = '';
-        matchedNodes.slice(0, 10).forEach(node => {
-            const div = document.createElement('div');
-            div.className = 'search-result-item';
-            div.innerText = `${node.data('name')} (${node.data('ticker')})`;
-
-            div.onclick = () => {
-                searchInput.value = node.data('ticker');
-                searchResults.innerHTML = '';
-
-                // Spotlight the node and its immediate supply chain
-                cy.elements().addClass('dimmed').removeClass('highlighted');
-                node.removeClass('dimmed').addClass('highlighted');
-                node.connectedEdges().removeClass('dimmed').addClass('highlighted');
-                node.connectedEdges().connectedNodes().removeClass('dimmed').addClass('highlighted');
-
-                // Fly the camera to the target
-                cy.animate({
-                    fit: { eles: node, padding: 50 },
-                    duration: 750,
-                    easing: 'ease-in-out'
-                });
-            };
-            searchResults.appendChild(div);
-        });
-    });
 }

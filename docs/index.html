@@ -8,119 +8,203 @@
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
-
-    <header>
-        <h1 onclick="renderLevel1(); document.getElementById('search-input').value='';">⚙️ Hephaestus Terminal</h1>
-        <div id="last-updated">Updating...</div>
+    <header class="topbar">
+        <button class="brand-button" onclick="resetDashboard()">
+            <span class="brand-mark">H</span>
+            <span>
+                <span class="brand-title">Hephaestus Terminal</span>
+                <span class="brand-subtitle">Supply chain intelligence for public markets</span>
+            </span>
+        </button>
+        <div id="last-updated" class="sync-status">Updating...</div>
     </header>
 
-    <div class="container">
-        
-        <input type="text" id="search-input" class="search-bar" placeholder="Search for a company name or ticker (e.g. AMD, Super Micro)..." oninput="handleSearch()">
-
-        <div id="view-industries">
-            <h2 style="margin-bottom: 20px;">Macro Sectors</h2>
-            <div class="grid" id="industry-grid"></div>
-        </div>
-
-        <div id="view-companies" class="hidden">
-            <button class="btn-back" onclick="renderLevel1(); document.getElementById('search-input').value='';">← Back to Sectors</button>
-            <h2 id="current-industry-title">Sector Name</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th onclick="handleSort('name')">Company <span class="sort-icon" id="sort-name"></span></th>
-                        <th onclick="handleSort('ticker')">Symbol <span class="sort-icon" id="sort-ticker"></span></th>
-                        <th onclick="handleSort('price')">Price <span class="sort-icon" id="sort-price"></span></th>
-                        <th onclick="handleSort('change')">% Change <span class="sort-icon" id="sort-change"></span></th>
-                        <th onclick="handleSort('market_cap')">Market Cap <span class="sort-icon" id="sort-market_cap"></span></th>
-                        <th onclick="handleSort('trailing_pe')">P/E Ratio <span class="sort-icon" id="sort-trailing_pe"></span></th>
-                    </tr>
-                </thead>
-                <tbody id="company-table-body"></tbody>
-            </table>
-        </div>
-
-        <div id="view-details" class="hidden">
-            <button class="btn-back" onclick="document.getElementById('view-details').classList.add('hidden'); document.getElementById('view-companies').classList.remove('hidden');">← Back to Screener</button>
-            
-            <div class="detail-header">
-                <h2 id="detail-name">Company Name</h2>
-                <span class="ticker" id="detail-ticker">TICKER</span>
-                <span class="ticker" style="font-size: 1rem; margin-left: auto;" id="detail-industry">Industry</span>
+    <main class="container">
+        <section id="view-industries">
+            <div class="overview-panel">
+                <div>
+                    <p class="eyebrow">Market Map</p>
+                    <h1>Trace how companies depend on each other.</h1>
+                    <p class="intro-copy">Explore public equities by sector, inspect financial context, and follow supplier/customer exposure through the Supply Chain X-Ray.</p>
+                </div>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-companies">-</span>
+                        <span class="stat-label">Companies</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-links">-</span>
+                        <span class="stat-label">Supply Links</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-sectors">-</span>
+                        <span class="stat-label">Sectors</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-connected">-</span>
+                        <span class="stat-label">Most Connected</span>
+                    </div>
+                </div>
             </div>
+
+            <section class="control-panel">
+                <div class="search-group">
+                    <label for="search-input">Search</label>
+                    <input type="text" id="search-input" class="search-bar" placeholder="Company name or ticker" oninput="applyFilters()">
+                </div>
+                <div class="filter-group">
+                    <label for="sector-filter">Sector</label>
+                    <select id="sector-filter" onchange="applyFilters()">
+                        <option value="">All sectors</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="dependency-filter">Dependency</label>
+                    <select id="dependency-filter" onchange="applyFilters()">
+                        <option value="">All dependency types</option>
+                    </select>
+                </div>
+                <label class="toggle-filter">
+                    <input type="checkbox" id="connected-filter" onchange="applyFilters()">
+                    <span>Has supply-chain data</span>
+                </label>
+            </section>
+
+            <section class="insight-grid">
+                <div class="insight-panel">
+                    <div class="section-heading">
+                        <p class="eyebrow">Explore</p>
+                        <h2>Macro Sectors</h2>
+                    </div>
+                    <div class="grid" id="industry-grid"></div>
+                </div>
+                <div class="insight-panel">
+                    <div class="section-heading">
+                        <p class="eyebrow">Signals</p>
+                        <h2>Most Connected</h2>
+                    </div>
+                    <div id="connected-list" class="rank-list"></div>
+                </div>
+            </section>
+        </section>
+
+        <section id="view-companies" class="hidden">
+            <button class="btn-back" onclick="resetDashboard()">Back to overview</button>
+            <div class="table-header">
+                <div>
+                    <p class="eyebrow">Screener</p>
+                    <h2 id="current-industry-title">Companies</h2>
+                </div>
+                <span id="result-count" class="result-count">0 results</span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th onclick="handleSort('name')">Company <span class="sort-icon" id="sort-name"></span></th>
+                            <th onclick="handleSort('ticker')">Symbol <span class="sort-icon" id="sort-ticker"></span></th>
+                            <th onclick="handleSort('price')">Price <span class="sort-icon" id="sort-price"></span></th>
+                            <th onclick="handleSort('change')">% Change <span class="sort-icon" id="sort-change"></span></th>
+                            <th onclick="handleSort('market_cap')">Market Cap <span class="sort-icon" id="sort-market_cap"></span></th>
+                            <th onclick="handleSort('connection_count')">Links <span class="sort-icon" id="sort-connection_count"></span></th>
+                            <th onclick="handleSort('trailing_pe')">P/E <span class="sort-icon" id="sort-trailing_pe"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="company-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="view-details" class="hidden">
+            <button class="btn-back" onclick="showCompanies()">Back to screener</button>
+
+            <div class="detail-header">
+                <div>
+                    <p class="eyebrow" id="detail-industry">Industry</p>
+                    <h2 id="detail-name">Company Name</h2>
+                </div>
+                <span class="ticker" id="detail-ticker">TICKER</span>
+            </div>
+
+            <section class="story-panel">
+                <div>
+                    <p class="eyebrow">Why It Matters</p>
+                    <h3 id="detail-story-title">Supply-chain context</h3>
+                    <p id="detail-story">Select a company to inspect its tracked dependencies.</p>
+                </div>
+                <div class="story-metrics">
+                    <div><span id="detail-up-count">0</span><small>Suppliers</small></div>
+                    <div><span id="detail-down-count">0</span><small>Customers</small></div>
+                    <div><span id="detail-link-count">0</span><small>Total Links</small></div>
+                </div>
+            </section>
 
             <div class="chart-wrapper" id="tv_chart_container"></div>
 
             <div class="dashboard-grid">
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <div class="metrics-section">
-                        <h3>Market Performance</h3>
-                        <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr);">
-                            <div><div class="metric-label">Current Price</div><div class="metric-value" id="detail-price">-</div></div>
-                            <div><div class="metric-label">Today's Change</div><div class="metric-value" id="detail-change">-</div></div>
-                            <div><div class="metric-label">52W High</div><div class="metric-value" id="detail-high">-</div></div>
-                            <div><div class="metric-label">52W Low</div><div class="metric-value" id="detail-low">-</div></div>
-                        </div>
+                <section class="metrics-section">
+                    <h3>Market Performance</h3>
+                    <div class="metrics-grid four-col">
+                        <div><div class="metric-label">Current Price</div><div class="metric-value" id="detail-price">-</div></div>
+                        <div><div class="metric-label">Today's Change</div><div class="metric-value" id="detail-change">-</div></div>
+                        <div><div class="metric-label">52W High</div><div class="metric-value" id="detail-high">-</div></div>
+                        <div><div class="metric-label">52W Low</div><div class="metric-value" id="detail-low">-</div></div>
                     </div>
+                </section>
 
-                    <div class="metrics-section">
-                        <h3>Valuation & Health</h3>
-                        <div class="metrics-grid">
-                            <div><div class="metric-label">Market Cap</div><div class="metric-value" id="detail-mcap">-</div></div>
-                            <div><div class="metric-label">Enterprise Value</div><div class="metric-value" id="detail-ev">-</div></div>
-                            <div><div class="metric-label">Trailing P/E</div><div class="metric-value" id="detail-tpe">-</div></div>
-                            <div><div class="metric-label">Forward P/E</div><div class="metric-value" id="detail-fpe">-</div></div>
-                            <div><div class="metric-label">Total Revenue</div><div class="metric-value" id="detail-rev">-</div></div>
-                            <div><div class="metric-label">Gross Margin</div><div class="metric-value" id="detail-margin">-</div></div>
-                        </div>
+                <section class="metrics-section">
+                    <h3>Valuation & Health</h3>
+                    <div class="metrics-grid">
+                        <div><div class="metric-label">Market Cap</div><div class="metric-value" id="detail-mcap">-</div></div>
+                        <div><div class="metric-label">Enterprise Value</div><div class="metric-value" id="detail-ev">-</div></div>
+                        <div><div class="metric-label">Trailing P/E</div><div class="metric-value" id="detail-tpe">-</div></div>
+                        <div><div class="metric-label">Forward P/E</div><div class="metric-value" id="detail-fpe">-</div></div>
+                        <div><div class="metric-label">Total Revenue</div><div class="metric-value" id="detail-rev">-</div></div>
+                        <div><div class="metric-label">Gross Margin</div><div class="metric-value" id="detail-margin">-</div></div>
                     </div>
-                </div>
+                </section>
 
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <div class="metrics-section">
-                        <h3>Sentiment & Yield</h3>
-                        <div class="metrics-grid">
-                            <div><div class="metric-label">Analyst Rec</div><div class="metric-value" id="detail-rec">-</div></div>
-                            <div><div class="metric-label">Target Price</div><div class="metric-value" id="detail-target">-</div></div>
-                            <div><div class="metric-label">Dividend Yield</div><div class="metric-value" id="detail-div">-</div></div>
-                            <div><div class="metric-label">Price to Book</div><div class="metric-value" id="detail-pb">-</div></div>
-                        </div>
+                <section class="metrics-section">
+                    <h3>Sentiment & Yield</h3>
+                    <div class="metrics-grid">
+                        <div><div class="metric-label">Analyst Rec</div><div class="metric-value" id="detail-rec">-</div></div>
+                        <div><div class="metric-label">Target Price</div><div class="metric-value" id="detail-target">-</div></div>
+                        <div><div class="metric-label">Dividend Yield</div><div class="metric-value" id="detail-div">-</div></div>
+                        <div><div class="metric-label">Price to Book</div><div class="metric-value" id="detail-pb">-</div></div>
                     </div>
+                </section>
 
-                    <div class="summary-box">
-                        <div style="color: var(--accent); font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Corporate Profile</div>
-                        <div style="margin-bottom: 15px;">
-                            <span style="color: var(--text-muted);">CEO:</span> <span id="detail-ceo" style="font-weight: bold;">-</span><br>
-                            <span style="color: var(--text-muted);">Employees:</span> <span id="detail-emp" style="font-weight: bold;">-</span>
-                        </div>
-                        <div id="detail-summary" style="height: 200px; overflow-y: auto; padding-right: 10px;">
-                            Summary...
-                        </div>
+                <section class="summary-box">
+                    <h3>Corporate Profile</h3>
+                    <p><span>CEO:</span> <strong id="detail-ceo">-</strong></p>
+                    <p><span>Employees:</span> <strong id="detail-emp">-</strong></p>
+                    <div id="detail-summary" class="profile-summary">Summary...</div>
+                </section>
+
+                <section class="metrics-section full-width">
+                    <div class="section-heading">
+                        <p class="eyebrow">X-Ray</p>
+                        <h3>Supply Chain Map</h3>
                     </div>
-                </div>
+                    <div id="supply-map" class="supply-map"></div>
+                </section>
 
-                <div class="metrics-section" style="grid-column: 1 / -1; margin-top: 10px;">
-                    <h3>Supply Chain X-Ray</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <section class="metrics-section full-width">
+                    <h3>Supply Chain Relationships</h3>
+                    <div class="xray-columns">
                         <div>
-                            <div style="color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; font-weight: bold;">
-                                ⬆️ Upstream (Suppliers / Vendors)
-                            </div>
-                            <div id="detail-upstream" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                            <div class="xray-column-title">Upstream Suppliers / Vendors</div>
+                            <div id="detail-upstream" class="xray-list"></div>
                         </div>
                         <div>
-                            <div style="color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; font-weight: bold;">
-                                ⬇️ Downstream (Customers / Buyers)
-                            </div>
-                            <div id="detail-downstream" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                            <div class="xray-column-title">Downstream Customers / Buyers</div>
+                            <div id="detail-downstream" class="xray-list"></div>
                         </div>
                     </div>
-                </div>
-
+                </section>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script src="app.js"></script>
 </body>

@@ -33,6 +33,55 @@ def clean_company_name(name):
         
     return clean_name.replace(',', '').strip()
 
+def is_reversed_role_dependency(dependency_type):
+    """Detect role labels that usually mean the LLM emitted customer -> supplier."""
+    dep_type = (dependency_type or "").strip().lower()
+    if not dep_type:
+        return False
+
+    non_directional = [
+        "customer relationship management",
+        "customer data",
+        "customer behavior",
+        "supplier/customer",
+        "customer/supplier"
+    ]
+    if any(phrase in dep_type for phrase in non_directional):
+        return False
+
+    role_markers = [
+        "customer",
+        "buyer",
+        "client",
+        "end-user"
+    ]
+    return any(marker in dep_type for marker in role_markers)
+
+def is_non_supply_dependency(dependency_type):
+    dep_type = (dependency_type or "").strip().lower()
+    non_supply_markers = [
+        "competitor",
+        "investor",
+        "acquisition",
+        "acquired",
+        "merger",
+        "option deal",
+        "funding",
+        "shareholder"
+    ]
+    return any(marker in dep_type for marker in non_supply_markers)
+
+def normalize_dependency(dep):
+    """Keep edge direction as supplier/provider -> customer/receiver."""
+    dep = dict(dep)
+    if not is_reversed_role_dependency(dep.get("dependency_type")):
+        return dep
+
+    dep["source_company"], dep["target_company"] = dep.get("target_company"), dep.get("source_company")
+    dep["source_ticker"], dep["target_ticker"] = dep.get("target_ticker"), dep.get("source_ticker")
+    dep["dependency_type"] = "Supply Relationship"
+    return dep
+
 class EntityResolver:
     """Dynamic Resolution Engine with Yahoo Finance API Fallback."""
     @staticmethod
@@ -189,6 +238,11 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                 continue
 
             for dep in dependencies:
+                dep = normalize_dependency(dep)
+                if is_non_supply_dependency(dep.get('dependency_type')):
+                    print(f"  [!] Ignored non-supply relationship: {dep.get('dependency_type')}")
+                    continue
+
                 s_node = EntityResolver.resolve(session, dep.get('source_ticker')) or \
                          EntityResolver.resolve(session, dep.get('source_company'))
                 
@@ -205,7 +259,8 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
 
                     existing = session.query(Edge).filter(
                         Edge.source_id == s_node.id, 
-                        Edge.target_id == t_node.id
+                        Edge.target_id == t_node.id,
+                        Edge.dependency_type == dep.get('dependency_type', 'Supply Link')
                     ).first()
 
                     if not existing:

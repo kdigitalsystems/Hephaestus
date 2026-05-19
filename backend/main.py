@@ -67,6 +67,14 @@ def process_source(url: str):
                 session.add(target_node)
                 session.flush()
 
+            existing_edge = session.query(Edge).filter(
+                Edge.source_id == source_node.id,
+                Edge.target_id == target_node.id,
+                Edge.dependency_type == dep_type
+            ).first()
+            if existing_edge:
+                continue
+
             # Create the edge
             new_edge = Edge(
                 source_id=source_node.id,
