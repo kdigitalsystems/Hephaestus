@@ -33,14 +33,13 @@ def get_alpaca_credentials():
         
     return api_key, secret_key
 
-# Load the keys safely
-API_KEY, SECRET_KEY = get_alpaca_credentials()
-
 def seed_database_from_alpaca(limit=None):
     """Fetches active US equities from Alpaca and seeds the database."""
     print("--- Fetching All Active Assets from Alpaca ---")
+
+    api_key, secret_key = get_alpaca_credentials()
     
-    trading_client = TradingClient(API_KEY, SECRET_KEY, paper=True)
+    trading_client = TradingClient(api_key, secret_key, paper=True)
     
     search_params = GetAssetsRequest(
         asset_class=AssetClass.US_EQUITY,

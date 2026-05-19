@@ -1,7 +1,4 @@
 import os
-import json
-import pandas as pd
-from datetime import datetime
 
 # Market Data Clients
 from alpaca.trading.client import TradingClient
@@ -9,9 +6,24 @@ from alpaca.data.historical import StockHistoricalDataClient, NewsClient
 from alpaca.data.requests import StockSnapshotRequest, NewsRequest
 from yahooquery import Ticker
 
-# API Keys (Move to .env for production)
-API_KEY = "PKU4JFER6M3KG4N2ZGA9"
-SECRET_KEY = "1AEXwFm9h6u1MK7riEp9oZgF6hVt6eWDSn7PmHcg"
+def get_alpaca_credentials():
+    api_key = os.environ.get("ALPACA_API_KEY")
+    secret_key = os.environ.get("ALPACA_SECRET_KEY")
+
+    key_path = os.path.expanduser("~/.ssh/alpaca_paper_keys")
+    if (not api_key or not secret_key) and os.path.exists(key_path):
+        with open(key_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("Key:"):
+                    api_key = line.split(":", 1)[1].strip()
+                elif line.startswith("Secret_Key:"):
+                    secret_key = line.split(":", 1)[1].strip()
+
+    if not api_key or not secret_key:
+        raise ValueError("Missing Alpaca API credentials. Set env vars or ~/.ssh/alpaca_paper_keys.")
+
+    return api_key, secret_key
 
 def fetch_yfinance_data(symbol: str):
     """Deep fundamental data extraction via yahooquery."""
@@ -44,9 +56,10 @@ def fetch_yfinance_data(symbol: str):
 
 def fetch_alpaca_data(symbol: str):
     """Live snapshot and news from Alpaca."""
-    trading_client = TradingClient(API_KEY, SECRET_KEY, paper=True)
-    data_client = StockHistoricalDataClient(API_KEY, SECRET_KEY)
-    news_client = NewsClient(API_KEY, SECRET_KEY)
+    api_key, secret_key = get_alpaca_credentials()
+    trading_client = TradingClient(api_key, secret_key, paper=True)
+    data_client = StockHistoricalDataClient(api_key, secret_key)
+    news_client = NewsClient(api_key, secret_key)
 
     print(f"\n{'='*60}\n[{symbol}] ALPACA LIVE PROFILE\n{'='*60}")
     try:

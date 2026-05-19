@@ -44,7 +44,8 @@ def seed_manual_edges():
             # 2. Check if this edge already exists to prevent duplicates
             existing_edge = session.query(Edge).filter(
                 Edge.source_id == source_node.id,
-                Edge.target_id == target_node.id
+                Edge.target_id == target_node.id,
+                Edge.dependency_type == edge_data["type"]
             ).first()
             
             # 3. Insert the connection

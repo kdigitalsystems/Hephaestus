@@ -22,6 +22,21 @@ def clean_num(val):
     except (ValueError, TypeError):
         return val
 
+def edge_payload(edge, node):
+    connected_node = node
+    source_url = edge.source_url or "Unknown"
+    source_type = "Manual" if "Manual" in source_url else "AI Research" if "AI" in source_url else "Source"
+
+    return {
+        "name": connected_node.name,
+        "ticker": connected_node.ticker or "",
+        "type": edge.dependency_type,
+        "confidence": clean_num(edge.confidence_score),
+        "source": source_url,
+        "source_type": source_type,
+        "last_verified": edge.last_verified.strftime('%Y-%m-%d') if edge.last_verified else "N/A"
+    }
+
 def export_to_json():
     session = SessionLocal()
     try:
@@ -46,21 +61,13 @@ def export_to_json():
             upstream = []
             for edge in node.supplied_by:
                 if edge.source_node:
-                    upstream.append({
-                        "name": edge.source_node.name,
-                        "ticker": edge.source_node.ticker or "",
-                        "type": edge.dependency_type
-                    })
+                    upstream.append(edge_payload(edge, edge.source_node))
             
             # Grab all companies that THIS node supplies (Downstream)
             downstream = []
             for edge in node.supplies_to:
                 if edge.target_node:
-                    downstream.append({
-                        "name": edge.target_node.name,
-                        "ticker": edge.target_node.ticker or "",
-                        "type": edge.dependency_type
-                    })
+                    downstream.append(edge_payload(edge, edge.target_node))
             # ------------------------
 
             dashboard_data["industries"][sector].append({
