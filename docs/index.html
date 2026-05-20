@@ -9,7 +9,7 @@
 </head>
 <body>
     <header class="topbar">
-        <button class="brand-button" onclick="resetDashboard()">
+        <button class="brand-button" onclick="navigateOverview()">
             <span class="brand-mark">H</span>
             <span>
                 <span class="brand-title">Hephaestus Terminal</span>
@@ -89,7 +89,7 @@
         </section>
 
         <section id="view-companies" class="hidden">
-            <button class="btn-back" onclick="resetDashboard()">Back to overview</button>
+            <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
             <div class="table-header">
                 <div>
                     <p class="eyebrow">Screener</p>
@@ -116,7 +116,7 @@
         </section>
 
         <section id="view-details" class="hidden">
-            <button class="btn-back" onclick="showCompanies()">Back to screener</button>
+            <button class="btn-back" onclick="navigateBackToCompanies()">Back to screener</button>
 
             <div class="detail-header">
                 <div>

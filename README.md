@@ -169,6 +169,8 @@ python3 -m http.server 8000 -d docs
 
 Then visit `http://localhost:8000`.
 
+The static site includes `docs/sitemap.xml` and `docs/robots.txt` for GitHub Pages discovery. The app uses hash routes such as `#company?ticker=AMD` internally, but the sitemap points search engines at the canonical dashboard entry point because URL fragments are not reliable sitemap targets.
+
 ## Full Pipeline
 
 Run the standard daily pipeline:
