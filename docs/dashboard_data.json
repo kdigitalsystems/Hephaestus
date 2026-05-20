@@ -1546,19 +1546,7 @@
         "employees": 1092,
         "summary": "Vicor Corporation, together with its subsidiaries, designs, develops, manufactures, and markets modular power components and power systems for converting electrical power for use in electrically powered devices in the United States, Europe, the Asia Pacific, and internationally. The company offers a range of brick-format DC-DC converters; complementary components that provide AC line rectification, input filtering, power factor correction, and transient protection; and input and output voltage, and output power products, as well as sells electrical and mechanical accessories. It also designs, sells, and services custom power system solutions. It serves independent manufacturers of electronic devices, original equipment manufacturers, original design manufacturers, and their contract manufacturers in the aerospace and aviation, defense electronics, satellites, factory automation, instrumentation, test equipment, transportation, telecommunications and networking infrastructure, and vehicle markets. Vicor Corporation was incorporated in 1981 and is headquartered in Andover, Massachusetts.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 567,
-            "name": "Hemab Therapeutics Holdings, Inc. Common Stock",
-            "ticker": "COAG",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -13224,17 +13212,6 @@
         "last_updated": "2026-05-19",
         "upstream": [
           {
-            "edge_id": 291,
-            "name": "DuPont de Nemours, Inc. Common Stock",
-            "ticker": "DD",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 292,
             "name": "NVIDIA Corporation Common Stock",
             "ticker": "NVDA",
@@ -16432,17 +16409,6 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 337,
-            "name": "KONINKLIJKE PHILIPS  N.V.",
-            "ticker": "PHG",
-            "type": "Former Subsidiary",
-            "product": "Former Subsidiary",
-            "confidence": 0.6,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 414,
             "name": "Roku, Inc. Class A Common Stock",
             "ticker": "ROKU",
@@ -16999,19 +16965,7 @@
         "employees": 2052,
         "summary": "NetScout Systems, Inc. provides carrier service assurance, cybersecurity, and Distributed Denial-of-Service (DDoS) solutions to protect digital business services against disruptions. It offers nGeniusONE management software to predict, preempt, and resolve network and service delivery problems, as well as facilitate the optimization and capacity planning of their network infrastructures; and specialized platforms and analytic modules to analyze and troubleshoot traffic in radio access and Wi-Fi networks; and Omnis Insights, a solution that is designed to generate a high-fidelity and curated dataset that strengthens observability and cybersecurity operations. Its platform provides real-time generation and analysis of information-rich, high-volume network-derived data for use its applications and partner networks. In addition, it offers ISNG, a real-time information platform that provides insights to optimize network performance; packet flow systems that delivers targeted network traffic access to a range of monitoring and cybersecurity tools and systems, including the nGeniusONE application; vSTREAM, a virtualized form factor version; Infinistream, an advanced passive network probe; and markets test access points that enables full and non-disruptive access to network traffic. Further, the company provides cybersecurity solutions to protect networks against DDoS attacks under the Arbor solutions, including Arbor Sightline, Arbor Threat Mitigation System, Arbor Insight, Arbor Edge Defense, and Omnis Cyber Intelligence solutions. It serves enterprise customers in financial services, technology, manufacturing, healthcare, utilities, education, transportation, and retail; mobile, wireline, and cable operators, internet service providers, and cloud providers industries; and government and associated agencies through a direct sales force, and indirect reseller and distribution channels. The company was incorporated in 1984 and is headquartered in Westford, Massachusetts.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 1227,
-            "name": "Danaher Corporation",
-            "ticker": "DHR",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -18605,17 +18559,6 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 1350,
-            "name": "MARRIOTT VACATIONS WORLDWIDE CORPORATION",
-            "ticker": "VAC",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 1359,
             "name": "ABM Industries, Inc.",
             "ticker": "ABM",
@@ -19677,19 +19620,7 @@
             "last_verified": "2026-05-20"
           }
         ],
-        "downstream": [
-          {
-            "edge_id": 1212,
-            "name": "Brookdale Senior Living, Inc.",
-            "ticker": "BKD",
-            "type": "Ownership",
-            "product": "Ownership",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 8469,
@@ -25249,17 +25180,6 @@
         "last_updated": "2026-05-18",
         "upstream": [
           {
-            "edge_id": 596,
-            "name": "Hemab Therapeutics Holdings, Inc. Common Stock",
-            "ticker": "COAG",
-            "type": "Merged Company",
-            "product": "Merged Company",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 597,
             "name": "Hemab Therapeutics Holdings, Inc. Common Stock",
             "ticker": "COAG",
@@ -25386,19 +25306,7 @@
         "employees": 3301,
         "summary": "Clear Secure, Inc. operates a secure identity platform under the CLEAR brand name primarily in the United States. It provides secure identity platform, a multi-layered infrastructure consisting of front-end, including enrollment, verification, and linking, as well as back-end. The company also offers CLEAR Plus, a consumer aviation subscription service, which enables access to predictable entry lanes in airport security checkpoints, as well as access to broader network; and CLEAR mobile app, which is used to enroll new members and improve the experience for existing members. In addition, it provides RESERVE powered by CLEAR to reservation spot for airport locations; Home to Gate, a feature to help travelers plan and time their trip to the airport; CLEAR1, a B2B offering that extends secure identity platform to partners to create friction-free experiences for their customers; CLEAR ID, a free and mobile digital ID that allow any traveler to verify their identity; CLEAR Concierge which enhances the CLEAR value proposition for high-frequency and premium travelers, as well as travelers requiring additional assistance, such as families and senior citizens; CLEAR Perks, a suite of added benefits that help CLEAR members get an even more seamless experience; TSA PreCheck Enrollment Provided by CLEAR, as well as online renewal services; Sora ID, a one-click know your customer that enables adding know your customer services to platform offerings; and a virtual queuing technology. The company was founded in 2010 and is headquartered in New York, New York. Clear Secure, Inc. is a subsidiary of Alclear Investments, Llc.",
         "last_updated": "2026-05-18",
-        "upstream": [
-          {
-            "edge_id": 1143,
-            "name": "Youxin Technology Ltd Class A Ordinary shares",
-            "ticker": "YAAS",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -25619,19 +25527,7 @@
         "summary": "Youxin Technology Ltd operates as a cloud-based software as a service (SaaS) and platform as a service (PaaS) provider in Mainland China. Its cloud-based SaaS product and PaaS platform help retail enterprises digitally transform their businesses to develop, use, and control business applications. The company's products optimizes the overall supply chain by streamlining the decision-making process, efficiency, and profitability. It sells and markets its products directly to customers and third-party agents. The company was founded in 2018 and is headquartered in Guangzhou, the People's Republic of China.",
         "last_updated": "2026-05-18",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 1143,
-            "name": "Clear Secure, Inc.",
-            "ticker": "YOU",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 11297,
@@ -26598,33 +26494,11 @@
         ],
         "downstream": [
           {
-            "edge_id": 376,
-            "name": "Veralto Corporation",
-            "ticker": "VLTO",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 877,
             "name": "Vontier Corporation",
             "ticker": "VNT",
             "type": "Manufacturing Partner",
             "product": "Manufacturing Partner",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 1227,
-            "name": "NetScout Systems, Inc. Common Stock",
-            "ticker": "NTCT",
-            "type": "Parent Company",
-            "product": "Parent Company",
             "confidence": 0.9,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
@@ -27852,19 +27726,7 @@
         "employees": 37500,
         "summary": "Baxter International Inc., through its subsidiaries, provides a portfolio of healthcare products in the United States. The company operates through three segments: Medical Products & Therapies, Healthcare Systems & Technologies, and Pharmaceuticals. It offers sterile intravenous (IV) solutions; infusion systems and devices; parenteral nutrition therapies; inhaled anesthetics; generic injectable pharmaceuticals; surgical hemostat and sealant products; advanced surgical equipment; smart bed systems; patient monitoring and diagnostic technologies; and respiratory health devices, as well as advanced equipment for the surgical space comprising operating room integration technologies, precision positioning devices, and other accessories. The company also provides specialty injectable pharmaceuticals, inhaled anesthetics, and drug compounding services. Its products are used in hospitals, nursing homes, rehabilitation centers, ambulatory surgery centers, doctors' offices, kidney dialysis centers, and patients at home under physician supervision. The company sells its products through direct sales force, independent distributors, drug wholesalers, and specialty pharmacy or other alternate site providers. It operates in Eastern Europe, the Middle East, Africa, Latin America, Asia, Western Europe, Canada, Japan, Australia, and New Zealand. Baxter International Inc. was incorporated in 1931 and is headquartered in Deerfield, Illinois.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 236,
-            "name": "Edwards Lifesciences Corp",
-            "ticker": "EW",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -28371,19 +28233,7 @@
         "summary": "UnitedHealth Group Incorporated operates as a health care company in the United States and internationally. It operates through four segments: Optum Health, Optum Insight, Optum Rx; and UnitedHealthcare. The Optum Health segment provides care delivery, care management, wellness and consumer engagement, and health financial services with patients, consumers, care delivery systems, providers, employers, payers, and public-sector entities. The Optum Insight segment offers software and information products, advisory consulting arrangements, and managed services outsourcing contracts to hospital systems, physicians, health plans, public entities, life sciences companies and other organizations. The Optum Rx segment provides pharmacy care services and programs, including retail network contracting, home delivery, specialty and community health pharmacy services, infusion, and purchasing and clinical capabilities, as well as develops programs in the areas of step therapy, formulary management, drug adherence, and disease and drug therapy management. The UnitedHealthcare segment offers consumer-oriented health benefit plans and services for national employers, public sector employers, mid-sized employers, small businesses, and individuals; Medicaid plans, including Temporary Assistance to Needy Families; Children's Health Insurance Programs; Dual SNPs; Long-Term Services and Supports; Aged, Blind and Disabled; and other federal, state, and community health care programs. and health care benefits products and services to state programs caring for the economically disadvantaged, medically underserved, and those without the benefit of employer-funded health care coverage. UnitedHealth Group Incorporated was founded in 1974 and is based in Eden Prairie, Minnesota.",
         "last_updated": "2026-05-19",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 797,
-            "name": "Elevance Health, Inc.",
-            "ticker": "ELV",
-            "type": "Competition",
-            "product": "Competition",
-            "confidence": 0.6,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 1244,
@@ -30562,19 +30412,7 @@
         "employees": 362,
         "summary": "Immunovant, Inc., a clinical-stage immunology company, develops monoclonal antibodies for the treatment of autoimmune diseases. It develops IMVT-1402 for graves' disease, rheumatoid arthritis, myasthenia gravis, chronic inflammatory demyelinating polyneuropathy, cutaneous lupus erythematosus disease, and sj\u00f6gren's disease; and batoclimab for myasthenia gravis, chronic inflammatory demyelinating polyneuropathy, and thyroid eye disease. The company was founded in 2018 and is based in Durham, North Carolina. Immunovant, Inc. operates as a subsidiary of Roivant Sciences Ltd.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 844,
-            "name": "Roivant Sciences Ltd. Common Shares",
-            "ticker": "ROIV",
-            "type": "Parent-Subsidiary",
-            "product": "Parent-Subsidiary",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -31154,17 +30992,6 @@
             "ticker": "NTRA",
             "type": "Critical Enterprise Software",
             "product": "Critical Enterprise Software",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 1310,
-            "name": "GRAIL, Inc. Common Stock",
-            "ticker": "GRAL",
-            "type": "Parent Company",
-            "product": "Parent Company",
             "confidence": 0.9,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
@@ -37589,19 +37416,7 @@
         "summary": "Roivant Sciences Ltd., a clinical-stage biopharmaceutical company, focuses on the discovery, development, and commercialization of medicines and technologies. Its clinical product candidates include IMVT-1402, a fully human monoclonal antibody that targets the neonatal fragment crystallizable receptor for the treatment of graves' disease, difficult-to-treat rheumatoid arthritis, sj\u00f6gren's disease, myasthenia gravis, chronic inflammatory demyelinating polyneuropathy, and cutaneous lupus erythematosus indications; batoclimab, a fully human monoclonal antibody for the treatment of thyroid eye disease; and brepocitinib, a potent small molecule inhibitor of TYK2 and JAK1 in development for the treatment of dermatomyositis, non-infectious uveitis, cutaneous sarcoidosis, and other immune-mediated diseases. The company's lead program consists of mosliciguat, an inhaled sGC activator for the treatment of pulmonary hypertension associated with interstitial lung disease and other cardiopulmonary diseases. In addition, the company offers delivery platforms comprising lipid nanoparticle (LNP) platform and ligand conjugate platform. Roivant Sciences Ltd. was founded in 2014 and is based in London, United Kingdom.",
         "last_updated": "2026-05-19",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 844,
-            "name": "Immunovant, Inc. Common Stock",
-            "ticker": "IMVT",
-            "type": "Parent-Subsidiary",
-            "product": "Parent-Subsidiary",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 4709,
@@ -38997,19 +38812,7 @@
         "summary": "Canopy Growth Corporation, together with its subsidiaries, engages in the production, distribution, and sale of cannabis, hemp, and cannabis-related products in Canada, Germany, and Australia. It operates through four segments: Canada Cannabis, International Markets Cannabis, and Storz & Bickel, and This Works. The company offers dried flower and pre-rolled joints; extracts and concentrates, such as softgel capsules; cannabis edibles, including gummies; cannabis vapes; and oils, beverages, concentrates. It sells its products under the Tweed, 7ACRES, Deep Space, HiWay, Maitri, Twd., Spectrum Therapeutics, Canopy Medical, Storz & Bickel, Wana, and Claybourne brands, as well as DOJA, LivRelief, Ace Valley, and Vert brands. The company was formerly known as Tweed Marijuana Inc. and changed its name to Canopy Growth Corporation in September 2015. Canopy Growth Corporation is headquartered in Smiths Falls, Canada.",
         "last_updated": "2026-05-19",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 265,
-            "name": "The Hershey Company",
-            "ticker": "HSY",
-            "type": "Ownership",
-            "product": "Ownership",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 5238,
@@ -40162,19 +39965,7 @@
         "employees": 910,
         "summary": "GRAIL, Inc., a commercial-stage healthcare company, provides multi-cancer early detection testing and services in the United States and internationally. It offers Galleri, a cancer screening test for asymptomatic individuals over 50 years of age; and a diagnostic aid for cancer tests to accelerate diagnostic resolution for patients with clinical suspicion of cancer. The company also provides development services, including support for ongoing clinical studies, pilot testing, research, and therapy development. In addition, its precision oncology portfolio consists of n RUO-targeted methylation-based platform that enables applications for disease prognostication, risk stratification, minimal residual disease detection, and recurrence and relapse monitoring. The company was incorporated in 2015 and is headquartered in Menlo Park, California.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 1310,
-            "name": "Illumina, Inc. Common Stock",
-            "ticker": "ILMN",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -42101,17 +41892,6 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 143,
-            "name": "FedEx Corporation",
-            "ticker": "FDX",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 161,
             "name": "O'Reilly Automotive, Inc. Common Stock",
             "ticker": "ORLY",
@@ -42332,17 +42112,6 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 567,
-            "name": "Vicor Corporation Common Stock",
-            "ticker": "VICR",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 573,
             "name": "Sanmina Corporation Common Stock",
             "ticker": "SANM",
@@ -42376,17 +42145,6 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 596,
-            "name": "Zebra Technologies Corporation Class A Common Stock",
-            "ticker": "ZBRA",
-            "type": "Merged Company",
-            "product": "Merged Company",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 597,
             "name": "Zebra Technologies Corporation Class A Common Stock",
             "ticker": "ZBRA",
@@ -42404,17 +42162,6 @@
             "type": "Electric Vehicle Charging",
             "product": "Electric Vehicle Charging",
             "confidence": 0.7,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 665,
-            "name": "National Fuel Gas Co.",
-            "ticker": "NFG",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 1.0,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -42559,19 +42306,7 @@
         "employees": 64317,
         "summary": "Koninklijke Philips N.V. operates as a health technology company in North America, the Greater China, and internationally. It operates through Diagnosis & Treatment, Connected Care, and Personal Health segments. The company provides diagnostic imaging solutions, includes ultrasound business unit, magnetic resonance imaging, computed tomography, and diagnostic x-ray; Image Guided Therapy, including image guided therapy systems and image guided therapy devices. It also offers monitoring, enterprise informatics, and sleep and respiratory care, as well as personal health. The company was formerly known as Koninklijke Philips Electronics N.V. and changed its name to Koninklijke Philips N.V. in May 2013. Koninklijke Philips N.V. was founded in 1891 and is headquartered in Amsterdam, the Netherlands.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 337,
-            "name": "NXP Semiconductors N.V. Common Stock",
-            "ticker": "NXPI",
-            "type": "Former Subsidiary",
-            "product": "Former Subsidiary",
-            "confidence": 0.6,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": [
           {
             "edge_id": 112,
@@ -44788,19 +44523,7 @@
         "employees": 10000,
         "summary": "Organon & Co. develops and delivers women health solutions through prescription therapies and medical devices in the United States, Europe, Canada, Japan, rest of the Asia Pacific, China, Latin America, the Middle East, Russia, Africa, and internationally. The company's women's health portfolio comprises contraception and fertility brands, such as Nexplanon, a long-acting reversible contraceptive; NuvaRing, a monthly vaginal contraceptive ring; Cerazette, Marvelon, and Mercilon to prevent pregnancy; Follistim AQ, which is used to promote development of ovarian follicles; Elonva, a follicle stimulant; Ganirelix acetate injection, an injectable antagonist; Jada for abnormal postpartum uterine bleeding and hemorrhage; and Xaciato for bacterial vaginosis. Its biosimilars portfolio consists of immunology products, such as Brenzys, Renflexis, and Hadlima; oncology products, including Ontruzant and Aybintio; Bildyos and Bilprevda, a recombinant anti-RANKL human monoclonal antibodies; and Poherdy, a neu receptor antagonist. The company also offers cholesterol-modifying medicines under the Zetia, Ezetrol, Vytorin, Inegy, Atozet, Rosuzet, and Zocor brands; Cozaar and Hyzaar for hypertension; respiratory products to control and prevent asthma symptoms under the Singulair, Dulera, Zenhale, and Asmanex brands, as well as seasonal allergic rhinitis under the Nasonex, Clarinex, and Aerius brands. In addition, it provides dermatology products under the Vtama, Diprosone, and Elocon brand; bone health products under the Fosamax brand; and non-opioid pain management products under the Arcoxia, Diprospan, and Celestone brands, as well as Proscar for symptomatic benign prostatic hyperplasia; and Propecia for male pattern hair loss. The company serves drug wholesalers and retailers, hospitals, clinics, government agencies, health maintenance organizations, pharmacy benefit managers, and other institutions. Organon & Co. was founded in 1923 and is headquartered in Jersey City, New Jersey.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 1337,
-            "name": "Merck & Co., Inc.",
-            "ticker": "MRK",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -47302,17 +47025,6 @@
             "type": "Manufacturing Partner",
             "product": "Manufacturing Partner",
             "confidence": 0.1,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 1337,
-            "name": "Organon & Co.",
-            "ticker": "OGN",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -50111,17 +49823,6 @@
         "upstream": [],
         "downstream": [
           {
-            "edge_id": 236,
-            "name": "Baxter International Inc.",
-            "ticker": "BAX",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 476,
             "name": "Becton, Dickinson and Co.",
             "ticker": "BDX",
@@ -51594,19 +51295,7 @@
         "employees": 22440,
         "summary": "Brookdale Senior Living Inc. owns, manages, and operates senior living communities in the United States. It operates in three segments: Independent Living, Assisted Living and Memory Care, and Continuing Care Retirement Communities (CCRCs). The Independent Living segment owns or leases communities comprising independent and assisted living units in a single community that are primarily designed for middle to upper income seniors. The Assisted Living and Memory Care segment owns or leases communities consisting of freestanding, multi-story communities and freestanding single-story communities, which offer housing and 24-hour assistance with activities of daily living for the Company's residents. This segment operates memory care communities for residents with Alzheimer's and other dementias. The CCRCs segment owns or leases communities that provides various living arrangements, such as independent and assisted living, memory care, and skilled nursing; and services to accommodate various levels of physical ability and healthcare needs. It manages communities on behalf of others. The company was incorporated in 2005 and is headquartered in Brentwood, Tennessee.",
         "last_updated": "2026-05-18",
-        "upstream": [
-          {
-            "edge_id": 1212,
-            "name": "Figma, Inc.",
-            "ticker": "FIG",
-            "type": "Ownership",
-            "product": "Ownership",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -52841,17 +52530,6 @@
             "type": "Business Process Outsourcing (BPO)",
             "product": "Business Process Outsourcing (BPO)",
             "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 797,
-            "name": "UNITEDHEALTH GROUP INCORPORATED (Delaware)",
-            "ticker": "UNH",
-            "type": "Competition",
-            "product": "Competition",
-            "confidence": 0.6,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -56041,19 +55719,7 @@
         "employees": 2000,
         "summary": "Wyndham Hotels & Resorts, Inc. operates as a hotel franchisor in the United States and internationally. It licenses its lodging brands; and provides related services to third-party hotel owners and others, as well as full-service international managed business services. The company is also involved in the guest loyalty program business. Its hotel brand portfolios include Super 8, Days Inn, Travelodge, Microtel, Howard Johnson, La Quinta, Ramada, Baymont, AmericInn, Wingate, Wyndham Alltra, Wyndham Garden, Ramada Encore, Trademark Collection, TRYP, Wyndham, Wyndham Grand, Dazzler, Esplendor, Dolce, Vienna House, ECHO Suites, Hawthorn, and WaterWalk. Wyndham Hotels & Resorts, Inc. was incorporated in 2017 and is headquartered in Parsippany, New Jersey.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 986,
-            "name": "Travel + Leisure Co.",
-            "ticker": "TNL",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -57106,19 +56772,7 @@
         "employees": 197924,
         "summary": "Darden Restaurants, Inc., together with its subsidiaries, owns and operates full-service restaurants in the United States and Canada. The company operates under Olive Garden, LongHorn Steakhouse, Cheddar's Scratch Kitchen, Chuy's, Yard House, Ruth's Chris Steak House, The Capital Grille, Seasons 52, Eddie V's Prime Seafood, Bahama Breeze, The Capital Burger, Darden and Darden Restaurants brand names. Darden Restaurants, Inc. was founded in 1938 and is based in Orlando, Florida.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 368,
-            "name": "General Mills, Inc.",
-            "ticker": "GIS",
-            "type": "Ownership",
-            "product": "Ownership",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -57376,19 +57030,7 @@
         "employees": 21100,
         "summary": "Marriott Vacations Worldwide Corporation, a vacation company, engages in vacation ownership, exchange, rental, and resort and property management, along with related businesses, products and services in the United States and internationally. The company operates in two segments, Vacation Ownership and Exchange & Third-Party Management. It develops, markets, sells, finances, rents, and manages vacation ownership and related products under the Marriott Vacation Club, Grand Residences by Marriott, Sheraton Vacation Club, Westin Vacation Club, Hyatt Vacation Club, and Ritz-Carlton Club brands; and holds non-exclusive right to develop, market, and sell whole ownership residential products under the Ritz-Carlton Residences brand name, as well as has a license to use the St. Regis brand for specified fractional ownership products. The company also offers exchange network and membership programs, as well as management services to other resorts and lodging properties through its Interval International and Aqua-Aston businesses. In addition, it provides financing for consumer purchases of vacation ownership products; and renting vacation ownership inventory. The company sells its upper upscale tier vacation ownership products under its brands primarily through a network of resort-based sales centers and certain off-site sales locations. Marriott Vacations Worldwide Corporation was founded in 1984 and is headquartered in Orlando, Florida.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 1350,
-            "name": "Micron Technology, Inc. Common Stock",
-            "ticker": "MU",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -58718,19 +58360,7 @@
             "last_verified": "2026-05-20"
           }
         ],
-        "downstream": [
-          {
-            "edge_id": 986,
-            "name": "Wyndham Hotels & Resorts, Inc. Common Stock",
-            "ticker": "WH",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 1987,
@@ -59805,17 +59435,6 @@
             "ticker": "IEX",
             "type": "Manufacturing Partner",
             "product": "Manufacturing Partner",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 833,
-            "name": "Eagle Materials, Inc.",
-            "ticker": "EXP",
-            "type": "Parent Company",
-            "product": "Parent Company",
             "confidence": 0.8,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
@@ -60922,19 +60541,7 @@
         "employees": 13873,
         "summary": "Shake Shack Inc. owns, operates, and licenses Shake Shack restaurants (Shacks) in the United States and internationally. It offers burger, chicken, hot dogs, crinkle cut fries, shakes, frozen custard, beer, wine, and other products. The company was founded in 2001 and is based in New York, New York.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 1004,
-            "name": "McDonald's Corporation",
-            "ticker": "MCD",
-            "type": "Market Competition",
-            "product": "Market Competition",
-            "confidence": 0.6,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -63017,17 +62624,6 @@
         "summary": "Garrett Motion Inc., together with its subsidiaries, designs, manufactures, and sells engineered turbocharging and high-speed electric motor technologies for original equipment manufacturers, distributors, and industrial fields in the United States, Europe, Asia, and internationally. The company offers air and fluid compression, cutting-edge technology for mobility and industrial space, including light vehicles, commercial vehicles, and industrial applications. It also provides mechanical and electrical products for turbocharging for gasoline, diesel, natural gas, hydrogen, internal combustion engines, as well as zero-emission technologies using hydrogen fuel cell systems, both for mobility and industrial use; boosting internal combustion engines, as well as for compressing air and refrigerants for industrial and mobility use; and e-powertrain and e-cooling compressor technologies for electric vehicles and industrial applications. It offers its products in the aftermarket through distributors. Garrett Motion Inc. was incorporated in 2018 and is based in Rolle, Switzerland.",
         "last_updated": "2026-05-19",
         "upstream": [
-          {
-            "edge_id": 885,
-            "name": "Honeywell International Inc. Common Stock",
-            "ticker": "HON",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
           {
             "edge_id": 886,
             "name": "Ford Motor Company",
@@ -65721,17 +65317,6 @@
           }
         ],
         "downstream": [
-          {
-            "edge_id": 105,
-            "name": "Lowe's Companies Inc.",
-            "ticker": "LOW",
-            "type": "Competition",
-            "product": "Competition",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
           {
             "edge_id": 420,
             "name": "Tractor Supply Company Common Stock",
@@ -68748,19 +68333,7 @@
         "summary": "McDonald's Corporation owns, operates, and franchises restaurants under the McDonald's brand in the United States and internationally. It offers food and beverages, including hamburgers and cheeseburgers, various chicken sandwiches, fries, shakes, frozen desserts, sundaes, soft serve cones, cookies, pies, soft drinks, coffee, and other beverages; and full or limited breakfast, as well as sells various other products during limited-time promotions. The company owns and operates franchised restaurants under various structures, including conventional franchise, developmental license, or affiliate. McDonald's Corporation was founded in 1940 and is based in Chicago, Illinois.",
         "last_updated": "2026-05-18",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 1004,
-            "name": "Shake Shack Inc.",
-            "ticker": "SHAK",
-            "type": "Market Competition",
-            "product": "Market Competition",
-            "confidence": 0.6,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 9247,
@@ -69757,17 +69330,6 @@
         "summary": "Lowe's Companies, Inc., together with its subsidiaries, operates as a home improvement retailer in the United States and Canada. It provides a line of products for construction, maintenance, repair, remodeling, and decorating. The company also offers home improvement products, such as appliances, seasonal and outdoor living, lumber, lawn and garden, kitchens and bath, hardware, building materials, millwork, paint, rough plumbing, tools, electrical, flooring, and d\u00e9cor. In addition, it provides installation services through independent contractors in various product categories; and extended protection plans and repair services. Further, the company provides design, distribution, and installation services for interior surface finishes to home builders and property managers. It sells its national brand-name merchandise and private brand products to professional customers, individual homeowners, and renters. The company serves its products through Lowes.com website, mobile applications, retail home improvement stores and outlet stores, and its branches. Lowe's Companies, Inc. was founded in 1921 and is based in Mooresville, North Carolina.",
         "last_updated": "2026-05-18",
         "upstream": [
-          {
-            "edge_id": 105,
-            "name": "Home Depot, Inc.",
-            "ticker": "HD",
-            "type": "Competition",
-            "product": "Competition",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
           {
             "edge_id": 1121,
             "name": "Sunrun Inc. Common Stock",
@@ -72719,19 +72281,7 @@
         "employees": 4400,
         "summary": "Versant Media Group, Inc. engages in the media and entertainment business in the United States. It produces, licenses, and acquires content that is distributed through various outlets, including networks and digital platforms. The company delivers news, sports and entertainment content through its portfolio of brands, which includes MS NOW, CNBC, USA Network, Golf Channel, GolfNow, SportsEngine, E!, SYFY, Oxygen True Crime, Fandango, and Free TV Networks. The company serves political news and opinion, business news and personal finance, golf and athletics participation, and sports and genre entertainment markets through television networks and digital platforms. The company was incorporated in 2025 and is based in New York, New York. Versant Media Group, Inc. was formerly a subsidiary of Comcast Corporation.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 789,
-            "name": "Comcast Corporation Class A Common Stock",
-            "ticker": "CMCSA",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -74417,19 +73967,7 @@
         "employees": 4000,
         "summary": "Telephone and Data Systems, Inc., a telecommunications company, provides communications services to residential, commercial, and wholesale customers in the United States. It operates through two segments: TDS Telecom and Array. The company offers internet connections and all-home Wi-Fi services, fiber internet, security, and support services; advanced home TV entertainment combined with a digital video recording (DVR) services; TDS TV+, an integrated cloud TV platform that combines linear and on-demand programming, mobile device interfaces, personalized recommendations, and network-based DVR; digital television; local and long-distance telephone service, voice over internet protocol, and enhanced services; wireless services to customers; broadband, IP-based services, and hosted voice and video collaboration services to small- and medium-sized businesses; carrying data and voice traffic services; wholesale services; and communication services in underserved areas. The company is also leases tower spaces to tenants; provides ancillary services. The company sells and distributes its products through third-party direct sales, retail stores, sales agents, and an online platform to sell services and products. Telephone and Data Systems, Inc. was incorporated in 1968 and is headquartered in Chicago, Illinois.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 1101,
-            "name": "Array Digital Infrastructure, Inc.",
-            "ticker": "AD",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -75168,19 +74706,7 @@
         "employees": 1100,
         "summary": "Sphere Entertainment Co. operates as a live entertainment and media company in the United States. It operates through two segments, Sphere and MSG Networks. The Sphere segment offers entertainment medium powered by technologies to create multi-sensory experiences. The MSG Networks segment provides regional sports and entertainment networks; direct-to-consumer and authenticated streaming products, as well as sports content, including live local games and other programming. The company was formerly known as Madison Square Garden Entertainment Corp. and changed its name to Sphere Entertainment Co. in April 2023. Sphere Entertainment Co. was founded in 2006 and is based in New York, New York.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 1147,
-            "name": "Madison Square Garden Sports Corp.",
-            "ticker": "MSGS",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -75717,19 +75243,7 @@
             "last_verified": "2026-05-20"
           }
         ],
-        "downstream": [
-          {
-            "edge_id": 789,
-            "name": "Versant Media Group, Inc. Class A Common Stock",
-            "ticker": "VSNT",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 4058,
@@ -75845,19 +75359,7 @@
             "last_verified": "2026-05-20"
           }
         ],
-        "downstream": [
-          {
-            "edge_id": 1101,
-            "name": "Telephone and Data Systems Inc.",
-            "ticker": "TDS",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 4322,
@@ -78655,19 +78157,7 @@
         "summary": "Madison Square Garden Sports Corp. operates as a professional sports company in the United States. The company owns and operates a portfolio of assets that consists of the New York Knickerbockers of the National Basketball Association (NBA) and the New York Rangers of the National Hockey League. Its other professional franchises include development league teams, the Hartford Wolf Pack of the American Hockey League and the Westchester Knicks of the NBA G League. It also operates the Madison Square Garden Training Center, a professional sports team performance center in Greenburgh. The company was formerly known as The Madison Square Garden Company. Madison Square Garden Sports Corp. was incorporated in 2015 and is based in New York, New York.",
         "last_updated": "2026-05-19",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 1147,
-            "name": "Sphere Entertainment Co.",
-            "ticker": "SPHR",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 8260,
@@ -80580,19 +80070,7 @@
         "summary": "Boise Cascade Company engages in the manufacture and sale of engineered wood products and plywood and wholesale distribution of building materials in the United States and Canada. It operates through two segments, Wood Products and Building Materials Distribution. The Wood Products segment manufactures laminated veneer lumber and beams for use in headers and beams; I-joists for residential and commercial flooring and roofing systems and other structural applications; structural, appearance, and industrial grade plywood panels; and ponderosa pine lumber and appearance grade boards. The Building Materials Distribution segment distributes a line of building materials, including oriented strand boards, plywood, and lumber; general line items, such as siding, composite decking, doors and millwork, metal products, insulation, and roofing; and engineered wood products. It markets and sells its products to dealers, home improvement centers, wholesalers, specialty distributors, and industrial converters for use in the construction of new residential housing, repair and remodeling of existing housing, construction of light industrial and commercial buildings, and other industrial applications through warehouse and direct sales. The company was incorporated in 2004 and is headquartered in Boise, Idaho.",
         "last_updated": "2026-05-19",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 1099,
-            "name": "StandardAero, Inc.",
-            "ticker": "SARO",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 324,
@@ -81281,19 +80759,7 @@
         "summary": "Ternium S.A., together with its subsidiaries, manufactures and distributes steel products in Mexico, Southern Region, Brazil, and internationally. The company operates through two segments, Steel and Mining. The Steel segment offers slabs, heavy plates, hot and cold rolled products, coated products, stamped steel parts for the automotive industry, roll-formed and tubular products, billets, bars, and other products, including sales of energy. Its Mining segment sells iron ore and pellets. It also provides medical and social; scrap; and engineering and other services. In addition, the company engages in the exploration, exploitation, and pelletizing of iron ore. Ternium S.A. was founded in 1961 and is based in Luxembourg, Luxembourg. Ternium S.A. is a subsidiary of Techint Holdings S.\u00e0 r.l.",
         "last_updated": "2026-05-19",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 281,
-            "name": "Tenaris S. A.",
-            "ticker": "TS",
-            "type": "Ownership",
-            "product": "Ownership",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 1579,
@@ -81344,19 +80810,7 @@
         "employees": 12300,
         "summary": "Axalta Coating Systems Ltd., through its subsidiaries, manufactures, markets, and distributes high-performance coatings systems in North America, Europe, the Middle East, Africa, the Asia Pacific, and Latin America. The company operates through two segments, Performance Coatings and Mobility Coatings. It also offers water and solvent-borne products and systems to repair damaged vehicles for independent body shops, multi-shop operators, and original equipment manufacturers (OEM) dealership body shops. In addition, the company provides functional and decorative liquid, and powder coatings for building materials, cabinet, wood and luxury vinyl flooring, and furniture applications under the Imron Industrial, Tufcote Industrial, Corlar Industrial, Strenex Industrial, PercoTop, Voltatex, AquaEC, Durapon, Hydropon, UNRIVALED, Ceranamel, Alesta, Teodur, Nap-Gard, Abcite, and Plascoat brands. Further, it develops and supplies electrocoat, primer, the basecoat, and clearcoat products for OEMs of light and commercial vehicles; and coatings systems for various commercial applications, including HDT, MDT, bus, rail, motorcycles, marine and aviation, trailers, recreational vehicles, and personal sport vehicles under the Imron, Imron Elite, Centari, Rival, Corlar epoxy undercoats, and AquaEC brands. The company also offers products under the Audurra, Abcite, Alesta, AquaEC, Axalta Irus Mix, Axalta Irus Scan, Axalta NextJet, Axalta Nimbus, Centari, Ceranamel, Challenger, Chemophan, ColorNet, Cromax, Cromax Mosaic, Durapon 70, Duxone, Harmonized Coating Technologies, Hydropon, Imron ExcelPro, Imron Elite, Imron, Lutophen, Nap-Gard, Nason, Spies Hecker, Standox, Stollaquid, Syntopal, Syrox, Raptor, Rival, U-POL, and Vermeera brands. The company was formerly known as Axalta Coating Systems Bermuda Co., Ltd. and changed its name to Axalta Coating Systems Ltd. in August 2014. Axalta Coating Systems Ltd. was founded in 1866 and is headquartered in Philadelphia, Pennsylvania.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 788,
-            "name": "DuPont de Nemours, Inc. Common Stock",
-            "ticker": "DD",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -81663,34 +81117,12 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 291,
-            "name": "Qnity Electronics, Inc.",
-            "ticker": "Q",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 630,
             "name": "Owens Corning",
             "ticker": "OC",
             "type": "Research Partnership",
             "product": "Research Partnership",
             "confidence": 0.6,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 788,
-            "name": "Axalta Coating Systems Ltd.",
-            "ticker": "AXTA",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -82495,17 +81927,6 @@
         "summary": "Solstice Advanced Materials, Inc. operates as a specialty chemicals and advanced materials company in the United States and internationally. It operates in two segments: Refrigerants & Applied Solutions (RAS), and Electronic & Specialty Materials (ESM). The RAS segment manufactures and sells low global warming potential (LGWP) refrigerants, blowing agents, solvents, and aerosol materials; and provides, aerosol propellants, cleaning solvents, pharmaceutical packaging materials, and alternative energy services under the Solstice, Genetron, and Aclar brands. The ESM segment offers electronic materials, fibers and laboratory life science chemicals for semiconductor, defense, pharmaceutical, and construction markets. This segment provides sputtering targets, lightweight high-strength fibers, and high-purity life science solutions under the Spectra, Fluka, and Hydranal brands. Solstice Advanced Materials, Inc. was incorporated in 2025 and is headquartered in Morris Plains, New Jersey.",
         "last_updated": "2026-05-19",
         "upstream": [
-          {
-            "edge_id": 553,
-            "name": "Honeywell International Inc. Common Stock",
-            "ticker": "HON",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
           {
             "edge_id": 554,
             "name": "Smurfit WestRock plc",
@@ -84287,19 +83708,7 @@
         "summary": "Cabot Corporation operates as a specialty chemicals and performance materials company. It operates through two segments, Reinforcement Materials and Performance Chemicals. The company offers reinforcing carbons that are used in tires as a rubber reinforcing agent and performance additive, as well as in industrial products, such as hoses, belts, extruded profiles, and molded goods; and engineered elastomer composites solutions. It also provides specialty carbons for use in inks, coatings, plastics, adhesives, toners, batteries, and displays; conductive additives and fumed alumina used in lead acid and lithium-ion batteries for electric vehicles; fumed silica used in adhesives, sealants, cosmetics, batteries, inks, toners, silicone elastomers, coatings, polishing slurries, and pharmaceuticals; and fumed alumina for use in various products, including inkjet media, lighting, coatings, cosmetics, and polishing slurries. In addition, it offers aerogel, a hydrophobic, silica-based particle to use in various thermal insulation and specialty chemical applications; masterbatch and conductive compound products that are used in automotive, industrial, packaging, infrastructure, agriculture, consumer products, and electronics industries; and inkjet colorants for inkjet printing applications, as well as carbon nanotubes and fumed metal oxides. The company sells its products through distributors and sales representatives in the Americas, Europe, the Middle East, Africa, and the Asia Pacific. Cabot Corporation was founded in 1882 and is headquartered in Boston, Massachusetts.",
         "last_updated": "2026-05-19",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 326,
-            "name": "Coterra Energy Inc.",
-            "ticker": "CTRA",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 6080,
@@ -85406,17 +84815,6 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 250,
-            "name": "Franco-Nevada Corporation",
-            "ticker": "FNV",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 829,
             "name": "OceanaGold Corporation",
             "ticker": "OGC",
@@ -85634,19 +85032,7 @@
         "employees": null,
         "summary": "Franco-Nevada Corporation operates as a royalty and stream company focused on precious metals in South America, Central America, Mexico, the United States, Canada, Australia, Europe, and Africa. The company operates through Precious Metals, Other Mining and Energy segments. It also manages its portfolio with a focus on precious metals, such as gold, silver, and platinum group metals; and engages in the sale of crude oil, natural gas, and natural gas liquids through a third-party marketing agent. Franco-Nevada Corporation was founded in 1986 and is headquartered in Toronto, Canada.",
         "last_updated": "2026-05-18",
-        "upstream": [
-          {
-            "edge_id": 250,
-            "name": "Newmont Corporation",
-            "ticker": "NEM",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -86531,19 +85917,7 @@
             "last_verified": "2026-05-20"
           }
         ],
-        "downstream": [
-          {
-            "edge_id": 507,
-            "name": "ITT Inc.",
-            "ticker": "ITT",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 9803,
@@ -86798,17 +86172,6 @@
         "summary": "Eagle Materials Inc., through its subsidiaries, manufactures and sells heavy construction products and light building materials in the United States. The company operates in four segments: Cement, Concrete and Aggregates, Gypsum Wallboard, and Recycled Paperboard. It engages in the mining of limestone for the manufacture, production, distribution, and sale of portland cement, including Portland limestone cement; grinding and sale of slag; and mining of gypsum for the manufacture and sale of gypsum wallboards used to finish the interior walls and ceilings in residential, commercial, and industrial structures, as well as well as containerboard and lightweight packaging grades. The company is also involved in the manufacture and sale of recycled paperboard to the gypsum wallboard industry and other paperboard converters; sale of readymix concrete; and mining and sale of aggregates, such as crushed stone, sand, and gravel. Its products are used in commercial and residential construction; public construction projects to build, expand, and repair roads and highways; and repair and remodel activities. The company was formerly known as Centex Construction Products, Inc. and changed its name to Eagle Materials, Inc. in January 2004. Eagle Materials Inc. was founded in 1963 and is headquartered in Dallas, Texas.",
         "last_updated": "2026-05-19",
         "upstream": [
-          {
-            "edge_id": 833,
-            "name": "INSTALLED BUILDING PRODUCTS, INC.",
-            "ticker": "IBP",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
           {
             "edge_id": 834,
             "name": "Cemex S.A.B. de C.V.",
@@ -88337,17 +87700,6 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 664,
-            "name": "National Fuel Gas Co.",
-            "ticker": "NFG",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 801,
             "name": "Cheniere Energy Partners, LP",
             "ticker": "CQP",
@@ -88657,19 +88009,7 @@
         "employees": 17000,
         "summary": "Veralto Corporation provides water analytics, water treatment, marking and coding, and packaging and color solutions worldwide. It operates through two segments, Water Quality (WQ) and Product Quality & Innovation (PQI). The WQ segment offers precision instrumentation and water treatment technologies to measure, analyze, and treat water in residential, commercial, municipal, industrial, research, and natural resource applications under the Hach, Trojan Technologies, ChemTreat, and other brands. This segment also provides water solutions, including chemical reagents, services, and software solutions. The PQI segment offers marking and coding for packaged goods and related consumables; a software solution that provides digital asset management, marketing resource management, and product information management; inline printing solutions for products and packaging with marking and coding systems; design software and imaging systems for the creation of new packaging designs; color management solutions for printed packages and consumer and industrial products; and color standard services for the design industry. This segment sells its products and services through the Videojet, Linx, Esko, X-Rite, and Pantone brands. The company serves industries, such as municipal utilities, food and beverage, pharmaceutical, and industrials. The company was formerly known as DH EAS Holding Corp. and changed its name to Veralto Corporation in February 2023. Veralto Corporation was incorporated in 2022 and is headquartered in Waltham, Massachusetts.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 376,
-            "name": "Danaher Corporation",
-            "ticker": "DHR",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -89136,19 +88476,7 @@
         "summary": "Dover Corporation provides equipment and components, consumable supplies, aftermarket parts, software and digital solutions, and support services worldwide. The company's Engineered Products segment provides various equipment, component, software, solution, and services that are used in vehicle aftermarket, aerospace and defense, industrial winch and hoist, and fluid dispensing end-market. This segment offers software solutions and services used in light and heavy-duty vehicle lifts, wheel service equipment, vehicle diagnostics, and vehicle collision repair solutions; winches, hoists, bearings, drives, and electric monitoring system; and radio frequency and microwave filters and switches, and signal intelligence solutions, as well as soldering and fluid dispensing solutions. Its Clean Energy & Fueling segment offers component, equipment, and software and service solution enabling safe storage and transport of fuel, cryogenic gases, and hazardous fluids, as well as operation of retail fueling and vehicle wash establishment. The company's Imaging & Identification segment provides precision marking and coding, product traceability equipment, brand protection, and digital textile printing equipment and solution, as well as consumable, software, and service to packaged and consumer goods, pharmaceutical, industrial manufacturing, textile, and other end-market. Its Pumps & Process Solutions segment manufactures specialty pump, connector, flow meter, fluid connecting solution, plastics and polymer processing equipment, and engineered components for rotating and reciprocating machines. The company's Climate & Sustainability Technologies segment manufactures refrigeration system, refrigeration display case, commercial glass refrigerator and freezer door, and brazed plate heat exchanger for industrial heating and cooling, and residential climate control applications. Dover Corporation was incorporated in 1947 and is headquartered in Downers Grove, Illinois.",
         "last_updated": "2026-05-19",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 549,
-            "name": "Graco Inc",
-            "ticker": "GGG",
-            "type": "Parent company of Husky Corporation",
-            "product": "Parent company of Husky Corporation",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 885,
@@ -89207,17 +88535,6 @@
             "type": "Manufacturing Partner",
             "product": "Manufacturing Partner",
             "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 1315,
-            "name": "NOV Inc.",
-            "ticker": "NOV",
-            "type": "Parent Company (spinoff)",
-            "product": "Parent Company (spinoff)",
-            "confidence": 1.0,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -89593,32 +88910,8 @@
         "employees": 60500,
         "summary": "Waste Management, Inc., through its subsidiaries, provides environmental solutions to residential, commercial, industrial, and municipal customers in the United States, Canada, Western Europe, and internationally. It offers collection services, including picking up and transporting waste and recyclable materials from where it was generated to a transfer station, recovery facility, or disposal site; owns and operates transfer stations; and owns, develops, and operates landfill gas-to-energy facilities that produce renewable electricity and renewable natural gas. It also operates materials processing and commodities recycling services, including cardboard, paper, glass, metals, plastics, construction and demolition materials, and other recycling commodities are recovered for resale or redirected for other purposes; markets and resells recycling commodities; recycling brokerage services, such as managing the marketing of recyclable materials for third parties; and other strategic business solutions. In addition, the company collects recyclable food and yard waste, as well as markets and sells mulch, compost, soil amendments, and renewable energy; offers remediation and construction, and industrial waste services; and manages and markets fly ash. Further, it provides Regulated Waste and Compliance Services (RWCS), which offers compliance programs, as well as collection, processing, and disposal of regulated and specialized waste, including medical, pharmaceutical, and hazardous waste; and Secure Information Destruction (SID) services that include the collection of personal and confidential information for secure destruction and recycling of sorted office paper. The company was formerly known as USA Waste Services, Inc. and changed its name to Waste Management, Inc. in 1998. Waste Management, Inc. was founded in 1968 and is based in Houston, Texas.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 151,
-            "name": "Republic Services Inc.",
-            "ticker": "RSG",
-            "type": "Competition/Market Presence",
-            "product": "Competition/Market Presence",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
-        "downstream": [
-          {
-            "edge_id": 208,
-            "name": "Republic Services Inc.",
-            "ticker": "RSG",
-            "type": "Competition",
-            "product": "Competition",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "upstream": [],
+        "downstream": []
       },
       {
         "id": 1206,
@@ -95030,17 +94323,6 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 553,
-            "name": "Solstice Advanced Materials Inc. Common Stock",
-            "ticker": "SOLS",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 655,
             "name": "Tetra Tech, Inc. Common Stock",
             "ticker": "TTEK",
@@ -95069,17 +94351,6 @@
             "type": "Hardware/Technology",
             "product": "Hardware/Technology",
             "confidence": 0.7,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 885,
-            "name": "Garrett Motion Inc. Common Stock",
-            "ticker": "GTX",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -95515,19 +94786,7 @@
         "employees": 8000,
         "summary": "StandardAero, Inc. provides aerospace engine aftermarket services for fixed and rotary wing aircraft in the United States, Canada, the United Kingdom, Rest of Europe, Asia, and internationally. It operates in two segments, Engine Services and Component Repair Services. The Engine Services segment provides a suite of aftermarket services, including maintenance, repair and overhaul, on-wing and field service support, asset management, and engineering and related solutions to customers in the commercial aerospace, military and helicopter, and business aviation end markets. The Component Repair Services segment offers engine component and accessory repairs to the commercial aerospace, military and helicopter, land and marine, and oil and gas end markets. StandardAero, Inc. was formerly known as Dynasty Parent Co., Inc. and changed its name to StandardAero, Inc. in September 2024. The company was founded in 1911 and is headquartered in Scottsdale, Arizona.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 1099,
-            "name": "Boise Cascade Company",
-            "ticker": "BCC",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -96084,31 +95343,8 @@
         "employees": 42000,
         "summary": "Republic Services, Inc., together with its subsidiaries, offers environmental services in the United States and Canada. It is involved in the collection and processing of recyclable, solid waste, and industrial waste materials; transportation and disposal of non-hazardous and hazardous waste streams; and other environmental solutions. Its residential collection services include curbside collection of material for transport to transfer stations, landfills, recycling centers, and organics processing facilities; supply of recycling and waste containers; and renting of compactors. The company also engages in the processing and sale of old corrugated containers, old newsprint, aluminum, glass, and other materials; and provision of landfill services. It serves small-container, large-container, and residential customers. The company was incorporated in 1996 and is based in Phoenix, Arizona.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 208,
-            "name": "Waste Management, Inc.",
-            "ticker": "WM",
-            "type": "Competition",
-            "product": "Competition",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": [
-          {
-            "edge_id": 151,
-            "name": "Waste Management, Inc.",
-            "ticker": "WM",
-            "type": "Competition/Market Presence",
-            "product": "Competition/Market Presence",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
           {
             "edge_id": 1033,
             "name": "AutoNation, Inc.",
@@ -97128,19 +96364,7 @@
         "employees": 105000,
         "summary": "GXO Logistics, Inc., together with its subsidiaries, provides logistics services worldwide. It provides warehousing and distribution, order fulfilment, e-commerce, reverse logistics, and other supply chain services. As of December 31, 2025, it operated in 1,043 facilities. The company serves a range of customers in the e-commerce, omnichannel retail, technology and consumer electronics, food and beverage, industrial and manufacturing, consumer packaged goods, and other industries. GXO Logistics, Inc. was incorporated in 2021 and is headquartered in Greenwich, Connecticut.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 987,
-            "name": "XPO, Inc.",
-            "ticker": "XPO",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -99758,17 +98982,6 @@
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 549,
-            "name": "Dover Corporation",
-            "ticker": "DOV",
-            "type": "Parent company of Husky Corporation",
-            "product": "Parent company of Husky Corporation",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
           }
         ],
         "downstream": []
@@ -100899,19 +100112,7 @@
         "summary": "nVent Electric plc designs, manufactures, markets, installs, and services electrical connection and protection solutions in the America, Europe, the Middle East, India, Africa, the Asia Pacific, and internationally. It operates in two segments, Systems Protection and Electrical Connections. The company provides solutions to protect electronics, systems, and data in mission critical applications, including data centers. It also offers solutions that connect power and data infrastructure. In addition, the company provides bus systems, cable management, control buildings, liquid and air-cooling solutions, electrical connections, enclosures, equipment protection, power connections, and power management solutions, switchgear systems, as well as tools and test instruments. The company markets its products through electrical distributors, retail, contractors, and original equipment manufacturers under the nVent CADDY, ERICO, HOFFMAN, ILSCO, SCHROFF, and TRACHTE brand names. Its products are used for various applications, such as industrial, commercial and residential, infrastructure, and energy. The company was founded in 1903 and is based in London, the United Kingdom.",
         "last_updated": "2026-05-18",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 557,
-            "name": "Pentair plc",
-            "ticker": "PNR",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 7329,
@@ -101843,19 +101044,7 @@
         "employees": 9000,
         "summary": "MYR Group Inc., through its subsidiaries, provides electrical construction services in the United States and Canada. The company operates through two segments: Transmission and Distribution, and Commercial and Industrial. Its Transmission and Distribution segment offers a range of services on electric transmission and distribution networks, and substation facilities, including design, engineering, procurement, construction, upgrade, maintenance, and repair services with primary focus on construction, maintenance, and repair to customers in the electric utility industry; and services, including construction and maintenance of high voltage transmission lines, substations, and lower voltage underground and overhead distribution systems, clean energy projects, and electric vehicle charging infrastructure services, as well as emergency restoration services in response to hurricane, wildfire, ice storm, or other related damages. This segment serves as prime contractor to customers, such as investor-owned utilities, cooperatives, private developers, government-funded utilities, independent power producers, independent transmission companies, industrial facility owners, and other contractors. The Commercial and Industrial segment provides a range of services, including design, installation, maintenance, and repair of commercial and industrial wiring; and installation of intelligent transportation systems, roadway lighting, and signalization for airports, hospitals, data centers, hotels, stadiums, commercial and industrial facilities, clean energy projects, manufacturing plants, processing facilities, water/waste-water treatment facilities, mining facilities, intelligent transportation systems, roadway lighting, signalization, and electric vehicle charging infrastructure. This segment serves general contractors, commercial and industrial facility owners, governmental agencies, and developers. MYR Group Inc. was founded in 1891 and is headquartered in Thornton, Colorado.",
         "last_updated": "2026-05-16",
-        "upstream": [
-          {
-            "edge_id": 756,
-            "name": "FirstEnergy Corp.",
-            "ticker": "FE",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -103238,17 +102427,6 @@
         "summary": "FedEx Corporation, together with its subsidiaries, provides transportation, e-commerce, and business services in the United States and internationally. It operates through Federal Express and FedEx Freight segments. The company offers transportation services, including express, freight, less-than-truckload freight, and time-specific freight-shipping; and small-package ground delivery services. It also provides e-commerce and digital solutions; dataworks; printing and shipping management, including digital printing, professional finishing, document creation, design solutions, direct mail, signs and graphics, custom-branded boxes, copying, computer rental, free Wi-Fi, corporate print solutions, shredding, expedited U.S. passport processing and renewal, and digital notarization; packing services, as well as packing supplies and boxes; document and business services; and retail access for package transportation. In addition, the company offers logistics services, air and ocean freight-forwarding and cargo transportation, specialty transportation, customs brokerage and clearance, trade management tools and data, and door-to-door solutions; and third party logistics and supply chain management solutions, such as inbound logistics, warehousing and distribution, fulfillment, contract packaging and product configuration, systems integration, returns process and disposition, test, repair, refurbishment, and product liquidation. Further, it provides sales, marketing, administrative, information technology, and back-office support services. FedEx Corporation was founded in 1971 and is headquartered in Memphis, Tennessee.",
         "last_updated": "2026-05-16",
         "upstream": [
-          {
-            "edge_id": 143,
-            "name": "Hemab Therapeutics Holdings, Inc. Common Stock",
-            "ticker": "COAG",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
           {
             "edge_id": 1132,
             "name": "W.W. Grainger, Inc.",
@@ -106917,32 +106095,8 @@
         "employees": 11600,
         "summary": "ITT Inc., together with its subsidiaries, manufactures and sells engineered critical components and customized technology solutions for the transportation, industrial, and energy markets. The company operates three segments: Motion Technologies, Industrial Process, and Connect & Control Technologies. The Motion Technologies segment manufactures brake pads, shock absorbers, energy absorption components, and damping technologies primarily for the transportation industry, including passenger cars, trucks, light and heavy-duty commercial and military vehicles, buses, and trains. This segment sells its products under the ITT Friction Technologies, KONI, Axtone, and Novitek brand names. The Industrial Process segment provides industrial pumps, valves, plant optimization, and remote monitoring systems and services; and aftermarket solutions, such as replacement parts and services. It serves various customers in the energy, chemical and petrochemical, pharmaceutical, general industrial, marine, mining, pulp and paper, food and beverage, power generation, and biopharmaceutical industries. This segment sells its products under the Goulds Pumps, Bornemann, Engineered Valves, Hamworthy Pumps, PRO Services, C'treat, Svaneh\u00f8j, Rheinh\u00fctte Pumpen, and Habonim brand names. The Connect & Control Technologies segment offers engineered connectors, cable assemblies, and specialized products for critical applications supporting various markets, including aerospace and defence, industrial, transportation, medical, and energy under the Cannon, VEAM, BIW Connector Systems, CIA&D, Compulink, Aerospace Controls, Enidine, Compact Automation, Charles E. Gillman, Turn-Act, Neo-Dyn, TopFlite Components, Conoflow, VIDAR, kSARIA, and Micro-Mode brand names. It operates in North America, Europe, Asia, the Middle East, Africa, and South America. The company was incorporated in 1920 and is headquartered in Stamford, Connecticut.",
         "last_updated": "2026-05-18",
-        "upstream": [
-          {
-            "edge_id": 507,
-            "name": "Element Solutions Inc.",
-            "ticker": "ESI",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
-        "downstream": [
-          {
-            "edge_id": 961,
-            "name": "Xylem Inc",
-            "ticker": "XYL",
-            "type": "Parent-Subsidiary Relationship",
-            "product": "Parent-Subsidiary Relationship",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "upstream": [],
+        "downstream": []
       },
       {
         "id": 10571,
@@ -108311,19 +107465,7 @@
         "employees": 22000,
         "summary": "Xylem Inc., together with its subsidiaries, engages in the design, manufacture, and servicing of engineered products and solutions for utility, industrial, and residential and commercial building services settings worldwide. It operates through Water Infrastructure; Applied Water; Measurement and Control Solutions; and Water Solutions and Services segments. The company offers water, wastewater, and storm water pumps and controls and systems; filtration, disinfection, and biological treatment equipment under the Flygt, Ionpure, Leopold, Neptune Benson, Sanitare, Wallace & Tiernan, and Wedeco brands; and pumps, valves, heat exchangers, controls, and dispensing equipment used for water and focuses on the residential, commercial and industrial markets under the Rule, Bell & Gossett, Flojet, Goulds Water Technology, Jabsco, and Lowara brands. It also provides smart meters, network communication devices, data analytics, test instruments, controls, sensor devices, software and managed services, critical infrastructure services, cloud-based analytics, and remote monitoring and data management under the Ebro, Sensus, Sentec, Smith Blair, WTW, YSI, and Xylem Vue brands. In addition, the company offers preventative maintenance services, rapid response mobile services, digitally enabled/outsourced solutions, process and wastewater treatment systems, environmental remediation, odor and corrosion control, filtration, reverse osmosis, continuous deionization, and mobile dewatering equipment and rental services; and municipal services comprising odor and corrosion control services, as well as condition assessment and asset management, and pressure monitoring solutions under the Grindex, Mar Cor, and Godwin brands. Xylem Inc. was formerly known as ITT WCO, Inc. and changed its name to Xylem Inc. in July 2011. The company was incorporated in 2011 and is headquartered in Washington, District Of Columbia.",
         "last_updated": "2026-05-14",
-        "upstream": [
-          {
-            "edge_id": 961,
-            "name": "ITT Inc.",
-            "ticker": "ITT",
-            "type": "Parent-Subsidiary Relationship",
-            "product": "Parent-Subsidiary Relationship",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -108480,17 +107622,6 @@
         ],
         "downstream": [
           {
-            "edge_id": 987,
-            "name": "GXO Logistics, Inc.",
-            "ticker": "GXO",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 1111,
             "name": "Planet Fitness, Inc.",
             "ticker": "PLNT",
@@ -108602,19 +107733,7 @@
         "employees": 9000,
         "summary": "Pentair plc provides various water solutions in the United States, Western Europe, China, Latin America, the Middle East, Southeast Asia, Australia, and Canada. It operates through three segments: Flow, Water Solutions, and Pool. The Flow segment designs, manufactures, and sells fluid treatment and pump products and systems, including pressure vessels, gas recovery solutions, membrane bioreactors, wastewater reuse systems and advanced membrane filtration, separation systems, specialty insertion valves, water disposal pumps, water supply pumps, fluid transfer pumps, turbine pumps, solid handling pumps, and agricultural spray nozzles. This segment provides products under Pentair Flow, Aurora, Berkeley, Codeline, Fairbanks-Nijhuis, Haffmans, Hydromatic, Hypro, Jung Pumpen, Myers, Sta-Rite, Shurflo, S\u00fcdmo, and X-Flow brand names. The Water Solutions segment offers commercial and residential water treatment products and systems, such as pressure tanks, control valves, activated carbon products, commercial ice machines, conventional filtration products, and point-of-entry and point-of-use water treatment systems for use in water filtration and water softening solutions, as well as commercial water management and filtration solutions in foodservice operations; and installation and preventative services for water management solutions for commercial operators under the Pentair Water Solutions, Everpure, Fleck, Manitowoc Ice, Pentek, and RainSoft brands. The Pool segment provides residential and commercial pool equipment and accessories, including pumps, filters, heaters, lights, automatic controls and cleaners, chlorinators, maintenance equipment, and pool accessories for residential and commercial pool maintenance, pool repair, renovation, service, construction, and aquaculture solutions. This segment offers products under the Pentair Pool, Kreepy Krauly, Pleatco, and Sta-Rite brands. Pentair plc was founded in 1966 and is headquartered in London, the United Kingdom.",
         "last_updated": "2026-05-13",
-        "upstream": [
-          {
-            "edge_id": 557,
-            "name": "nVent Electric plc Ordinary Shares",
-            "ticker": "NVT",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": [
           {
             "edge_id": 556,
@@ -109891,17 +109010,6 @@
             "type": "Joint Venture",
             "product": "Joint Venture",
             "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 819,
-            "name": "The Magnum Ice Cream Company N.V.",
-            "ticker": "MICC",
-            "type": "Parent company",
-            "product": "Parent company",
-            "confidence": 0.95,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -111251,17 +110359,6 @@
         "last_updated": "2026-05-19",
         "upstream": [
           {
-            "edge_id": 265,
-            "name": "Canopy Growth Corporation Common Shares",
-            "ticker": "CGC",
-            "type": "Ownership",
-            "product": "Ownership",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 266,
             "name": "C.H. Robinson Worldwide, Inc. Common Stock",
             "ticker": "CHRW",
@@ -111362,19 +110459,7 @@
         "employees": 7600,
         "summary": "The Clorox Company manufactures and markets consumer and professional products worldwide. The company operates through four segments: Health and Wellness, Household, Lifestyle, and International. The Health and Wellness segment offers home care cleaning and disinfecting products, bleach, clog removers, and laundry additives under the Clorox, Clorox2, Pine-Sol, Scentiva, Tilex, Liquid-Plumr, Poett, and Formula 409 brands; professional cleaning and disinfecting products under the CloroxPro and Clorox Healthcare brands; professional food service products under the Hidden Valley brand in the United States. The Household segment provides cat litter products under the Fresh Step and Scoop Away brands; bags and wraps under the Glad brand; and grilling products under the Kingsford brand in the United States. The Lifestyle segment offers dressings, dips, seasonings, and sauces primarily under the Hidden Valley brand; water-filtration products under the Brita brand; and natural personal care products under the Burt's Bees brand in the United States. The International segment provides laundry additives, home care products, bags and wraps, cat litter products, water-filtration systems, professional cleaning and disinfecting products, natural personal care products, food, grilling products, and digestive health products internationally primarily under the Clorox, Glad, Poett, Brita, Burt's Bees, Pine-Sol, Ever Clean, Clorinda, Chux and Fresh Step Brands. It also offers vitamins, minerals, and supplement products under the Natural Vitality, RenewLife, NeoCell, and Rainbow Light brands. The company sells its products through mass retailers; grocery outlets; warehouse clubs; dollar stores; home hardware centers; drug, pet, and military stores; third-party and owned e-commerce channels; and distributors, as well as a direct sales force. The company was founded in 1913 and is headquartered in Oakland, California.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 974,
-            "name": "Procter & Gamble Company",
-            "ticker": "PG",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -112773,17 +111858,6 @@
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 974,
-            "name": "Clorox Company",
-            "ticker": "CLX",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
           }
         ]
       },
@@ -112871,17 +111945,6 @@
             "type": "Logistics/Supplier",
             "product": "Logistics/Supplier",
             "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 368,
-            "name": "Darden Restaurants, Inc.",
-            "ticker": "DRI",
-            "type": "Ownership",
-            "product": "Ownership",
-            "confidence": 1.0,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -113577,19 +112640,7 @@
         "employees": 370426,
         "summary": "Fomento Econ\u00f3mico Mexicano, S.A.B. de C.V., through its subsidiaries, operates as a franchise bottler of Coca-Cola trademark beverages worldwide. The company operates through Coca-Cola FEMSA, Proximity Americas Division, Proximity Europe Division, Health Division, Fuel Division, and Others segments. It produces, markets, and distributes Coca-Cola trademark beverages in Mexico, Guatemala, Nicaragua, Costa Rica, Panama, Colombia, Venezuela, Brazil, Argentina, and Uruguay. The company also operates small-box retail chain stores in Mexico, Colombia, Peru, Chile, Brazil, and the United States under the OXXO name; retail service stations for fuels, motor oils, lubricants, and car care products under the OXXO GAS name in Mexico; and drugstores in Chile, Colombia, Ecuador, and Mexico under the Cruz Verde, Fybeca, Sana Sana, YZA, La Moderna, and Farmacon names. In addition, the company provides transport logistics and maintenance services in Mexico, Brazil, and Colombia; processes electronic transactions for small and medium-sized businesses under the Spin name; and engages in the proximity discount grocery business under the Bara name. Further, it operates small-box retail and foodvenience chain stores in Switzerland, Germany, Austria, Luxembourg, and the Netherlands under the k kiosk, Brezelk\u00f6nig, BackWerk, Ditsch, Press & Books, avec, Caff\u00e8 Spettacolo, and ok.\u0096 brands. Fomento Econ\u00f3mico Mexicano, S.A.B. de C.V. was founded in 1890 and is headquartered in Monterrey, Mexico.",
         "last_updated": "2026-05-16",
-        "upstream": [
-          {
-            "edge_id": 1018,
-            "name": "Coca-Cola FEMSA, S.A.B DE C.V",
-            "ticker": "KOF",
-            "type": "Parent Company (47.9% stake)",
-            "product": "Parent Company (47.9% stake)",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -114130,17 +113181,6 @@
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 918,
-            "name": "Lamb Weston Holdings, Inc.",
-            "ticker": "LW",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
           }
         ]
       },
@@ -114448,19 +113488,7 @@
         "employees": 10100,
         "summary": "Lamb Weston Holdings, Inc. engages in the production, distribution, and marketing of frozen potato products in the United States, Canada, Mexico, and internationally. It offers frozen potatoes, commercial ingredients, and appetizers under the Lamb Weston brand, as well as under various customer labels. The company also provides its products under its owned or licensed brands, such as Grown in Idaho and Alexia, and other licensed brands, as well as under retailers' own brands. It sells its products through a network of internal sales personnel and independent brokers, agents, and distributors to quick service and full-service restaurants and chains, wholesale, grocery, mass merchants, club retailers, and specialty retailers, as well as foodservice distributors and institutions, including businesses, educational institutions, independent restaurants, regional chain restaurants, and convenience stores. Lamb Weston Holdings, Inc. was incorporated in 1950 and is headquartered in Eagle, Idaho.",
         "last_updated": "2026-05-16",
-        "upstream": [
-          {
-            "edge_id": 918,
-            "name": "Conagra Brands, Inc.",
-            "ticker": "CAG",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -115149,19 +114177,7 @@
         "employees": 15399,
         "summary": "The Magnum Ice Cream Company N.V. engages in the ice cream business in the Netherlands. The company offers its products under the Magnum, Ben & Jerry's, Cornetto, and Wall's brands. It also operates in rest of Europe, North America, South America, Africa, Asia, the Middle East, Australia, and New Zealand. The company was incorporated in 2025 and is headquartered in Amsterdam, the Netherlands.",
         "last_updated": "2026-05-18",
-        "upstream": [
-          {
-            "edge_id": 819,
-            "name": "Unilever plc",
-            "ticker": "UL",
-            "type": "Parent company",
-            "product": "Parent company",
-            "confidence": 0.95,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -115287,19 +114303,7 @@
             "last_verified": "2026-05-20"
           }
         ],
-        "downstream": [
-          {
-            "edge_id": 1018,
-            "name": "FOMENTO ECONOMICO MEXICANO, S.A.B. DE C.V.",
-            "ticker": "FMX",
-            "type": "Parent Company (47.9% stake)",
-            "product": "Parent Company (47.9% stake)",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 10666,
@@ -117083,19 +116087,7 @@
         "employees": 24875,
         "summary": "Tenaris S.A., together with its subsidiaries, manufactures and supplies steel pipe products and related services for the energy industry and other industrial applications in North America, South America, Europe, the Middle East and Africa, and the Asia Pacific. It provides steel casings to sustain the walls of oil and gas wells during and after drilling; steel tubing for conducting crude oil and natural gas to the surface after drilling has been completed; steel line pipes to transport crude oil and natural gas from wells to refineries, storage tanks, and loading and distribution centers; and mechanical and structural pipes for the transportation of other forms of gas and liquids under high pressure. The company also offers cold-drawn pipes for use in boilers, superheaters, condensers, heat exchangers, automobile production, and other industrial applications; premium joints and couplings for use in high temperature or high pressure environments under the TenarisHydril brand name; coiled tubing is used for oil and gas drilling and well workovers and for subsea pipelines; sucker rods used in oil extraction activities, tubes used for plumbing and construction applications, and oilfield / hydraulic fracturing services; pipe coating services; and automotive components. In addition, it engages in the sale of energy and raw materials; development, management, and licensing of intellectual property; procurement and trading services; and financial operations, as well as markets steel products. Further, the company manufactures and markets connections; and welded and seamless steel pipes. Tenaris S.A. was incorporated in 2001 and is based in Luxembourg, Luxembourg. Tenaris S.A. operates as a subsidiary of Techint Holdings S.\u00e0r.l.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 281,
-            "name": "Ternium S.A. American Depositary Shares",
-            "ticker": "TX",
-            "type": "Ownership",
-            "product": "Ownership",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -117173,19 +116165,7 @@
         "employees": 588,
         "summary": "TORM plc, a shipping company, owns and operates a fleet of product tankers in the United Kingdom and internationally. It operates in two segments, Tanker and Marine Engineering. The Tanker segment transports refined oil products, such as gasoline, jet fuel, diesel, naphtha, and gas oil, as well as dirty petroleum products, such as residual fuels and crude oil. The Marine Engineering segment engages in developing and producing advanced and green marine equipment. TORM plc was founded in 1889 and is based in London, the United Kingdom.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 1076,
-            "name": "Teekay Corporation Ltd.",
-            "ticker": "TK",
-            "type": "Joint Venture/Ownership",
-            "product": "Joint Venture/Ownership",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -117366,19 +116346,7 @@
         "summary": "Teekay Corporation Ltd. provides crude oil marine transportation and other marine services worldwide. The company operates in two segments, Tankers and Marine Services. It owns and operates crude oil and refined product tankers. The company also offers ship-to-ship support services; tanker commercial management operation services; technical management; and operational and maintenance marine services. It operates a fleet of 34 double-hull tankers. It serves energy and utility companies, oil traders, oil consumers and petroleum product producers, government agencies, and various other entities that depend upon marine transportation. The company was formerly known as Teekay Corporation and changed its name to Teekay Corporation Ltd. in October 2024. Teekay Corporation Ltd. was founded in 1973 and is headquartered in Hamilton, Bermuda.",
         "last_updated": "2026-05-19",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 1076,
-            "name": "TORM plc Class A Common Stock",
-            "ticker": "TRMD",
-            "type": "Joint Venture/Ownership",
-            "product": "Joint Venture/Ownership",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 2300,
@@ -117771,17 +116739,6 @@
             "type": "Raw Materials",
             "product": "Raw Materials",
             "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 780,
-            "name": "Occidental Petroleum Corporation",
-            "ticker": "OXY",
-            "type": "Parent Company (historical)",
-            "product": "Parent Company (historical)",
-            "confidence": 0.8,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -118265,19 +117222,7 @@
         "summary": "CNX Resources Corporation, an independent natural gas and midstream company, engages in the acquisition, exploration, development, and production of natural gas properties in the Appalachian Basin. The company operates in two segments, Shale and Coalbed Methane (CBM). It produces and sells pipeline quality natural gas primarily for gas wholesalers. The company owns rights to extract natural gas from shale formations in Pennsylvania, West Virginia, and Ohio, as well as rights to extract natural gas from other Shale and shallow oil and gas formations primarily in Illinois, Indiana, New York, Ohio, Pennsylvania, Virginia, and West Virginia. In addition, the company designs, builds, and operates natural gas gathering systems to move natural gas from the wellhead to interstate pipelines or other local sales points; owns or operates approximately 2,600 miles of natural gas gathering pipelines as well as various natural gas processing facilities. Further, it offers turn-key solutions for water sourcing, delivery and disposal for its natural gas operations and supplies solutions for water sourcing as well as delivery and disposal for third parties. The company was formerly known as CONSOL Energy Inc. and changed its name to CNX Resources Corporation in November 2017. CNX Resources Corporation was founded in 1860 and is based in Canonsburg, Pennsylvania.",
         "last_updated": "2026-05-19",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 934,
-            "name": "Core Natural Resources, Inc.",
-            "ticker": "CNR",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 3691,
@@ -118328,19 +117273,7 @@
         "employees": 4850,
         "summary": "Core Natural Resources, Inc., together with its subsidiaries, produces, sells, and exports metallurgical and thermal coals in the United States and internationally. It operates through the High CV Thermal; Metallurgical; Powder River Basin (PRB); and Core Marine Terminal segments. The High CV Thermal segment consists of Pennsylvania Mining Complex and the West Elk mine located in Colorado. The Metallurgical segment consists of Leer, Leer South, Beckley, Mountain Laurel, and Itmann coal mines in West Virginia. The PRB segment consists of Black Thunder and Coal Creek surface mining complexes located in Wyoming. The Core Marine Terminal segment consists of coal export terminal operations in the Port of Baltimore. The company was formerly known as CONSOL Energy Inc. and changed its name to Core Natural Resources, Inc. in January 2025. Core Natural Resources, Inc. was founded in 1864 and is headquartered in Canonsburg, Pennsylvania.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 934,
-            "name": "CNX Resources Corporation",
-            "ticker": "CNX",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -118571,17 +117504,6 @@
         "summary": "Coterra Energy Inc., an independent oil and gas company, engages in the exploration, development, and production of oil, natural gas, and natural gas liquids in the United States. The company's properties include the Permian Basin, which covers approximately 345,000 net acres in the Delaware Basin in west Texas and southeast New Mexico, and an additional approximate of 49,000 net acres in the Delaware Basin in Lea County, New Mexico; Marcellus Shale properties, which covers approximately 186,000 net acres located in Susquehanna County, northeast Pennsylvania; and Anadarko Basin, which covers approximately 208,000 net acres located in the mid-continent region in Oklahoma. It also operates natural gas and saltwater gathering, and disposal systems in Texas. The company sells its natural gas to industrial customers, local distribution companies, oil and gas marketers, energy companies, pipeline companies, and power generation facilities. The company was formerly known as Cabot Oil & Gas Corporation and changed its name to Coterra Energy Inc. in October 2021. Coterra Energy Inc. was incorporated in 1989 and is headquartered in Houston, Texas.",
         "last_updated": "2026-05-13",
         "upstream": [
-          {
-            "edge_id": 326,
-            "name": "Cabot Corporation",
-            "ticker": "CBT",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
           {
             "edge_id": 328,
             "name": "Devon Energy Corporation",
@@ -119292,17 +118214,6 @@
             "type": "Logistics Partner",
             "product": "Logistics Partner",
             "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 227,
-            "name": "Cenovus Energy Inc.",
-            "ticker": "CVE",
-            "type": "Joint Ownership",
-            "product": "Joint Ownership",
-            "confidence": 0.7,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -120625,17 +119536,6 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 780,
-            "name": "California Resources Corporation",
-            "ticker": "CRC",
-            "type": "Parent Company (historical)",
-            "product": "Parent Company (historical)",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 1249,
             "name": "National Energy Services Reunited Corp Ordinary Shares",
             "ticker": "NESR",
@@ -121021,17 +119921,6 @@
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 1315,
-            "name": "DNOW Inc.",
-            "ticker": "DNOW",
-            "type": "Parent Company (spinoff)",
-            "product": "Parent Company (spinoff)",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
           }
         ]
       },
@@ -121168,28 +120057,6 @@
             "type": "Equity Interests",
             "product": "Equity Interests",
             "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 664,
-            "name": "Vertiv Holdings Co Class A Common Stock",
-            "ticker": "VRT",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 1.0,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 665,
-            "name": "Hemab Therapeutics Holdings, Inc. Common Stock",
-            "ticker": "COAG",
-            "type": "Subsidiary",
-            "product": "Subsidiary",
-            "confidence": 1.0,
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
@@ -122954,17 +121821,6 @@
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 227,
-            "name": "PHILLIPS 66",
-            "ticker": "PSX",
-            "type": "Joint Ownership",
-            "product": "Joint Ownership",
-            "confidence": 0.7,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
           }
         ],
         "downstream": [
@@ -123770,19 +122626,7 @@
         "employees": 7000,
         "summary": "WEC Energy Group, Inc., through its subsidiaries, provides regulated natural gas and electricity, and renewable and nonregulated renewable energy services in the United States. The company operates through Wisconsin, Illinois, Other States, Electric Transmission, and Non-Utility Energy Infrastructure segments. It generates and distributes electricity from coal, natural gas, oil, and nuclear, as well as renewable energy resources, including wind, solar, hydroelectric, and biomass; and distributes and hydroelectric natural gas. The company also owns, maintains, monitors, and operates electric transmission systems; and generates, distributes, and sells steam. As of December 31, 2025, the company operated approximately 35,200 miles of overhead distribution lines and 37,600 miles of underground distribution cables, as well as 420 electric distribution substations and 649,500 line transformers; approximately 47,200 miles of natural gas distribution mains; 1,300 miles of natural gas transmission mains; 2.4 million natural gas lateral services; 510 natural gas distribution and transmission gate stations; and 67.0 billion cubic feet of working gas capacities in underground natural gas storage fields. The company was formerly known as Wisconsin Energy Corporation and changed its name to WEC Energy Group, Inc. in June 2015. WEC Energy Group, Inc. was founded in 1896 and is headquartered in Milwaukee, Wisconsin.",
         "last_updated": "2026-05-19",
-        "upstream": [
-          {
-            "edge_id": 960,
-            "name": "Alliant Energy Corporation Common Stock",
-            "ticker": "LNT",
-            "type": "Ownership",
-            "product": "Ownership",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -126308,17 +125152,6 @@
             "source": "AI Multi-Source Research",
             "source_type": "AI Research",
             "last_verified": "2026-05-20"
-          },
-          {
-            "edge_id": 756,
-            "name": "MYR Group, Inc. Common Stock",
-            "ticker": "MYRG",
-            "type": "Parent Company",
-            "product": "Parent Company",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
           }
         ]
       },
@@ -126521,17 +125354,6 @@
             "last_verified": "2026-05-20"
           },
           {
-            "edge_id": 232,
-            "name": "Entergy Corporation",
-            "ticker": "ETR",
-            "type": "Competition",
-            "product": "Competition",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          },
-          {
             "edge_id": 902,
             "name": "Public Service Enterprise Group Incorporated",
             "ticker": "PEG",
@@ -126642,19 +125464,7 @@
         "employees": 12000,
         "summary": "Entergy Corporation, together with its subsidiaries, engages in the production and retail distribution of electricity in the United States. It generates, transmits, distributes, and sells electric power in portions of Arkansas, Louisiana, Mississippi, and Texas, including the City of New Orleans. It also engages in the ownership of interests in non-nuclear power plants that sell electric power to wholesale customers, as well as provides decommissioning services to other nuclear power plant owners. It generates electricity through gas, nuclear, coal, hydro, and solar power sources. The company sells energy to retail power providers, utilities, electric power co-operatives, power trading organizations, and other power generation companies. The company's power plants have approximately 25,000 megawatts of electric generating capacity. It delivers electricity to 3.1 million utility customers in Arkansas, Louisiana, Mississippi, and Texas. Entergy Corporation was founded in 1913 and is headquartered in New Orleans, Louisiana.",
         "last_updated": "2026-05-18",
-        "upstream": [
-          {
-            "edge_id": 232,
-            "name": "Exelon Corporation Common Stock",
-            "ticker": "EXC",
-            "type": "Competition",
-            "product": "Competition",
-            "confidence": 0.8,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ],
+        "upstream": [],
         "downstream": []
       },
       {
@@ -126733,19 +125543,7 @@
         "summary": "Alliant Energy Corporation operates as a utility holding company that provides regulated electric and natural gas services in the United States. It operates through IPL and WPL segments. The company's IPL segment engages primarily in the generation and distribution of electricity and the distribution and transportation of natural gas to retail customers in select markets in Iowa. This segment also sells electricity to wholesale customers in Minnesota, Illinois and Iowa; and generates and distributes steam for two customers in Cedar Rapids, Iowa. Its WPL segment generates and distributes electricity, and distributes and transports natural gas to retail customers in select markets in Wisconsin; and sells electricity to wholesale customers in Wisconsin. It serves retail customers in the farming, agriculture, industrial manufacturing, chemical, packaging, and food industries, as well as wholesale customers comprising municipalities and rural electric cooperatives. In addition, the company owns and operates a short-line rail freight service in Iowa; a Mississippi River barge, rail, and truck freight terminal in Illinois; freight brokerage services; wind turbine blade recycling services; and a rail-served warehouse in Iowa. Further, it holds interests in a natural gas-fired electric generating unit near Sheboygan Falls, Wisconsin; and a wind farm located in Oklahoma. The company was formerly known as Interstate Energy Corp. and changed its name to Alliant Energy Corporation in May 1999. Alliant Energy Corporation is headquartered in Madison, Wisconsin.",
         "last_updated": "2026-05-18",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 960,
-            "name": "WEC Energy Group, Inc.",
-            "ticker": "WEC",
-            "type": "Ownership",
-            "product": "Ownership",
-            "confidence": 0.9,
-            "source": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "last_verified": "2026-05-20"
-          }
-        ]
+        "downstream": []
       },
       {
         "id": 9891,

@@ -47,21 +47,22 @@ jobs:
         run: |
           echo "Firing up the RTX 3080 Ti..."
           venv/bin/python backend/auto_discover_edges.py --limit 500
+
+          echo "Auditing relationship quality..."
+          venv/bin/python backend/audit_data_quality.py --fail-on-warnings
           
           echo "Exporting graph to JSON..."
           venv/bin/python backend/export.py
 
-      - name: Commit and Push Changes (JSON & Database)
+      - name: Commit and Push Dashboard Data
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Stage both the frontend JSON and the backend SQLite database
           git add docs/dashboard_data.json
-          git add backend/supply_chain.db
           
           if ! git diff --cached --quiet; then
-            git commit -m "Automated AI extraction: Updated DB & Supply Chain X-Ray"
+            git commit -m "Automated AI extraction: Update Supply Chain X-Ray"
             git push origin main
           else
             echo "No new edges discovered today. Skipping commit."

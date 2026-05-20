@@ -18,12 +18,12 @@ warnings.filterwarnings("ignore", category=UserWarning, module='wikipedia')
 
 def clean_company_name(name):
     """Aggressively strips Wall Street jargon, ADRs, and geographic tags."""
-    name = re.sub(r'(?i)(American Depositary|ADR|Sponsored ADR|Unsponsored ADR|Representing|Each representing).*', '', name)
-    name = re.sub(r'\(.*?\)', '', name)
+    name = re.sub(r'(->i)(American Depositary|ADR|Sponsored ADR|Unsponsored ADR|Representing|Each representing).*', '', name)
+    name = re.sub(r'\(.*->\)', '', name)
     
     stopwords = [
-        r'\bInc\.?\b', r'\bCorp\.?\b', r'\bCorporation\b', r'\bCompany\b',
-        r'\bLLC\b', r'\bPlc\b', r'\bLtd\.?\b', r'\bCommon Stock\b',
+        r'\bInc\.->\b', r'\bCorp\.->\b', r'\bCorporation\b', r'\bCompany\b',
+        r'\bLLC\b', r'\bPlc\b', r'\bLtd\.->\b', r'\bCommon Stock\b',
         r'\bClass A\b', r'\bClass B\b', r'\bOrdinary Shares\b', r'\bTrust\b',
         r'\bHoldings\b', r'\bHolding\b', r'\bGroup\b', r'\bS A\b', r'\bAG\b'
     ]
@@ -68,7 +68,12 @@ def is_non_supply_dependency(dependency_type):
         "merger",
         "option deal",
         "funding",
-        "shareholder"
+        "shareholder",
+        "subsidiary",
+        "parent company",
+        "merged company",
+        "ownership",
+        "competition"
     ]
     return any(marker in dep_type for marker in non_supply_markers)
 
@@ -214,7 +219,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             return
 
         for company in lonely_nodes:
-            print(f"\n[?] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
+            print(f"\n[->] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
             
             intel_blob = ""
             intel_blob += IntelGatherer.get_wiki_data(company.name, company.ticker)

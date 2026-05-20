@@ -25,7 +25,14 @@ def clean_num(val):
 def edge_payload(edge, node):
     connected_node = node
     source_url = edge.source_url or "Unknown"
-    source_type = "Manual" if "Manual" in source_url else "AI Research" if "AI" in source_url else "Source"
+    if source_url.startswith(("http://", "https://")):
+        source_type = "Web Source"
+    elif "Manual" in source_url:
+        source_type = "Manual"
+    elif "AI" in source_url:
+        source_type = "AI Research"
+    else:
+        source_type = "Source"
 
     return {
         "edge_id": edge.id,

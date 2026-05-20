@@ -29,6 +29,11 @@ NON_SUPPLY_MARKERS = (
     "option deal",
     "funding",
     "shareholder",
+    "subsidiary",
+    "parent company",
+    "merged company",
+    "ownership",
+    "competition",
 )
 
 
