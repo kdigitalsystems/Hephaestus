@@ -710,6 +710,23 @@ tr:hover {
     font-size: 0.8rem;
 }
 
+.relationship-product {
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.source-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.source-link:hover {
+    text-decoration: underline;
+}
+
 .empty-state {
     color: var(--text-muted);
     font-style: italic;

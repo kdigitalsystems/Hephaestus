@@ -33,6 +33,18 @@ const formatNum = (num, type = 'currency') => {
 
 const relationshipCount = (company) => (company.upstream?.length || 0) + (company.downstream?.length || 0);
 
+const uniqueLinkCount = () => {
+    const ids = new Set();
+    allCompanies.forEach(company => {
+        [...(company.upstream || []), ...(company.downstream || [])].forEach(dep => {
+            if (dep.edge_id !== undefined && dep.edge_id !== null) {
+                ids.add(String(dep.edge_id));
+            }
+        });
+    });
+    return ids.size || Math.round(allCompanies.reduce((sum, company) => sum + relationshipCount(company), 0) / 2);
+};
+
 const hydrateCompanies = (data) => {
     allCompanies = Object.entries(data).flatMap(([sector, companies]) =>
         companies.map(company => ({
@@ -75,17 +87,21 @@ function resetDashboard() {
 }
 
 function showCompanies() {
+    if (!currentCompaniesList.length) {
+        currentCompaniesList = [...allCompanies];
+        currentTitle = 'All Companies';
+        setText('current-industry-title', currentTitle);
+    }
     document.getElementById('view-industries').classList.add('hidden');
     document.getElementById('view-companies').classList.remove('hidden');
     document.getElementById('view-details').classList.add('hidden');
 }
 
 function renderOverview() {
-    const totalLinks = allCompanies.reduce((sum, company) => sum + relationshipCount(company), 0);
     const mostConnected = [...allCompanies].sort((a, b) => b.connection_count - a.connection_count)[0];
 
     setText('stat-companies', allCompanies.length.toLocaleString());
-    setText('stat-links', totalLinks.toLocaleString());
+    setText('stat-links', uniqueLinkCount().toLocaleString());
     setText('stat-sectors', Object.keys(globalData).length.toLocaleString());
     setText('stat-connected', mostConnected?.ticker || 'N/A');
     renderConnectedList();
@@ -366,7 +382,7 @@ function renderMapColumn(title, deps, direction) {
         const linkedCompany = getCompanyByTicker(dep.ticker);
         if (linkedCompany) node.onclick = () => renderLevel3(linkedCompany);
         node.appendChild(makeElement('strong', '', dep.ticker || dep.name || 'Unknown'));
-        node.appendChild(makeElement('small', '', dep.type || 'Supply Link'));
+        node.appendChild(makeElement('small', '', dep.product || dep.type || 'Supply Link'));
         column.appendChild(node);
     });
     return column;
@@ -400,11 +416,23 @@ function renderXRay(company) {
         topLine.appendChild(makeElement('span', 'dep-pill', dep.type || 'Supply Link'));
         card.appendChild(topLine);
 
+        if (dep.product && dep.product !== dep.type) {
+            card.appendChild(makeElement('div', 'relationship-product', dep.product));
+        }
+
         const meta = makeElement('div', 'relationship-meta');
         const confidence = dep.confidence === null || dep.confidence === undefined ? 'N/A' : `${Math.round(Number(dep.confidence) * 100)}%`;
         meta.appendChild(makeElement('span', 'source-badge', dep.source_type || 'Source'));
         meta.appendChild(makeElement('span', '', `Confidence ${confidence}`));
         meta.appendChild(makeElement('span', '', `Verified ${dep.last_verified || 'N/A'}`));
+        if (dep.source && /^https?:\/\//i.test(dep.source)) {
+            const sourceLink = makeElement('a', 'source-link', 'Source');
+            sourceLink.href = dep.source;
+            sourceLink.target = '_blank';
+            sourceLink.rel = 'noopener noreferrer';
+            sourceLink.onclick = event => event.stopPropagation();
+            meta.appendChild(sourceLink);
+        }
         card.appendChild(meta);
 
         if (linkedCompany) {

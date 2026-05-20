@@ -19,6 +19,9 @@ python3 backend/seed_db.py "${LIMIT_ARG[@]}"
 echo "Updating live financial metrics..."
 python3 backend/update_metrics.py "${LIMIT_ARG[@]}"
 
+echo "Auditing supply-chain relationship quality..."
+python3 backend/audit_data_quality.py --fail-on-warnings
+
 echo "Exporting database to docs/dashboard_data.json..."
 python3 backend/export.py
 

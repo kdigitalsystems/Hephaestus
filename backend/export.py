@@ -28,14 +28,25 @@ def edge_payload(edge, node):
     source_type = "Manual" if "Manual" in source_url else "AI Research" if "AI" in source_url else "Source"
 
     return {
+        "edge_id": edge.id,
         "name": connected_node.name,
         "ticker": connected_node.ticker or "",
         "type": edge.dependency_type,
+        "product": edge.product or edge.dependency_type,
         "confidence": clean_num(edge.confidence_score),
         "source": source_url,
         "source_type": source_type,
         "last_verified": edge.last_verified.strftime('%Y-%m-%d') if edge.last_verified else "N/A"
     }
+
+def should_export_node(node):
+    if not node.market_cap or not node.current_price:
+        return False
+    if node.market_cap < MIN_MARKET_CAP:
+        return False
+
+    sector = node.sector if node.sector else "Uncategorized"
+    return sector not in IGNORED_SECTORS
 
 def export_to_json():
     session = SessionLocal()
@@ -44,14 +55,10 @@ def export_to_json():
         dashboard_data = { "industries": {} }
         
         for node in nodes:
-            if not node.market_cap or not node.current_price:
-                continue
-            if node.market_cap < MIN_MARKET_CAP:
+            if not should_export_node(node):
                 continue
                 
             sector = node.sector if node.sector else "Uncategorized"
-            if sector in IGNORED_SECTORS:
-                continue
                 
             if sector not in dashboard_data["industries"]:
                 dashboard_data["industries"][sector] = []
@@ -60,13 +67,13 @@ def export_to_json():
             # Grab all companies that supply THIS node (Upstream)
             upstream = []
             for edge in node.supplied_by:
-                if edge.source_node:
+                if edge.source_node and should_export_node(edge.source_node):
                     upstream.append(edge_payload(edge, edge.source_node))
             
             # Grab all companies that THIS node supplies (Downstream)
             downstream = []
             for edge in node.supplies_to:
-                if edge.target_node:
+                if edge.target_node and should_export_node(edge.target_node):
                     downstream.append(edge_payload(edge, edge.target_node))
             # ------------------------
 

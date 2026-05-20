@@ -53,7 +53,8 @@ def is_reversed_role_dependency(dependency_type):
         "customer",
         "buyer",
         "client",
-        "end-user"
+        "end-user",
+        "outsourcing partner"
     ]
     return any(marker in dep_type for marker in role_markers)
 
@@ -125,8 +126,8 @@ class EntityResolver:
                 if discovered_ticker:
                     node = session.query(Node).filter(Node.ticker == discovered_ticker.upper()).first()
                     if node: return node
-        except Exception:
-            pass 
+        except Exception as e:
+            print(f"  [!] YahooQuery resolution failed for '{search_val}': {e}")
 
         return None
 
@@ -179,7 +180,8 @@ class IntelGatherer:
             for article in news:
                 blob += f"- {article.get('title')}: {article.get('summary')}\n"
             return blob
-        except:
+        except Exception as e:
+            print(f"  [-] Yahoo news unavailable for {ticker}: {e}")
             return ""
 
 def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
@@ -271,6 +273,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                             source_id=s_node.id,
                             target_id=t_node.id,
                             dependency_type=dep.get('dependency_type', 'Supply Link'),
+                            product=dep.get('product'),
                             confidence_score=conf,
                             source_url="AI Multi-Source Research"
                         )

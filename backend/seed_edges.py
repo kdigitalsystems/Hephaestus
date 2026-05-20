@@ -5,22 +5,22 @@ from models import Node, Edge
 # A curated list of heavy-hitter hardware dependencies
 SEED_EDGES = [
     # Foundries & Equipment
-    {"source": "ASML", "target": "TSM", "type": "EUV Lithography Equipment"},
-    {"source": "TSM", "target": "AMD", "type": "Advanced Silicon Fabrication"},
-    {"source": "TSM", "target": "NVDA", "type": "Advanced Silicon Fabrication"},
-    {"source": "TSM", "target": "AAPL", "type": "Advanced Silicon Fabrication"},
+    {"source": "ASML", "target": "TSM", "type": "Semiconductor Equipment", "product": "EUV lithography systems"},
+    {"source": "TSM", "target": "AMD", "type": "Advanced Silicon Fabrication", "product": "Advanced process node chip fabrication"},
+    {"source": "TSM", "target": "NVDA", "type": "Advanced Silicon Fabrication", "product": "Advanced process node chip fabrication"},
+    {"source": "TSM", "target": "AAPL", "type": "Advanced Silicon Fabrication", "product": "Advanced process node chip fabrication"},
     
     # Memory (HBM)
-    {"source": "MU", "target": "NVDA", "type": "HBM3e Memory"},
-    {"source": "MU", "target": "AMD", "type": "HBM3e Memory"},
+    {"source": "MU", "target": "NVDA", "type": "High-Bandwidth Memory", "product": "HBM3e memory"},
+    {"source": "MU", "target": "AMD", "type": "High-Bandwidth Memory", "product": "HBM3e memory"},
     
     # Cooling & Infrastructure
-    {"source": "VRT", "target": "NVDA", "type": "Data Center Liquid Cooling"},
+    {"source": "VRT", "target": "NVDA", "type": "Data Center Cooling", "product": "Liquid cooling infrastructure"},
     
     # System Integrators / OEMs
-    {"source": "NVDA", "target": "SMCI", "type": "AI Accelerator Chips"},
-    {"source": "AMD", "target": "SMCI", "type": "MI-Series / EPYC Processors"},
-    {"source": "INTC", "target": "DELL", "type": "Server CPUs"}
+    {"source": "NVDA", "target": "SMCI", "type": "AI Accelerator Chips", "product": "GPU accelerators"},
+    {"source": "AMD", "target": "SMCI", "type": "Server Processors", "product": "MI-series accelerators and EPYC CPUs"},
+    {"source": "INTC", "target": "DELL", "type": "Server CPUs", "product": "Xeon server processors"}
 ]
 
 def seed_manual_edges():
@@ -42,11 +42,11 @@ def seed_manual_edges():
                 continue
                 
             # 2. Check if this edge already exists to prevent duplicates
-            existing_edge = session.query(Edge).filter(
+            existing_edges = session.query(Edge).filter(
                 Edge.source_id == source_node.id,
-                Edge.target_id == target_node.id,
-                Edge.dependency_type == edge_data["type"]
-            ).first()
+                Edge.target_id == target_node.id
+            ).all()
+            existing_edge = existing_edges[0] if existing_edges else None
             
             # 3. Insert the connection
             if not existing_edge:
@@ -54,14 +54,22 @@ def seed_manual_edges():
                     source_id=source_node.id,
                     target_id=target_node.id,
                     dependency_type=edge_data["type"],
+                    product=edge_data.get("product"),
                     confidence_score=1.0, # 100% confidence for manual hardcoded seeds
                     source_url="Manual System Jumpstart"
                 )
                 session.add(new_edge)
                 edges_added += 1
-                print(f"  [+] Linked: {source_node.ticker} ➔ {target_node.ticker} ({edge_data['type']})")
+                print(f"  [+] Linked: {source_node.ticker} -> {target_node.ticker} ({edge_data['type']})")
             else:
-                print(f"  [=] Link already exists: {source_node.ticker} ➔ {target_node.ticker}")
+                existing_edge.dependency_type = edge_data["type"]
+                if edge_data.get("product"):
+                    existing_edge.product = edge_data["product"]
+                existing_edge.confidence_score = 1.0
+                existing_edge.source_url = "Manual System Jumpstart"
+                for duplicate_edge in existing_edges[1:]:
+                    session.delete(duplicate_edge)
+                print(f"  [=] Link already exists: {source_node.ticker} -> {target_node.ticker}")
                 
         session.commit()
         print(f"--- Edge Seeding Complete. Created {edges_added} new relationships. ---")
