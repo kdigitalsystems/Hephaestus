@@ -68,12 +68,14 @@ def audit_database(fail_on_warnings=False):
         self_edges = [edge for edge in edges if edge.source_id == edge.target_id]
         ai_edges = [edge for edge in edges if "AI" in (edge.source_url or "")]
         manual_edges = [edge for edge in edges if "Manual" in (edge.source_url or "")]
+        status_counts = Counter(edge.review_status or "pending" for edge in edges)
 
         print("--- Hephaestus Data Quality Audit ---")
         print(f"Nodes: {session.query(Node).count()}")
         print(f"Edges: {len(edges)}")
         print(f"Manual/reviewed edges: {len(manual_edges)}")
         print(f"Unreviewed AI edges: {len(ai_edges)}")
+        print("Review statuses:", dict(sorted(status_counts.items())))
         print(f"Duplicate tickers: {len(duplicate_tickers)}")
         print(f"Duplicate exact edges: {len(duplicate_edge_keys)}")
         print(f"Role-label direction warnings: {len(reversed_edges)}")

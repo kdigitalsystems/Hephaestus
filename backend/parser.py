@@ -10,6 +10,7 @@ class Dependency(BaseModel):
     target_ticker: Optional[str] = Field(default=None, description="The customer ticker if explicitly known.")
     dependency_type: str = Field(description="E.g., Semiconductors, Raw Materials, Logistics, Cloud Services.")
     product: str = Field(description="The specific product, service, or material provided.")
+    evidence_excerpt: str = Field(default="", description="A short supporting excerpt from the source text.")
     confidence_score: float = Field(description="Confidence from 0.0 to 1.0.")
 
 class ExtractionResult(BaseModel):
@@ -46,7 +47,7 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
     8. If the supplier is a private company, still extract it only when the relationship is explicit.
 
     Output JSON:
-    {{"dependencies": [{{"source_company": "Supplier Name", "source_ticker": "SUP", "target_company": "Customer Name", "target_ticker": "CUS", "dependency_type": "Raw Materials", "product": "Lithium", "confidence_score": 0.9}}]}}
+    {{"dependencies": [{{"source_company": "Supplier Name", "source_ticker": "SUP", "target_company": "Customer Name", "target_ticker": "CUS", "dependency_type": "Raw Materials", "product": "Lithium", "evidence_excerpt": "Supplier Name provides lithium to Customer Name.", "confidence_score": 0.9}}]}}
     """
 
     user_prompt = f"""

@@ -280,7 +280,10 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                             dependency_type=dep.get('dependency_type', 'Supply Link'),
                             product=dep.get('product'),
                             confidence_score=conf,
-                            source_url="AI Multi-Source Research"
+                            source_url="AI Multi-Source Research",
+                            source_title="AI Multi-Source Research",
+                            evidence_excerpt=dep.get('evidence_excerpt'),
+                            review_status="pending"
                         )
                         session.add(new_edge)
                         print(f"  [+] DYNAMICALLY LINKED: {s_node.ticker} ➔ {t_node.ticker} ({dep.get('product')})")
