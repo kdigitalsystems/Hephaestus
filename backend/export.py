@@ -10,6 +10,7 @@ EXPORT_PATH = os.path.join(DOCS_DIR, "dashboard_data.json")
 
 MIN_MARKET_CAP = 0 
 IGNORED_SECTORS = ["Shell Companies", "Uncategorized", "Financial Services", "Real Estate"]
+EXPORT_AI_RESEARCH = os.environ.get("HEPHAESTUS_EXPORT_AI_RESEARCH", "0") == "1"
 
 def clean_num(val):
     if val is None:
@@ -25,17 +26,41 @@ def clean_num(val):
 def edge_payload(edge, node):
     connected_node = node
     source_url = edge.source_url or "Unknown"
-    source_type = "Manual" if "Manual" in source_url else "AI Research" if "AI" in source_url else "Source"
+    if source_url.startswith(("http://", "https://")):
+        source_type = "Web Source"
+    elif "Manual" in source_url:
+        source_type = "Manual"
+    elif "AI" in source_url:
+        source_type = "AI Research"
+    else:
+        source_type = "Source"
 
     return {
+        "edge_id": edge.id,
         "name": connected_node.name,
         "ticker": connected_node.ticker or "",
         "type": edge.dependency_type,
+        "product": edge.product or edge.dependency_type,
         "confidence": clean_num(edge.confidence_score),
         "source": source_url,
         "source_type": source_type,
         "last_verified": edge.last_verified.strftime('%Y-%m-%d') if edge.last_verified else "N/A"
     }
+
+def should_export_node(node):
+    if not node.market_cap or not node.current_price:
+        return False
+    if node.market_cap < MIN_MARKET_CAP:
+        return False
+
+    sector = node.sector if node.sector else "Uncategorized"
+    return sector not in IGNORED_SECTORS
+
+def should_export_edge(edge):
+    source_url = edge.source_url or ""
+    if "AI" in source_url and not EXPORT_AI_RESEARCH:
+        return False
+    return True
 
 def export_to_json():
     session = SessionLocal()
@@ -44,14 +69,10 @@ def export_to_json():
         dashboard_data = { "industries": {} }
         
         for node in nodes:
-            if not node.market_cap or not node.current_price:
-                continue
-            if node.market_cap < MIN_MARKET_CAP:
+            if not should_export_node(node):
                 continue
                 
             sector = node.sector if node.sector else "Uncategorized"
-            if sector in IGNORED_SECTORS:
-                continue
                 
             if sector not in dashboard_data["industries"]:
                 dashboard_data["industries"][sector] = []
@@ -60,13 +81,17 @@ def export_to_json():
             # Grab all companies that supply THIS node (Upstream)
             upstream = []
             for edge in node.supplied_by:
-                if edge.source_node:
+                if not should_export_edge(edge):
+                    continue
+                if edge.source_node and should_export_node(edge.source_node):
                     upstream.append(edge_payload(edge, edge.source_node))
             
             # Grab all companies that THIS node supplies (Downstream)
             downstream = []
             for edge in node.supplies_to:
-                if edge.target_node:
+                if not should_export_edge(edge):
+                    continue
+                if edge.target_node and should_export_node(edge.target_node):
                     downstream.append(edge_payload(edge, edge.target_node))
             # ------------------------
 
@@ -102,7 +127,8 @@ def export_to_json():
         with open(EXPORT_PATH, "w") as f:
             json.dump(dashboard_data, f, indent=2, allow_nan=False)
             
-        print("Export Complete with Supply Chain X-Ray metrics included.")
+        mode = "manual plus AI research" if EXPORT_AI_RESEARCH else "reviewed/manual only"
+        print(f"Export Complete with Supply Chain X-Ray metrics included ({mode}).")
         
     except Exception as e:
         print(f"Error exporting database: {e}")

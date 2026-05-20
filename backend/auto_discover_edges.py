@@ -18,12 +18,12 @@ warnings.filterwarnings("ignore", category=UserWarning, module='wikipedia')
 
 def clean_company_name(name):
     """Aggressively strips Wall Street jargon, ADRs, and geographic tags."""
-    name = re.sub(r'(?i)(American Depositary|ADR|Sponsored ADR|Unsponsored ADR|Representing|Each representing).*', '', name)
-    name = re.sub(r'\(.*?\)', '', name)
+    name = re.sub(r'(->i)(American Depositary|ADR|Sponsored ADR|Unsponsored ADR|Representing|Each representing).*', '', name)
+    name = re.sub(r'\(.*->\)', '', name)
     
     stopwords = [
-        r'\bInc\.?\b', r'\bCorp\.?\b', r'\bCorporation\b', r'\bCompany\b',
-        r'\bLLC\b', r'\bPlc\b', r'\bLtd\.?\b', r'\bCommon Stock\b',
+        r'\bInc\.->\b', r'\bCorp\.->\b', r'\bCorporation\b', r'\bCompany\b',
+        r'\bLLC\b', r'\bPlc\b', r'\bLtd\.->\b', r'\bCommon Stock\b',
         r'\bClass A\b', r'\bClass B\b', r'\bOrdinary Shares\b', r'\bTrust\b',
         r'\bHoldings\b', r'\bHolding\b', r'\bGroup\b', r'\bS A\b', r'\bAG\b'
     ]
@@ -53,7 +53,8 @@ def is_reversed_role_dependency(dependency_type):
         "customer",
         "buyer",
         "client",
-        "end-user"
+        "end-user",
+        "outsourcing partner"
     ]
     return any(marker in dep_type for marker in role_markers)
 
@@ -67,7 +68,12 @@ def is_non_supply_dependency(dependency_type):
         "merger",
         "option deal",
         "funding",
-        "shareholder"
+        "shareholder",
+        "subsidiary",
+        "parent company",
+        "merged company",
+        "ownership",
+        "competition"
     ]
     return any(marker in dep_type for marker in non_supply_markers)
 
@@ -125,8 +131,8 @@ class EntityResolver:
                 if discovered_ticker:
                     node = session.query(Node).filter(Node.ticker == discovered_ticker.upper()).first()
                     if node: return node
-        except Exception:
-            pass 
+        except Exception as e:
+            print(f"  [!] YahooQuery resolution failed for '{search_val}': {e}")
 
         return None
 
@@ -179,7 +185,8 @@ class IntelGatherer:
             for article in news:
                 blob += f"- {article.get('title')}: {article.get('summary')}\n"
             return blob
-        except:
+        except Exception as e:
+            print(f"  [-] Yahoo news unavailable for {ticker}: {e}")
             return ""
 
 def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
@@ -212,7 +219,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             return
 
         for company in lonely_nodes:
-            print(f"\n[?] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
+            print(f"\n[->] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
             
             intel_blob = ""
             intel_blob += IntelGatherer.get_wiki_data(company.name, company.ticker)
@@ -271,6 +278,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                             source_id=s_node.id,
                             target_id=t_node.id,
                             dependency_type=dep.get('dependency_type', 'Supply Link'),
+                            product=dep.get('product'),
                             confidence_score=conf,
                             source_url="AI Multi-Source Research"
                         )

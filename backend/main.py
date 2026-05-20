@@ -47,6 +47,7 @@ def process_source(url: str):
             source_name = dep.get('source_company')
             target_name = dep.get('target_company')
             dep_type = dep.get('dependency_type', 'Unknown')
+            product = dep.get('product')
             conf_score = dep.get('confidence_score', 0.5)
 
             if not source_name or not target_name:
@@ -80,6 +81,7 @@ def process_source(url: str):
                 source_id=source_node.id,
                 target_id=target_node.id,
                 dependency_type=dep_type,
+                product=product,
                 confidence_score=conf_score,
                 source_url=url
             )

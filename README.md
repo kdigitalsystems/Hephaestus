@@ -83,6 +83,18 @@ For a quick test run:
 python3 backend/seed_db.py --limit 25
 ```
 
+To rebuild the local database from scratch and refresh dashboard data:
+
+```bash
+./scripts/rebuild_db.sh
+```
+
+For a limited debug rebuild:
+
+```bash
+./scripts/rebuild_db.sh 25
+```
+
 ## Update Market Data
 
 Populate pricing, market cap, valuation, profile, and analyst fields:
@@ -125,11 +137,31 @@ python3 backend/auto_discover_edges.py --limit 10 --deep-dive
 
 ## Export Dashboard Data
 
+Before publishing dashboard data, run the quality audit:
+
+```bash
+python3 backend/audit_data_quality.py
+```
+
+The audit checks for duplicate tickers, reversed role-label edges, non-supply relationships, and self-edges. To make it fail a pipeline when warnings are present:
+
+```bash
+python3 backend/audit_data_quality.py --fail-on-warnings
+```
+
 Write the static dashboard payload:
 
 ```bash
 python3 backend/export.py
 ```
+
+By default, export is conservative: it includes reviewed/manual edges and hides unreviewed AI-discovered edges. To publish AI research edges anyway:
+
+```bash
+HEPHAESTUS_EXPORT_AI_RESEARCH=1 python3 backend/export.py
+```
+
+Use that mode only after reviewing the generated relationships; LLM extraction can create plausible but wrong links.
 
 The dashboard reads:
 
@@ -144,6 +176,8 @@ python3 -m http.server 8000 -d docs
 ```
 
 Then visit `http://localhost:8000`.
+
+The static site includes `docs/sitemap.xml` and `docs/robots.txt` for GitHub Pages discovery. The app uses hash routes such as `#company?ticker=AMD` internally, but the sitemap points search engines at the canonical dashboard entry point because URL fragments are not reliable sitemap targets.
 
 ## Full Pipeline
 
@@ -177,6 +211,7 @@ The pipeline now fails fast if any step fails. When `docs/dashboard_data.json` c
 - `source_id`: supplier/provider
 - `target_id`: customer/receiver
 - `dependency_type`
+- `product`
 - `confidence_score`
 - `source_url`
 

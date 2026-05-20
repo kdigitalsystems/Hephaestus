@@ -61,6 +61,7 @@ class Edge(Base):
     source_id = Column(Integer, ForeignKey('nodes.id'), nullable=False)
     target_id = Column(Integer, ForeignKey('nodes.id'), nullable=False)
     dependency_type = Column(String, nullable=False)
+    product = Column(String, nullable=True)
     confidence_score = Column(Float, nullable=True)
     source_url = Column(String, nullable=True)
     last_verified = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
