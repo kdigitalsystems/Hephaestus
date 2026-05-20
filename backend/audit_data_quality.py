@@ -66,10 +66,14 @@ def audit_database(fail_on_warnings=False):
         reversed_edges = [edge for edge in edges if has_reversed_role_label(edge.dependency_type)]
         non_supply_edges = [edge for edge in edges if has_non_supply_label(edge.dependency_type)]
         self_edges = [edge for edge in edges if edge.source_id == edge.target_id]
+        ai_edges = [edge for edge in edges if "AI" in (edge.source_url or "")]
+        manual_edges = [edge for edge in edges if "Manual" in (edge.source_url or "")]
 
         print("--- Hephaestus Data Quality Audit ---")
         print(f"Nodes: {session.query(Node).count()}")
         print(f"Edges: {len(edges)}")
+        print(f"Manual/reviewed edges: {len(manual_edges)}")
+        print(f"Unreviewed AI edges: {len(ai_edges)}")
         print(f"Duplicate tickers: {len(duplicate_tickers)}")
         print(f"Duplicate exact edges: {len(duplicate_edge_keys)}")
         print(f"Role-label direction warnings: {len(reversed_edges)}")

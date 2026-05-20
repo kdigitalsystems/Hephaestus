@@ -155,6 +155,14 @@ Write the static dashboard payload:
 python3 backend/export.py
 ```
 
+By default, export is conservative: it includes reviewed/manual edges and hides unreviewed AI-discovered edges. To publish AI research edges anyway:
+
+```bash
+HEPHAESTUS_EXPORT_AI_RESEARCH=1 python3 backend/export.py
+```
+
+Use that mode only after reviewing the generated relationships; LLM extraction can create plausible but wrong links.
+
 The dashboard reads:
 
 ```text
