@@ -81,3 +81,40 @@ def test_dashboard_data_shows_tsm_as_supplier_to_nvidia_and_amd():
     assert any(edge["ticker"] == "TSM" for edge in nvda["upstream"])
     assert not any(edge["ticker"] == "TSM" for edge in amd["downstream"])
     assert not any(edge["ticker"] == "TSM" for edge in nvda["downstream"])
+
+
+def test_relationship_dedupe_keeps_one_entry_per_connected_ticker():
+    duplicate_ai = {
+        "edge_id": 20,
+        "ticker": "TSM",
+        "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+        "type": "Foundry Services",
+        "product": "foundry services",
+        "confidence": 0.9,
+        "source_type": "AI Research",
+        "evidence_excerpt": "",
+    }
+    manual_seed = {
+        "edge_id": 10,
+        "ticker": "TSM",
+        "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+        "type": "Advanced Silicon Fabrication",
+        "product": "Advanced process node chip fabrication",
+        "confidence": 1.0,
+        "source_type": "Manual",
+        "evidence_excerpt": "",
+    }
+
+    deduped = export.dedupe_relationships([duplicate_ai, manual_seed])
+
+    assert deduped == [manual_seed]
+
+
+def test_dashboard_data_has_no_duplicate_supplier_or_buyer_tickers():
+    data = json.loads((ROOT / "docs/dashboard_data.json").read_text(encoding="utf-8"))
+    companies = [company for sector in data["industries"].values() for company in sector]
+
+    for company in companies:
+        for side in ("upstream", "downstream"):
+            tickers = [edge["ticker"] for edge in company.get(side, [])]
+            assert len(tickers) == len(set(tickers)), f"{company['ticker']} has duplicate {side} tickers"

@@ -65,6 +65,46 @@ def edge_payload(edge, node):
         "last_verified": edge.last_verified.strftime('%Y-%m-%d') if edge.last_verified else "N/A"
     }
 
+def edge_rank(payload):
+    source_type_rank = {
+        "Manual": 3,
+        "Web Source": 2,
+        "AI Research": 1,
+        "Source": 0,
+    }
+    confidence = payload.get("confidence")
+    try:
+        confidence_value = float(confidence) if confidence is not None else 0.0
+    except (TypeError, ValueError):
+        confidence_value = 0.0
+
+    specificity = len(str(payload.get("product") or "")) + len(str(payload.get("evidence_excerpt") or ""))
+    return (
+        source_type_rank.get(payload.get("source_type"), 0),
+        confidence_value,
+        specificity,
+        -(payload.get("edge_id") or 0),
+    )
+
+def dedupe_relationships(relationships):
+    best_by_ticker = {}
+    for relationship in relationships:
+        ticker = relationship.get("ticker") or relationship.get("name") or ""
+        if not ticker:
+            continue
+        current = best_by_ticker.get(ticker)
+        if current is None or edge_rank(relationship) > edge_rank(current):
+            best_by_ticker[ticker] = relationship
+
+    return sorted(
+        best_by_ticker.values(),
+        key=lambda relationship: (
+            relationship.get("ticker") or "",
+            relationship.get("type") or "",
+            relationship.get("product") or "",
+        ),
+    )
+
 def should_export_node(node):
     if not node.market_cap or not node.current_price:
         return False
@@ -178,6 +218,8 @@ def export_to_json():
                     upstream.append(edge_payload(edge, supplier_node))
                 elif node.id == supplier_node.id and should_export_node(customer_node):
                     downstream.append(edge_payload(edge, customer_node))
+            upstream = dedupe_relationships(upstream)
+            downstream = dedupe_relationships(downstream)
             # ------------------------
 
             dashboard_data["industries"][sector].append({
