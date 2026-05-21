@@ -2838,7 +2838,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ],
         "downstream": [
@@ -2854,7 +2854,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           },
           {
             "edge_id": 10,
@@ -2868,7 +2868,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           },
           {
             "edge_id": 12,
@@ -2924,7 +2924,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           },
           {
             "edge_id": 16,
@@ -3488,7 +3488,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ],
         "downstream": []
@@ -5399,7 +5399,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ]
       },
@@ -6746,7 +6746,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           },
           {
             "edge_id": 1371,
@@ -6760,7 +6760,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ],
         "downstream": []
@@ -6958,7 +6958,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ]
       },
@@ -12899,7 +12899,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           },
           {
             "edge_id": 1367,
@@ -12913,7 +12913,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           },
           {
             "edge_id": 1369,
@@ -12927,7 +12927,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ],
         "downstream": [
@@ -12957,7 +12957,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ]
       },
@@ -13205,7 +13205,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           },
           {
             "edge_id": 1368,
@@ -13219,7 +13219,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ],
         "downstream": [
@@ -13235,7 +13235,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ]
       },
@@ -14420,7 +14420,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           },
           {
             "edge_id": 1368,
@@ -14434,7 +14434,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ]
       },
@@ -15782,7 +15782,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           },
           {
             "edge_id": 104,
@@ -73775,7 +73775,7 @@
             "source_type": "Manual",
             "review_status": "approved",
             "evidence_excerpt": "",
-            "last_verified": "2026-05-20"
+            "last_verified": "2026-05-21"
           }
         ]
       },
@@ -105415,9 +105415,9 @@
     ]
   },
   "quality": {
-    "pending_count": 935,
+    "pending_count": 934,
     "approved_count": 78,
-    "rejected_count": 161,
+    "rejected_count": 162,
     "review_queue": [
       {
         "edge_id": 11,
