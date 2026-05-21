@@ -151,6 +151,31 @@ python3 backend/review_edges.py list --status pending --source AMD
 python3 backend/review_edges.py list --status pending --target TSM
 ```
 
+To batch-curate pending edges with a local Ollama model:
+
+```bash
+python3 backend/review_edges_with_ollama.py --model qwen2.5:14b-instruct --limit 25
+python3 backend/review_edges_with_ollama.py --model qwen2.5:14b-instruct --limit 250 --apply
+```
+
+The Ollama reviewer can approve, reject, or reverse high-confidence edges. Ambiguous edges stay pending. Review reports are written to `reports/ollama_edge_review.csv` by default.
+
+Long review runs can be resumed safely:
+
+```bash
+python3 backend/review_edges_with_ollama.py --model qwen2.5:14b-instruct --limit 1000 --apply --max-seconds 3300
+python3 backend/apply_ollama_review_report.py reports/ollama_edge_review.csv --min-approve 0.85 --min-reverse 0.85
+```
+
+Persist reviewed decisions outside the local SQLite database:
+
+```bash
+python3 backend/edge_review_decisions.py export
+python3 backend/edge_review_decisions.py apply
+```
+
+The exported decisions live in `data/edge_review_decisions.json` so future database rebuilds can reapply the reviewed approvals/rejections.
+
 ## Export Dashboard Data
 
 Before publishing dashboard data, run the quality audit:
