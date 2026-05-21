@@ -164,6 +164,24 @@
       "data": {
         "id": "e_7",
         "source": "7",
+        "target": "2",
+        "label": "Advanced Silicon Fabrication",
+        "weight": 1.0
+      }
+    },
+    {
+      "data": {
+        "id": "e_8",
+        "source": "7",
+        "target": "4",
+        "label": "Advanced Silicon Fabrication",
+        "weight": 1.0
+      }
+    },
+    {
+      "data": {
+        "id": "e_9",
+        "source": "7",
         "target": "8",
         "label": "Chip Production",
         "weight": 0.8
@@ -171,7 +189,7 @@
     },
     {
       "data": {
-        "id": "e_8",
+        "id": "e_10",
         "source": "7",
         "target": "6",
         "label": "Chip Production",
@@ -180,7 +198,7 @@
     },
     {
       "data": {
-        "id": "e_9",
+        "id": "e_11",
         "source": "7",
         "target": "9",
         "label": "Joint Venture",
@@ -189,7 +207,7 @@
     },
     {
       "data": {
-        "id": "e_10",
+        "id": "e_12",
         "source": "7",
         "target": "10",
         "label": "Joint Venture",
@@ -198,7 +216,7 @@
     },
     {
       "data": {
-        "id": "e_11",
+        "id": "e_13",
         "source": "7",
         "target": "11",
         "label": "Joint Venture",
@@ -207,7 +225,7 @@
     },
     {
       "data": {
-        "id": "e_12",
+        "id": "e_14",
         "source": "7",
         "target": "12",
         "label": "Subsidy",
@@ -216,7 +234,7 @@
     },
     {
       "data": {
-        "id": "e_13",
+        "id": "e_15",
         "source": "7",
         "target": "13",
         "label": "Subsidy",

@@ -12,6 +12,20 @@ MIN_MARKET_CAP = 0
 IGNORED_SECTORS = ["Shell Companies", "Uncategorized", "Financial Services", "Real Estate"]
 EXPORT_AI_RESEARCH = os.environ.get("HEPHAESTUS_EXPORT_AI_RESEARCH", "0") == "1"
 REVIEW_QUEUE_LIMIT = int(os.environ.get("HEPHAESTUS_REVIEW_QUEUE_LIMIT", "250"))
+FOUNDRY_TERMS = (
+    "advanced silicon fabrication",
+    "advanced manufacturing services",
+    "chip fabrication",
+    "chip manufacturing",
+    "chip production",
+    "contract manufacturing",
+    "foundry",
+    "outsourced production",
+    "semiconductor chips",
+    "semiconductor manufacturing",
+    "silicon fabrication",
+    "silicon wafers",
+)
 
 def clean_num(val):
     if val is None:
@@ -72,6 +86,34 @@ def should_export_edge(edge):
         return True
     return False
 
+def looks_like_tsm_foundry_edge(edge):
+    text = " ".join(
+        str(value or "")
+        for value in (
+            edge.dependency_type,
+            edge.product,
+            edge.evidence_excerpt,
+            edge.review_note,
+        )
+    ).lower()
+    return any(term in text for term in FOUNDRY_TERMS)
+
+def canonical_edge_nodes(edge):
+    """Return supplier, customer after correcting known foundry direction errors."""
+    source = edge.source_node
+    target = edge.target_node
+    if not source or not target:
+        return source, target
+
+    target_ticker = target.ticker or ""
+    if (
+        target_ticker == "TSM"
+        and looks_like_tsm_foundry_edge(edge)
+    ):
+        return target, source
+
+    return source, target
+
 def review_edge_payload(edge):
     return {
         "edge_id": edge.id,
@@ -120,22 +162,22 @@ def export_to_json():
             if sector not in dashboard_data["industries"]:
                 dashboard_data["industries"][sector] = []
             
-            # --- NEW: X-RAY LOGIC ---
-            # Grab all companies that supply THIS node (Upstream)
+            # --- X-RAY LOGIC ---
             upstream = []
-            for edge in node.supplied_by:
-                if not should_export_edge(edge):
-                    continue
-                if edge.source_node and should_export_node(edge.source_node):
-                    upstream.append(edge_payload(edge, edge.source_node))
-            
-            # Grab all companies that THIS node supplies (Downstream)
             downstream = []
-            for edge in node.supplies_to:
+            seen_edges = set()
+            for edge in [*node.supplied_by, *node.supplies_to]:
                 if not should_export_edge(edge):
                     continue
-                if edge.target_node and should_export_node(edge.target_node):
-                    downstream.append(edge_payload(edge, edge.target_node))
+                if edge.id in seen_edges:
+                    continue
+                seen_edges.add(edge.id)
+
+                supplier_node, customer_node = canonical_edge_nodes(edge)
+                if node.id == customer_node.id and should_export_node(supplier_node):
+                    upstream.append(edge_payload(edge, supplier_node))
+                elif node.id == supplier_node.id and should_export_node(customer_node):
+                    downstream.append(edge_payload(edge, customer_node))
             # ------------------------
 
             dashboard_data["industries"][sector].append({
