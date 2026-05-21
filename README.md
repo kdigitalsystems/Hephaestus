@@ -236,7 +236,23 @@ Run a limited debug pipeline:
 ./run_pipeline.sh 25
 ```
 
-The pipeline now fails fast if any step fails. When `docs/dashboard_data.json` changes, it commits and pushes the dashboard export.
+The pipeline now reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with Ollama, fails fast if any step fails, and commits dashboard/review-decision changes.
+
+Review behavior can be tuned with environment variables:
+
+```bash
+HEPHAESTUS_REVIEW_MODEL=qwen2.5:14b-instruct \
+HEPHAESTUS_REVIEW_LIMIT=200 \
+HEPHAESTUS_REVIEW_MAX_SECONDS=3300 \
+HEPHAESTUS_REVIEW_MIN_CONFIDENCE=0.85 \
+./run_pipeline.sh
+```
+
+To skip local AI review during a manual pipeline run:
+
+```bash
+HEPHAESTUS_RUN_OLLAMA_REVIEW=0 ./run_pipeline.sh
+```
 
 ## Data Model
 

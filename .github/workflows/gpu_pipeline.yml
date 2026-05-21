@@ -11,6 +11,11 @@ permissions:
 jobs:
   run-ai-discovery:
     runs-on: [self-hosted, nvidia-gpu]
+    env:
+      HEPHAESTUS_REVIEW_MODEL: qwen2.5:14b-instruct
+      HEPHAESTUS_REVIEW_LIMIT: "200"
+      HEPHAESTUS_REVIEW_MAX_SECONDS: "3300"
+      HEPHAESTUS_REVIEW_MIN_CONFIDENCE: "0.85"
 
     steps:
       - name: Checkout repository
@@ -24,6 +29,20 @@ jobs:
           echo "Installing dependencies inside venv..."
           venv/bin/pip install --upgrade pip
           venv/bin/pip install -r requirements.txt
+
+      - name: Check Ollama Review Model
+        run: |
+          if ! command -v ollama >/dev/null 2>&1; then
+            echo "Ollama is not installed or not on PATH for this runner."
+            exit 1
+          fi
+
+          if ! ollama list | awk '{print $1}' | grep -Fx "$HEPHAESTUS_REVIEW_MODEL"; then
+            echo "Required review model is missing: $HEPHAESTUS_REVIEW_MODEL"
+            echo "Install it on the self-hosted runner with:"
+            echo "  ollama pull $HEPHAESTUS_REVIEW_MODEL"
+            exit 1
+          fi
 
       - name: Update Market Metrics
         env:
@@ -48,6 +67,24 @@ jobs:
           echo "Firing up the RTX 3080 Ti..."
           venv/bin/python backend/auto_discover_edges.py --limit 500
 
+          echo "Reapplying persisted edge review decisions..."
+          venv/bin/python backend/edge_review_decisions.py apply
+
+          echo "Reviewing pending AI edges with local Ollama model..."
+          venv/bin/python backend/review_edges_with_ollama.py \
+            --model "$HEPHAESTUS_REVIEW_MODEL" \
+            --status pending \
+            --limit "$HEPHAESTUS_REVIEW_LIMIT" \
+            --apply \
+            --max-seconds "$HEPHAESTUS_REVIEW_MAX_SECONDS" \
+            --min-approve "$HEPHAESTUS_REVIEW_MIN_CONFIDENCE" \
+            --min-reverse "$HEPHAESTUS_REVIEW_MIN_CONFIDENCE" \
+            --min-reject "$HEPHAESTUS_REVIEW_MIN_CONFIDENCE" \
+            --report reports/ollama_edge_review_daily.csv
+
+          echo "Persisting reviewed edge decisions..."
+          venv/bin/python backend/edge_review_decisions.py export
+
           echo "Auditing relationship quality..."
           venv/bin/python backend/audit_data_quality.py --fail-on-warnings
           
@@ -59,7 +96,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          git add docs/dashboard_data.json
+          git add docs/dashboard_data.json data/edge_review_decisions.json
           
           if ! git diff --cached --quiet; then
             git commit -m "Automated AI extraction: Update Supply Chain X-Ray"
