@@ -254,6 +254,12 @@ To skip local AI review during a manual pipeline run:
 HEPHAESTUS_RUN_OLLAMA_REVIEW=0 ./run_pipeline.sh
 ```
 
+The scheduled GitHub workflow checks that Ollama is available on the self-hosted runner and pulls the configured review model if it is missing:
+
+```bash
+ollama pull qwen2.5:14b-instruct
+```
+
 ## Data Model
 
 `Node` represents a company or tracked entity. Important fields include:
