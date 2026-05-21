@@ -11,6 +11,7 @@ EXPORT_PATH = os.path.join(DOCS_DIR, "dashboard_data.json")
 MIN_MARKET_CAP = 0 
 IGNORED_SECTORS = ["Shell Companies", "Uncategorized", "Financial Services", "Real Estate"]
 EXPORT_AI_RESEARCH = os.environ.get("HEPHAESTUS_EXPORT_AI_RESEARCH", "0") == "1"
+REVIEW_QUEUE_LIMIT = int(os.environ.get("HEPHAESTUS_REVIEW_QUEUE_LIMIT", "250"))
 
 def clean_num(val):
     if val is None:
@@ -43,7 +44,10 @@ def edge_payload(edge, node):
         "product": edge.product or edge.dependency_type,
         "confidence": clean_num(edge.confidence_score),
         "source": source_url,
+        "source_title": edge.source_title or source_url,
         "source_type": source_type,
+        "review_status": edge.review_status or "pending",
+        "evidence_excerpt": edge.evidence_excerpt or "",
         "last_verified": edge.last_verified.strftime('%Y-%m-%d') if edge.last_verified else "N/A"
     }
 
@@ -58,15 +62,54 @@ def should_export_node(node):
 
 def should_export_edge(edge):
     source_url = edge.source_url or ""
-    if "AI" in source_url and not EXPORT_AI_RESEARCH:
+    if edge.review_status == "rejected":
         return False
-    return True
+    if edge.review_status == "approved":
+        return True
+    if "Manual" in source_url:
+        return True
+    if "AI" in source_url and EXPORT_AI_RESEARCH:
+        return True
+    return False
+
+def review_edge_payload(edge):
+    return {
+        "edge_id": edge.id,
+        "source_ticker": edge.source_node.ticker if edge.source_node else "",
+        "source_name": edge.source_node.name if edge.source_node else "",
+        "target_ticker": edge.target_node.ticker if edge.target_node else "",
+        "target_name": edge.target_node.name if edge.target_node else "",
+        "type": edge.dependency_type,
+        "product": edge.product or edge.dependency_type,
+        "confidence": clean_num(edge.confidence_score),
+        "source_url": edge.source_url or "",
+        "source_title": edge.source_title or edge.source_url or "",
+        "evidence_excerpt": edge.evidence_excerpt or "",
+        "review_status": edge.review_status or "pending",
+        "review_note": edge.review_note or "",
+        "last_verified": edge.last_verified.strftime('%Y-%m-%d') if edge.last_verified else "N/A"
+    }
 
 def export_to_json():
     session = SessionLocal()
     try:
         nodes = session.query(Node).all()
-        dashboard_data = { "industries": {} }
+        pending_edges = session.query(Edge).filter(Edge.review_status == "pending").order_by(
+            Edge.confidence_score.desc().nullslast(),
+            Edge.id.asc()
+        ).limit(REVIEW_QUEUE_LIMIT).all()
+        rejected_count = session.query(Edge).filter(Edge.review_status == "rejected").count()
+        approved_count = session.query(Edge).filter(Edge.review_status == "approved").count()
+
+        dashboard_data = {
+            "industries": {},
+            "quality": {
+                "pending_count": session.query(Edge).filter(Edge.review_status == "pending").count(),
+                "approved_count": approved_count,
+                "rejected_count": rejected_count,
+                "review_queue": [review_edge_payload(edge) for edge in pending_edges]
+            }
+        }
         
         for node in nodes:
             if not should_export_node(node):

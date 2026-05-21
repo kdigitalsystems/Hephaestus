@@ -83,7 +83,10 @@ def process_source(url: str):
                 dependency_type=dep_type,
                 product=product,
                 confidence_score=conf_score,
-                source_url=url
+                source_url=url,
+                source_title=url,
+                review_status="pending",
+                evidence_excerpt=dep.get("evidence_excerpt")
             )
             session.add(new_edge)
             

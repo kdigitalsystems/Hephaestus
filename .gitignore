@@ -239,3 +239,4 @@ full_codebase.txt
 backend/supply_chain.db
 *.db-journal
 alpaca_paper_keys
+reports/

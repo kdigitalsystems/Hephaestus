@@ -64,6 +64,11 @@ class Edge(Base):
     product = Column(String, nullable=True)
     confidence_score = Column(Float, nullable=True)
     source_url = Column(String, nullable=True)
+    source_title = Column(String, nullable=True)
+    evidence_excerpt = Column(Text, nullable=True)
+    review_status = Column(String, nullable=False, default="pending")
+    review_note = Column(Text, nullable=True)
+    reviewed_at = Column(DateTime, nullable=True)
     last_verified = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     source_node = relationship("Node", foreign_keys=[source_id], back_populates="supplies_to")

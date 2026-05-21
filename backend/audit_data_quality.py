@@ -56,24 +56,31 @@ def audit_database(fail_on_warnings=False):
         duplicate_tickers = [ticker for ticker, count in Counter(tickers).items() if count > 1]
 
         edges = session.query(Edge).all()
+        published_edges = [
+            edge for edge in edges
+            if edge.review_status == "approved" or "Manual" in (edge.source_url or "")
+        ]
         edge_keys = [
             (edge.source_id, edge.target_id, edge.dependency_type)
-            for edge in edges
+            for edge in published_edges
         ]
         duplicate_edge_keys = [
             key for key, count in Counter(edge_keys).items() if count > 1
         ]
-        reversed_edges = [edge for edge in edges if has_reversed_role_label(edge.dependency_type)]
-        non_supply_edges = [edge for edge in edges if has_non_supply_label(edge.dependency_type)]
-        self_edges = [edge for edge in edges if edge.source_id == edge.target_id]
+        reversed_edges = [edge for edge in published_edges if has_reversed_role_label(edge.dependency_type)]
+        non_supply_edges = [edge for edge in published_edges if has_non_supply_label(edge.dependency_type)]
+        self_edges = [edge for edge in published_edges if edge.source_id == edge.target_id]
         ai_edges = [edge for edge in edges if "AI" in (edge.source_url or "")]
         manual_edges = [edge for edge in edges if "Manual" in (edge.source_url or "")]
+        status_counts = Counter(edge.review_status or "pending" for edge in edges)
 
         print("--- Hephaestus Data Quality Audit ---")
         print(f"Nodes: {session.query(Node).count()}")
         print(f"Edges: {len(edges)}")
+        print(f"Published edges: {len(published_edges)}")
         print(f"Manual/reviewed edges: {len(manual_edges)}")
         print(f"Unreviewed AI edges: {len(ai_edges)}")
+        print("Review statuses:", dict(sorted(status_counts.items())))
         print(f"Duplicate tickers: {len(duplicate_tickers)}")
         print(f"Duplicate exact edges: {len(duplicate_edge_keys)}")
         print(f"Role-label direction warnings: {len(reversed_edges)}")

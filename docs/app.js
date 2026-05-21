@@ -1,4 +1,5 @@
 let globalData = {};
+let qualityData = { pending_count: 0, approved_count: 0, rejected_count: 0, review_queue: [] };
 let allCompanies = [];
 let currentCompaniesList = [];
 let currentTitle = 'Companies';
@@ -63,6 +64,7 @@ fetch('dashboard_data.json')
     })
     .then(data => {
         globalData = data.industries || {};
+        qualityData = data.quality || qualityData;
         hydrateCompanies(globalData);
         populateFilters();
         renderOverview();
@@ -91,6 +93,10 @@ function resetDashboard() {
 
 function navigateOverview() {
     setRoute({ view: 'overview' });
+}
+
+function navigateQuality() {
+    setRoute({ view: 'quality' });
 }
 
 function navigateCompanies(route = {}, push = true) {
@@ -174,6 +180,11 @@ function applyRoute(route) {
         return;
     }
 
+    if (route.view === 'quality') {
+        renderQualityView();
+        return;
+    }
+
     resetDashboard();
 }
 
@@ -187,6 +198,7 @@ function showCompanies() {
         setText('current-industry-title', currentTitle);
     }
     document.getElementById('view-industries').classList.add('hidden');
+    document.getElementById('view-quality').classList.add('hidden');
     document.getElementById('view-companies').classList.remove('hidden');
     document.getElementById('view-details').classList.add('hidden');
 }
@@ -245,7 +257,7 @@ function renderConnectedList() {
         row.appendChild(makeElement('span', 'rank-index', String(index + 1)));
         const body = makeElement('span', 'rank-body');
         body.appendChild(makeElement('strong', '', company.name || 'Unknown'));
-        body.appendChild(makeElement('small', '', `${company.ticker || 'N/A'} · ${company.connection_count} links`));
+        body.appendChild(makeElement('small', '', `${company.ticker || 'N/A'} - ${company.connection_count} links`));
         row.appendChild(body);
         list.appendChild(row);
     });
@@ -254,6 +266,7 @@ function renderConnectedList() {
 function renderLevel1() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     document.getElementById('view-industries').classList.remove('hidden');
+    document.getElementById('view-quality').classList.add('hidden');
     document.getElementById('view-companies').classList.add('hidden');
     document.getElementById('view-details').classList.add('hidden');
 
@@ -272,7 +285,7 @@ function renderLevel1() {
             navigateCompanies({ sector });
         };
         card.appendChild(makeElement('span', 'sector-name', sector));
-        card.appendChild(makeElement('span', 'sector-meta', `${companies.length} equities · ${links} links`));
+        card.appendChild(makeElement('span', 'sector-meta', `${companies.length} equities - ${links} links`));
         grid.appendChild(card);
     });
 }
@@ -373,6 +386,62 @@ function renderLevel2() {
     });
 }
 
+function renderQualityView() {
+    currentRoute = { view: 'quality' };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('view-industries').classList.add('hidden');
+    document.getElementById('view-quality').classList.remove('hidden');
+    document.getElementById('view-companies').classList.add('hidden');
+    document.getElementById('view-details').classList.add('hidden');
+
+    const pending = Number(qualityData.pending_count || 0);
+    setText('quality-approved', Number(qualityData.approved_count || 0).toLocaleString());
+    setText('quality-pending', pending.toLocaleString());
+    setText('quality-rejected', Number(qualityData.rejected_count || 0).toLocaleString());
+    setText('quality-count', `${pending.toLocaleString()} pending`);
+
+    const list = document.getElementById('review-queue');
+    clearElement(list);
+    const queue = qualityData.review_queue || [];
+    if (!queue.length) {
+        list.appendChild(makeElement('span', 'empty-state', 'No pending AI-discovered relationships are waiting for review.'));
+        return;
+    }
+
+    queue.forEach(edge => {
+        const card = makeElement('article', 'review-card');
+        const title = makeElement('div', 'review-title');
+        title.appendChild(makeElement('strong', '', `${edge.source_ticker || 'N/A'} -> ${edge.target_ticker || 'N/A'}`));
+        title.appendChild(makeElement('span', 'source-badge', `#${edge.edge_id}`));
+        card.appendChild(title);
+
+        card.appendChild(makeElement('div', 'relationship-product', `${edge.type || 'Supply Link'} | ${edge.product || 'Product not specified'}`));
+
+        const meta = makeElement('div', 'relationship-meta');
+        const confidence = edge.confidence === null || edge.confidence === undefined ? 'N/A' : `${Math.round(Number(edge.confidence) * 100)}%`;
+        meta.appendChild(makeElement('span', '', `Confidence ${confidence}`));
+        meta.appendChild(makeElement('span', '', edge.source_title || edge.source_type || 'AI research'));
+        if (edge.source_url && /^https?:\/\//i.test(edge.source_url)) {
+            const sourceLink = makeElement('a', 'source-link', 'Source');
+            sourceLink.href = edge.source_url;
+            sourceLink.target = '_blank';
+            sourceLink.rel = 'noopener noreferrer';
+            meta.appendChild(sourceLink);
+        }
+        card.appendChild(meta);
+
+        if (edge.evidence_excerpt) {
+            card.appendChild(makeElement('p', 'review-evidence', edge.evidence_excerpt));
+        }
+
+        const commands = makeElement('div', 'review-commands');
+        commands.appendChild(makeElement('code', 'review-command', `python3 backend/review_edges.py approve ${edge.edge_id} --note "Verified source"`));
+        commands.appendChild(makeElement('code', 'review-command', `python3 backend/review_edges.py reject ${edge.edge_id} --note "Incorrect relationship"`));
+        card.appendChild(commands);
+        list.appendChild(card);
+    });
+}
+
 const getCompanyByTicker = (ticker) => allCompanies.find(company => company.ticker === ticker) || null;
 
 function renderLevel3(company, previousRoute = null) {
@@ -383,6 +452,7 @@ function renderLevel3(company, previousRoute = null) {
     };
     window.scrollTo({ top: 0, behavior: 'smooth' });
     document.getElementById('view-industries').classList.add('hidden');
+    document.getElementById('view-quality').classList.add('hidden');
     document.getElementById('view-companies').classList.add('hidden');
     document.getElementById('view-details').classList.remove('hidden');
 

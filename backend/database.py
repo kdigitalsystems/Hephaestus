@@ -34,6 +34,23 @@ def apply_lightweight_migrations():
     with engine.begin() as connection:
         if "product" not in edge_columns:
             connection.execute(text("ALTER TABLE edges ADD COLUMN product VARCHAR"))
+        if "source_title" not in edge_columns:
+            connection.execute(text("ALTER TABLE edges ADD COLUMN source_title VARCHAR"))
+        if "evidence_excerpt" not in edge_columns:
+            connection.execute(text("ALTER TABLE edges ADD COLUMN evidence_excerpt TEXT"))
+        if "review_status" not in edge_columns:
+            connection.execute(text("ALTER TABLE edges ADD COLUMN review_status VARCHAR NOT NULL DEFAULT 'pending'"))
+            connection.execute(text("""
+                UPDATE edges
+                SET review_status = CASE
+                    WHEN source_url LIKE '%Manual%' THEN 'approved'
+                    ELSE 'pending'
+                END
+            """))
+        if "review_note" not in edge_columns:
+            connection.execute(text("ALTER TABLE edges ADD COLUMN review_note TEXT"))
+        if "reviewed_at" not in edge_columns:
+            connection.execute(text("ALTER TABLE edges ADD COLUMN reviewed_at DATETIME"))
 
 # If you run `python database.py` from the terminal, it will create the tables.
 if __name__ == "__main__":

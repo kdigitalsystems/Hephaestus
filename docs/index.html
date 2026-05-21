@@ -16,7 +16,10 @@
                 <span class="brand-subtitle">Supply chain intelligence for public markets</span>
             </span>
         </button>
-        <div id="last-updated" class="sync-status">Updating...</div>
+        <div class="topbar-actions">
+            <button class="topbar-link" onclick="navigateQuality()">Review Queue</button>
+            <div id="last-updated" class="sync-status">Updating...</div>
+        </div>
     </header>
 
     <main class="container">
@@ -86,6 +89,32 @@
                     <div id="connected-list" class="rank-list"></div>
                 </div>
             </section>
+        </section>
+
+        <section id="view-quality" class="hidden">
+            <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
+            <div class="table-header">
+                <div>
+                    <p class="eyebrow">Quality Control</p>
+                    <h2>AI Review Queue</h2>
+                </div>
+                <span id="quality-count" class="result-count">0 pending</span>
+            </div>
+            <div class="quality-summary">
+                <div class="stat-card">
+                    <span class="stat-value" id="quality-approved">-</span>
+                    <span class="stat-label">Approved</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="quality-pending">-</span>
+                    <span class="stat-label">Pending AI Review</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="quality-rejected">-</span>
+                    <span class="stat-label">Rejected</span>
+                </div>
+            </div>
+            <div id="review-queue" class="review-list"></div>
         </section>
 
         <section id="view-companies" class="hidden">

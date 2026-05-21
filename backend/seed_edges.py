@@ -56,7 +56,10 @@ def seed_manual_edges():
                     dependency_type=edge_data["type"],
                     product=edge_data.get("product"),
                     confidence_score=1.0, # 100% confidence for manual hardcoded seeds
-                    source_url="Manual System Jumpstart"
+                    source_url="Manual System Jumpstart",
+                    source_title="Manual System Jumpstart",
+                    review_status="approved",
+                    review_note="Curated seed relationship"
                 )
                 session.add(new_edge)
                 edges_added += 1
@@ -67,6 +70,9 @@ def seed_manual_edges():
                     existing_edge.product = edge_data["product"]
                 existing_edge.confidence_score = 1.0
                 existing_edge.source_url = "Manual System Jumpstart"
+                existing_edge.source_title = "Manual System Jumpstart"
+                existing_edge.review_status = "approved"
+                existing_edge.review_note = "Curated seed relationship"
                 for duplicate_edge in existing_edges[1:]:
                     session.delete(duplicate_edge)
                 print(f"  [=] Link already exists: {source_node.ticker} -> {target_node.ticker}")

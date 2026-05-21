@@ -135,6 +135,47 @@ Research already-connected companies:
 python3 backend/auto_discover_edges.py --limit 10 --deep-dive
 ```
 
+AI-discovered relationships are saved as pending by default. Review them before publishing:
+
+```bash
+python3 backend/review_edges.py list --status pending --limit 20
+python3 backend/review_edges.py approve 123 --note "Verified source"
+python3 backend/review_edges.py reject 123 --note "Wrong direction or not a supply-chain link"
+python3 backend/review_edges.py edit 123 --type "Manufacturing" --product "Advanced node wafer fabrication"
+```
+
+You can also filter the review queue by company:
+
+```bash
+python3 backend/review_edges.py list --status pending --source AMD
+python3 backend/review_edges.py list --status pending --target TSM
+```
+
+To batch-curate pending edges with a local Ollama model:
+
+```bash
+python3 backend/review_edges_with_ollama.py --model qwen2.5:14b-instruct --limit 25
+python3 backend/review_edges_with_ollama.py --model qwen2.5:14b-instruct --limit 250 --apply
+```
+
+The Ollama reviewer can approve, reject, or reverse high-confidence edges. Ambiguous edges stay pending. Review reports are written to `reports/ollama_edge_review.csv` by default.
+
+Long review runs can be resumed safely:
+
+```bash
+python3 backend/review_edges_with_ollama.py --model qwen2.5:14b-instruct --limit 1000 --apply --max-seconds 3300
+python3 backend/apply_ollama_review_report.py reports/ollama_edge_review.csv --min-approve 0.85 --min-reverse 0.85
+```
+
+Persist reviewed decisions outside the local SQLite database:
+
+```bash
+python3 backend/edge_review_decisions.py export
+python3 backend/edge_review_decisions.py apply
+```
+
+The exported decisions live in `data/edge_review_decisions.json` so future database rebuilds can reapply the reviewed approvals/rejections.
+
 ## Export Dashboard Data
 
 Before publishing dashboard data, run the quality audit:
@@ -162,6 +203,8 @@ HEPHAESTUS_EXPORT_AI_RESEARCH=1 python3 backend/export.py
 ```
 
 Use that mode only after reviewing the generated relationships; LLM extraction can create plausible but wrong links.
+
+The exported dashboard also includes a review summary. Visit `#quality` in the static app, or click `Review Queue`, to see pending AI edges and the review commands for each one.
 
 The dashboard reads:
 
@@ -214,6 +257,11 @@ The pipeline now fails fast if any step fails. When `docs/dashboard_data.json` c
 - `product`
 - `confidence_score`
 - `source_url`
+- `source_title`
+- `evidence_excerpt`
+- `review_status`: `pending`, `approved`, or `rejected`
+- `review_note`
+- `reviewed_at`
 
 Edges are unique by source, target, and dependency type.
 
