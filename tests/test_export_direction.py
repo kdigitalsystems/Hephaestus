@@ -83,7 +83,7 @@ def test_dashboard_data_shows_tsm_as_supplier_to_nvidia_and_amd():
     assert not any(edge["ticker"] == "TSM" for edge in nvda["downstream"])
 
 
-def test_relationship_dedupe_keeps_one_entry_per_connected_ticker():
+def test_relationship_merge_keeps_one_entry_per_connected_ticker_with_combined_details():
     duplicate_ai = {
         "edge_id": 20,
         "ticker": "TSM",
@@ -105,9 +105,14 @@ def test_relationship_dedupe_keeps_one_entry_per_connected_ticker():
         "evidence_excerpt": "",
     }
 
-    deduped = export.dedupe_relationships([duplicate_ai, manual_seed])
+    merged = export.merge_relationships([duplicate_ai, manual_seed])
 
-    assert deduped == [manual_seed]
+    assert len(merged) == 1
+    assert merged[0]["ticker"] == "TSM"
+    assert merged[0]["confidence"] == 1.0
+    assert merged[0]["source_type"] == "Manual / AI Research"
+    assert merged[0]["type"] == "Advanced Silicon Fabrication / Foundry Services"
+    assert merged[0]["product"] == "Advanced process node chip fabrication / foundry services"
 
 
 def test_dashboard_data_has_no_duplicate_supplier_or_buyer_tickers():

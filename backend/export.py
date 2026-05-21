@@ -86,18 +86,55 @@ def edge_rank(payload):
         -(payload.get("edge_id") or 0),
     )
 
-def dedupe_relationships(relationships):
-    best_by_ticker = {}
+def unique_join(values):
+    seen = set()
+    merged = []
+    for value in values:
+        value = str(value or "").strip()
+        if not value or value in seen:
+            continue
+        seen.add(value)
+        merged.append(value)
+    return " / ".join(merged)
+
+def merge_relationship_group(relationships):
+    ranked = sorted(relationships, key=edge_rank, reverse=True)
+    primary = dict(ranked[0])
+    primary["edge_id"] = min(
+        relationship.get("edge_id")
+        for relationship in ranked
+        if relationship.get("edge_id") is not None
+    )
+    primary["type"] = unique_join(relationship.get("type") for relationship in ranked)
+    primary["product"] = unique_join(relationship.get("product") for relationship in ranked)
+    primary["source"] = unique_join(relationship.get("source") for relationship in ranked)
+    primary["source_title"] = unique_join(relationship.get("source_title") for relationship in ranked)
+    primary["source_type"] = unique_join(relationship.get("source_type") for relationship in ranked)
+    primary["evidence_excerpt"] = unique_join(relationship.get("evidence_excerpt") for relationship in ranked)
+    primary["review_status"] = unique_join(relationship.get("review_status") for relationship in ranked)
+    primary["last_verified"] = max(
+        (relationship.get("last_verified") for relationship in ranked if relationship.get("last_verified") and relationship.get("last_verified") != "N/A"),
+        default="N/A",
+    )
+
+    confidences = [
+        relationship.get("confidence")
+        for relationship in ranked
+        if relationship.get("confidence") is not None
+    ]
+    primary["confidence"] = max(confidences) if confidences else None
+    return primary
+
+def merge_relationships(relationships):
+    by_ticker = {}
     for relationship in relationships:
         ticker = relationship.get("ticker") or relationship.get("name") or ""
         if not ticker:
             continue
-        current = best_by_ticker.get(ticker)
-        if current is None or edge_rank(relationship) > edge_rank(current):
-            best_by_ticker[ticker] = relationship
+        by_ticker.setdefault(ticker, []).append(relationship)
 
     return sorted(
-        best_by_ticker.values(),
+        (merge_relationship_group(group) for group in by_ticker.values()),
         key=lambda relationship: (
             relationship.get("ticker") or "",
             relationship.get("type") or "",
@@ -218,8 +255,8 @@ def export_to_json():
                     upstream.append(edge_payload(edge, supplier_node))
                 elif node.id == supplier_node.id and should_export_node(customer_node):
                     downstream.append(edge_payload(edge, customer_node))
-            upstream = dedupe_relationships(upstream)
-            downstream = dedupe_relationships(downstream)
+            upstream = merge_relationships(upstream)
+            downstream = merge_relationships(downstream)
             # ------------------------
 
             dashboard_data["industries"][sector].append({
