@@ -30,19 +30,36 @@ jobs:
           venv/bin/pip install --upgrade pip
           venv/bin/pip install -r requirements.txt
 
-      - name: Check Ollama Review Model
+      - name: Ensure Ollama Review Model
         run: |
           if ! command -v ollama >/dev/null 2>&1; then
             echo "Ollama is not installed or not on PATH for this runner."
             exit 1
           fi
 
-          if ! ollama list | awk '{print $1}' | grep -Fx "$HEPHAESTUS_REVIEW_MODEL"; then
-            echo "Required review model is missing: $HEPHAESTUS_REVIEW_MODEL"
-            echo "Install it on the self-hosted runner with:"
-            echo "  ollama pull $HEPHAESTUS_REVIEW_MODEL"
+          if ! ollama list >/tmp/ollama-list.txt 2>/tmp/ollama-list.err; then
+            echo "Ollama is installed but the local service is not responding. Starting ollama serve..."
+            nohup ollama serve >/tmp/ollama-serve.log 2>&1 &
+            for attempt in $(seq 1 30); do
+              if ollama list >/tmp/ollama-list.txt 2>/tmp/ollama-list.err; then
+                break
+              fi
+              sleep 2
+            done
+          fi
+
+          if ! ollama list >/tmp/ollama-list.txt 2>/tmp/ollama-list.err; then
+            echo "Ollama did not become ready. Recent error:"
+            cat /tmp/ollama-list.err
             exit 1
           fi
+
+          if ! awk '{print $1}' /tmp/ollama-list.txt | grep -Fx "$HEPHAESTUS_REVIEW_MODEL"; then
+            echo "Pulling missing review model: $HEPHAESTUS_REVIEW_MODEL"
+            ollama pull "$HEPHAESTUS_REVIEW_MODEL"
+          fi
+
+          echo "Ollama review model is ready: $HEPHAESTUS_REVIEW_MODEL"
 
       - name: Update Market Metrics
         env:
@@ -64,7 +81,7 @@ jobs:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
-          echo "Firing up the RTX 3080 Ti..."
+          echo "Running local GPU discovery..."
           venv/bin/python backend/auto_discover_edges.py --limit 500
 
           echo "Reapplying persisted edge review decisions..."
