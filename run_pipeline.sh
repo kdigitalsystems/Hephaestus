@@ -46,6 +46,9 @@ if [ "$RUN_OLLAMA_REVIEW" = "1" ]; then
   fi
 fi
 
+echo "Cleaning up non-supply reviewed edges before publishing..."
+python3 backend/cleanup_reviewed_edges.py
+
 echo "Persisting reviewed edge decisions..."
 python3 backend/edge_review_decisions.py export
 

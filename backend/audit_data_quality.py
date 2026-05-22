@@ -22,13 +22,24 @@ NON_DIRECTIONAL_ROLE_LABELS = (
 
 NON_SUPPLY_MARKERS = (
     "competitor",
+    "collaboration",
+    "co-commercialization",
+    "equity stake",
     "investor",
     "acquisition",
     "acquired",
     "merger",
+    "license agreement",
+    "licensing agreement",
     "option deal",
     "funding",
+    "historical acquisition",
+    "joint venture",
+    "patent",
+    "royalty",
     "shareholder",
+    "spin-off",
+    "spinoff",
     "subsidiary",
     "parent company",
     "merged company",
@@ -44,9 +55,9 @@ def has_reversed_role_label(dependency_type):
     return any(marker in dep_type for marker in REVERSED_ROLE_MARKERS)
 
 
-def has_non_supply_label(dependency_type):
-    dep_type = (dependency_type or "").lower()
-    return any(marker in dep_type for marker in NON_SUPPLY_MARKERS)
+def has_non_supply_label(*labels):
+    label_text = " ".join(label or "" for label in labels).lower()
+    return any(marker in label_text for marker in NON_SUPPLY_MARKERS)
 
 
 def audit_database(fail_on_warnings=False):
@@ -68,7 +79,7 @@ def audit_database(fail_on_warnings=False):
             key for key, count in Counter(edge_keys).items() if count > 1
         ]
         reversed_edges = [edge for edge in published_edges if has_reversed_role_label(edge.dependency_type)]
-        non_supply_edges = [edge for edge in published_edges if has_non_supply_label(edge.dependency_type)]
+        non_supply_edges = [edge for edge in published_edges if has_non_supply_label(edge.dependency_type, edge.product)]
         self_edges = [edge for edge in published_edges if edge.source_id == edge.target_id]
         ai_edges = [edge for edge in edges if "AI" in (edge.source_url or "")]
         manual_edges = [edge for edge in edges if "Manual" in (edge.source_url or "")]

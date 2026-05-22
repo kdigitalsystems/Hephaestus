@@ -15,6 +15,34 @@ from models import Edge, Node
 
 DEFAULT_MODEL = os.environ.get("HEPHAESTUS_REVIEW_MODEL", "qwen2.5:14b-instruct")
 VALID_ACTIONS = {"approve", "reject", "reverse", "pending"}
+NON_SUPPLY_REVIEW_MARKERS = [
+    "acquisition",
+    "acquired",
+    "acquires",
+    "asset purchase",
+    "business unit purchase",
+    "collaboration",
+    "co-commercialization",
+    "competitor",
+    "competition",
+    "equity stake",
+    "funding",
+    "historical acquisition",
+    "investment",
+    "joint venture",
+    "license agreement",
+    "licensing agreement",
+    "merger",
+    "option deal",
+    "ownership",
+    "partnership",
+    "patent",
+    "royalty",
+    "shareholder",
+    "spin-off",
+    "spinoff",
+    "transfer of rights",
+]
 NON_OPERATING_SECTORS = {"financial services", "real estate", "shell companies"}
 NON_OPERATING_NAME_MARKERS = [
     " fund",
@@ -231,6 +259,22 @@ def deterministic_review(edge):
             "reason": f"Non-operating financial vehicle or fund is not a useful operating supply-chain node: {names}.",
         }
 
+    label_text = " ".join([
+        edge.dependency_type or "",
+        edge.product or "",
+        edge.evidence_excerpt or "",
+    ]).lower()
+    if any(marker in label_text for marker in NON_SUPPLY_REVIEW_MARKERS):
+        return {
+            "action": "reject",
+            "supplier_side": "neither",
+            "customer_side": "neither",
+            "confidence": max(edge.confidence_score or 0.0, 0.95),
+            "relationship_type": edge.dependency_type or "Non-supply relationship",
+            "product": edge.product or "",
+            "reason": "Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
+        }
+
     return None
 
 
@@ -265,6 +309,13 @@ def normalize_review(raw):
 
     reason = str(raw.get("reason") or "").strip()
     reason_lower = reason.lower()
+    relationship_type = str(raw.get("relationship_type") or "").strip()
+    product = str(raw.get("product") or "").strip()
+    review_text = " ".join([relationship_type, product, reason]).lower()
+    if any(marker in review_text for marker in NON_SUPPLY_REVIEW_MARKERS):
+        action = "reject"
+        supplier_side = "neither"
+        customer_side = "neither"
     if action in {"approve", "reverse"} and any(marker in reason_lower for marker in UNCERTAIN_REASON_MARKERS):
         action = "pending"
     try:
@@ -278,8 +329,8 @@ def normalize_review(raw):
         "supplier_side": supplier_side,
         "customer_side": customer_side,
         "confidence": confidence,
-        "relationship_type": str(raw.get("relationship_type") or "").strip(),
-        "product": str(raw.get("product") or "").strip(),
+        "relationship_type": relationship_type,
+        "product": product,
         "reason": reason,
     }
 

@@ -99,6 +99,9 @@ jobs:
             --min-reject "$HEPHAESTUS_REVIEW_MIN_CONFIDENCE" \
             --report reports/ollama_edge_review_daily.csv
 
+          echo "Cleaning up non-supply reviewed edges before publishing..."
+          venv/bin/python backend/cleanup_reviewed_edges.py
+
           echo "Persisting reviewed edge decisions..."
           venv/bin/python backend/edge_review_decisions.py export
 

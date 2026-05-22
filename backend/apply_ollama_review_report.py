@@ -5,6 +5,44 @@ from datetime import datetime, timezone
 from database import SessionLocal
 from models import Edge
 
+NON_SUPPLY_REVIEW_MARKERS = [
+    "acquisition",
+    "acquired",
+    "acquires",
+    "asset purchase",
+    "business unit purchase",
+    "collaboration",
+    "co-commercialization",
+    "competitor",
+    "competition",
+    "equity stake",
+    "funding",
+    "historical acquisition",
+    "investment",
+    "joint venture",
+    "license agreement",
+    "licensing agreement",
+    "merger",
+    "option deal",
+    "ownership",
+    "partnership",
+    "patent",
+    "royalty",
+    "shareholder",
+    "spin-off",
+    "spinoff",
+    "transfer of rights",
+]
+
+
+def has_non_supply_review_label(row):
+    text = " ".join([
+        row.get("relationship_type") or "",
+        row.get("product") or "",
+        row.get("reason") or "",
+    ]).lower()
+    return any(marker in text for marker in NON_SUPPLY_REVIEW_MARKERS)
+
 
 def allowed(row, args):
     action = row["model_action"]
@@ -35,7 +73,7 @@ def apply_row(session, row):
     if not edge or edge.review_status != "pending":
         return "skipped"
 
-    action = row["model_action"]
+    action = "reject" if has_non_supply_review_label(row) else row["model_action"]
     if action == "approve":
         update_metadata(edge, row)
         edge.review_status = "approved"
