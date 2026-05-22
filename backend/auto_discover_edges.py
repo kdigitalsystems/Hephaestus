@@ -124,12 +124,12 @@ def upsert_pending_edge(session, source_node, target_node, dep):
         evidence_excerpt=dep.get('evidence_excerpt'),
         review_status="pending"
     )
-    session.add(new_edge)
     try:
-        session.flush()
+        with session.begin_nested():
+            session.add(new_edge)
+            session.flush()
         return new_edge, True
     except IntegrityError:
-        session.rollback()
         existing = session.query(Edge).filter(
             Edge.source_id == source_node.id,
             Edge.target_id == target_node.id,
@@ -312,14 +312,14 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                         continue
 
                     if s_node.id != company.id and t_node.id != company.id:
-                        print(f"  [!] Ignored tangential competitor link: {s_node.ticker} ➔ {t_node.ticker}")
+                        print(f"  [!] Ignored tangential competitor link: {s_node.ticker} -> {t_node.ticker}")
                         continue
 
                     edge, created = upsert_pending_edge(session, s_node, t_node, dep)
                     if created:
-                        print(f"  [+] DYNAMICALLY LINKED: {s_node.ticker} ➔ {t_node.ticker} ({dep.get('product')})")
+                        print(f"  [+] DYNAMICALLY LINKED: {s_node.ticker} -> {t_node.ticker} ({dep.get('product')})")
                     else:
-                        print(f"  [=] Link already exists: {s_node.ticker} ➔ {t_node.ticker} ({edge.dependency_type})")
+                        print(f"  [=] Link already exists: {s_node.ticker} -> {t_node.ticker} ({edge.dependency_type})")
                 else:
                     s_name = dep.get('source_company')
                     t_name = dep.get('target_company')
@@ -333,6 +333,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
     except Exception as e:
         print(f"CRITICAL ERROR: {e}")
         session.rollback()
+        raise
     finally:
         session.close()
 

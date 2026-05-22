@@ -67,71 +67,77 @@ def apply_decisions(path):
     counts = {"applied": 0, "missing": 0, "merged": 0}
     try:
         for decision in decisions:
-            source = session.query(Node).filter(Node.ticker == decision.get("source_ticker")).first()
-            target = session.query(Node).filter(Node.ticker == decision.get("target_ticker")).first()
-            if not source or not target:
-                counts["missing"] += 1
-                continue
-
-            edge = (
-                session.query(Edge)
-                .filter(
-                    Edge.source_id == source.id,
-                    Edge.target_id == target.id,
-                    Edge.dependency_type == decision.get("dependency_type"),
-                )
-                .first()
-            )
-
-            if not edge:
-                edge = (
-                    session.query(Edge)
-                    .filter(
-                        Edge.source_id == source.id,
-                        Edge.target_id == target.id,
-                        Edge.source_url == decision.get("source_url"),
-                    )
-                    .first()
-                )
-
-            conflicting_edge = (
-                session.query(Edge)
-                .filter(
-                    Edge.source_id == source.id,
-                    Edge.target_id == target.id,
-                    Edge.dependency_type == decision.get("dependency_type"),
-                )
-                .first()
-            )
-            if edge and conflicting_edge and edge.id != conflicting_edge.id:
-                session.delete(edge)
-                edge = conflicting_edge
-                counts["merged"] += 1
-
-            if not edge:
-                edge = Edge(source_id=source.id, target_id=target.id, dependency_type=decision["dependency_type"])
-                session.add(edge)
-
-            edge.dependency_type = decision["dependency_type"]
-            edge.product = decision.get("product")
-            edge.confidence_score = decision.get("confidence_score")
-            edge.source_url = decision.get("source_url")
-            edge.source_title = decision.get("source_title")
-            edge.evidence_excerpt = decision.get("evidence_excerpt")
-            edge.review_status = decision["review_status"]
-            edge.review_note = decision.get("review_note")
-            edge.reviewed_at = datetime.now(timezone.utc)
-            counts["applied"] += 1
-
-        try:
-            session.commit()
-        except IntegrityError:
-            session.rollback()
-            dedupe_edges(session)
-            session.commit()
+            try:
+                result = apply_decision(session, decision)
+                counts[result] += 1
+                session.commit()
+            except IntegrityError:
+                session.rollback()
+                dedupe_edges(session)
+                result = apply_decision(session, decision)
+                counts[result] += 1
+                session.commit()
         print("Applied review decisions:", counts)
     finally:
         session.close()
+
+
+def apply_decision(session, decision):
+    source = session.query(Node).filter(Node.ticker == decision.get("source_ticker")).first()
+    target = session.query(Node).filter(Node.ticker == decision.get("target_ticker")).first()
+    if not source or not target:
+        return "missing"
+
+    edge = (
+        session.query(Edge)
+        .filter(
+            Edge.source_id == source.id,
+            Edge.target_id == target.id,
+            Edge.dependency_type == decision.get("dependency_type"),
+        )
+        .first()
+    )
+
+    if not edge:
+        edge = (
+            session.query(Edge)
+            .filter(
+                Edge.source_id == source.id,
+                Edge.target_id == target.id,
+                Edge.source_url == decision.get("source_url"),
+            )
+            .first()
+        )
+
+    conflicting_edge = (
+        session.query(Edge)
+        .filter(
+            Edge.source_id == source.id,
+            Edge.target_id == target.id,
+            Edge.dependency_type == decision.get("dependency_type"),
+        )
+        .first()
+    )
+    merged = False
+    if edge and conflicting_edge and edge.id != conflicting_edge.id:
+        session.delete(edge)
+        edge = conflicting_edge
+        merged = True
+
+    if not edge:
+        edge = Edge(source_id=source.id, target_id=target.id, dependency_type=decision["dependency_type"])
+        session.add(edge)
+
+    edge.dependency_type = decision["dependency_type"]
+    edge.product = decision.get("product")
+    edge.confidence_score = decision.get("confidence_score")
+    edge.source_url = decision.get("source_url")
+    edge.source_title = decision.get("source_title")
+    edge.evidence_excerpt = decision.get("evidence_excerpt")
+    edge.review_status = decision["review_status"]
+    edge.review_note = decision.get("review_note")
+    edge.reviewed_at = datetime.now(timezone.utc)
+    return "merged" if merged else "applied"
 
 
 def dedupe_edges(session):
