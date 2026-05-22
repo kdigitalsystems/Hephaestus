@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260522-ui4">
+    <link rel="stylesheet" href="styles.css?v=20260522-future1">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
@@ -35,22 +35,39 @@
                     <h1>Trace how companies depend on each other.</h1>
                     <p class="intro-copy">Explore public equities by sector, inspect financial context, and follow supplier/customer exposure through the Supply Chain X-Ray.</p>
                 </div>
-                <div class="stat-grid">
-                    <div class="stat-card">
-                        <span class="stat-value" id="stat-companies">-</span>
-                        <span class="stat-label">Companies</span>
+                <div class="hero-intel">
+                    <div class="signal-visual" aria-hidden="true">
+                        <span class="signal-node node-a"></span>
+                        <span class="signal-node node-b"></span>
+                        <span class="signal-node node-c"></span>
+                        <span class="signal-node node-d"></span>
+                        <span class="signal-node node-e"></span>
+                        <span class="signal-line line-a"></span>
+                        <span class="signal-line line-b"></span>
+                        <span class="signal-line line-c"></span>
+                        <span class="signal-line line-d"></span>
+                        <div class="signal-core">
+                            <strong>LIVE</strong>
+                            <span>Dependency graph</span>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <span class="stat-value" id="stat-links">-</span>
-                        <span class="stat-label">Supply Links</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-value" id="stat-sectors">-</span>
-                        <span class="stat-label">Sectors</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-value" id="stat-connected">-</span>
-                        <span class="stat-label">Most Connected</span>
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-companies">-</span>
+                            <span class="stat-label">Companies</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-links">-</span>
+                            <span class="stat-label">Supply Links</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-sectors">-</span>
+                            <span class="stat-label">Sectors</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-connected">-</span>
+                            <span class="stat-label">Most Connected</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -240,6 +257,6 @@
         </section>
     </main>
 
-    <script src="app.js?v=20260522-ui4"></script>
+    <script src="app.js?v=20260522-future1"></script>
 </body>
 </html>
