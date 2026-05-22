@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hephaestus Terminal</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Hephaestus Supply Chain Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260522-ui4">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
@@ -12,14 +15,14 @@
         <button class="brand-button" onclick="navigateOverview()">
             <span class="brand-mark">H</span>
             <span>
-                <span class="brand-title">Hephaestus Terminal</span>
+                <span class="brand-title">Hephaestus</span>
                 <span class="brand-subtitle">Supply chain intelligence for public markets</span>
             </span>
         </button>
         <div class="topbar-actions">
-            <button class="topbar-link" onclick="navigateOverview()">Overview</button>
-            <button class="topbar-link" onclick="navigateCompanies()">Screener</button>
-            <button class="topbar-link" onclick="navigateQuality()">Review Queue</button>
+            <button class="topbar-link" data-nav="overview" onclick="navigateOverview()">Overview</button>
+            <button class="topbar-link" data-nav="companies" onclick="navigateCompanies()">Screener</button>
+            <button class="topbar-link" data-nav="quality" onclick="navigateQuality()">Review Queue</button>
             <div id="last-updated" class="sync-status">Updating...</div>
         </div>
     </header>
@@ -237,6 +240,6 @@
         </section>
     </main>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=20260522-ui4"></script>
 </body>
 </html>
