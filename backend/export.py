@@ -295,7 +295,7 @@ def export_to_json():
         print(f"Export Complete with Supply Chain X-Ray metrics included ({mode}).")
         
     except Exception as e:
-        print(f"Error exporting database: {e}")
+        raise SystemExit(f"Error exporting database: {e}") from e
     finally:
         session.close()
 

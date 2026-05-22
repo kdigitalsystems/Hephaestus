@@ -1,6 +1,10 @@
 import argparse
 from collections import Counter
+import sys
 
+from sqlalchemy import inspect
+
+from database import engine
 from database import SessionLocal
 from models import Edge, Node
 
@@ -47,6 +51,12 @@ NON_SUPPLY_MARKERS = (
     "competition",
 )
 
+REQUIRED_TABLES = ("nodes", "edges")
+
+
+class DatabaseSchemaError(RuntimeError):
+    pass
+
 
 def has_reversed_role_label(dependency_type):
     dep_type = (dependency_type or "").lower()
@@ -60,7 +70,19 @@ def has_non_supply_label(*labels):
     return any(marker in label_text for marker in NON_SUPPLY_MARKERS)
 
 
+def validate_database_schema():
+    inspector = inspect(engine)
+    missing_tables = [table for table in REQUIRED_TABLES if table not in inspector.get_table_names()]
+    if missing_tables:
+        missing = ", ".join(missing_tables)
+        raise DatabaseSchemaError(
+            f"Database schema is missing required table(s): {missing}. "
+            "Run `python backend/database.py` and seed or rebuild the database before auditing."
+        )
+
+
 def audit_database(fail_on_warnings=False):
+    validate_database_schema()
     session = SessionLocal()
     try:
         tickers = [ticker for (ticker,) in session.query(Node.ticker).filter(Node.ticker != None).all()]
@@ -131,4 +153,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Audit Hephaestus node and edge data quality.")
     parser.add_argument("--fail-on-warnings", action="store_true", help="Exit non-zero when warnings are found.")
     args = parser.parse_args()
-    audit_database(fail_on_warnings=args.fail_on_warnings)
+    try:
+        audit_database(fail_on_warnings=args.fail_on_warnings)
+    except DatabaseSchemaError as exc:
+        print(exc, file=sys.stderr)
+        raise SystemExit(1) from exc
