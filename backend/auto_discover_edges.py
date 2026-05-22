@@ -5,6 +5,7 @@ import argparse
 import wikipedia
 import warnings
 from sqlalchemy import func, or_
+from sqlalchemy.exc import IntegrityError
 from thefuzz import fuzz
 
 from database import SessionLocal
@@ -87,6 +88,56 @@ def normalize_dependency(dep):
     dep["source_ticker"], dep["target_ticker"] = dep.get("target_ticker"), dep.get("source_ticker")
     dep["dependency_type"] = "Supply Relationship"
     return dep
+
+def upsert_pending_edge(session, source_node, target_node, dep):
+    dep_type = dep.get('dependency_type') or 'Supply Link'
+    conf = dep.get('confidence_score', 0.8)
+    if conf > 1:
+        conf = conf / 100.0 if conf > 10 else conf / 10.0
+
+    existing = session.query(Edge).filter(
+        Edge.source_id == source_node.id,
+        Edge.target_id == target_node.id,
+        Edge.dependency_type == dep_type
+    ).first()
+
+    if existing:
+        if dep.get('product') and not existing.product:
+            existing.product = dep.get('product')
+        if dep.get('evidence_excerpt') and not existing.evidence_excerpt:
+            existing.evidence_excerpt = dep.get('evidence_excerpt')
+        existing.confidence_score = max(existing.confidence_score or 0, conf)
+        if not existing.source_title:
+            existing.source_title = "AI Multi-Source Research"
+        if not existing.source_url:
+            existing.source_url = "AI Multi-Source Research"
+        return existing, False
+
+    new_edge = Edge(
+        source_id=source_node.id,
+        target_id=target_node.id,
+        dependency_type=dep_type,
+        product=dep.get('product'),
+        confidence_score=conf,
+        source_url="AI Multi-Source Research",
+        source_title="AI Multi-Source Research",
+        evidence_excerpt=dep.get('evidence_excerpt'),
+        review_status="pending"
+    )
+    session.add(new_edge)
+    try:
+        session.flush()
+        return new_edge, True
+    except IntegrityError:
+        session.rollback()
+        existing = session.query(Edge).filter(
+            Edge.source_id == source_node.id,
+            Edge.target_id == target_node.id,
+            Edge.dependency_type == dep_type
+        ).first()
+        if existing:
+            return existing, False
+        raise
 
 class EntityResolver:
     """Dynamic Resolution Engine with Yahoo Finance API Fallback."""
@@ -264,29 +315,11 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                         print(f"  [!] Ignored tangential competitor link: {s_node.ticker} ➔ {t_node.ticker}")
                         continue
 
-                    existing = session.query(Edge).filter(
-                        Edge.source_id == s_node.id, 
-                        Edge.target_id == t_node.id,
-                        Edge.dependency_type == dep.get('dependency_type', 'Supply Link')
-                    ).first()
-
-                    if not existing:
-                        conf = dep.get('confidence_score', 0.8)
-                        if conf > 1: conf = conf / 100.0 if conf > 10 else conf / 10.0
-
-                        new_edge = Edge(
-                            source_id=s_node.id,
-                            target_id=t_node.id,
-                            dependency_type=dep.get('dependency_type', 'Supply Link'),
-                            product=dep.get('product'),
-                            confidence_score=conf,
-                            source_url="AI Multi-Source Research",
-                            source_title="AI Multi-Source Research",
-                            evidence_excerpt=dep.get('evidence_excerpt'),
-                            review_status="pending"
-                        )
-                        session.add(new_edge)
+                    edge, created = upsert_pending_edge(session, s_node, t_node, dep)
+                    if created:
                         print(f"  [+] DYNAMICALLY LINKED: {s_node.ticker} ➔ {t_node.ticker} ({dep.get('product')})")
+                    else:
+                        print(f"  [=] Link already exists: {s_node.ticker} ➔ {t_node.ticker} ({edge.dependency_type})")
                 else:
                     s_name = dep.get('source_company')
                     t_name = dep.get('target_company')

@@ -3,6 +3,8 @@ import json
 import os
 from datetime import datetime, timezone
 
+from sqlalchemy.exc import IntegrityError
+
 from database import SessionLocal
 from models import Edge, Node
 
@@ -62,7 +64,7 @@ def apply_decisions(path):
 
     decisions = payload.get("decisions", [])
     session = SessionLocal()
-    counts = {"applied": 0, "missing": 0}
+    counts = {"applied": 0, "missing": 0, "merged": 0}
     try:
         for decision in decisions:
             source = session.query(Node).filter(Node.ticker == decision.get("source_ticker")).first()
@@ -76,10 +78,36 @@ def apply_decisions(path):
                 .filter(
                     Edge.source_id == source.id,
                     Edge.target_id == target.id,
-                    Edge.source_url == decision.get("source_url"),
+                    Edge.dependency_type == decision.get("dependency_type"),
                 )
                 .first()
             )
+
+            if not edge:
+                edge = (
+                    session.query(Edge)
+                    .filter(
+                        Edge.source_id == source.id,
+                        Edge.target_id == target.id,
+                        Edge.source_url == decision.get("source_url"),
+                    )
+                    .first()
+                )
+
+            conflicting_edge = (
+                session.query(Edge)
+                .filter(
+                    Edge.source_id == source.id,
+                    Edge.target_id == target.id,
+                    Edge.dependency_type == decision.get("dependency_type"),
+                )
+                .first()
+            )
+            if edge and conflicting_edge and edge.id != conflicting_edge.id:
+                session.delete(edge)
+                edge = conflicting_edge
+                counts["merged"] += 1
+
             if not edge:
                 edge = Edge(source_id=source.id, target_id=target.id, dependency_type=decision["dependency_type"])
                 session.add(edge)
@@ -95,10 +123,53 @@ def apply_decisions(path):
             edge.reviewed_at = datetime.now(timezone.utc)
             counts["applied"] += 1
 
-        session.commit()
+        try:
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+            dedupe_edges(session)
+            session.commit()
         print("Applied review decisions:", counts)
     finally:
         session.close()
+
+
+def dedupe_edges(session):
+    edges = session.query(Edge).order_by(Edge.id.asc()).all()
+    by_key = {}
+    deleted = 0
+    for edge in edges:
+        key = (edge.source_id, edge.target_id, edge.dependency_type)
+        existing = by_key.get(key)
+        if not existing:
+            by_key[key] = edge
+            continue
+
+        if (edge.review_status == "approved" and existing.review_status != "approved") or (
+            (edge.confidence_score or 0) > (existing.confidence_score or 0)
+        ):
+            keep, remove = edge, existing
+            by_key[key] = edge
+        else:
+            keep, remove = existing, edge
+
+        if not keep.product and remove.product:
+            keep.product = remove.product
+        if not keep.source_url and remove.source_url:
+            keep.source_url = remove.source_url
+        if not keep.source_title and remove.source_title:
+            keep.source_title = remove.source_title
+        if not keep.evidence_excerpt and remove.evidence_excerpt:
+            keep.evidence_excerpt = remove.evidence_excerpt
+        if not keep.review_note and remove.review_note:
+            keep.review_note = remove.review_note
+        keep.confidence_score = max(keep.confidence_score or 0, remove.confidence_score or 0)
+        session.delete(remove)
+        deleted += 1
+
+    if deleted:
+        session.flush()
+        print(f"Removed {deleted} duplicate edge(s).")
 
 
 def main():
