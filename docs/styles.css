@@ -701,9 +701,6 @@ td {
 }
 
 th {
-    position: sticky;
-    top: 75px;
-    z-index: 2;
     color: var(--accent);
     background: rgba(5, 10, 16, 0.96);
     font-size: 0.78rem;
