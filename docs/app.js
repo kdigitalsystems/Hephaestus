@@ -357,10 +357,8 @@ function renderMarketNetwork() {
 }
 
 function renderInvestmentRadar() {
-    renderQualityBars();
     renderChangeSummary();
     renderConcentrationWatch();
-    renderSectorExposure();
 }
 
 function renderChangeSummary() {
@@ -368,10 +366,9 @@ function renderChangeSummary() {
     clearElement(container);
     const summary = investorMetrics.change_summary || {};
     const rows = [
-        ['Net change', summary.net_change || 0],
-        ['New links', summary.new_count || 0],
-        ['Removed links', summary.removed_count || 0],
-        ['Changed confidence/status', summary.changed_count || 0],
+        ['Net link change', summary.net_change || 0],
+        ['New relationships', summary.new_count || 0],
+        ['Removed relationships', summary.removed_count || 0],
     ];
     rows.forEach(([label, value]) => {
         const row = makeElement('div', 'change-row');
@@ -384,6 +381,9 @@ function renderChangeSummary() {
         button.onclick = () => link.target_ticker ? navigateCompany(link.target_ticker) : navigateCompanies({ connected: '1' });
         container.appendChild(button);
     });
+    if (!(summary.new_links || []).length) {
+        container.appendChild(makeElement('span', 'empty-state', 'No new approved relationship changes since the last daily snapshot.'));
+    }
 }
 
 function renderQualityBars() {

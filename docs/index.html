@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260525-investor2">
+    <link rel="stylesheet" href="styles.css?v=20260525-investor3">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
@@ -63,27 +63,19 @@
             <section class="radar-panel">
                 <div class="section-heading">
                     <div>
-                        <p class="eyebrow">Decision Support</p>
-                        <h2>Investment Radar</h2>
+                        <p class="eyebrow">Morning Brief</p>
+                        <h2>Today’s Supply-Chain Signals</h2>
                     </div>
                     <span id="radar-freshness" class="result-count">Awaiting data</span>
                 </div>
                 <div class="radar-grid">
-                    <article class="radar-card">
-                        <div class="radar-card-title">Link Quality</div>
-                        <div id="radar-quality" class="quality-bars"></div>
-                    </article>
-                    <article class="radar-card">
-                        <div class="radar-card-title">What Changed</div>
+                    <article class="radar-card radar-primary">
+                        <div class="radar-card-title">What Changed Since Last Run</div>
                         <div id="radar-changes" class="change-list"></div>
                     </article>
-                    <article class="radar-card">
-                        <div class="radar-card-title">Concentration Watch</div>
+                    <article class="radar-card radar-primary">
+                        <div class="radar-card-title">Concentration Watchlist</div>
                         <div id="radar-concentration" class="rank-list compact"></div>
-                    </article>
-                    <article class="radar-card">
-                        <div class="radar-card-title">Sector Exposure</div>
-                        <div id="radar-sectors" class="sector-exposure"></div>
                     </article>
                 </div>
             </section>
@@ -372,6 +364,6 @@
         </section>
     </div>
 
-    <script src="app.js?v=20260525-investor2"></script>
+    <script src="app.js?v=20260525-investor3"></script>
 </body>
 </html>
