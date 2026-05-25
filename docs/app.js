@@ -613,22 +613,26 @@ function renderLevel2() {
     }
 
     companies.forEach(company => {
-        const tr = document.createElement('tr');
-        tr.onclick = () => navigateCompany(company.ticker);
-
-        const changeClass = company.change >= 0 ? 'positive' : 'negative';
-        const sign = company.change > 0 ? '+' : '';
-        const nameCell = makeElement('td', 'company-cell', company.name || '');
-
-        tr.appendChild(nameCell);
-        tr.appendChild(makeElement('td', '', company.ticker || ''));
-        tr.appendChild(makeElement('td', '', `$${(company.price || 0).toFixed(2)}`));
-        tr.appendChild(makeElement('td', changeClass, `${sign}${(company.change || 0).toFixed(2)}%`));
-        tr.appendChild(makeElement('td', '', formatNum(company.market_cap)));
-        tr.appendChild(makeElement('td', '', String(company.connection_count || 0)));
-        tr.appendChild(makeElement('td', '', formatNum(company.trailing_pe, 'ratio')));
-        tbody.appendChild(tr);
+        tbody.appendChild(renderCompanyTableRow(company));
     });
+}
+
+function renderCompanyTableRow(company) {
+    const tr = document.createElement('tr');
+    tr.onclick = () => navigateCompany(company.ticker);
+
+    const changeClass = company.change >= 0 ? 'positive' : 'negative';
+    const sign = company.change > 0 ? '+' : '';
+    const nameCell = makeElement('td', 'company-cell', company.name || '');
+
+    tr.appendChild(nameCell);
+    tr.appendChild(makeElement('td', '', company.ticker || ''));
+    tr.appendChild(makeElement('td', '', `$${(company.price || 0).toFixed(2)}`));
+    tr.appendChild(makeElement('td', changeClass, `${sign}${(company.change || 0).toFixed(2)}%`));
+    tr.appendChild(makeElement('td', '', formatNum(company.market_cap)));
+    tr.appendChild(makeElement('td', '', String(company.connection_count || 0)));
+    tr.appendChild(makeElement('td', '', formatNum(company.trailing_pe, 'ratio')));
+    return tr;
 }
 
 function renderQualityView() {
@@ -1162,12 +1166,15 @@ function renderSectorView(sector) {
         card.appendChild(makeElement('span', 'stat-value', value.toLocaleString()));
         summary.appendChild(card);
     });
-    const leaders = document.getElementById('sector-leaders');
-    clearElement(leaders);
-    linked
-        .sort((a, b) => relationshipCount(b) - relationshipCount(a))
-        .slice(0, 12)
-        .forEach(company => leaders.appendChild(renderCompanySignalCard(company)));
+    const tbody = document.getElementById('sector-company-table-body');
+    clearElement(tbody);
+    companies
+        .sort((a, b) => {
+            const capA = Number(a.market_cap || 0);
+            const capB = Number(b.market_cap || 0);
+            return capB - capA;
+        })
+        .forEach(company => tbody.appendChild(renderCompanyTableRow(company)));
 }
 
 function renderCompareView(updateRoute = true) {
