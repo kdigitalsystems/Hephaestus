@@ -111,6 +111,12 @@ jobs:
           echo "Exporting graph to JSON..."
           venv/bin/python backend/export.py
 
+          echo "Repairing export from persisted approved decisions..."
+          venv/bin/python backend/repair_dashboard_from_decisions.py
+
+          echo "Validating published dashboard data..."
+          venv/bin/python backend/validate_dashboard_data.py
+
       - name: Commit and Push Dashboard Data
         run: |
           git config --global user.name "github-actions[bot]"

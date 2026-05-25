@@ -18,5 +18,7 @@ python3 backend/update_metrics.py "${LIMIT_ARG[@]}"
 python3 backend/seed_edges.py
 python3 backend/audit_data_quality.py --fail-on-warnings
 python3 backend/export.py
+python3 backend/repair_dashboard_from_decisions.py
+python3 backend/validate_dashboard_data.py
 
 echo "Rebuild complete. Dashboard data refreshed at docs/dashboard_data.json"

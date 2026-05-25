@@ -58,6 +58,12 @@ python3 backend/audit_data_quality.py --fail-on-warnings
 echo "Exporting database to docs/dashboard_data.json..."
 python3 backend/export.py
 
+echo "Repairing export from persisted approved decisions..."
+python3 backend/repair_dashboard_from_decisions.py
+
+echo "Validating published dashboard data..."
+python3 backend/validate_dashboard_data.py
+
 echo "Checking for dashboard changes..."
 git add docs/dashboard_data.json data/edge_review_decisions.json
 if ! git diff --cached --quiet; then
