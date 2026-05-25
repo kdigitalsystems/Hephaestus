@@ -37,7 +37,9 @@ jobs:
           python -m pip install pytest
 
       - name: Check frontend JavaScript
-        run: node --check docs/app.js
+        run: |
+          node --check docs/app.js
+          node tests/check_app_link_count.js
 
       - name: Check backend Python syntax
         run: python -m compileall backend tests
