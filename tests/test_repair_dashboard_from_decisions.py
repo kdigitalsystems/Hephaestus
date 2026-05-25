@@ -74,6 +74,9 @@ def test_repair_adds_approved_missing_endpoint_and_stable_relationship_key(tmp_p
     assert by_ticker["DELL"]["downstream"][0]["ticker"] == "AMD"
     assert by_ticker["AMD"]["upstream"][0]["ticker"] == "DELL"
     assert by_ticker["AMD"]["upstream"][0]["relationship_key"] == "DELL->AMD:SERVER CHIPS"
+    assert by_ticker["AMD"]["investor_metrics"]["upstream_count"] == 1
+    assert by_ticker["AMD"]["investor_metrics"]["approved_count"] == 1
+    assert repaired["investor_metrics"]["unique_links"] == 1
 
 
 def test_repair_canonicalizes_tsm_foundry_direction(tmp_path):
@@ -148,3 +151,4 @@ def test_repair_canonicalizes_tsm_foundry_direction(tmp_path):
     assert any(edge["ticker"] == "NVDA" for edge in by_ticker["TSM"]["downstream"])
     assert any(edge["ticker"] == "TSM" for edge in by_ticker["NVDA"]["upstream"])
     assert not any(edge["ticker"] == "NVDA" for edge in by_ticker["TSM"]["upstream"])
+    assert by_ticker["TSM"]["investor_metrics"]["downstream_count"] == 1

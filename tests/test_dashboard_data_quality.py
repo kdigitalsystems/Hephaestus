@@ -17,6 +17,43 @@ def test_published_dashboard_data_shape_and_relationships_are_valid():
     assert summary["companies"] > 1000
     assert summary["sectors"] >= 5
     assert summary["linked_companies"] > 0
+    assert data["investor_metrics"]["unique_links"] >= 50
+    assert data["investor_metrics"]["approved_links"] >= 50
+    assert data["investor_metrics"]["sector_exposure"]
+    assert "change_summary" in data["investor_metrics"]
+    assert "history" in data["investor_metrics"]
+
+
+def test_company_investor_metrics_are_consistent_with_relationships():
+    data = load_dashboard_data(ROOT / "docs" / "dashboard_data.json")
+    companies = [
+        company
+        for sector_companies in data["industries"].values()
+        for company in sector_companies
+    ]
+    linked = [company for company in companies if company.get("upstream") or company.get("downstream")]
+
+    assert linked
+    for company in linked[:25]:
+        metrics = company["investor_metrics"]
+        assert metrics["upstream_count"] == len(company.get("upstream", []))
+        assert metrics["downstream_count"] == len(company.get("downstream", []))
+        assert metrics["total_links"] == metrics["upstream_count"] + metrics["downstream_count"]
+        assert 0 <= metrics["concentration_score"] <= 1
+        assert 0 <= metrics["risk_score"] <= 100
+        assert 0 <= metrics["review_score"] <= 100
+
+
+def test_link_history_tracks_current_snapshot():
+    data = load_dashboard_data(ROOT / "docs" / "dashboard_data.json")
+    history = json.loads((ROOT / "docs" / "link_history.json").read_text(encoding="utf-8"))
+
+    assert history
+    latest = history[-1]
+    assert latest["unique_links"] == data["investor_metrics"]["unique_links"]
+    assert latest["approved_links"] == data["investor_metrics"]["approved_links"]
+    assert isinstance(latest["links"], dict)
+    assert len(latest["links"]) == data["investor_metrics"]["unique_links"]
 
 
 def test_dashboard_validator_rejects_duplicate_relationship_tickers():
