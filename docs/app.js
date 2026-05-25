@@ -315,16 +315,12 @@ function showCompanies() {
 }
 
 function renderOverview() {
-    const mostConnected = [...allCompanies].sort((a, b) => b.connection_count - a.connection_count)[0];
-
     setText('stat-companies', allCompanies.length.toLocaleString());
     setText('stat-links', Number(investorMetrics.unique_links || uniqueLinkCount()).toLocaleString());
     setText('stat-sectors', Object.keys(globalData).length.toLocaleString());
-    setText('stat-connected', mostConnected?.ticker || 'N/A');
     setText('radar-freshness', getLastUpdatedLabel());
     renderMarketNetwork();
     renderInvestmentRadar();
-    renderConnectedList();
 }
 
 function renderMarketNetwork() {
@@ -337,8 +333,8 @@ function renderMarketNetwork() {
     const core = makeElement('button', 'network-core');
     core.type = 'button';
     core.onclick = () => navigateCompanies({ connected: '1' });
-    core.appendChild(makeElement('strong', '', 'Supply Links'));
-    core.appendChild(makeElement('span', '', `${Number(investorMetrics.unique_links || uniqueLinkCount()).toLocaleString()} tracked`));
+    core.appendChild(makeElement('strong', '', 'Research Graph'));
+    core.appendChild(makeElement('span', '', 'Explore links'));
     network.appendChild(core);
 
     if (!leaders.length) {
@@ -717,10 +713,8 @@ function renderLevel3(company, previousRoute = null) {
 
     renderStory(company);
     renderDecisionBrief(company);
-    renderChart(company);
     renderMetrics(company);
     renderSupplyGraph(company);
-    renderSupplyMap(company);
     renderXRay(company);
 }
 
@@ -731,9 +725,6 @@ function renderStory(company) {
     const primaryCustomer = downstream[0]?.name;
     const metrics = companyMetrics(company);
 
-    setText('detail-up-count', upstream.length);
-    setText('detail-down-count', downstream.length);
-    setText('detail-link-count', upstream.length + downstream.length);
     setText('detail-story-title', `${company.ticker || company.name} dependency snapshot`);
 
     let story = `${company.name} has ${upstream.length} tracked upstream supplier relationship${upstream.length === 1 ? '' : 's'} and ${downstream.length} tracked downstream customer relationship${downstream.length === 1 ? '' : 's'}.`;

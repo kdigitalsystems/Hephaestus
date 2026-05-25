@@ -463,7 +463,7 @@ h3 {
 .stat-grid,
 .quality-summary {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
 }
 
@@ -1010,9 +1010,6 @@ tbody tr:hover {
 }
 
 .story-panel {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 20px;
     padding: 22px;
     margin-bottom: 20px;
 }

@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css?v=20260525-investor3">
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
     <header class="topbar">
@@ -51,10 +50,6 @@
                         <div class="stat-card">
                             <span class="stat-value" id="stat-sectors">-</span>
                             <span class="stat-label">Sectors</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-value" id="stat-connected">-</span>
-                            <span class="stat-label">Most Connected</span>
                         </div>
                     </div>
                 </div>
@@ -120,21 +115,12 @@
                 </label>
             </section>
 
-            <section class="insight-grid">
-                <div class="insight-panel">
-                    <div class="section-heading">
-                        <p class="eyebrow">Explore</p>
-                        <h2>Macro Sectors</h2>
-                    </div>
-                    <div class="grid" id="industry-grid"></div>
+            <section class="insight-panel">
+                <div class="section-heading">
+                    <p class="eyebrow">Explore</p>
+                    <h2>Macro Sectors</h2>
                 </div>
-                <div class="insight-panel">
-                    <div class="section-heading">
-                        <p class="eyebrow">Signals</p>
-                        <h2>Most Connected</h2>
-                    </div>
-                    <div id="connected-list" class="rank-list"></div>
-                </div>
+                <div class="grid" id="industry-grid"></div>
             </section>
         </section>
 
@@ -267,14 +253,7 @@
                     <h3 id="detail-story-title">Supply-chain context</h3>
                     <p id="detail-story">Select a company to inspect its tracked dependencies.</p>
                 </div>
-                <div class="story-metrics">
-                    <div><span id="detail-up-count">0</span><small>Suppliers</small></div>
-                    <div><span id="detail-down-count">0</span><small>Customers</small></div>
-                    <div><span id="detail-link-count">0</span><small>Total Links</small></div>
-                </div>
             </section>
-
-            <div class="chart-wrapper" id="tv_chart_container"></div>
 
             <div class="dashboard-grid">
                 <section class="metrics-section">
@@ -335,7 +314,6 @@
                         <h3>Interactive Supply Chain Graph</h3>
                     </div>
                     <div id="supply-graph" class="supply-graph"></div>
-                    <div id="supply-map" class="supply-map"></div>
                 </section>
 
                 <section class="metrics-section full-width">
