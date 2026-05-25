@@ -1,6 +1,6 @@
-# Hephaestus Terminal
+# Hephaestus
 
-Hephaestus Terminal is a local-first supply chain intelligence dashboard. It builds a SQLite graph of public companies, enriches those companies with market and profile data, discovers supplier/customer relationships, and exports a static JSON payload for the browser dashboard in `docs/`.
+Hephaestus is a local-first supply chain intelligence dashboard. It builds a SQLite graph of public companies, enriches those companies with market and profile data, discovers supplier/customer relationships, and exports a static JSON payload for the browser dashboard in `docs/`.
 
 The project is designed around a simple split:
 
@@ -18,6 +18,8 @@ backend/
   main.py                 URL scrape -> LLM parse -> database workflow
   models.py               Node and Edge ORM models
   parser.py               Ollama structured extraction prompt/schema
+  repair_dashboard_from_decisions.py
+                          Restores approved links into the published dashboard export
   scraper.py              Web article text extraction
   seed_db.py              Alpaca equity universe seeding
   seed_edges.py           Manual starter relationships
@@ -196,6 +198,15 @@ Write the static dashboard payload:
 python3 backend/export.py
 ```
 
+After export, repair the payload from persisted reviewed decisions and validate it:
+
+```bash
+python3 backend/repair_dashboard_from_decisions.py
+python3 backend/validate_dashboard_data.py
+```
+
+This repair step is important. The broad stock screener still prefers companies with current market data, but approved/manual supply-chain relationships should not disappear just because Yahoo/market metrics are temporarily missing for one endpoint. The repair step uses `data/edge_review_decisions.json` as the durable source of reviewed links, adds missing approved endpoints under `Linked Companies`, and writes stable `relationship_key` values so the dashboard link count is not tied to volatile SQLite edge IDs.
+
 By default, export is conservative: it includes reviewed/manual edges and hides unreviewed AI-discovered edges. To publish AI research edges anyway:
 
 ```bash
@@ -205,6 +216,8 @@ HEPHAESTUS_EXPORT_AI_RESEARCH=1 python3 backend/export.py
 Use that mode only after reviewing the generated relationships; LLM extraction can create plausible but wrong links.
 
 The exported dashboard also includes a review summary. Visit `#quality` in the static app, or click `Review Queue`, to see pending AI edges and the review commands for each one.
+
+The website's Supply Links number counts unique stable relationship keys. Relationship rows appear from both sides of a connection, so the raw number of upstream/downstream rows is usually about twice the unique link count.
 
 The dashboard reads:
 
@@ -236,7 +249,7 @@ Run a limited debug pipeline:
 ./run_pipeline.sh 25
 ```
 
-The pipeline now reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with Ollama, fails fast if any step fails, and commits dashboard/review-decision changes.
+The pipeline now reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with Ollama, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard/review-decision changes.
 
 Review behavior can be tuned with environment variables:
 
@@ -258,6 +271,14 @@ The scheduled GitHub workflow checks that Ollama is available on the self-hosted
 
 ```bash
 ollama pull qwen2.5:14b-instruct
+```
+
+The scheduled workflow and local scripts both run the same publishing safety sequence:
+
+```bash
+python3 backend/export.py
+python3 backend/repair_dashboard_from_decisions.py
+python3 backend/validate_dashboard_data.py
 ```
 
 ## Data Model
@@ -287,16 +308,21 @@ ollama pull qwen2.5:14b-instruct
 
 Edges are unique by source, target, and dependency type.
 
+Published relationship payloads also include `relationship_key`, a stable supplier/customer/type key used by the browser to count unique links across database rebuilds. Do not rely on SQLite `edge_id` values for long-term trend tracking because IDs can change after a rebuild.
+
 ## Troubleshooting
 
 `ConnectionRefusedError` from Ollama:
 Start Ollama with `ollama serve` and make sure the configured model is available.
 
 Dashboard shows no companies:
-Run `seed_db.py`, then `update_metrics.py`, then `export.py`. The exporter skips nodes without market cap or current price.
+Run `seed_db.py`, then `update_metrics.py`, then `export.py`. The broad screener prefers nodes with market cap and current price. Approved relationship endpoints without fresh market data are restored by `repair_dashboard_from_decisions.py` under `Linked Companies`.
 
 Dashboard shows no Supply Chain X-Ray relationships:
-Run `seed_edges.py` for starter edges or `auto_discover_edges.py` for LLM-assisted discovery, then run `export.py`.
+Run `seed_edges.py` for starter edges or `auto_discover_edges.py` for LLM-assisted discovery, review/apply the discovered edges, then run `export.py`, `repair_dashboard_from_decisions.py`, and `validate_dashboard_data.py`.
+
+Supply Links decreased after a daily run:
+Check `data/edge_review_decisions.json` and the workflow logs. Approved links should accumulate, but rejected/pending edges are intentionally hidden. If the count drops unexpectedly, run `python3 backend/repair_dashboard_from_decisions.py` and `python3 backend/validate_dashboard_data.py`; the pipeline now runs both automatically after every export.
 
 Alpaca authentication fails:
 Check `ALPACA_API_KEY`, `ALPACA_SECRET_KEY`, or `~/.ssh/alpaca_paper_keys`.
