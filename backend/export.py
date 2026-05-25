@@ -366,12 +366,14 @@ def persist_link_history(dashboard_data, history_path=HISTORY_PATH, limit=30):
     generated_at = dashboard_data.get("generated_at")
     if not snapshot or not generated_at:
         return history
+    generated_on = generated_at[:10]
     filtered = [
         entry for entry in history
-        if entry.get("generated_at") != generated_at
+        if entry.get("generated_on", entry.get("generated_at", "")[:10]) != generated_on
     ]
     filtered.append({
         "generated_at": generated_at,
+        "generated_on": generated_on,
         "unique_links": metrics.get("unique_links", 0),
         "approved_links": metrics.get("approved_links", 0),
         "pending_links": metrics.get("pending_links", 0),
@@ -484,6 +486,7 @@ def annotate_dashboard_data(dashboard_data, history_path=HISTORY_PATH):
         "history": [
             {
                 "generated_at": entry.get("generated_at"),
+                "generated_on": entry.get("generated_on", str(entry.get("generated_at") or "")[:10]),
                 "unique_links": entry.get("unique_links", 0),
                 "approved_links": entry.get("approved_links", 0),
                 "pending_links": entry.get("pending_links", 0),
