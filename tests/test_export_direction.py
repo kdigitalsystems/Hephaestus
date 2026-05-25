@@ -115,6 +115,40 @@ def test_relationship_merge_keeps_one_entry_per_connected_ticker_with_combined_d
     assert merged[0]["product"] == "Advanced process node chip fabrication / foundry services"
 
 
+def test_approved_relationship_endpoint_exports_without_market_data():
+    supplier = SimpleNamespace(
+        id=1,
+        ticker="DELL",
+        name="Dell Technologies",
+        sector="Technology",
+        market_cap=None,
+        current_price=None,
+    )
+    customer = SimpleNamespace(
+        id=2,
+        ticker="AMD",
+        name="Advanced Micro Devices",
+        sector="Technology",
+        market_cap=100_000_000,
+        current_price=100,
+    )
+    edge_obj = edge(supplier, customer, "Server Chips", "EPYC servers")
+    edge_obj.id = 1
+    edge_obj.source_url = "AI Multi-Source Research"
+    edge_obj.source_title = "AI Multi-Source Research"
+    edge_obj.confidence_score = 0.95
+    edge_obj.review_status = "approved"
+    edge_obj.last_verified = None
+
+    assert export.should_export_node(supplier) is False
+    assert export.should_export_node(supplier, require_market_data=False) is True
+
+    payload = export.edge_payload(edge_obj, supplier, supplier, customer)
+
+    assert payload["ticker"] == "DELL"
+    assert payload["relationship_key"] == "DELL->AMD:SERVER CHIPS"
+
+
 def test_dashboard_data_has_no_duplicate_supplier_or_buyer_tickers():
     data = json.loads((ROOT / "docs/dashboard_data.json").read_text(encoding="utf-8"))
     companies = [company for sector in data["industries"].values() for company in sector]

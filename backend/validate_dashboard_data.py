@@ -21,6 +21,7 @@ REQUIRED_COMPANY_FIELDS = {
 
 REQUIRED_EDGE_FIELDS = {
     "edge_id",
+    "relationship_key",
     "name",
     "ticker",
     "type",

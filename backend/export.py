@@ -9,7 +9,8 @@ DOCS_DIR = os.path.join(BASE_DIR, "docs")
 EXPORT_PATH = os.path.join(DOCS_DIR, "dashboard_data.json")
 
 MIN_MARKET_CAP = 0 
-IGNORED_SECTORS = ["Shell Companies", "Uncategorized", "Financial Services", "Real Estate"]
+IGNORED_SECTORS = ["Shell Companies", "Financial Services", "Real Estate"]
+FALLBACK_LINKED_SECTOR = "Linked Companies"
 EXPORT_AI_RESEARCH = os.environ.get("HEPHAESTUS_EXPORT_AI_RESEARCH", "0") == "1"
 REVIEW_QUEUE_LIMIT = int(os.environ.get("HEPHAESTUS_REVIEW_QUEUE_LIMIT", "250"))
 FOUNDRY_TERMS = (
@@ -38,7 +39,15 @@ def clean_num(val):
     except (ValueError, TypeError):
         return val
 
-def edge_payload(edge, node):
+def stable_edge_key(edge, supplier_node=None, customer_node=None):
+    supplier_node = supplier_node or edge.source_node
+    customer_node = customer_node or edge.target_node
+    supplier = supplier_node.ticker or supplier_node.name if supplier_node else edge.source_id
+    customer = customer_node.ticker or customer_node.name if customer_node else edge.target_id
+    dependency_type = edge.dependency_type or "Supply Link"
+    return f"{supplier}->{customer}:{dependency_type}".upper()
+
+def edge_payload(edge, node, supplier_node=None, customer_node=None):
     connected_node = node
     source_url = edge.source_url or "Unknown"
     if source_url.startswith(("http://", "https://")):
@@ -52,6 +61,7 @@ def edge_payload(edge, node):
 
     return {
         "edge_id": edge.id,
+        "relationship_key": stable_edge_key(edge, supplier_node, customer_node),
         "name": connected_node.name,
         "ticker": connected_node.ticker or "",
         "type": edge.dependency_type,
@@ -142,14 +152,24 @@ def merge_relationships(relationships):
         ),
     )
 
-def should_export_node(node):
-    if not node.market_cap or not node.current_price:
-        return False
-    if node.market_cap < MIN_MARKET_CAP:
-        return False
-
+def is_ignored_sector(node):
     sector = node.sector if node.sector else "Uncategorized"
-    return sector not in IGNORED_SECTORS
+    return sector in IGNORED_SECTORS
+
+def should_export_node(node, require_market_data=True):
+    if not node or not node.ticker or is_ignored_sector(node):
+        return False
+    if require_market_data and (not node.market_cap or not node.current_price):
+        return False
+    if node.market_cap is not None and node.market_cap < MIN_MARKET_CAP:
+        return False
+    return True
+
+def export_sector(node):
+    sector = node.sector if node.sector else "Uncategorized"
+    if sector in ("Pending Update", "Uncategorized"):
+        return FALLBACK_LINKED_SECTOR
+    return sector
 
 def should_export_edge(edge):
     source_url = edge.source_url or ""
@@ -213,6 +233,14 @@ def export_to_json():
     session = SessionLocal()
     try:
         nodes = session.query(Node).all()
+        exportable_node_ids = set()
+        for edge in session.query(Edge).all():
+            if not should_export_edge(edge):
+                continue
+            supplier_node, customer_node = canonical_edge_nodes(edge)
+            if should_export_node(supplier_node, require_market_data=False) and should_export_node(customer_node, require_market_data=False):
+                exportable_node_ids.add(supplier_node.id)
+                exportable_node_ids.add(customer_node.id)
         pending_edges = session.query(Edge).filter(Edge.review_status == "pending").order_by(
             Edge.confidence_score.desc().nullslast(),
             Edge.id.asc()
@@ -231,10 +259,10 @@ def export_to_json():
         }
         
         for node in nodes:
-            if not should_export_node(node):
+            if not should_export_node(node) and node.id not in exportable_node_ids:
                 continue
                 
-            sector = node.sector if node.sector else "Uncategorized"
+            sector = export_sector(node)
                 
             if sector not in dashboard_data["industries"]:
                 dashboard_data["industries"][sector] = []
@@ -251,10 +279,12 @@ def export_to_json():
                 seen_edges.add(edge.id)
 
                 supplier_node, customer_node = canonical_edge_nodes(edge)
-                if node.id == customer_node.id and should_export_node(supplier_node):
-                    upstream.append(edge_payload(edge, supplier_node))
-                elif node.id == supplier_node.id and should_export_node(customer_node):
-                    downstream.append(edge_payload(edge, customer_node))
+                supplier_exportable = should_export_node(supplier_node, require_market_data=False)
+                customer_exportable = should_export_node(customer_node, require_market_data=False)
+                if node.id == customer_node.id and supplier_exportable:
+                    upstream.append(edge_payload(edge, supplier_node, supplier_node, customer_node))
+                elif node.id == supplier_node.id and customer_exportable:
+                    downstream.append(edge_payload(edge, customer_node, supplier_node, customer_node))
             upstream = merge_relationships(upstream)
             downstream = merge_relationships(downstream)
             # ------------------------

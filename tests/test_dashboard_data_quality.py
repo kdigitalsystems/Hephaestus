@@ -34,6 +34,7 @@ def test_dashboard_validator_rejects_duplicate_relationship_tickers():
                     "upstream": [
                         {
                             "edge_id": 1,
+                            "relationship_key": "TSM->AMD:FOUNDRY",
                             "name": "Taiwan Semiconductor",
                             "ticker": "TSM",
                             "type": "Foundry",
@@ -43,6 +44,7 @@ def test_dashboard_validator_rejects_duplicate_relationship_tickers():
                         },
                         {
                             "edge_id": 2,
+                            "relationship_key": "TSM->AMD:FOUNDRY SERVICES",
                             "name": "Taiwan Semiconductor",
                             "ticker": "TSM",
                             "type": "Foundry Services",

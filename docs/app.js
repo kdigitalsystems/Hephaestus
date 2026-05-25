@@ -39,8 +39,9 @@ const uniqueLinkCount = () => {
     const ids = new Set();
     allCompanies.forEach(company => {
         [...(company.upstream || []), ...(company.downstream || [])].forEach(dep => {
-            if (dep.edge_id !== undefined && dep.edge_id !== null) {
-                ids.add(String(dep.edge_id));
+            const key = dep.relationship_key || dep.edge_id;
+            if (key !== undefined && key !== null) {
+                ids.add(String(key));
             }
         });
     });
