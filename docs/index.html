@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260522-future2">
+    <link rel="stylesheet" href="styles.css?v=20260525-investor2">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
@@ -22,6 +22,8 @@
         <div class="topbar-actions">
             <button class="topbar-link" data-nav="overview" onclick="navigateOverview()">Overview</button>
             <button class="topbar-link" data-nav="companies" onclick="navigateCompanies()">Screener</button>
+            <button class="topbar-link" data-nav="watchlist" onclick="navigateWatchlist()">Watchlist</button>
+            <button class="topbar-link" data-nav="compare" onclick="navigateCompare()">Compare</button>
             <button class="topbar-link" data-nav="quality" onclick="navigateQuality()">Review Queue</button>
             <div id="last-updated" class="sync-status">Updating...</div>
         </div>
@@ -31,26 +33,12 @@
         <section id="view-industries">
             <div class="overview-panel">
                 <div>
-                    <p class="eyebrow">Market Map</p>
-                    <h1>Trace how companies depend on each other.</h1>
-                    <p class="intro-copy">Explore public equities by sector, inspect financial context, and follow supplier/customer exposure through the Supply Chain X-Ray.</p>
+                    <p class="eyebrow">Investor Radar</p>
+                    <h1>Supply-chain intelligence for public-market decisions.</h1>
+                    <p class="intro-copy">Research public companies by supplier/customer dependency, review confidence, and operational exposure. Hephaestus turns reviewed supply-chain links into a faster equity research workflow.</p>
                 </div>
                 <div class="hero-intel">
-                    <div class="signal-visual" aria-hidden="true">
-                        <span class="signal-node node-a"></span>
-                        <span class="signal-node node-b"></span>
-                        <span class="signal-node node-c"></span>
-                        <span class="signal-node node-d"></span>
-                        <span class="signal-node node-e"></span>
-                        <span class="signal-line line-a"></span>
-                        <span class="signal-line line-b"></span>
-                        <span class="signal-line line-c"></span>
-                        <span class="signal-line line-d"></span>
-                        <div class="signal-core">
-                            <strong>LIVE</strong>
-                            <span>Dependency graph</span>
-                        </div>
-                    </div>
+                    <div id="market-network" class="market-network" aria-label="Top supply-chain network preview"></div>
                     <div class="stat-grid">
                         <div class="stat-card">
                             <span class="stat-value" id="stat-companies">-</span>
@@ -72,10 +60,38 @@
                 </div>
             </div>
 
+            <section class="radar-panel">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Decision Support</p>
+                        <h2>Investment Radar</h2>
+                    </div>
+                    <span id="radar-freshness" class="result-count">Awaiting data</span>
+                </div>
+                <div class="radar-grid">
+                    <article class="radar-card">
+                        <div class="radar-card-title">Link Quality</div>
+                        <div id="radar-quality" class="quality-bars"></div>
+                    </article>
+                    <article class="radar-card">
+                        <div class="radar-card-title">What Changed</div>
+                        <div id="radar-changes" class="change-list"></div>
+                    </article>
+                    <article class="radar-card">
+                        <div class="radar-card-title">Concentration Watch</div>
+                        <div id="radar-concentration" class="rank-list compact"></div>
+                    </article>
+                    <article class="radar-card">
+                        <div class="radar-card-title">Sector Exposure</div>
+                        <div id="radar-sectors" class="sector-exposure"></div>
+                    </article>
+                </div>
+            </section>
+
             <section class="control-panel">
                 <div class="search-group">
                     <label for="search-input">Search</label>
-                    <input type="text" id="search-input" class="search-bar" placeholder="Company name or ticker" oninput="applyFilters()">
+                    <input type="text" id="search-input" class="search-bar" placeholder="Company, ticker, sector, supplier, or customer" oninput="applyFilters()">
                 </div>
                 <div class="filter-group">
                     <label for="sector-filter">Sector</label>
@@ -87,6 +103,23 @@
                     <label for="dependency-filter">Dependency</label>
                     <select id="dependency-filter" onchange="applyFilters()">
                         <option value="">All dependency types</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="status-filter">Review Status</label>
+                    <select id="status-filter" onchange="applyFilters()">
+                        <option value="">All statuses</option>
+                        <option value="approved">Approved</option>
+                        <option value="pending">Needs review</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="confidence-filter">Confidence</label>
+                    <select id="confidence-filter" onchange="applyFilters()">
+                        <option value="">Any confidence</option>
+                        <option value="0.85">85%+</option>
+                        <option value="0.70">70%+</option>
+                        <option value="0.50">50%+</option>
                     </select>
                 </div>
                 <label class="toggle-filter">
@@ -111,6 +144,61 @@
                     <div id="connected-list" class="rank-list"></div>
                 </div>
             </section>
+        </section>
+
+        <section id="view-sector" class="hidden">
+            <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
+            <div class="table-header">
+                <div>
+                    <p class="eyebrow">Sector Page</p>
+                    <h2 id="sector-title">Sector</h2>
+                </div>
+                <span id="sector-count" class="result-count">0 companies</span>
+            </div>
+            <div id="sector-summary" class="radar-grid"></div>
+            <div class="dashboard-grid">
+                <section class="metrics-section full-width">
+                    <div class="section-heading">
+                        <p class="eyebrow">Top Signals</p>
+                        <h3>Sector Research Queue</h3>
+                    </div>
+                    <div id="sector-leaders" class="comparison-grid"></div>
+                </section>
+            </div>
+        </section>
+
+        <section id="view-watchlist" class="hidden">
+            <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
+            <div class="table-header">
+                <div>
+                    <p class="eyebrow">Research Queue</p>
+                    <h2>Watchlist</h2>
+                </div>
+                <span id="watchlist-count" class="result-count">0 saved</span>
+            </div>
+            <div id="watchlist-grid" class="comparison-grid"></div>
+        </section>
+
+        <section id="view-compare" class="hidden">
+            <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
+            <div class="table-header">
+                <div>
+                    <p class="eyebrow">Peer Review</p>
+                    <h2>Compare Companies</h2>
+                </div>
+                <span id="compare-count" class="result-count">Choose 2 tickers</span>
+            </div>
+            <section class="control-panel compare-controls">
+                <div class="search-group">
+                    <label for="compare-a">Company A</label>
+                    <input id="compare-a" class="search-bar" placeholder="AMD" oninput="renderCompareView()">
+                </div>
+                <div class="search-group">
+                    <label for="compare-b">Company B</label>
+                    <input id="compare-b" class="search-bar" placeholder="NVDA" oninput="renderCompareView()">
+                </div>
+            </section>
+            <div id="compare-grid" class="comparison-grid"></div>
         </section>
 
         <section id="view-quality" class="hidden">
@@ -174,7 +262,11 @@
                     <p class="eyebrow" id="detail-industry">Industry</p>
                     <h2 id="detail-name">Company Name</h2>
                 </div>
-                <span class="ticker" id="detail-ticker">TICKER</span>
+                <div class="detail-actions">
+                    <button class="btn-back compact-btn" id="watchlist-toggle" onclick="toggleCurrentWatchlist()">Track</button>
+                    <button class="btn-back compact-btn" onclick="navigateCompareFromCurrent()">Compare</button>
+                    <span class="ticker" id="detail-ticker">TICKER</span>
+                </div>
             </div>
 
             <section class="story-panel">
@@ -193,6 +285,19 @@
             <div class="chart-wrapper" id="tv_chart_container"></div>
 
             <div class="dashboard-grid">
+                <section class="metrics-section">
+                    <h3>Decision Brief</h3>
+                    <div class="brief-grid">
+                        <div><span id="brief-confidence">-</span><small>Avg Confidence</small></div>
+                        <div><span id="brief-approved">-</span><small>Approved Links</small></div>
+                        <div><span id="brief-concentration">-</span><small>Concentration</small></div>
+                        <div><span id="brief-verified">-</span><small>Last Verified</small></div>
+                    </div>
+                    <div id="detail-risk-badges" class="badge-row"></div>
+                    <div id="risk-bars" class="quality-bars risk-bars"></div>
+                    <div id="detail-related" class="related-links"></div>
+                </section>
+
                 <section class="metrics-section">
                     <h3>Market Performance</h3>
                     <div class="metrics-grid four-col">
@@ -235,8 +340,9 @@
                 <section class="metrics-section full-width">
                     <div class="section-heading">
                         <p class="eyebrow">X-Ray</p>
-                        <h3>Supply Chain Map</h3>
+                        <h3>Interactive Supply Chain Graph</h3>
                     </div>
+                    <div id="supply-graph" class="supply-graph"></div>
                     <div id="supply-map" class="supply-map"></div>
                 </section>
 
@@ -257,6 +363,15 @@
         </section>
     </main>
 
-    <script src="app.js?v=20260522-future1"></script>
+    <div id="evidence-modal" class="modal-backdrop hidden" onclick="closeEvidenceModal()">
+        <section class="evidence-modal" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeEvidenceModal()">Close</button>
+            <p class="eyebrow">Relationship Evidence</p>
+            <h2 id="modal-title">Supply-chain link</h2>
+            <div id="modal-body" class="modal-body"></div>
+        </section>
+    </div>
+
+    <script src="app.js?v=20260525-investor2"></script>
 </body>
 </html>

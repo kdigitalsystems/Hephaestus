@@ -6,7 +6,7 @@ The project is designed around a simple split:
 
 - Local Python jobs own ingestion, enrichment, LLM-assisted discovery, and export.
 - SQLite stores the company and supply-chain graph.
-- A static frontend reads `docs/dashboard_data.json` and renders the screener and Supply Chain X-Ray.
+- A static frontend reads `docs/dashboard_data.json` and renders the investor radar, watchlist, comparison view, sector pages, decision briefs, and Supply Chain X-Ray.
 
 ## Repository Layout
 
@@ -217,7 +217,22 @@ Use that mode only after reviewing the generated relationships; LLM extraction c
 
 The exported dashboard also includes a review summary. Visit `#quality` in the static app, or click `Review Queue`, to see pending AI edges and the review commands for each one.
 
+The dashboard payload also includes investor-facing derived metrics:
+
+- `investor_metrics.unique_links`, `approved_links`, `pending_links`, and `sector_exposure` summarize the published graph.
+- Each company has `investor_metrics` with upstream/downstream counts, approval counts, top counterparties, average confidence, concentration score, explainable risk scores, and last verified date.
+- `docs/link_history.json` keeps a rolling daily snapshot of published relationship keys so the dashboard can show what changed between runs.
+- The static UI uses those fields for the Investment Radar, richer search filters, watchlist cards, comparison views, trust badges, source/evidence modals, sector pages, and company Decision Briefs.
+
+The risk scores are intentionally simple and explainable:
+
+- `risk_score` combines concentration risk, incomplete review coverage, and lower confidence.
+- `supplier_risk` and `customer_risk` show whether concentration is mostly upstream or downstream.
+- `review_score`, `confidence_score`, and `freshness_score` expose the components instead of hiding them behind a black-box AI score.
+
 The website's Supply Links number counts unique stable relationship keys. Relationship rows appear from both sides of a connection, so the raw number of upstream/downstream rows is usually about twice the unique link count.
+
+The Watchlist is local to the browser via `localStorage`; it does not require accounts or a backend. The Compare view is routeable with hash parameters, for example `#compare?a=AMD&b=NVDA`.
 
 The dashboard reads:
 
@@ -232,6 +247,16 @@ python3 -m http.server 8000 -d docs
 ```
 
 Then visit `http://localhost:8000`.
+
+Useful local smoke checks:
+
+```bash
+node --check docs/app.js
+node tests/check_app_link_count.js
+node tests/check_app_behaviors.js
+python3 backend/validate_dashboard_data.py
+python3 -m pytest -q
+```
 
 The static site includes `docs/sitemap.xml` and `docs/robots.txt` for GitHub Pages discovery. The app uses hash routes such as `#company?ticker=AMD` internally, but the sitemap points search engines at the canonical dashboard entry point because URL fragments are not reliable sitemap targets.
 

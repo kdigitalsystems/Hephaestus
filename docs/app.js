@@ -1,11 +1,13 @@
 let globalData = {};
 let qualityData = { pending_count: 0, approved_count: 0, rejected_count: 0, review_queue: [] };
+let investorMetrics = {};
 let allCompanies = [];
 let currentCompaniesList = [];
 let currentTitle = 'Companies';
 let currentRoute = { view: 'overview' };
 let sortCol = 'market_cap';
 let sortAsc = false;
+let watchlist = new Set();
 
 const clearElement = (element) => {
     while (element.firstChild) element.removeChild(element.firstChild);
@@ -34,6 +36,64 @@ const formatNum = (num, type = 'currency') => {
 };
 
 const relationshipCount = (company) => (company.upstream?.length || 0) + (company.downstream?.length || 0);
+const companyMetrics = (company) => company.investor_metrics || {
+    upstream_count: company.upstream?.length || 0,
+    downstream_count: company.downstream?.length || 0,
+    total_links: relationshipCount(company),
+    approved_count: 0,
+    pending_count: 0,
+    rejected_count: 0,
+    manual_count: 0,
+    web_source_count: 0,
+    ai_research_count: 0,
+    average_confidence: null,
+    concentration_score: 0,
+    top_upstream: [],
+    top_downstream: [],
+    last_verified: 'N/A',
+    risk_score: 0,
+    supplier_risk: 0,
+    customer_risk: 0,
+    confidence_score: 0,
+    review_score: 0,
+    freshness_score: 0
+};
+
+const relationshipStatus = (relationship) => {
+    const tokens = String(relationship.review_status || 'pending')
+        .toLowerCase()
+        .split(/[\/,]/)
+        .map(token => token.trim());
+    if (tokens.includes('approved')) return 'approved';
+    if (tokens.includes('rejected')) return 'rejected';
+    return 'pending';
+};
+
+const statusLabel = (status) => status === 'approved' ? 'Approved' : status === 'rejected' ? 'Rejected' : 'Needs review';
+const formatConfidence = (value) => value === null || value === undefined || isNaN(Number(value)) ? 'N/A' : `${Math.round(Number(value) * 100)}%`;
+const formatDateLabel = (value) => {
+    if (!value || value === 'N/A') return 'N/A';
+    return String(value).replace('T', ' ').replace('+00:00', ' UTC');
+};
+
+const relationshipMatchesStatus = (relationship, status) => !status || relationshipStatus(relationship) === status;
+const relationshipMatchesConfidence = (relationship, minimum) => {
+    if (!minimum) return true;
+    const confidence = Number(relationship.confidence);
+    return !isNaN(confidence) && confidence >= Number(minimum);
+};
+
+function loadWatchlist() {
+    try {
+        watchlist = new Set(JSON.parse(localStorage.getItem('hephaestus_watchlist') || '[]'));
+    } catch (_error) {
+        watchlist = new Set();
+    }
+}
+
+function saveWatchlist() {
+    localStorage.setItem('hephaestus_watchlist', JSON.stringify([...watchlist].sort()));
+}
 
 const uniqueLinkCount = () => {
     const ids = new Set();
@@ -66,6 +126,8 @@ fetch('dashboard_data.json')
     .then(data => {
         globalData = data.industries || {};
         qualityData = data.quality || qualityData;
+        investorMetrics = data.investor_metrics || {};
+        loadWatchlist();
         hydrateCompanies(globalData);
         populateFilters();
         renderOverview();
@@ -78,7 +140,11 @@ fetch('dashboard_data.json')
     });
 
 function getLastUpdatedLabel() {
-    const dates = allCompanies.map(company => company.last_updated).filter(Boolean).sort().reverse();
+    const dates = allCompanies
+        .map(company => company.last_updated)
+        .filter(value => value && value !== 'N/A')
+        .sort()
+        .reverse();
     return dates.length ? `Data synced ${dates[0]}` : 'Live Data Synced';
 }
 
@@ -86,6 +152,8 @@ function resetDashboard() {
     document.getElementById('search-input').value = '';
     document.getElementById('sector-filter').value = '';
     document.getElementById('dependency-filter').value = '';
+    document.getElementById('status-filter').value = '';
+    document.getElementById('confidence-filter').value = '';
     document.getElementById('connected-filter').checked = false;
     currentCompaniesList = [];
     currentTitle = 'Companies';
@@ -98,6 +166,18 @@ function navigateOverview() {
 
 function navigateQuality() {
     setRoute({ view: 'quality' });
+}
+
+function navigateWatchlist() {
+    setRoute({ view: 'watchlist' });
+}
+
+function navigateCompare(route = {}, push = true) {
+    setRoute({ view: 'compare', ...route }, push);
+}
+
+function navigateSector(sector) {
+    setRoute({ view: 'sector', sector });
 }
 
 function navigateCompanies(route = {}, push = true) {
@@ -177,6 +257,8 @@ function applyRoute(route) {
         document.getElementById('search-input').value = route.query || '';
         document.getElementById('sector-filter').value = route.sector || '';
         document.getElementById('dependency-filter').value = route.dependency || '';
+        document.getElementById('status-filter').value = route.status || '';
+        document.getElementById('confidence-filter').value = route.confidence || '';
         document.getElementById('connected-filter').checked = route.connected === '1';
         applyFilters(false);
         return;
@@ -187,11 +269,28 @@ function applyRoute(route) {
         return;
     }
 
+    if (route.view === 'watchlist') {
+        renderWatchlistView();
+        return;
+    }
+
+    if (route.view === 'compare') {
+        document.getElementById('compare-a').value = route.a || '';
+        document.getElementById('compare-b').value = route.b || '';
+        renderCompareView(false);
+        return;
+    }
+
+    if (route.view === 'sector') {
+        renderSectorView(route.sector || '');
+        return;
+    }
+
     resetDashboard();
 }
 
 function updateActiveNav(route) {
-    const activeView = route.view === 'company' ? 'companies' : route.view;
+    const activeView = route.view === 'company' || route.view === 'sector' ? 'companies' : route.view;
     document.querySelectorAll('[data-nav]').forEach(button => {
         button.classList.toggle('active', button.dataset.nav === activeView);
     });
@@ -208,6 +307,9 @@ function showCompanies() {
     }
     document.getElementById('view-industries').classList.add('hidden');
     document.getElementById('view-quality').classList.add('hidden');
+    document.getElementById('view-watchlist').classList.add('hidden');
+    document.getElementById('view-compare').classList.add('hidden');
+    document.getElementById('view-sector').classList.add('hidden');
     document.getElementById('view-companies').classList.remove('hidden');
     document.getElementById('view-details').classList.add('hidden');
 }
@@ -216,10 +318,135 @@ function renderOverview() {
     const mostConnected = [...allCompanies].sort((a, b) => b.connection_count - a.connection_count)[0];
 
     setText('stat-companies', allCompanies.length.toLocaleString());
-    setText('stat-links', uniqueLinkCount().toLocaleString());
+    setText('stat-links', Number(investorMetrics.unique_links || uniqueLinkCount()).toLocaleString());
     setText('stat-sectors', Object.keys(globalData).length.toLocaleString());
     setText('stat-connected', mostConnected?.ticker || 'N/A');
+    setText('radar-freshness', getLastUpdatedLabel());
+    renderMarketNetwork();
+    renderInvestmentRadar();
     renderConnectedList();
+}
+
+function renderMarketNetwork() {
+    const network = document.getElementById('market-network');
+    clearElement(network);
+    const leaders = (investorMetrics.most_connected || [])
+        .filter(item => item.ticker)
+        .slice(0, 6);
+
+    const core = makeElement('button', 'network-core');
+    core.type = 'button';
+    core.onclick = () => navigateCompanies({ connected: '1' });
+    core.appendChild(makeElement('strong', '', 'Supply Links'));
+    core.appendChild(makeElement('span', '', `${Number(investorMetrics.unique_links || uniqueLinkCount()).toLocaleString()} tracked`));
+    network.appendChild(core);
+
+    if (!leaders.length) {
+        network.appendChild(makeElement('span', 'empty-state network-empty', 'No reviewed network links available yet.'));
+        return;
+    }
+
+    leaders.forEach((item, index) => {
+        const node = makeElement('button', `network-node node-${index + 1}`);
+        node.type = 'button';
+        node.onclick = () => navigateCompany(item.ticker);
+        node.appendChild(makeElement('strong', '', item.ticker));
+        node.appendChild(makeElement('span', '', `${item.total_links} links`));
+        network.appendChild(node);
+    });
+}
+
+function renderInvestmentRadar() {
+    renderQualityBars();
+    renderChangeSummary();
+    renderConcentrationWatch();
+    renderSectorExposure();
+}
+
+function renderChangeSummary() {
+    const container = document.getElementById('radar-changes');
+    clearElement(container);
+    const summary = investorMetrics.change_summary || {};
+    const rows = [
+        ['Net change', summary.net_change || 0],
+        ['New links', summary.new_count || 0],
+        ['Removed links', summary.removed_count || 0],
+        ['Changed confidence/status', summary.changed_count || 0],
+    ];
+    rows.forEach(([label, value]) => {
+        const row = makeElement('div', 'change-row');
+        row.appendChild(makeElement('span', '', label));
+        row.appendChild(makeElement('strong', value > 0 ? 'positive' : value < 0 ? 'negative' : '', `${value > 0 ? '+' : ''}${value}`));
+        container.appendChild(row);
+    });
+    (summary.new_links || []).slice(0, 3).forEach(link => {
+        const button = makeElement('button', 'change-link', `${link.source_ticker || '?'} -> ${link.target_ticker || '?'}: ${link.product || link.type || 'Supply Link'}`);
+        button.onclick = () => link.target_ticker ? navigateCompany(link.target_ticker) : navigateCompanies({ connected: '1' });
+        container.appendChild(button);
+    });
+}
+
+function renderQualityBars() {
+    const container = document.getElementById('radar-quality');
+    clearElement(container);
+    const rows = [
+        ['Approved', Number(investorMetrics.approved_links || 0), 'approved'],
+        ['Needs review', Number(investorMetrics.pending_links || qualityData.pending_count || 0), 'pending'],
+        ['Rejected', Number(investorMetrics.rejected_links || qualityData.rejected_count || 0), 'rejected'],
+    ];
+    const total = Math.max(rows.reduce((sum, row) => sum + row[1], 0), 1);
+
+    rows.forEach(([label, value, status]) => {
+        const row = makeElement('div', 'quality-bar-row');
+        const top = makeElement('div', 'quality-bar-top');
+        top.appendChild(makeElement('span', '', label));
+        top.appendChild(makeElement('strong', '', value.toLocaleString()));
+        row.appendChild(top);
+        const track = makeElement('div', 'quality-bar-track');
+        const fill = makeElement('span', `quality-bar-fill ${status}`);
+        fill.style.width = `${Math.max((value / total) * 100, value ? 4 : 0)}%`;
+        track.appendChild(fill);
+        row.appendChild(track);
+        container.appendChild(row);
+    });
+}
+
+function renderConcentrationWatch() {
+    const list = document.getElementById('radar-concentration');
+    clearElement(list);
+    const concentrated = investorMetrics.highest_concentration || [];
+    if (!concentrated.length) {
+        list.appendChild(makeElement('span', 'empty-state', 'No concentration signals yet.'));
+        return;
+    }
+    concentrated.slice(0, 5).forEach((item, index) => {
+        const row = makeElement('button', 'rank-item');
+        row.onclick = () => navigateCompany(item.ticker);
+        row.appendChild(makeElement('span', 'rank-index', String(index + 1)));
+        const body = makeElement('span', 'rank-body');
+        body.appendChild(makeElement('strong', '', `${item.ticker} - ${Math.round(Number(item.concentration_score || 0) * 100)}% concentrated`));
+        body.appendChild(makeElement('small', '', `${item.name} - ${item.total_links} tracked links`));
+        row.appendChild(body);
+        list.appendChild(row);
+    });
+}
+
+function renderSectorExposure() {
+    const container = document.getElementById('radar-sectors');
+    clearElement(container);
+    const sectors = investorMetrics.sector_exposure || [];
+    if (!sectors.length) {
+        container.appendChild(makeElement('span', 'empty-state', 'No sector exposure data yet.'));
+        return;
+    }
+    sectors.slice(0, 6).forEach(sector => {
+        const row = makeElement('button', 'sector-exposure-row');
+        row.onclick = () => navigateSector(sector.sector);
+        const coverage = Math.round(Number(sector.coverage || 0) * 100);
+        row.appendChild(makeElement('strong', '', sector.sector));
+        row.appendChild(makeElement('span', '', `${sector.relationship_entries} entries - ${coverage}% covered`));
+        container.appendChild(row);
+    });
 }
 
 function populateFilters() {
@@ -276,6 +503,9 @@ function renderLevel1() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     document.getElementById('view-industries').classList.remove('hidden');
     document.getElementById('view-quality').classList.add('hidden');
+    document.getElementById('view-watchlist').classList.add('hidden');
+    document.getElementById('view-compare').classList.add('hidden');
+    document.getElementById('view-sector').classList.add('hidden');
     document.getElementById('view-companies').classList.add('hidden');
     document.getElementById('view-details').classList.add('hidden');
 
@@ -291,7 +521,7 @@ function renderLevel1() {
         const links = companies.reduce((sum, company) => sum + company.connection_count, 0);
         const card = makeElement('button', 'card sector-card');
         card.onclick = () => {
-            navigateCompanies({ sector });
+            navigateSector(sector);
         };
         card.appendChild(makeElement('span', 'sector-name', sector));
         card.appendChild(makeElement('span', 'sector-meta', `${companies.length} equities - ${links} links`));
@@ -303,17 +533,25 @@ function applyFilters(updateRoute = true) {
     const query = document.getElementById('search-input').value.toLowerCase().trim();
     const sector = document.getElementById('sector-filter').value;
     const dependency = document.getElementById('dependency-filter').value;
+    const status = document.getElementById('status-filter').value;
+    const confidence = document.getElementById('confidence-filter').value;
     const onlyConnected = document.getElementById('connected-filter').checked;
 
     let results = allCompanies.filter(company => {
+        const deps = [...(company.upstream || []), ...(company.downstream || [])];
+        const counterpartyText = deps.map(dep => `${dep.name || ''} ${dep.ticker || ''} ${dep.product || ''} ${dep.type || ''}`).join(' ').toLowerCase();
         const matchesQuery = !query ||
             (company.name || '').toLowerCase().includes(query) ||
-            (company.ticker || '').toLowerCase().includes(query);
+            (company.ticker || '').toLowerCase().includes(query) ||
+            (company.sector || '').toLowerCase().includes(query) ||
+            (company.industry || '').toLowerCase().includes(query) ||
+            counterpartyText.includes(query);
         const matchesSector = !sector || company.sector === sector;
-        const deps = [...(company.upstream || []), ...(company.downstream || [])];
         const matchesDependency = !dependency || deps.some(dep => dep.type === dependency);
+        const matchesStatus = !status || deps.some(dep => relationshipMatchesStatus(dep, status));
+        const matchesConfidence = !confidence || deps.some(dep => relationshipMatchesConfidence(dep, confidence));
         const matchesConnected = !onlyConnected || company.connection_count > 0;
-        return matchesQuery && matchesSector && matchesDependency && matchesConnected;
+        return matchesQuery && matchesSector && matchesDependency && matchesStatus && matchesConfidence && matchesConnected;
     });
 
     currentCompaniesList = results;
@@ -327,6 +565,8 @@ function applyFilters(updateRoute = true) {
             query,
             sector,
             dependency,
+            status,
+            confidence,
             connected: onlyConnected ? '1' : ''
         }, shouldPush);
     }
@@ -402,6 +642,9 @@ function renderQualityView() {
     document.getElementById('view-quality').classList.remove('hidden');
     document.getElementById('view-companies').classList.add('hidden');
     document.getElementById('view-details').classList.add('hidden');
+    document.getElementById('view-watchlist').classList.add('hidden');
+    document.getElementById('view-compare').classList.add('hidden');
+    document.getElementById('view-sector').classList.add('hidden');
 
     const pending = Number(qualityData.pending_count || 0);
     setText('quality-approved', Number(qualityData.approved_count || 0).toLocaleString());
@@ -464,14 +707,19 @@ function renderLevel3(company, previousRoute = null) {
     document.getElementById('view-quality').classList.add('hidden');
     document.getElementById('view-companies').classList.add('hidden');
     document.getElementById('view-details').classList.remove('hidden');
+    document.getElementById('view-watchlist').classList.add('hidden');
+    document.getElementById('view-compare').classList.add('hidden');
+    document.getElementById('view-sector').classList.add('hidden');
 
     setText('detail-name', company.name || 'N/A');
     setText('detail-ticker', company.ticker || 'N/A');
     setText('detail-industry', company.industry || company.sector || 'Uncategorized');
 
     renderStory(company);
+    renderDecisionBrief(company);
     renderChart(company);
     renderMetrics(company);
+    renderSupplyGraph(company);
     renderSupplyMap(company);
     renderXRay(company);
 }
@@ -481,6 +729,7 @@ function renderStory(company) {
     const downstream = company.downstream || [];
     const primarySupplier = upstream[0]?.name;
     const primaryCustomer = downstream[0]?.name;
+    const metrics = companyMetrics(company);
 
     setText('detail-up-count', upstream.length);
     setText('detail-down-count', downstream.length);
@@ -490,8 +739,95 @@ function renderStory(company) {
     let story = `${company.name} has ${upstream.length} tracked upstream supplier relationship${upstream.length === 1 ? '' : 's'} and ${downstream.length} tracked downstream customer relationship${downstream.length === 1 ? '' : 's'}.`;
     if (primarySupplier) story += ` Its upstream exposure includes ${primarySupplier}.`;
     if (primaryCustomer) story += ` Its downstream exposure includes ${primaryCustomer}.`;
+    if (metrics.approved_count) story += ` ${metrics.approved_count} relationship${metrics.approved_count === 1 ? ' is' : 's are'} approved or manually reviewed.`;
+    if (metrics.pending_count) story += ` ${metrics.pending_count} relationship${metrics.pending_count === 1 ? ' still needs' : 's still need'} review before being treated as high-confidence research input.`;
     if (!upstream.length && !downstream.length) story += ' This company is a good candidate for the next discovery pass.';
     setText('detail-story', story);
+}
+
+function renderDecisionBrief(company) {
+    const metrics = companyMetrics(company);
+    const watchButton = document.getElementById('watchlist-toggle');
+    watchButton.textContent = watchlist.has(company.ticker) ? 'Tracking' : 'Track';
+    watchButton.classList.toggle('active', watchlist.has(company.ticker));
+    setText('brief-confidence', formatConfidence(metrics.average_confidence));
+    setText('brief-approved', Number(metrics.approved_count || 0).toLocaleString());
+    setText('brief-concentration', `${Math.round(Number(metrics.concentration_score || 0) * 100)}%`);
+    setText('brief-verified', formatDateLabel(metrics.last_verified));
+
+    const badges = document.getElementById('detail-risk-badges');
+    clearElement(badges);
+    const addBadge = (label, className = '') => badges.appendChild(makeElement('span', `trust-badge ${className}`, label));
+    if (metrics.approved_count) addBadge(`${metrics.approved_count} approved`, 'approved');
+    if (metrics.pending_count) addBadge(`${metrics.pending_count} needs review`, 'pending');
+    if (metrics.manual_count) addBadge(`${metrics.manual_count} manual`, 'manual');
+    if (metrics.ai_research_count) addBadge(`${metrics.ai_research_count} AI reviewed`, 'ai');
+    if (!metrics.total_links) addBadge('Discovery candidate', 'pending');
+
+    renderRiskBars(metrics);
+
+    const related = document.getElementById('detail-related');
+    clearElement(related);
+    related.appendChild(makeElement('div', 'related-title', 'Related Companies'));
+    const relationships = [...(company.upstream || []), ...(company.downstream || [])]
+        .filter(dep => dep.ticker)
+        .sort((a, b) => (Number(b.confidence || 0) - Number(a.confidence || 0)))
+        .slice(0, 8);
+    if (!relationships.length) {
+        related.appendChild(makeElement('span', 'empty-state', 'No related companies tracked yet.'));
+        return;
+    }
+    const chips = makeElement('div', 'related-chip-row');
+    relationships.forEach(dep => {
+        const chip = makeElement('button', 'related-chip', dep.ticker);
+        const linkedCompany = getCompanyByTicker(dep.ticker);
+        chip.type = 'button';
+        chip.title = dep.name || dep.ticker;
+        chip.onclick = () => linkedCompany ? navigateCompany(linkedCompany.ticker) : navigateCompanies({ query: dep.ticker });
+        chips.appendChild(chip);
+    });
+    related.appendChild(chips);
+}
+
+function renderRiskBars(metrics) {
+    const container = document.getElementById('risk-bars');
+    clearElement(container);
+    [
+        ['Risk score', metrics.risk_score || 0, 'rejected'],
+        ['Supplier risk', metrics.supplier_risk || 0, 'pending'],
+        ['Customer risk', metrics.customer_risk || 0, 'approved'],
+        ['Review completeness', metrics.review_score || 0, 'approved'],
+    ].forEach(([label, value, className]) => {
+        const row = makeElement('div', 'quality-bar-row');
+        const top = makeElement('div', 'quality-bar-top');
+        top.appendChild(makeElement('span', '', label));
+        top.appendChild(makeElement('strong', '', `${value}/100`));
+        row.appendChild(top);
+        const track = makeElement('div', 'quality-bar-track');
+        const fill = makeElement('span', `quality-bar-fill ${className}`);
+        fill.style.width = `${Math.max(Number(value || 0), 2)}%`;
+        track.appendChild(fill);
+        row.appendChild(track);
+        container.appendChild(row);
+    });
+}
+
+function toggleCurrentWatchlist() {
+    const ticker = currentRoute.ticker;
+    if (!ticker) return;
+    if (watchlist.has(ticker)) watchlist.delete(ticker);
+    else watchlist.add(ticker);
+    saveWatchlist();
+    const company = getCompanyByTicker(ticker);
+    if (company) renderDecisionBrief(company);
+}
+
+function navigateCompareFromCurrent() {
+    const ticker = currentRoute.ticker || '';
+    const nextPeer = [...(getCompanyByTicker(ticker)?.upstream || []), ...(getCompanyByTicker(ticker)?.downstream || [])]
+        .map(dep => dep.ticker)
+        .find(depTicker => getCompanyByTicker(depTicker));
+    navigateCompare({ a: ticker, b: nextPeer || '' });
 }
 
 function renderChart(company) {
@@ -581,6 +917,38 @@ function renderSupplyMap(company) {
     map.appendChild(renderMapColumn('Customers', downstream, 'downstream'));
 }
 
+function renderSupplyGraph(company) {
+    const graph = document.getElementById('supply-graph');
+    clearElement(graph);
+    const upstream = (company.upstream || []).slice(0, 5);
+    const downstream = (company.downstream || []).slice(0, 5);
+    const center = makeElement('button', 'graph-node graph-center');
+    center.type = 'button';
+    center.appendChild(makeElement('strong', '', company.ticker || 'N/A'));
+    center.appendChild(makeElement('span', '', `${relationshipCount(company)} links`));
+    graph.appendChild(center);
+
+    const addGraphNode = (dep, direction, index, total) => {
+        const node = makeElement('button', `graph-node ${direction}`);
+        const y = total <= 1 ? 50 : 18 + (index * (64 / (total - 1)));
+        node.style.top = `${y}%`;
+        node.style.left = direction === 'upstream' ? '9%' : '74%';
+        node.type = 'button';
+        node.appendChild(makeElement('strong', '', dep.ticker || dep.name || 'N/A'));
+        node.appendChild(makeElement('span', '', `${formatConfidence(dep.confidence)} ${statusLabel(relationshipStatus(dep))}`));
+        node.onclick = () => getCompanyByTicker(dep.ticker) ? navigateCompany(dep.ticker) : openEvidenceModal(dep, company, direction);
+        graph.appendChild(node);
+        const line = makeElement('span', `graph-line ${direction} status-${relationshipStatus(dep)}`);
+        line.style.top = `${y}%`;
+        graph.appendChild(line);
+    };
+    upstream.forEach((dep, index) => addGraphNode(dep, 'upstream', index, upstream.length));
+    downstream.forEach((dep, index) => addGraphNode(dep, 'downstream', index, downstream.length));
+    if (!upstream.length && !downstream.length) {
+        graph.appendChild(makeElement('span', 'empty-state graph-empty', 'No graphable relationships yet.'));
+    }
+}
+
 function renderMapColumn(title, deps, direction) {
     const column = makeElement('div', `map-column ${direction}`);
     column.appendChild(makeElement('span', 'map-title', title));
@@ -625,7 +993,7 @@ function renderXRay(company) {
         }
 
         topLine.appendChild(companyLine);
-        topLine.appendChild(makeElement('span', 'dep-pill', dep.type || 'Supply Link'));
+        topLine.appendChild(makeElement('span', `dep-pill ${relationshipStatus(dep)}`, dep.type || 'Supply Link'));
         card.appendChild(topLine);
 
         if (dep.product && dep.product !== dep.type) {
@@ -634,6 +1002,7 @@ function renderXRay(company) {
 
         const meta = makeElement('div', 'relationship-meta');
         const confidence = dep.confidence === null || dep.confidence === undefined ? 'N/A' : `${Math.round(Number(dep.confidence) * 100)}%`;
+        meta.appendChild(makeElement('span', `source-badge ${relationshipStatus(dep)}`, statusLabel(relationshipStatus(dep))));
         meta.appendChild(makeElement('span', 'source-badge', dep.source_type || 'Source'));
         meta.appendChild(makeElement('span', '', `Confidence ${confidence}`));
         meta.appendChild(makeElement('span', '', `Verified ${dep.last_verified || 'N/A'}`));
@@ -646,6 +1015,29 @@ function renderXRay(company) {
             meta.appendChild(sourceLink);
         }
         card.appendChild(meta);
+
+        if (dep.evidence_excerpt) {
+            card.appendChild(makeElement('p', 'relationship-evidence', dep.evidence_excerpt));
+        }
+
+        const actions = makeElement('div', 'relationship-actions');
+        const evidenceButton = makeElement('button', 'mini-button', 'Evidence');
+        evidenceButton.type = 'button';
+        evidenceButton.onclick = event => {
+            event.stopPropagation();
+            openEvidenceModal(dep, getCompanyByTicker(currentRoute.ticker) || {}, directionClass);
+        };
+        actions.appendChild(evidenceButton);
+        if (linkedCompany) {
+            const compareButton = makeElement('button', 'mini-button', 'Compare');
+            compareButton.type = 'button';
+            compareButton.onclick = event => {
+                event.stopPropagation();
+                navigateCompare({ a: currentRoute.ticker, b: linkedCompany.ticker });
+            };
+            actions.appendChild(compareButton);
+        }
+        card.appendChild(actions);
 
         if (linkedCompany) {
             card.onclick = () => {
@@ -675,4 +1067,158 @@ function renderXRay(company) {
     } else {
         downContainer.appendChild(makeElement('span', 'empty-state', 'No known downstream exposure tracked.'));
     }
+}
+
+function openEvidenceModal(dep, company = {}, direction = '') {
+    const modal = document.getElementById('evidence-modal');
+    const body = document.getElementById('modal-body');
+    clearElement(body);
+    setText('modal-title', `${company.ticker || 'Company'} ${direction === 'upstream' ? '<-' : '->'} ${dep.ticker || dep.name || 'Counterparty'}`);
+    [
+        ['Counterparty', `${dep.name || 'Unknown'} ${dep.ticker ? `(${dep.ticker})` : ''}`],
+        ['Relationship', dep.type || 'Supply Link'],
+        ['Product / service', dep.product || 'N/A'],
+        ['Review status', statusLabel(relationshipStatus(dep))],
+        ['Confidence', formatConfidence(dep.confidence)],
+        ['Source type', dep.source_type || 'Source'],
+        ['Last verified', dep.last_verified || 'N/A'],
+    ].forEach(([label, value]) => {
+        const row = makeElement('div', 'modal-row');
+        row.appendChild(makeElement('span', '', label));
+        row.appendChild(makeElement('strong', '', value));
+        body.appendChild(row);
+    });
+    if (dep.evidence_excerpt) {
+        body.appendChild(makeElement('p', 'modal-evidence', dep.evidence_excerpt));
+    }
+    if (dep.source && /^https?:\/\//i.test(dep.source)) {
+        const link = makeElement('a', 'source-link modal-source', 'Open source');
+        link.href = dep.source;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        body.appendChild(link);
+    }
+    modal.classList.remove('hidden');
+}
+
+function closeEvidenceModal() {
+    document.getElementById('evidence-modal').classList.add('hidden');
+}
+
+function hideAllViews() {
+    ['view-industries', 'view-quality', 'view-companies', 'view-details', 'view-watchlist', 'view-compare', 'view-sector'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+    });
+}
+
+function renderWatchlistView() {
+    currentRoute = { view: 'watchlist' };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    hideAllViews();
+    document.getElementById('view-watchlist').classList.remove('hidden');
+    const grid = document.getElementById('watchlist-grid');
+    clearElement(grid);
+    const companies = [...watchlist].map(getCompanyByTicker).filter(Boolean);
+    setText('watchlist-count', `${companies.length} saved`);
+    if (!companies.length) {
+        grid.appendChild(makeElement('span', 'empty-state', 'Track companies from a Decision Brief to build a local research queue.'));
+        return;
+    }
+    companies
+        .sort((a, b) => companyMetrics(b).risk_score - companyMetrics(a).risk_score)
+        .forEach(company => grid.appendChild(renderCompanySignalCard(company)));
+}
+
+function renderCompanySignalCard(company) {
+    const metrics = companyMetrics(company);
+    const card = makeElement('article', 'signal-card');
+    const header = makeElement('div', 'signal-card-header');
+    header.appendChild(makeElement('strong', '', `${company.ticker} - ${company.name}`));
+    header.appendChild(makeElement('span', 'source-badge pending', `Risk ${metrics.risk_score}/100`));
+    card.appendChild(header);
+    card.appendChild(makeElement('p', '', `${metrics.total_links} links, ${metrics.approved_count} approved, ${metrics.pending_count} needing review.`));
+    const actions = makeElement('div', 'relationship-actions');
+    const open = makeElement('button', 'mini-button', 'Open brief');
+    open.onclick = () => navigateCompany(company.ticker);
+    actions.appendChild(open);
+    const compare = makeElement('button', 'mini-button', 'Compare');
+    compare.onclick = () => navigateCompare({ a: company.ticker });
+    actions.appendChild(compare);
+    card.appendChild(actions);
+    return card;
+}
+
+function renderSectorView(sector) {
+    currentRoute = { view: 'sector', sector };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    hideAllViews();
+    document.getElementById('view-sector').classList.remove('hidden');
+    const companies = (globalData[sector] || []).map(company => ({ ...company, sector, connection_count: relationshipCount(company) }));
+    const linked = companies.filter(company => relationshipCount(company) > 0);
+    setText('sector-title', sector || 'Unknown sector');
+    setText('sector-count', `${companies.length.toLocaleString()} companies`);
+    const summary = document.getElementById('sector-summary');
+    clearElement(summary);
+    const approved = linked.reduce((sum, company) => sum + (companyMetrics(company).approved_count || 0), 0);
+    [
+        ['Companies', companies.length],
+        ['Linked companies', linked.length],
+        ['Approved links', approved],
+        ['Avg risk', linked.length ? Math.round(linked.reduce((sum, company) => sum + companyMetrics(company).risk_score, 0) / linked.length) : 0],
+    ].forEach(([label, value]) => {
+        const card = makeElement('article', 'radar-card');
+        card.appendChild(makeElement('div', 'radar-card-title', label));
+        card.appendChild(makeElement('span', 'stat-value', value.toLocaleString()));
+        summary.appendChild(card);
+    });
+    const leaders = document.getElementById('sector-leaders');
+    clearElement(leaders);
+    linked
+        .sort((a, b) => relationshipCount(b) - relationshipCount(a))
+        .slice(0, 12)
+        .forEach(company => leaders.appendChild(renderCompanySignalCard(company)));
+}
+
+function renderCompareView(updateRoute = true) {
+    currentRoute = { view: 'compare' };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    hideAllViews();
+    document.getElementById('view-compare').classList.remove('hidden');
+    const tickerA = document.getElementById('compare-a').value.trim().toUpperCase();
+    const tickerB = document.getElementById('compare-b').value.trim().toUpperCase();
+    if (updateRoute) navigateCompare({ a: tickerA, b: tickerB }, false);
+    const companies = [getCompanyByTicker(tickerA), getCompanyByTicker(tickerB)].filter(Boolean);
+    setText('compare-count', `${companies.length}/2 selected`);
+    const grid = document.getElementById('compare-grid');
+    clearElement(grid);
+    if (!companies.length) {
+        grid.appendChild(makeElement('span', 'empty-state', 'Enter two tickers to compare valuation context, supply-chain risk, and relationship quality.'));
+        return;
+    }
+    companies.forEach(company => {
+        const metrics = companyMetrics(company);
+        const card = makeElement('article', 'compare-card');
+        card.appendChild(makeElement('h3', '', `${company.ticker} - ${company.name}`));
+        const rows = [
+            ['Market cap', formatNum(company.market_cap)],
+            ['Tracked links', metrics.total_links],
+            ['Risk score', `${metrics.risk_score}/100`],
+            ['Supplier risk', `${metrics.supplier_risk}/100`],
+            ['Customer risk', `${metrics.customer_risk}/100`],
+            ['Review completeness', `${metrics.review_score}/100`],
+            ['Avg confidence', formatConfidence(metrics.average_confidence)],
+            ['Top supplier', metrics.top_upstream?.[0]?.ticker || 'N/A'],
+            ['Top customer', metrics.top_downstream?.[0]?.ticker || 'N/A'],
+        ];
+        rows.forEach(([label, value]) => {
+            const row = makeElement('div', 'modal-row');
+            row.appendChild(makeElement('span', '', label));
+            row.appendChild(makeElement('strong', '', String(value)));
+            card.appendChild(row);
+        });
+        const open = makeElement('button', 'mini-button', 'Open brief');
+        open.onclick = () => navigateCompany(company.ticker);
+        card.appendChild(open);
+        grid.appendChild(card);
+    });
 }

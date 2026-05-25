@@ -40,6 +40,7 @@ jobs:
         run: |
           node --check docs/app.js
           node tests/check_app_link_count.js
+          node tests/check_app_behaviors.js
 
       - name: Check backend Python syntax
         run: python -m compileall backend tests

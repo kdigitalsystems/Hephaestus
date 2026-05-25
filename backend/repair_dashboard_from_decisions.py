@@ -1,7 +1,14 @@
 import json
 from pathlib import Path
 
-from export import FALLBACK_LINKED_SECTOR, FOUNDRY_TERMS, merge_relationships
+from export import (
+    FALLBACK_LINKED_SECTOR,
+    FOUNDRY_TERMS,
+    annotate_dashboard_data,
+    merge_relationships,
+    persist_link_history,
+    strip_transient_dashboard_fields,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -157,6 +164,10 @@ def repair_dashboard_from_decisions(dashboard_path=DASHBOARD_PATH, decisions_pat
             unique_companies.append(company)
         industries[sector] = unique_companies
 
+    history_path = Path(dashboard_path).with_name("link_history.json")
+    annotate_dashboard_data(dashboard, history_path)
+    persist_link_history(dashboard, history_path)
+    strip_transient_dashboard_fields(dashboard)
     Path(dashboard_path).write_text(json.dumps(dashboard, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     return dashboard
 

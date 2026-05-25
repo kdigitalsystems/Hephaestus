@@ -1,12 +1,14 @@
 import os
 import json
 import math
+from datetime import datetime, timezone
 from database import SessionLocal
 from models import Node, Edge
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS_DIR = os.path.join(BASE_DIR, "docs")
 EXPORT_PATH = os.path.join(DOCS_DIR, "dashboard_data.json")
+HISTORY_PATH = os.path.join(DOCS_DIR, "link_history.json")
 
 MIN_MARKET_CAP = 0 
 IGNORED_SECTORS = ["Shell Companies", "Financial Services", "Real Estate"]
@@ -151,6 +153,347 @@ def merge_relationships(relationships):
             relationship.get("product") or "",
         ),
     )
+
+def status_tokens(value):
+    return {
+        token.strip().lower()
+        for token in str(value or "pending").replace(",", "/").split("/")
+        if token.strip()
+    }
+
+def relationship_status(relationship):
+    tokens = status_tokens(relationship.get("review_status"))
+    if "approved" in tokens:
+        return "approved"
+    if "rejected" in tokens:
+        return "rejected"
+    return "pending"
+
+def source_tokens(value):
+    return {
+        token.strip().lower()
+        for token in str(value or "").replace(",", "/").split("/")
+        if token.strip()
+    }
+
+def relationship_score(relationship):
+    status_rank = {"approved": 3, "pending": 1, "rejected": 0}
+    source_rank = {
+        "manual": 3,
+        "web source": 2,
+        "ai research": 1,
+        "source": 0,
+    }
+    confidence = relationship.get("confidence")
+    try:
+        confidence_value = float(confidence) if confidence is not None else 0.0
+    except (TypeError, ValueError):
+        confidence_value = 0.0
+    best_source = max(
+        (source_rank.get(token, 0) for token in source_tokens(relationship.get("source_type"))),
+        default=0,
+    )
+    return (
+        status_rank.get(relationship_status(relationship), 0),
+        best_source,
+        confidence_value,
+        relationship.get("ticker") or "",
+    )
+
+def top_relationships(relationships, limit=5):
+    return [
+        {
+            "ticker": relationship.get("ticker") or "",
+            "name": relationship.get("name") or relationship.get("ticker") or "Unknown",
+            "type": relationship.get("type") or "Supply Link",
+            "product": relationship.get("product") or relationship.get("type") or "Supply Link",
+            "confidence": relationship.get("confidence"),
+            "review_status": relationship_status(relationship),
+            "source_type": relationship.get("source_type") or "Source",
+            "last_verified": relationship.get("last_verified") or "N/A",
+        }
+        for relationship in sorted(relationships, key=relationship_score, reverse=True)[:limit]
+    ]
+
+def summarize_company_relationships(company):
+    upstream = company.get("upstream", [])
+    downstream = company.get("downstream", [])
+    relationships = [*upstream, *downstream]
+    status_counts = {"approved": 0, "pending": 0, "rejected": 0}
+    source_counts = {"manual": 0, "web_source": 0, "ai_research": 0, "other": 0}
+    confidences = []
+    verified_dates = []
+
+    for relationship in relationships:
+        status_counts[relationship_status(relationship)] += 1
+        sources = source_tokens(relationship.get("source_type"))
+        if "manual" in sources:
+            source_counts["manual"] += 1
+        elif "web source" in sources:
+            source_counts["web_source"] += 1
+        elif "ai research" in sources:
+            source_counts["ai_research"] += 1
+        else:
+            source_counts["other"] += 1
+        confidence = relationship.get("confidence")
+        try:
+            if confidence is not None:
+                confidences.append(float(confidence))
+        except (TypeError, ValueError):
+            pass
+        last_verified = relationship.get("last_verified")
+        if last_verified and last_verified != "N/A":
+            verified_dates.append(last_verified)
+
+    total_links = len(relationships)
+    largest_side = max(len(upstream), len(downstream))
+    concentration_score = round(largest_side / total_links, 3) if total_links else 0.0
+    average_confidence = round(sum(confidences) / len(confidences), 3) if confidences else None
+    confidence_score = int(round((average_confidence or 0) * 100))
+    review_score = int(round((status_counts["approved"] / total_links) * 100)) if total_links else 0
+    concentration_risk = int(round(concentration_score * 100)) if total_links else 0
+    freshness_score = 100 if verified_dates else 0
+    supplier_risk = int(round((len(upstream) / total_links) * concentration_risk)) if total_links else 0
+    customer_risk = int(round((len(downstream) / total_links) * concentration_risk)) if total_links else 0
+    risk_score = int(round((concentration_risk * 0.45) + ((100 - review_score) * 0.35) + ((100 - confidence_score) * 0.20))) if total_links else 0
+
+    return {
+        "upstream_count": len(upstream),
+        "downstream_count": len(downstream),
+        "total_links": total_links,
+        "approved_count": status_counts["approved"],
+        "pending_count": status_counts["pending"],
+        "rejected_count": status_counts["rejected"],
+        "manual_count": source_counts["manual"],
+        "web_source_count": source_counts["web_source"],
+        "ai_research_count": source_counts["ai_research"],
+        "average_confidence": average_confidence,
+        "concentration_score": concentration_score,
+        "top_upstream": top_relationships(upstream),
+        "top_downstream": top_relationships(downstream),
+        "last_verified": max(verified_dates) if verified_dates else "N/A",
+        "risk_score": risk_score,
+        "supplier_risk": supplier_risk,
+        "customer_risk": customer_risk,
+        "confidence_score": confidence_score,
+        "review_score": review_score,
+        "freshness_score": freshness_score,
+    }
+
+def load_link_history(history_path=HISTORY_PATH):
+    if not os.path.exists(history_path):
+        return []
+    try:
+        with open(history_path, encoding="utf-8") as handle:
+            payload = json.load(handle)
+    except (OSError, json.JSONDecodeError):
+        return []
+    return payload if isinstance(payload, list) else payload.get("history", [])
+
+def relationship_identity(relationship):
+    return str(relationship.get("relationship_key") or relationship.get("edge_id") or "")
+
+def relationship_direction_from_key(key):
+    if "->" not in key:
+        return "", ""
+    source, rest = key.split("->", 1)
+    target = rest.split(":", 1)[0]
+    return source, target
+
+def relationship_snapshot_entry(key, relationship):
+    source_ticker, target_ticker = relationship_direction_from_key(key)
+    return {
+        "relationship_key": key,
+        "source_ticker": source_ticker,
+        "target_ticker": target_ticker,
+        "type": relationship.get("type") or "Supply Link",
+        "product": relationship.get("product") or relationship.get("type") or "Supply Link",
+        "review_status": relationship_status(relationship),
+        "confidence": relationship.get("confidence"),
+        "source_type": relationship.get("source_type") or "Source",
+        "last_verified": relationship.get("last_verified") or "N/A",
+    }
+
+def build_change_summary(history, current_snapshot):
+    previous_snapshot = history[-1].get("links", {}) if history else {}
+    previous_keys = set(previous_snapshot)
+    current_keys = set(current_snapshot)
+    new_keys = sorted(current_keys - previous_keys)
+    removed_keys = sorted(previous_keys - current_keys)
+    changed_keys = sorted(
+        key for key in current_keys & previous_keys
+        if (
+            current_snapshot[key].get("review_status") != previous_snapshot[key].get("review_status")
+            or current_snapshot[key].get("confidence") != previous_snapshot[key].get("confidence")
+        )
+    )
+    rejected_keys = sorted(
+        key for key, link in current_snapshot.items()
+        if link.get("review_status") == "rejected"
+    )
+
+    def compact(keys, source):
+        return [
+            {
+                "relationship_key": key,
+                "source_ticker": source.get(key, {}).get("source_ticker", ""),
+                "target_ticker": source.get(key, {}).get("target_ticker", ""),
+                "type": source.get(key, {}).get("type", "Supply Link"),
+                "product": source.get(key, {}).get("product", "Supply Link"),
+                "review_status": source.get(key, {}).get("review_status", "pending"),
+                "confidence": source.get(key, {}).get("confidence"),
+            }
+            for key in keys[:12]
+        ]
+
+    return {
+        "previous_unique_links": len(previous_keys),
+        "current_unique_links": len(current_keys),
+        "net_change": len(current_keys) - len(previous_keys),
+        "new_count": len(new_keys),
+        "removed_count": len(removed_keys),
+        "changed_count": len(changed_keys),
+        "rejected_count": len(rejected_keys),
+        "new_links": compact(new_keys, current_snapshot),
+        "removed_links": compact(removed_keys, previous_snapshot),
+        "changed_links": compact(changed_keys, current_snapshot),
+    }
+
+def persist_link_history(dashboard_data, history_path=HISTORY_PATH, limit=30):
+    history = load_link_history(history_path)
+    metrics = dashboard_data.get("investor_metrics", {})
+    snapshot = metrics.get("relationship_snapshot", {})
+    generated_at = dashboard_data.get("generated_at")
+    if not snapshot or not generated_at:
+        return history
+    filtered = [
+        entry for entry in history
+        if entry.get("generated_at") != generated_at
+    ]
+    filtered.append({
+        "generated_at": generated_at,
+        "unique_links": metrics.get("unique_links", 0),
+        "approved_links": metrics.get("approved_links", 0),
+        "pending_links": metrics.get("pending_links", 0),
+        "rejected_links": metrics.get("rejected_links", 0),
+        "linked_companies": metrics.get("linked_companies", 0),
+        "links": snapshot,
+    })
+    filtered = filtered[-limit:]
+    os.makedirs(os.path.dirname(history_path), exist_ok=True)
+    with open(history_path, "w", encoding="utf-8") as handle:
+        json.dump(filtered, handle, indent=2, allow_nan=False)
+        handle.write("\n")
+    return filtered
+
+def strip_transient_dashboard_fields(dashboard_data):
+    dashboard_data.get("investor_metrics", {}).pop("relationship_snapshot", None)
+    return dashboard_data
+
+def annotate_dashboard_data(dashboard_data, history_path=HISTORY_PATH):
+    companies = []
+    unique_relationships = {}
+    sector_exposure = []
+
+    for sector, sector_companies in dashboard_data.get("industries", {}).items():
+        for company in sector_companies:
+            company["sector"] = sector
+            company["investor_metrics"] = summarize_company_relationships(company)
+            companies.append(company)
+            for side in ("upstream", "downstream"):
+                for relationship in company.get(side, []):
+                    key = relationship.get("relationship_key") or relationship.get("edge_id")
+                    if key is not None:
+                        unique_relationships.setdefault(str(key), relationship)
+
+    for sector, sector_companies in dashboard_data.get("industries", {}).items():
+        linked = [company for company in sector_companies if company.get("investor_metrics", {}).get("total_links", 0) > 0]
+        total_links = sum(company.get("investor_metrics", {}).get("total_links", 0) for company in sector_companies)
+        sector_exposure.append({
+            "sector": sector,
+            "companies": len(sector_companies),
+            "linked_companies": len(linked),
+            "relationship_entries": total_links,
+            "coverage": round(len(linked) / len(sector_companies), 3) if sector_companies else 0.0,
+        })
+
+    def unique_count(status=None):
+        return sum(
+            1
+            for relationship in unique_relationships.values()
+            if status is None or relationship_status(relationship) == status
+        )
+
+    dashboard_data["generated_at"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    current_snapshot = {
+        key: relationship_snapshot_entry(key, relationship)
+        for key, relationship in sorted(unique_relationships.items())
+        if key
+    }
+    history = load_link_history(history_path)
+    change_summary = build_change_summary(history, current_snapshot)
+    dashboard_data["investor_metrics"] = {
+        "company_count": len(companies),
+        "sector_count": len(dashboard_data.get("industries", {})),
+        "unique_links": len(unique_relationships),
+        "relationship_entries": sum(
+            company.get("investor_metrics", {}).get("total_links", 0)
+            for company in companies
+        ),
+        "approved_links": unique_count("approved"),
+        "pending_links": unique_count("pending"),
+        "rejected_links": unique_count("rejected"),
+        "linked_companies": sum(
+            1
+            for company in companies
+            if company.get("investor_metrics", {}).get("total_links", 0) > 0
+        ),
+        "most_connected": sorted(
+            (
+                {
+                    "ticker": company.get("ticker") or "",
+                    "name": company.get("name") or "Unknown",
+                    "sector": company.get("sector") or "",
+                    "total_links": company.get("investor_metrics", {}).get("total_links", 0),
+                    "upstream_count": company.get("investor_metrics", {}).get("upstream_count", 0),
+                    "downstream_count": company.get("investor_metrics", {}).get("downstream_count", 0),
+                }
+                for company in companies
+                if company.get("investor_metrics", {}).get("total_links", 0) > 0
+            ),
+            key=lambda item: item["total_links"],
+            reverse=True,
+        )[:10],
+        "highest_concentration": sorted(
+            (
+                {
+                    "ticker": company.get("ticker") or "",
+                    "name": company.get("name") or "Unknown",
+                    "sector": company.get("sector") or "",
+                    "concentration_score": company.get("investor_metrics", {}).get("concentration_score", 0),
+                    "total_links": company.get("investor_metrics", {}).get("total_links", 0),
+                }
+                for company in companies
+                if company.get("investor_metrics", {}).get("total_links", 0) >= 2
+            ),
+            key=lambda item: (item["concentration_score"], item["total_links"]),
+            reverse=True,
+        )[:10],
+        "sector_exposure": sorted(sector_exposure, key=lambda item: item["relationship_entries"], reverse=True),
+        "change_summary": change_summary,
+        "history": [
+            {
+                "generated_at": entry.get("generated_at"),
+                "unique_links": entry.get("unique_links", 0),
+                "approved_links": entry.get("approved_links", 0),
+                "pending_links": entry.get("pending_links", 0),
+                "linked_companies": entry.get("linked_companies", 0),
+            }
+            for entry in history[-14:]
+        ],
+        "relationship_snapshot": current_snapshot,
+    }
+    return dashboard_data
 
 def is_ignored_sector(node):
     sector = node.sector if node.sector else "Uncategorized"
@@ -317,6 +660,9 @@ def export_to_json():
             })
             
         os.makedirs(DOCS_DIR, exist_ok=True)
+        annotate_dashboard_data(dashboard_data)
+        persist_link_history(dashboard_data)
+        strip_transient_dashboard_fields(dashboard_data)
         
         with open(EXPORT_PATH, "w") as f:
             json.dump(dashboard_data, f, indent=2, allow_nan=False)

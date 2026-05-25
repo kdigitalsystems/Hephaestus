@@ -30,6 +30,24 @@ REQUIRED_EDGE_FIELDS = {
     "review_status",
 }
 
+REQUIRED_INVESTOR_METRIC_FIELDS = {
+    "upstream_count",
+    "downstream_count",
+    "total_links",
+    "approved_count",
+    "pending_count",
+    "concentration_score",
+    "top_upstream",
+    "top_downstream",
+    "last_verified",
+    "risk_score",
+    "supplier_risk",
+    "customer_risk",
+    "confidence_score",
+    "review_score",
+    "freshness_score",
+}
+
 
 def load_dashboard_data(path):
     with Path(path).open(encoding="utf-8") as handle:
@@ -60,6 +78,18 @@ def validate_dashboard_data(data):
         if not isinstance(quality.get("review_queue", []), list):
             errors.append("quality.review_queue must be a list")
 
+    investor_metrics = data.get("investor_metrics")
+    if not isinstance(investor_metrics, dict):
+        errors.append("dashboard_data.json must contain investor_metrics")
+    else:
+        for field in ("unique_links", "approved_links", "pending_links", "sector_exposure", "change_summary", "history"):
+            if field not in investor_metrics:
+                errors.append(f"investor_metrics.{field} is missing")
+        if not isinstance(investor_metrics.get("history", []), list):
+            errors.append("investor_metrics.history must be a list")
+        if not isinstance(investor_metrics.get("change_summary", {}), dict):
+            errors.append("investor_metrics.change_summary must be an object")
+
     companies = list(iter_companies(data))
     tickers = []
     for sector, company in companies:
@@ -72,6 +102,22 @@ def validate_dashboard_data(data):
             errors.append(f"{sector}/{company.get('name', '<unknown>')} has no ticker")
         else:
             tickers.append(ticker)
+
+        metrics = company.get("investor_metrics")
+        if not isinstance(metrics, dict):
+            errors.append(f"{ticker}.investor_metrics is missing")
+        else:
+            missing_metric_fields = REQUIRED_INVESTOR_METRIC_FIELDS - set(metrics)
+            if missing_metric_fields:
+                errors.append(f"{ticker}.investor_metrics missing fields: {sorted(missing_metric_fields)}")
+            if metrics.get("upstream_count") != len(company.get("upstream", [])):
+                errors.append(f"{ticker}.investor_metrics.upstream_count does not match upstream rows")
+            if metrics.get("downstream_count") != len(company.get("downstream", [])):
+                errors.append(f"{ticker}.investor_metrics.downstream_count does not match downstream rows")
+            for risk_field in ("risk_score", "supplier_risk", "customer_risk", "confidence_score", "review_score", "freshness_score"):
+                value = metrics.get(risk_field)
+                if value is not None and not 0 <= value <= 100:
+                    errors.append(f"{ticker}.investor_metrics.{risk_field} must be 0-100")
 
         for side in ("upstream", "downstream"):
             relationships = company.get(side, [])
