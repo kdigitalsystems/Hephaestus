@@ -651,7 +651,7 @@ h3 {
 
 .control-panel {
     display: grid;
-    grid-template-columns: minmax(260px, 1.2fr) minmax(160px, 0.6fr) minmax(190px, 0.7fr) minmax(150px, 0.55fr) minmax(150px, 0.55fr) auto;
+    grid-template-columns: minmax(300px, 1fr) minmax(180px, 230px) minmax(210px, 280px) auto;
     gap: 12px;
     align-items: end;
     margin: 18px 0 34px;

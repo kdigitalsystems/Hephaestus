@@ -152,8 +152,6 @@ function resetDashboard() {
     document.getElementById('search-input').value = '';
     document.getElementById('sector-filter').value = '';
     document.getElementById('dependency-filter').value = '';
-    document.getElementById('status-filter').value = '';
-    document.getElementById('confidence-filter').value = '';
     document.getElementById('connected-filter').checked = false;
     currentCompaniesList = [];
     currentTitle = 'Companies';
@@ -257,15 +255,13 @@ function applyRoute(route) {
         document.getElementById('search-input').value = route.query || '';
         document.getElementById('sector-filter').value = route.sector || '';
         document.getElementById('dependency-filter').value = route.dependency || '';
-        document.getElementById('status-filter').value = route.status || '';
-        document.getElementById('confidence-filter').value = route.confidence || '';
         document.getElementById('connected-filter').checked = route.connected === '1';
         applyFilters(false);
         return;
     }
 
     if (route.view === 'quality') {
-        renderQualityView();
+        setRoute({ view: 'overview' }, false);
         return;
     }
 
@@ -338,7 +334,7 @@ function renderMarketNetwork() {
     network.appendChild(core);
 
     if (!leaders.length) {
-        network.appendChild(makeElement('span', 'empty-state network-empty', 'No reviewed network links available yet.'));
+        network.appendChild(makeElement('span', 'empty-state network-empty', 'No tracked network links available yet.'));
         return;
     }
 
@@ -378,7 +374,7 @@ function renderChangeSummary() {
         container.appendChild(button);
     });
     if (!(summary.new_links || []).length) {
-        container.appendChild(makeElement('span', 'empty-state', 'No new approved relationship changes since the last daily snapshot.'));
+        container.appendChild(makeElement('span', 'empty-state', 'No new relationship changes since the last daily snapshot.'));
     }
 }
 
@@ -529,8 +525,6 @@ function applyFilters(updateRoute = true) {
     const query = document.getElementById('search-input').value.toLowerCase().trim();
     const sector = document.getElementById('sector-filter').value;
     const dependency = document.getElementById('dependency-filter').value;
-    const status = document.getElementById('status-filter').value;
-    const confidence = document.getElementById('confidence-filter').value;
     const onlyConnected = document.getElementById('connected-filter').checked;
 
     let results = allCompanies.filter(company => {
@@ -544,10 +538,8 @@ function applyFilters(updateRoute = true) {
             counterpartyText.includes(query);
         const matchesSector = !sector || company.sector === sector;
         const matchesDependency = !dependency || deps.some(dep => dep.type === dependency);
-        const matchesStatus = !status || deps.some(dep => relationshipMatchesStatus(dep, status));
-        const matchesConfidence = !confidence || deps.some(dep => relationshipMatchesConfidence(dep, confidence));
         const matchesConnected = !onlyConnected || company.connection_count > 0;
-        return matchesQuery && matchesSector && matchesDependency && matchesStatus && matchesConfidence && matchesConnected;
+        return matchesQuery && matchesSector && matchesDependency && matchesConnected;
     });
 
     currentCompaniesList = results;
@@ -561,8 +553,6 @@ function applyFilters(updateRoute = true) {
             query,
             sector,
             dependency,
-            status,
-            confidence,
             connected: onlyConnected ? '1' : ''
         }, shouldPush);
     }
@@ -734,8 +724,6 @@ function renderStory(company) {
     let story = `${company.name} has ${upstream.length} tracked upstream supplier relationship${upstream.length === 1 ? '' : 's'} and ${downstream.length} tracked downstream customer relationship${downstream.length === 1 ? '' : 's'}.`;
     if (primarySupplier) story += ` Its upstream exposure includes ${primarySupplier}.`;
     if (primaryCustomer) story += ` Its downstream exposure includes ${primaryCustomer}.`;
-    if (metrics.approved_count) story += ` ${metrics.approved_count} relationship${metrics.approved_count === 1 ? ' is' : 's are'} approved or manually reviewed.`;
-    if (metrics.pending_count) story += ` ${metrics.pending_count} relationship${metrics.pending_count === 1 ? ' still needs' : 's still need'} review before being treated as high-confidence research input.`;
     if (!upstream.length && !downstream.length) story += ' This company is a good candidate for the next discovery pass.';
     setText('detail-story', story);
 }
@@ -746,17 +734,16 @@ function renderDecisionBrief(company) {
     watchButton.textContent = watchlist.has(company.ticker) ? 'Tracking' : 'Track';
     watchButton.classList.toggle('active', watchlist.has(company.ticker));
     setText('brief-confidence', formatConfidence(metrics.average_confidence));
-    setText('brief-approved', Number(metrics.approved_count || 0).toLocaleString());
+    setText('brief-approved', Number(metrics.total_links || 0).toLocaleString());
     setText('brief-concentration', `${Math.round(Number(metrics.concentration_score || 0) * 100)}%`);
     setText('brief-verified', formatDateLabel(metrics.last_verified));
 
     const badges = document.getElementById('detail-risk-badges');
     clearElement(badges);
     const addBadge = (label, className = '') => badges.appendChild(makeElement('span', `trust-badge ${className}`, label));
-    if (metrics.approved_count) addBadge(`${metrics.approved_count} approved`, 'approved');
-    if (metrics.pending_count) addBadge(`${metrics.pending_count} needs review`, 'pending');
-    if (metrics.manual_count) addBadge(`${metrics.manual_count} manual`, 'manual');
-    if (metrics.ai_research_count) addBadge(`${metrics.ai_research_count} AI reviewed`, 'ai');
+    if (metrics.upstream_count) addBadge(`${metrics.upstream_count} suppliers`, 'manual');
+    if (metrics.downstream_count) addBadge(`${metrics.downstream_count} customers`, 'ai');
+    if (metrics.risk_score) addBadge(`Risk ${metrics.risk_score}/100`, metrics.risk_score >= 60 ? 'pending' : 'approved');
     if (!metrics.total_links) addBadge('Discovery candidate', 'pending');
 
     renderRiskBars(metrics);
@@ -791,7 +778,6 @@ function renderRiskBars(metrics) {
         ['Risk score', metrics.risk_score || 0, 'rejected'],
         ['Supplier risk', metrics.supplier_risk || 0, 'pending'],
         ['Customer risk', metrics.customer_risk || 0, 'approved'],
-        ['Review completeness', metrics.review_score || 0, 'approved'],
     ].forEach(([label, value, className]) => {
         const row = makeElement('div', 'quality-bar-row');
         const top = makeElement('div', 'quality-bar-top');
@@ -930,7 +916,7 @@ function renderSupplyGraph(company) {
         node.style.left = direction === 'upstream' ? '9%' : '74%';
         node.type = 'button';
         node.appendChild(makeElement('strong', '', dep.ticker || dep.name || 'N/A'));
-        node.appendChild(makeElement('span', '', `${formatConfidence(dep.confidence)} ${statusLabel(relationshipStatus(dep))}`));
+        node.appendChild(makeElement('span', '', `${formatConfidence(dep.confidence)} confidence`));
         node.onclick = () => getCompanyByTicker(dep.ticker) ? navigateCompany(dep.ticker) : openEvidenceModal(dep, company, direction);
         graph.appendChild(node);
         const line = makeElement('span', `graph-line ${direction} status-${relationshipStatus(dep)}`);
@@ -997,7 +983,6 @@ function renderXRay(company) {
 
         const meta = makeElement('div', 'relationship-meta');
         const confidence = dep.confidence === null || dep.confidence === undefined ? 'N/A' : `${Math.round(Number(dep.confidence) * 100)}%`;
-        meta.appendChild(makeElement('span', `source-badge ${relationshipStatus(dep)}`, statusLabel(relationshipStatus(dep))));
         meta.appendChild(makeElement('span', 'source-badge', dep.source_type || 'Source'));
         meta.appendChild(makeElement('span', '', `Confidence ${confidence}`));
         meta.appendChild(makeElement('span', '', `Verified ${dep.last_verified || 'N/A'}`));
@@ -1073,7 +1058,6 @@ function openEvidenceModal(dep, company = {}, direction = '') {
         ['Counterparty', `${dep.name || 'Unknown'} ${dep.ticker ? `(${dep.ticker})` : ''}`],
         ['Relationship', dep.type || 'Supply Link'],
         ['Product / service', dep.product || 'N/A'],
-        ['Review status', statusLabel(relationshipStatus(dep))],
         ['Confidence', formatConfidence(dep.confidence)],
         ['Source type', dep.source_type || 'Source'],
         ['Last verified', dep.last_verified || 'N/A'],
@@ -1131,7 +1115,7 @@ function renderCompanySignalCard(company) {
     header.appendChild(makeElement('strong', '', `${company.ticker} - ${company.name}`));
     header.appendChild(makeElement('span', 'source-badge pending', `Risk ${metrics.risk_score}/100`));
     card.appendChild(header);
-    card.appendChild(makeElement('p', '', `${metrics.total_links} links, ${metrics.approved_count} approved, ${metrics.pending_count} needing review.`));
+    card.appendChild(makeElement('p', '', `${metrics.total_links} tracked links, supplier risk ${metrics.supplier_risk}/100, customer risk ${metrics.customer_risk}/100.`));
     const actions = makeElement('div', 'relationship-actions');
     const open = makeElement('button', 'mini-button', 'Open brief');
     open.onclick = () => navigateCompany(company.ticker);
@@ -1154,11 +1138,11 @@ function renderSectorView(sector) {
     setText('sector-count', `${companies.length.toLocaleString()} companies`);
     const summary = document.getElementById('sector-summary');
     clearElement(summary);
-    const approved = linked.reduce((sum, company) => sum + (companyMetrics(company).approved_count || 0), 0);
+    const sectorLinks = linked.reduce((sum, company) => sum + (companyMetrics(company).total_links || 0), 0);
     [
         ['Companies', companies.length],
         ['Linked companies', linked.length],
-        ['Approved links', approved],
+        ['Supply links', sectorLinks],
         ['Avg risk', linked.length ? Math.round(linked.reduce((sum, company) => sum + companyMetrics(company).risk_score, 0) / linked.length) : 0],
     ].forEach(([label, value]) => {
         const card = makeElement('article', 'radar-card');
@@ -1190,7 +1174,7 @@ function renderCompareView(updateRoute = true) {
     const grid = document.getElementById('compare-grid');
     clearElement(grid);
     if (!companies.length) {
-        grid.appendChild(makeElement('span', 'empty-state', 'Enter two tickers to compare valuation context, supply-chain risk, and relationship quality.'));
+        grid.appendChild(makeElement('span', 'empty-state', 'Enter two tickers to compare valuation context and supply-chain risk.'));
         return;
     }
     companies.forEach(company => {
@@ -1203,7 +1187,6 @@ function renderCompareView(updateRoute = true) {
             ['Risk score', `${metrics.risk_score}/100`],
             ['Supplier risk', `${metrics.supplier_risk}/100`],
             ['Customer risk', `${metrics.customer_risk}/100`],
-            ['Review completeness', `${metrics.review_score}/100`],
             ['Avg confidence', formatConfidence(metrics.average_confidence)],
             ['Top supplier', metrics.top_upstream?.[0]?.ticker || 'N/A'],
             ['Top customer', metrics.top_downstream?.[0]?.ticker || 'N/A'],

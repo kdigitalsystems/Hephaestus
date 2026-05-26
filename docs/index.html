@@ -23,7 +23,6 @@
             <button class="topbar-link" data-nav="companies" onclick="navigateCompanies()">Screener</button>
             <button class="topbar-link" data-nav="watchlist" onclick="navigateWatchlist()">Watchlist</button>
             <button class="topbar-link" data-nav="compare" onclick="navigateCompare()">Compare</button>
-            <button class="topbar-link" data-nav="quality" onclick="navigateQuality()">Review Queue</button>
             <div id="last-updated" class="sync-status">Updating...</div>
         </div>
     </header>
@@ -34,7 +33,7 @@
                 <div>
                     <p class="eyebrow">Investor Radar</p>
                     <h1>Supply-chain intelligence for public-market decisions.</h1>
-                    <p class="intro-copy">Research public companies by supplier/customer dependency, review confidence, and operational exposure. Hephaestus turns reviewed supply-chain links into a faster equity research workflow.</p>
+                    <p class="intro-copy">Research public companies by supplier/customer dependency, market context, and operational exposure. Hephaestus turns supply-chain links into a faster equity research workflow.</p>
                 </div>
                 <div class="hero-intel">
                     <div id="market-network" class="market-network" aria-label="Top supply-chain network preview"></div>
@@ -90,23 +89,6 @@
                     <label for="dependency-filter">Dependency</label>
                     <select id="dependency-filter" onchange="applyFilters()">
                         <option value="">All dependency types</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="status-filter">Review Status</label>
-                    <select id="status-filter" onchange="applyFilters()">
-                        <option value="">All statuses</option>
-                        <option value="approved">Approved</option>
-                        <option value="pending">Needs review</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="confidence-filter">Confidence</label>
-                    <select id="confidence-filter" onchange="applyFilters()">
-                        <option value="">Any confidence</option>
-                        <option value="0.85">85%+</option>
-                        <option value="0.70">70%+</option>
-                        <option value="0.50">50%+</option>
                     </select>
                 </div>
                 <label class="toggle-filter">
@@ -176,7 +158,7 @@
             <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
             <div class="table-header">
                 <div>
-                    <p class="eyebrow">Peer Review</p>
+                    <p class="eyebrow">Compare</p>
                     <h2>Compare Companies</h2>
                 </div>
                 <span id="compare-count" class="result-count">Choose 2 tickers</span>
@@ -194,31 +176,7 @@
             <div id="compare-grid" class="comparison-grid"></div>
         </section>
 
-        <section id="view-quality" class="hidden">
-            <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
-            <div class="table-header">
-                <div>
-                    <p class="eyebrow">Quality Control</p>
-                    <h2>AI Review Queue</h2>
-                </div>
-                <span id="quality-count" class="result-count">0 pending</span>
-            </div>
-            <div class="quality-summary">
-                <div class="stat-card">
-                    <span class="stat-value" id="quality-approved">-</span>
-                    <span class="stat-label">Approved</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="quality-pending">-</span>
-                    <span class="stat-label">Pending AI Review</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="quality-rejected">-</span>
-                    <span class="stat-label">Rejected</span>
-                </div>
-            </div>
-            <div id="review-queue" class="review-list"></div>
-        </section>
+        <section id="view-quality" class="hidden"></section>
 
         <section id="view-companies" class="hidden">
             <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
@@ -275,7 +233,7 @@
                     <h3>Decision Brief</h3>
                     <div class="brief-grid">
                         <div><span id="brief-confidence">-</span><small>Avg Confidence</small></div>
-                        <div><span id="brief-approved">-</span><small>Approved Links</small></div>
+                        <div><span id="brief-approved">-</span><small>Tracked Links</small></div>
                         <div><span id="brief-concentration">-</span><small>Concentration</small></div>
                         <div><span id="brief-verified">-</span><small>Last Verified</small></div>
                     </div>
