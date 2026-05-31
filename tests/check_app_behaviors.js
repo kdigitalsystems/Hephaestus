@@ -110,8 +110,26 @@ vm.runInContext(`
       upstream: [{ ticker: "PRIVATE", name: "Private Vendor", type: "Logistics", confidence: 0.6, review_status: "pending" }],
       downstream: [],
     },
+    {
+      name: "Applied Materials",
+      ticker: "AMAT",
+      sector: "Technology",
+      industry: "Semiconductor Equipment",
+      connection_count: 0,
+      upstream: [],
+      downstream: [],
+    },
+    {
+      name: "International Business Machines",
+      ticker: "IBM",
+      sector: "Technology",
+      industry: "Information Technology Services",
+      connection_count: 0,
+      upstream: [],
+      downstream: [],
+    },
   ];
-  globalData = { Technology: [allCompanies[0]], Consumer: [allCompanies[1]] };
+  globalData = { Technology: [allCompanies[0], allCompanies[2], allCompanies[3]], Consumer: [allCompanies[1]] };
 `, context);
 
 vm.runInContext("globalThis.__caseInsensitiveTicker = getCompanyByTicker('amd')?.ticker;", context);
@@ -141,6 +159,21 @@ vm.runInContext("applyFilters(true); globalThis.__routeAfterPartialTicker = curr
 
 if (context.__routeAfterPartialTicker.view !== "overview" || context.__partialResults.length !== 0) {
   throw new Error(`expected partial ticker typing to stay on overview, got route ${JSON.stringify(context.__routeAfterPartialTicker)} and results ${JSON.stringify(context.__partialResults)}`);
+}
+
+element("search-input").value = "am";
+element("sector-filter").value = "";
+element("dependency-filter").value = "";
+element("connected-filter").checked = false;
+
+vm.runInContext("applyFilters(true); globalThis.__routeAfterTickerPrefix = currentRoute; globalThis.__prefixResults = currentCompaniesList.map(company => company.ticker).sort();", context);
+
+if (context.__routeAfterTickerPrefix.view !== "companies" || context.__routeAfterTickerPrefix.query !== "am") {
+  throw new Error(`expected ticker prefix search to route to companies, got ${JSON.stringify(context.__routeAfterTickerPrefix)}`);
+}
+
+if (JSON.stringify(context.__prefixResults) !== JSON.stringify(["AMAT", "AMD"])) {
+  throw new Error(`expected AM ticker prefix matches only, got ${JSON.stringify(context.__prefixResults)}`);
 }
 
 element("search-input").value = "amd";

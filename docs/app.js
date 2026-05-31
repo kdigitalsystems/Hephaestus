@@ -370,8 +370,10 @@ function applyFilters(updateRoute = true, forceShortQuery = false) {
     const dependency = document.getElementById('dependency-filter').value;
     const onlyConnected = document.getElementById('connected-filter').checked;
     const exactTicker = !sector && !dependency && !onlyConnected ? findExactTicker(query) : null;
+    const tickerPrefixSearch = !sector && !dependency && !onlyConnected && query.length >= 2 &&
+        allCompanies.some(company => (company.ticker || '').toLowerCase().startsWith(query));
 
-    if (query && query.length < 3 && !sector && !dependency && !onlyConnected && !forceShortQuery) {
+    if (query && query.length < 3 && !tickerPrefixSearch && !sector && !dependency && !onlyConnected && !forceShortQuery) {
         return;
     }
 
@@ -383,7 +385,7 @@ function applyFilters(updateRoute = true, forceShortQuery = false) {
     let results = allCompanies.filter(company => {
         const deps = [...(company.upstream || []), ...(company.downstream || [])];
         const counterpartyText = deps.map(dep => `${dep.name || ''} ${dep.ticker || ''} ${dep.product || ''} ${dep.type || ''}`).join(' ').toLowerCase();
-        const matchesQuery = !query ||
+        const matchesQuery = tickerPrefixSearch ? (company.ticker || '').toLowerCase().startsWith(query) : !query ||
             (company.name || '').toLowerCase().includes(query) ||
             (company.ticker || '').toLowerCase().includes(query) ||
             (company.sector || '').toLowerCase().includes(query) ||
