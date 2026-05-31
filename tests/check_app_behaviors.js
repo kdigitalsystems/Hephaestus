@@ -110,3 +110,14 @@ vm.runInContext("applyFilters(false); globalThis.__filteredTickers = currentComp
 if (context.__filteredTickers.length !== 1 || context.__filteredTickers[0] !== "AMD") {
   throw new Error(`expected richer search/filter to match AMD only, got ${JSON.stringify(context.__filteredTickers)}`);
 }
+
+element("search-input").value = "amd";
+element("sector-filter").value = "";
+element("dependency-filter").value = "";
+element("connected-filter").checked = false;
+
+vm.runInContext("applyFilters(true); globalThis.__routeAfterTickerSearch = currentRoute;", context);
+
+if (context.__routeAfterTickerSearch.view !== "company" || context.__routeAfterTickerSearch.ticker !== "AMD") {
+  throw new Error(`expected exact ticker search to open AMD detail, got ${JSON.stringify(context.__routeAfterTickerSearch)}`);
+}

@@ -83,6 +83,11 @@ const relationshipMatchesConfidence = (relationship, minimum) => {
     const confidence = Number(relationship.confidence);
     return !isNaN(confidence) && confidence >= Number(minimum);
 };
+const findExactTicker = (query) => {
+    const normalized = String(query || '').trim().toUpperCase();
+    if (normalized.length < 2) return null;
+    return allCompanies.find(company => String(company.ticker || '').toUpperCase() === normalized) || null;
+};
 
 function loadWatchlist() {
     try {
@@ -400,6 +405,12 @@ function applyFilters(updateRoute = true) {
     const sector = document.getElementById('sector-filter').value;
     const dependency = document.getElementById('dependency-filter').value;
     const onlyConnected = document.getElementById('connected-filter').checked;
+    const exactTicker = !sector && !dependency && !onlyConnected ? findExactTicker(query) : null;
+
+    if (exactTicker && updateRoute) {
+        navigateCompany(exactTicker.ticker);
+        return;
+    }
 
     let results = allCompanies.filter(company => {
         const deps = [...(company.upstream || []), ...(company.downstream || [])];
