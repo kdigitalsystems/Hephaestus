@@ -21,7 +21,8 @@ const makeElement = (tag, className, text) => {
 };
 
 const setText = (id, value) => {
-    document.getElementById(id).textContent = value;
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
 };
 
 const formatNum = (num, type = 'currency') => {
@@ -311,132 +312,7 @@ function showCompanies() {
 }
 
 function renderOverview() {
-    setText('stat-companies', allCompanies.length.toLocaleString());
-    setText('stat-links', Number(investorMetrics.unique_links || uniqueLinkCount()).toLocaleString());
-    setText('stat-sectors', Object.keys(globalData).length.toLocaleString());
-    renderMarketNetwork();
-}
-
-function renderMarketNetwork() {
-    const network = document.getElementById('market-network');
-    clearElement(network);
-    const leaders = (investorMetrics.most_connected || [])
-        .filter(item => item.ticker)
-        .slice(0, 6);
-
-    const core = makeElement('button', 'network-core');
-    core.type = 'button';
-    core.onclick = () => navigateCompanies({ connected: '1' });
-    core.appendChild(makeElement('strong', '', 'Research Graph'));
-    core.appendChild(makeElement('span', '', 'Explore links'));
-    network.appendChild(core);
-
-    if (!leaders.length) {
-        network.appendChild(makeElement('span', 'empty-state network-empty', 'No tracked network links available yet.'));
-        return;
-    }
-
-    leaders.forEach((item, index) => {
-        const node = makeElement('button', `network-node node-${index + 1}`);
-        node.type = 'button';
-        node.onclick = () => navigateCompany(item.ticker);
-        node.appendChild(makeElement('strong', '', item.ticker));
-        node.appendChild(makeElement('span', '', `${item.total_links} links`));
-        network.appendChild(node);
-    });
-}
-
-function renderInvestmentRadar() {
-    renderChangeSummary();
-    renderConcentrationWatch();
-}
-
-function renderChangeSummary() {
-    const container = document.getElementById('radar-changes');
-    clearElement(container);
-    const summary = investorMetrics.change_summary || {};
-    const rows = [
-        ['Net link change', summary.net_change || 0],
-        ['New relationships', summary.new_count || 0],
-        ['Removed relationships', summary.removed_count || 0],
-    ];
-    rows.forEach(([label, value]) => {
-        const row = makeElement('div', 'change-row');
-        row.appendChild(makeElement('span', '', label));
-        row.appendChild(makeElement('strong', value > 0 ? 'positive' : value < 0 ? 'negative' : '', `${value > 0 ? '+' : ''}${value}`));
-        container.appendChild(row);
-    });
-    (summary.new_links || []).slice(0, 3).forEach(link => {
-        const button = makeElement('button', 'change-link', `${link.source_ticker || '?'} -> ${link.target_ticker || '?'}: ${link.product || link.type || 'Supply Link'}`);
-        button.onclick = () => link.target_ticker ? navigateCompany(link.target_ticker) : navigateCompanies({ connected: '1' });
-        container.appendChild(button);
-    });
-    if (!(summary.new_links || []).length) {
-        container.appendChild(makeElement('span', 'empty-state', 'No new relationship changes since the last daily snapshot.'));
-    }
-}
-
-function renderQualityBars() {
-    const container = document.getElementById('radar-quality');
-    clearElement(container);
-    const rows = [
-        ['Approved', Number(investorMetrics.approved_links || 0), 'approved'],
-        ['Needs review', Number(investorMetrics.pending_links || qualityData.pending_count || 0), 'pending'],
-        ['Rejected', Number(investorMetrics.rejected_links || qualityData.rejected_count || 0), 'rejected'],
-    ];
-    const total = Math.max(rows.reduce((sum, row) => sum + row[1], 0), 1);
-
-    rows.forEach(([label, value, status]) => {
-        const row = makeElement('div', 'quality-bar-row');
-        const top = makeElement('div', 'quality-bar-top');
-        top.appendChild(makeElement('span', '', label));
-        top.appendChild(makeElement('strong', '', value.toLocaleString()));
-        row.appendChild(top);
-        const track = makeElement('div', 'quality-bar-track');
-        const fill = makeElement('span', `quality-bar-fill ${status}`);
-        fill.style.width = `${Math.max((value / total) * 100, value ? 4 : 0)}%`;
-        track.appendChild(fill);
-        row.appendChild(track);
-        container.appendChild(row);
-    });
-}
-
-function renderConcentrationWatch() {
-    const list = document.getElementById('radar-concentration');
-    clearElement(list);
-    const concentrated = investorMetrics.highest_concentration || [];
-    if (!concentrated.length) {
-        list.appendChild(makeElement('span', 'empty-state', 'No concentration signals yet.'));
-        return;
-    }
-    concentrated.slice(0, 5).forEach((item, index) => {
-        const row = makeElement('button', 'rank-item');
-        row.onclick = () => navigateCompany(item.ticker);
-        row.appendChild(makeElement('span', 'rank-index', String(index + 1)));
-        const body = makeElement('span', 'rank-body');
-        body.appendChild(makeElement('strong', '', `${item.ticker} - ${Math.round(Number(item.concentration_score || 0) * 100)}% concentrated`));
-        body.appendChild(makeElement('small', '', `${item.name} - ${item.total_links} tracked links`));
-        row.appendChild(body);
-        list.appendChild(row);
-    });
-}
-
-function renderSectorExposure() {
-    const container = document.getElementById('radar-sectors');
-    clearElement(container);
-    const sectors = investorMetrics.sector_exposure || [];
-    if (!sectors.length) {
-        container.appendChild(makeElement('span', 'empty-state', 'No sector exposure data yet.'));
-        return;
-    }
-    sectors.slice(0, 6).forEach(sector => {
-        const row = makeElement('button', 'sector-exposure-row');
-        row.onclick = () => navigateSector(sector.sector);
-        const coverage = Math.round(Number(sector.coverage || 0) * 100);
-        row.appendChild(makeElement('strong', '', sector.sector));
-        row.appendChild(makeElement('span', '', `${sector.relationship_entries} entries - ${coverage}% covered`));
-        container.appendChild(row);
-    });
+    renderLevel1();
 }
 
 function populateFilters() {

@@ -5,7 +5,7 @@ const appSource = fs.readFileSync("docs/app.js", "utf8");
 const htmlSource = fs.readFileSync("docs/index.html", "utf8");
 const elements = new Map();
 
-["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief"].forEach((label) => {
+["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief", "Investor Radar", "Investment Radar", "Decision Support"].forEach((label) => {
   if (htmlSource.includes(label)) {
     throw new Error(`public dashboard still exposes redundant/developer label: ${label}`);
   }
