@@ -463,7 +463,7 @@ h3 {
 .stat-grid,
 .quality-summary {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
 }
 
@@ -535,7 +535,7 @@ h3 {
 
 .radar-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
     gap: 14px;
 }
 
@@ -545,6 +545,10 @@ h3 {
     border: 1px solid rgba(103, 248, 223, 0.14);
     border-radius: 8px;
     background: rgba(3, 7, 13, 0.5);
+}
+
+.radar-primary {
+    min-height: 210px;
 }
 
 .radar-card-title,
@@ -647,7 +651,7 @@ h3 {
 
 .control-panel {
     display: grid;
-    grid-template-columns: minmax(260px, 1.2fr) minmax(160px, 0.6fr) minmax(190px, 0.7fr) minmax(150px, 0.55fr) minmax(150px, 0.55fr) auto;
+    grid-template-columns: minmax(300px, 1fr) minmax(180px, 230px) minmax(210px, 280px) auto;
     gap: 12px;
     align-items: end;
     margin: 18px 0 34px;
@@ -1006,9 +1010,6 @@ tbody tr:hover {
 }
 
 .story-panel {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 20px;
     padding: 22px;
     margin-bottom: 20px;
 }

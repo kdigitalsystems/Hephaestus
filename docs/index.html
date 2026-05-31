@@ -7,8 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260525-investor2">
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <link rel="stylesheet" href="styles.css?v=20260525-investor3">
 </head>
 <body>
     <header class="topbar">
@@ -24,70 +23,12 @@
             <button class="topbar-link" data-nav="companies" onclick="navigateCompanies()">Screener</button>
             <button class="topbar-link" data-nav="watchlist" onclick="navigateWatchlist()">Watchlist</button>
             <button class="topbar-link" data-nav="compare" onclick="navigateCompare()">Compare</button>
-            <button class="topbar-link" data-nav="quality" onclick="navigateQuality()">Review Queue</button>
             <div id="last-updated" class="sync-status">Updating...</div>
         </div>
     </header>
 
     <main class="container">
         <section id="view-industries">
-            <div class="overview-panel">
-                <div>
-                    <p class="eyebrow">Investor Radar</p>
-                    <h1>Supply-chain intelligence for public-market decisions.</h1>
-                    <p class="intro-copy">Research public companies by supplier/customer dependency, review confidence, and operational exposure. Hephaestus turns reviewed supply-chain links into a faster equity research workflow.</p>
-                </div>
-                <div class="hero-intel">
-                    <div id="market-network" class="market-network" aria-label="Top supply-chain network preview"></div>
-                    <div class="stat-grid">
-                        <div class="stat-card">
-                            <span class="stat-value" id="stat-companies">-</span>
-                            <span class="stat-label">Companies</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-value" id="stat-links">-</span>
-                            <span class="stat-label">Supply Links</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-value" id="stat-sectors">-</span>
-                            <span class="stat-label">Sectors</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-value" id="stat-connected">-</span>
-                            <span class="stat-label">Most Connected</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <section class="radar-panel">
-                <div class="section-heading">
-                    <div>
-                        <p class="eyebrow">Decision Support</p>
-                        <h2>Investment Radar</h2>
-                    </div>
-                    <span id="radar-freshness" class="result-count">Awaiting data</span>
-                </div>
-                <div class="radar-grid">
-                    <article class="radar-card">
-                        <div class="radar-card-title">Link Quality</div>
-                        <div id="radar-quality" class="quality-bars"></div>
-                    </article>
-                    <article class="radar-card">
-                        <div class="radar-card-title">What Changed</div>
-                        <div id="radar-changes" class="change-list"></div>
-                    </article>
-                    <article class="radar-card">
-                        <div class="radar-card-title">Concentration Watch</div>
-                        <div id="radar-concentration" class="rank-list compact"></div>
-                    </article>
-                    <article class="radar-card">
-                        <div class="radar-card-title">Sector Exposure</div>
-                        <div id="radar-sectors" class="sector-exposure"></div>
-                    </article>
-                </div>
-            </section>
-
             <section class="control-panel">
                 <div class="search-group">
                     <label for="search-input">Search</label>
@@ -105,44 +46,18 @@
                         <option value="">All dependency types</option>
                     </select>
                 </div>
-                <div class="filter-group">
-                    <label for="status-filter">Review Status</label>
-                    <select id="status-filter" onchange="applyFilters()">
-                        <option value="">All statuses</option>
-                        <option value="approved">Approved</option>
-                        <option value="pending">Needs review</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="confidence-filter">Confidence</label>
-                    <select id="confidence-filter" onchange="applyFilters()">
-                        <option value="">Any confidence</option>
-                        <option value="0.85">85%+</option>
-                        <option value="0.70">70%+</option>
-                        <option value="0.50">50%+</option>
-                    </select>
-                </div>
                 <label class="toggle-filter">
                     <input type="checkbox" id="connected-filter" onchange="applyFilters()">
                     <span>Has supply-chain data</span>
                 </label>
             </section>
 
-            <section class="insight-grid">
-                <div class="insight-panel">
-                    <div class="section-heading">
-                        <p class="eyebrow">Explore</p>
-                        <h2>Macro Sectors</h2>
-                    </div>
-                    <div class="grid" id="industry-grid"></div>
+            <section class="insight-panel">
+                <div class="section-heading">
+                    <p class="eyebrow">Explore</p>
+                    <h2>Macro Sectors</h2>
                 </div>
-                <div class="insight-panel">
-                    <div class="section-heading">
-                        <p class="eyebrow">Signals</p>
-                        <h2>Most Connected</h2>
-                    </div>
-                    <div id="connected-list" class="rank-list"></div>
-                </div>
+                <div class="grid" id="industry-grid"></div>
             </section>
         </section>
 
@@ -159,10 +74,25 @@
             <div class="dashboard-grid">
                 <section class="metrics-section full-width">
                     <div class="section-heading">
-                        <p class="eyebrow">Top Signals</p>
-                        <h3>Sector Research Queue</h3>
+                        <p class="eyebrow">All Companies</p>
+                        <h3>Sector Constituents</h3>
                     </div>
-                    <div id="sector-leaders" class="comparison-grid"></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Symbol</th>
+                                    <th>Price</th>
+                                    <th>% Change</th>
+                                    <th>Market Cap</th>
+                                    <th>Links</th>
+                                    <th>P/E</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sector-company-table-body"></tbody>
+                        </table>
+                    </div>
                 </section>
             </div>
         </section>
@@ -183,7 +113,7 @@
             <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
             <div class="table-header">
                 <div>
-                    <p class="eyebrow">Peer Review</p>
+                    <p class="eyebrow">Compare</p>
                     <h2>Compare Companies</h2>
                 </div>
                 <span id="compare-count" class="result-count">Choose 2 tickers</span>
@@ -201,31 +131,7 @@
             <div id="compare-grid" class="comparison-grid"></div>
         </section>
 
-        <section id="view-quality" class="hidden">
-            <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
-            <div class="table-header">
-                <div>
-                    <p class="eyebrow">Quality Control</p>
-                    <h2>AI Review Queue</h2>
-                </div>
-                <span id="quality-count" class="result-count">0 pending</span>
-            </div>
-            <div class="quality-summary">
-                <div class="stat-card">
-                    <span class="stat-value" id="quality-approved">-</span>
-                    <span class="stat-label">Approved</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="quality-pending">-</span>
-                    <span class="stat-label">Pending AI Review</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="quality-rejected">-</span>
-                    <span class="stat-label">Rejected</span>
-                </div>
-            </div>
-            <div id="review-queue" class="review-list"></div>
-        </section>
+        <section id="view-quality" class="hidden"></section>
 
         <section id="view-companies" class="hidden">
             <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
@@ -275,26 +181,18 @@
                     <h3 id="detail-story-title">Supply-chain context</h3>
                     <p id="detail-story">Select a company to inspect its tracked dependencies.</p>
                 </div>
-                <div class="story-metrics">
-                    <div><span id="detail-up-count">0</span><small>Suppliers</small></div>
-                    <div><span id="detail-down-count">0</span><small>Customers</small></div>
-                    <div><span id="detail-link-count">0</span><small>Total Links</small></div>
-                </div>
             </section>
-
-            <div class="chart-wrapper" id="tv_chart_container"></div>
 
             <div class="dashboard-grid">
                 <section class="metrics-section">
                     <h3>Decision Brief</h3>
                     <div class="brief-grid">
-                        <div><span id="brief-confidence">-</span><small>Avg Confidence</small></div>
-                        <div><span id="brief-approved">-</span><small>Approved Links</small></div>
+                        <div><span id="brief-confidence">-</span><small>Suppliers</small></div>
+                        <div><span id="brief-approved">-</span><small>Customers</small></div>
                         <div><span id="brief-concentration">-</span><small>Concentration</small></div>
-                        <div><span id="brief-verified">-</span><small>Last Verified</small></div>
+                        <div><span id="brief-verified">-</span><small>Risk</small></div>
                     </div>
                     <div id="detail-risk-badges" class="badge-row"></div>
-                    <div id="risk-bars" class="quality-bars risk-bars"></div>
                     <div id="detail-related" class="related-links"></div>
                 </section>
 
@@ -343,7 +241,6 @@
                         <h3>Interactive Supply Chain Graph</h3>
                     </div>
                     <div id="supply-graph" class="supply-graph"></div>
-                    <div id="supply-map" class="supply-map"></div>
                 </section>
 
                 <section class="metrics-section full-width">
@@ -372,6 +269,6 @@
         </section>
     </div>
 
-    <script src="app.js?v=20260525-investor2"></script>
+    <script src="app.js?v=20260525-investor3"></script>
 </body>
 </html>

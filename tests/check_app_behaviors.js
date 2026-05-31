@@ -2,7 +2,14 @@ const fs = require("fs");
 const vm = require("vm");
 
 const appSource = fs.readFileSync("docs/app.js", "utf8");
+const htmlSource = fs.readFileSync("docs/index.html", "utf8");
 const elements = new Map();
+
+["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief", "Investor Radar", "Investment Radar", "Decision Support"].forEach((label) => {
+  if (htmlSource.includes(label)) {
+    throw new Error(`public dashboard still exposes redundant/developer label: ${label}`);
+  }
+});
 
 function element(id) {
   if (!elements.has(id)) {
@@ -63,12 +70,10 @@ const roundTrip = context.hashToRoute(context.routeToHash({
   view: "companies",
   query: "tsm",
   sector: "Technology",
-  status: "approved",
-  confidence: "0.85",
   connected: "1",
 }));
 
-if (roundTrip.view !== "companies" || roundTrip.query !== "tsm" || roundTrip.status !== "approved" || roundTrip.confidence !== "0.85") {
+if (roundTrip.view !== "companies" || roundTrip.query !== "tsm" || roundTrip.sector !== "Technology" || roundTrip.connected !== "1") {
   throw new Error(`route round-trip failed: ${JSON.stringify(roundTrip)}`);
 }
 
@@ -98,8 +103,6 @@ vm.runInContext(`
 element("search-input").value = "taiwan";
 element("sector-filter").value = "";
 element("dependency-filter").value = "";
-element("status-filter").value = "approved";
-element("confidence-filter").value = "0.85";
 element("connected-filter").checked = true;
 
 vm.runInContext("applyFilters(false); globalThis.__filteredTickers = currentCompaniesList.map(company => company.ticker);", context);

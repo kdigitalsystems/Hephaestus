@@ -215,14 +215,14 @@ HEPHAESTUS_EXPORT_AI_RESEARCH=1 python3 backend/export.py
 
 Use that mode only after reviewing the generated relationships; LLM extraction can create plausible but wrong links.
 
-The exported dashboard also includes a review summary. Visit `#quality` in the static app, or click `Review Queue`, to see pending AI edges and the review commands for each one.
+The exported dashboard includes review metadata for CI and maintainer workflows, but the public UI intentionally keeps approval/rejection details out of the main experience.
 
 The dashboard payload also includes investor-facing derived metrics:
 
 - `investor_metrics.unique_links`, `approved_links`, `pending_links`, and `sector_exposure` summarize the published graph.
 - Each company has `investor_metrics` with upstream/downstream counts, approval counts, top counterparties, average confidence, concentration score, explainable risk scores, and last verified date.
 - `docs/link_history.json` keeps one rolling snapshot per UTC date of published relationship keys so the dashboard can show what changed between daily runs without adding duplicate same-day snapshots.
-- The static UI uses those fields for the Investment Radar, richer search filters, watchlist cards, comparison views, trust badges, source/evidence modals, sector pages, and company Decision Briefs.
+- The static UI uses those fields for search filters, watchlist cards, comparison views, source/evidence modals, sector pages, and company Decision Briefs.
 
 The risk scores are intentionally simple and explainable:
 

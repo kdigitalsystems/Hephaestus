@@ -21,7 +21,8 @@ const makeElement = (tag, className, text) => {
 };
 
 const setText = (id, value) => {
-    document.getElementById(id).textContent = value;
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
 };
 
 const formatNum = (num, type = 'currency') => {
@@ -152,8 +153,6 @@ function resetDashboard() {
     document.getElementById('search-input').value = '';
     document.getElementById('sector-filter').value = '';
     document.getElementById('dependency-filter').value = '';
-    document.getElementById('status-filter').value = '';
-    document.getElementById('confidence-filter').value = '';
     document.getElementById('connected-filter').checked = false;
     currentCompaniesList = [];
     currentTitle = 'Companies';
@@ -257,15 +256,13 @@ function applyRoute(route) {
         document.getElementById('search-input').value = route.query || '';
         document.getElementById('sector-filter').value = route.sector || '';
         document.getElementById('dependency-filter').value = route.dependency || '';
-        document.getElementById('status-filter').value = route.status || '';
-        document.getElementById('confidence-filter').value = route.confidence || '';
         document.getElementById('connected-filter').checked = route.connected === '1';
         applyFilters(false);
         return;
     }
 
     if (route.view === 'quality') {
-        renderQualityView();
+        setRoute({ view: 'overview' }, false);
         return;
     }
 
@@ -315,138 +312,7 @@ function showCompanies() {
 }
 
 function renderOverview() {
-    const mostConnected = [...allCompanies].sort((a, b) => b.connection_count - a.connection_count)[0];
-
-    setText('stat-companies', allCompanies.length.toLocaleString());
-    setText('stat-links', Number(investorMetrics.unique_links || uniqueLinkCount()).toLocaleString());
-    setText('stat-sectors', Object.keys(globalData).length.toLocaleString());
-    setText('stat-connected', mostConnected?.ticker || 'N/A');
-    setText('radar-freshness', getLastUpdatedLabel());
-    renderMarketNetwork();
-    renderInvestmentRadar();
-    renderConnectedList();
-}
-
-function renderMarketNetwork() {
-    const network = document.getElementById('market-network');
-    clearElement(network);
-    const leaders = (investorMetrics.most_connected || [])
-        .filter(item => item.ticker)
-        .slice(0, 6);
-
-    const core = makeElement('button', 'network-core');
-    core.type = 'button';
-    core.onclick = () => navigateCompanies({ connected: '1' });
-    core.appendChild(makeElement('strong', '', 'Supply Links'));
-    core.appendChild(makeElement('span', '', `${Number(investorMetrics.unique_links || uniqueLinkCount()).toLocaleString()} tracked`));
-    network.appendChild(core);
-
-    if (!leaders.length) {
-        network.appendChild(makeElement('span', 'empty-state network-empty', 'No reviewed network links available yet.'));
-        return;
-    }
-
-    leaders.forEach((item, index) => {
-        const node = makeElement('button', `network-node node-${index + 1}`);
-        node.type = 'button';
-        node.onclick = () => navigateCompany(item.ticker);
-        node.appendChild(makeElement('strong', '', item.ticker));
-        node.appendChild(makeElement('span', '', `${item.total_links} links`));
-        network.appendChild(node);
-    });
-}
-
-function renderInvestmentRadar() {
-    renderQualityBars();
-    renderChangeSummary();
-    renderConcentrationWatch();
-    renderSectorExposure();
-}
-
-function renderChangeSummary() {
-    const container = document.getElementById('radar-changes');
-    clearElement(container);
-    const summary = investorMetrics.change_summary || {};
-    const rows = [
-        ['Net change', summary.net_change || 0],
-        ['New links', summary.new_count || 0],
-        ['Removed links', summary.removed_count || 0],
-        ['Changed confidence/status', summary.changed_count || 0],
-    ];
-    rows.forEach(([label, value]) => {
-        const row = makeElement('div', 'change-row');
-        row.appendChild(makeElement('span', '', label));
-        row.appendChild(makeElement('strong', value > 0 ? 'positive' : value < 0 ? 'negative' : '', `${value > 0 ? '+' : ''}${value}`));
-        container.appendChild(row);
-    });
-    (summary.new_links || []).slice(0, 3).forEach(link => {
-        const button = makeElement('button', 'change-link', `${link.source_ticker || '?'} -> ${link.target_ticker || '?'}: ${link.product || link.type || 'Supply Link'}`);
-        button.onclick = () => link.target_ticker ? navigateCompany(link.target_ticker) : navigateCompanies({ connected: '1' });
-        container.appendChild(button);
-    });
-}
-
-function renderQualityBars() {
-    const container = document.getElementById('radar-quality');
-    clearElement(container);
-    const rows = [
-        ['Approved', Number(investorMetrics.approved_links || 0), 'approved'],
-        ['Needs review', Number(investorMetrics.pending_links || qualityData.pending_count || 0), 'pending'],
-        ['Rejected', Number(investorMetrics.rejected_links || qualityData.rejected_count || 0), 'rejected'],
-    ];
-    const total = Math.max(rows.reduce((sum, row) => sum + row[1], 0), 1);
-
-    rows.forEach(([label, value, status]) => {
-        const row = makeElement('div', 'quality-bar-row');
-        const top = makeElement('div', 'quality-bar-top');
-        top.appendChild(makeElement('span', '', label));
-        top.appendChild(makeElement('strong', '', value.toLocaleString()));
-        row.appendChild(top);
-        const track = makeElement('div', 'quality-bar-track');
-        const fill = makeElement('span', `quality-bar-fill ${status}`);
-        fill.style.width = `${Math.max((value / total) * 100, value ? 4 : 0)}%`;
-        track.appendChild(fill);
-        row.appendChild(track);
-        container.appendChild(row);
-    });
-}
-
-function renderConcentrationWatch() {
-    const list = document.getElementById('radar-concentration');
-    clearElement(list);
-    const concentrated = investorMetrics.highest_concentration || [];
-    if (!concentrated.length) {
-        list.appendChild(makeElement('span', 'empty-state', 'No concentration signals yet.'));
-        return;
-    }
-    concentrated.slice(0, 5).forEach((item, index) => {
-        const row = makeElement('button', 'rank-item');
-        row.onclick = () => navigateCompany(item.ticker);
-        row.appendChild(makeElement('span', 'rank-index', String(index + 1)));
-        const body = makeElement('span', 'rank-body');
-        body.appendChild(makeElement('strong', '', `${item.ticker} - ${Math.round(Number(item.concentration_score || 0) * 100)}% concentrated`));
-        body.appendChild(makeElement('small', '', `${item.name} - ${item.total_links} tracked links`));
-        row.appendChild(body);
-        list.appendChild(row);
-    });
-}
-
-function renderSectorExposure() {
-    const container = document.getElementById('radar-sectors');
-    clearElement(container);
-    const sectors = investorMetrics.sector_exposure || [];
-    if (!sectors.length) {
-        container.appendChild(makeElement('span', 'empty-state', 'No sector exposure data yet.'));
-        return;
-    }
-    sectors.slice(0, 6).forEach(sector => {
-        const row = makeElement('button', 'sector-exposure-row');
-        row.onclick = () => navigateSector(sector.sector);
-        const coverage = Math.round(Number(sector.coverage || 0) * 100);
-        row.appendChild(makeElement('strong', '', sector.sector));
-        row.appendChild(makeElement('span', '', `${sector.relationship_entries} entries - ${coverage}% covered`));
-        container.appendChild(row);
-    });
+    renderLevel1();
 }
 
 function populateFilters() {
@@ -533,8 +399,6 @@ function applyFilters(updateRoute = true) {
     const query = document.getElementById('search-input').value.toLowerCase().trim();
     const sector = document.getElementById('sector-filter').value;
     const dependency = document.getElementById('dependency-filter').value;
-    const status = document.getElementById('status-filter').value;
-    const confidence = document.getElementById('confidence-filter').value;
     const onlyConnected = document.getElementById('connected-filter').checked;
 
     let results = allCompanies.filter(company => {
@@ -548,10 +412,8 @@ function applyFilters(updateRoute = true) {
             counterpartyText.includes(query);
         const matchesSector = !sector || company.sector === sector;
         const matchesDependency = !dependency || deps.some(dep => dep.type === dependency);
-        const matchesStatus = !status || deps.some(dep => relationshipMatchesStatus(dep, status));
-        const matchesConfidence = !confidence || deps.some(dep => relationshipMatchesConfidence(dep, confidence));
         const matchesConnected = !onlyConnected || company.connection_count > 0;
-        return matchesQuery && matchesSector && matchesDependency && matchesStatus && matchesConfidence && matchesConnected;
+        return matchesQuery && matchesSector && matchesDependency && matchesConnected;
     });
 
     currentCompaniesList = results;
@@ -565,8 +427,6 @@ function applyFilters(updateRoute = true) {
             query,
             sector,
             dependency,
-            status,
-            confidence,
             connected: onlyConnected ? '1' : ''
         }, shouldPush);
     }
@@ -617,22 +477,26 @@ function renderLevel2() {
     }
 
     companies.forEach(company => {
-        const tr = document.createElement('tr');
-        tr.onclick = () => navigateCompany(company.ticker);
-
-        const changeClass = company.change >= 0 ? 'positive' : 'negative';
-        const sign = company.change > 0 ? '+' : '';
-        const nameCell = makeElement('td', 'company-cell', company.name || '');
-
-        tr.appendChild(nameCell);
-        tr.appendChild(makeElement('td', '', company.ticker || ''));
-        tr.appendChild(makeElement('td', '', `$${(company.price || 0).toFixed(2)}`));
-        tr.appendChild(makeElement('td', changeClass, `${sign}${(company.change || 0).toFixed(2)}%`));
-        tr.appendChild(makeElement('td', '', formatNum(company.market_cap)));
-        tr.appendChild(makeElement('td', '', String(company.connection_count || 0)));
-        tr.appendChild(makeElement('td', '', formatNum(company.trailing_pe, 'ratio')));
-        tbody.appendChild(tr);
+        tbody.appendChild(renderCompanyTableRow(company));
     });
+}
+
+function renderCompanyTableRow(company) {
+    const tr = document.createElement('tr');
+    tr.onclick = () => navigateCompany(company.ticker);
+
+    const changeClass = company.change >= 0 ? 'positive' : 'negative';
+    const sign = company.change > 0 ? '+' : '';
+    const nameCell = makeElement('td', 'company-cell', company.name || '');
+
+    tr.appendChild(nameCell);
+    tr.appendChild(makeElement('td', '', company.ticker || ''));
+    tr.appendChild(makeElement('td', '', `$${(company.price || 0).toFixed(2)}`));
+    tr.appendChild(makeElement('td', changeClass, `${sign}${(company.change || 0).toFixed(2)}%`));
+    tr.appendChild(makeElement('td', '', formatNum(company.market_cap)));
+    tr.appendChild(makeElement('td', '', String(company.connection_count || 0)));
+    tr.appendChild(makeElement('td', '', formatNum(company.trailing_pe, 'ratio')));
+    return tr;
 }
 
 function renderQualityView() {
@@ -717,10 +581,8 @@ function renderLevel3(company, previousRoute = null) {
 
     renderStory(company);
     renderDecisionBrief(company);
-    renderChart(company);
     renderMetrics(company);
     renderSupplyGraph(company);
-    renderSupplyMap(company);
     renderXRay(company);
 }
 
@@ -731,16 +593,11 @@ function renderStory(company) {
     const primaryCustomer = downstream[0]?.name;
     const metrics = companyMetrics(company);
 
-    setText('detail-up-count', upstream.length);
-    setText('detail-down-count', downstream.length);
-    setText('detail-link-count', upstream.length + downstream.length);
     setText('detail-story-title', `${company.ticker || company.name} dependency snapshot`);
 
     let story = `${company.name} has ${upstream.length} tracked upstream supplier relationship${upstream.length === 1 ? '' : 's'} and ${downstream.length} tracked downstream customer relationship${downstream.length === 1 ? '' : 's'}.`;
     if (primarySupplier) story += ` Its upstream exposure includes ${primarySupplier}.`;
     if (primaryCustomer) story += ` Its downstream exposure includes ${primaryCustomer}.`;
-    if (metrics.approved_count) story += ` ${metrics.approved_count} relationship${metrics.approved_count === 1 ? ' is' : 's are'} approved or manually reviewed.`;
-    if (metrics.pending_count) story += ` ${metrics.pending_count} relationship${metrics.pending_count === 1 ? ' still needs' : 's still need'} review before being treated as high-confidence research input.`;
     if (!upstream.length && !downstream.length) story += ' This company is a good candidate for the next discovery pass.';
     setText('detail-story', story);
 }
@@ -750,21 +607,14 @@ function renderDecisionBrief(company) {
     const watchButton = document.getElementById('watchlist-toggle');
     watchButton.textContent = watchlist.has(company.ticker) ? 'Tracking' : 'Track';
     watchButton.classList.toggle('active', watchlist.has(company.ticker));
-    setText('brief-confidence', formatConfidence(metrics.average_confidence));
-    setText('brief-approved', Number(metrics.approved_count || 0).toLocaleString());
+    setText('brief-confidence', Number(metrics.upstream_count || 0).toLocaleString());
+    setText('brief-approved', Number(metrics.downstream_count || 0).toLocaleString());
     setText('brief-concentration', `${Math.round(Number(metrics.concentration_score || 0) * 100)}%`);
-    setText('brief-verified', formatDateLabel(metrics.last_verified));
+    setText('brief-verified', `${Number(metrics.risk_score || 0)}/100`);
 
     const badges = document.getElementById('detail-risk-badges');
     clearElement(badges);
-    const addBadge = (label, className = '') => badges.appendChild(makeElement('span', `trust-badge ${className}`, label));
-    if (metrics.approved_count) addBadge(`${metrics.approved_count} approved`, 'approved');
-    if (metrics.pending_count) addBadge(`${metrics.pending_count} needs review`, 'pending');
-    if (metrics.manual_count) addBadge(`${metrics.manual_count} manual`, 'manual');
-    if (metrics.ai_research_count) addBadge(`${metrics.ai_research_count} AI reviewed`, 'ai');
-    if (!metrics.total_links) addBadge('Discovery candidate', 'pending');
-
-    renderRiskBars(metrics);
+    if (!metrics.total_links) badges.appendChild(makeElement('span', 'trust-badge pending', 'Discovery candidate'));
 
     const related = document.getElementById('detail-related');
     clearElement(related);
@@ -787,29 +637,6 @@ function renderDecisionBrief(company) {
         chips.appendChild(chip);
     });
     related.appendChild(chips);
-}
-
-function renderRiskBars(metrics) {
-    const container = document.getElementById('risk-bars');
-    clearElement(container);
-    [
-        ['Risk score', metrics.risk_score || 0, 'rejected'],
-        ['Supplier risk', metrics.supplier_risk || 0, 'pending'],
-        ['Customer risk', metrics.customer_risk || 0, 'approved'],
-        ['Review completeness', metrics.review_score || 0, 'approved'],
-    ].forEach(([label, value, className]) => {
-        const row = makeElement('div', 'quality-bar-row');
-        const top = makeElement('div', 'quality-bar-top');
-        top.appendChild(makeElement('span', '', label));
-        top.appendChild(makeElement('strong', '', `${value}/100`));
-        row.appendChild(top);
-        const track = makeElement('div', 'quality-bar-track');
-        const fill = makeElement('span', `quality-bar-fill ${className}`);
-        fill.style.width = `${Math.max(Number(value || 0), 2)}%`;
-        track.appendChild(fill);
-        row.appendChild(track);
-        container.appendChild(row);
-    });
 }
 
 function toggleCurrentWatchlist() {
@@ -935,7 +762,7 @@ function renderSupplyGraph(company) {
         node.style.left = direction === 'upstream' ? '9%' : '74%';
         node.type = 'button';
         node.appendChild(makeElement('strong', '', dep.ticker || dep.name || 'N/A'));
-        node.appendChild(makeElement('span', '', `${formatConfidence(dep.confidence)} ${statusLabel(relationshipStatus(dep))}`));
+        node.appendChild(makeElement('span', '', dep.product || dep.type || 'Supply Link'));
         node.onclick = () => getCompanyByTicker(dep.ticker) ? navigateCompany(dep.ticker) : openEvidenceModal(dep, company, direction);
         graph.appendChild(node);
         const line = makeElement('span', `graph-line ${direction} status-${relationshipStatus(dep)}`);
@@ -1000,22 +827,6 @@ function renderXRay(company) {
             card.appendChild(makeElement('div', 'relationship-product', dep.product));
         }
 
-        const meta = makeElement('div', 'relationship-meta');
-        const confidence = dep.confidence === null || dep.confidence === undefined ? 'N/A' : `${Math.round(Number(dep.confidence) * 100)}%`;
-        meta.appendChild(makeElement('span', `source-badge ${relationshipStatus(dep)}`, statusLabel(relationshipStatus(dep))));
-        meta.appendChild(makeElement('span', 'source-badge', dep.source_type || 'Source'));
-        meta.appendChild(makeElement('span', '', `Confidence ${confidence}`));
-        meta.appendChild(makeElement('span', '', `Verified ${dep.last_verified || 'N/A'}`));
-        if (dep.source && /^https?:\/\//i.test(dep.source)) {
-            const sourceLink = makeElement('a', 'source-link', 'Source');
-            sourceLink.href = dep.source;
-            sourceLink.target = '_blank';
-            sourceLink.rel = 'noopener noreferrer';
-            sourceLink.onclick = event => event.stopPropagation();
-            meta.appendChild(sourceLink);
-        }
-        card.appendChild(meta);
-
         if (dep.evidence_excerpt) {
             card.appendChild(makeElement('p', 'relationship-evidence', dep.evidence_excerpt));
         }
@@ -1028,6 +839,14 @@ function renderXRay(company) {
             openEvidenceModal(dep, getCompanyByTicker(currentRoute.ticker) || {}, directionClass);
         };
         actions.appendChild(evidenceButton);
+        if (dep.source && /^https?:\/\//i.test(dep.source)) {
+            const sourceLink = makeElement('a', 'mini-button', 'Source');
+            sourceLink.href = dep.source;
+            sourceLink.target = '_blank';
+            sourceLink.rel = 'noopener noreferrer';
+            sourceLink.onclick = event => event.stopPropagation();
+            actions.appendChild(sourceLink);
+        }
         if (linkedCompany) {
             const compareButton = makeElement('button', 'mini-button', 'Compare');
             compareButton.type = 'button';
@@ -1078,10 +897,6 @@ function openEvidenceModal(dep, company = {}, direction = '') {
         ['Counterparty', `${dep.name || 'Unknown'} ${dep.ticker ? `(${dep.ticker})` : ''}`],
         ['Relationship', dep.type || 'Supply Link'],
         ['Product / service', dep.product || 'N/A'],
-        ['Review status', statusLabel(relationshipStatus(dep))],
-        ['Confidence', formatConfidence(dep.confidence)],
-        ['Source type', dep.source_type || 'Source'],
-        ['Last verified', dep.last_verified || 'N/A'],
     ].forEach(([label, value]) => {
         const row = makeElement('div', 'modal-row');
         row.appendChild(makeElement('span', '', label));
@@ -1136,7 +951,7 @@ function renderCompanySignalCard(company) {
     header.appendChild(makeElement('strong', '', `${company.ticker} - ${company.name}`));
     header.appendChild(makeElement('span', 'source-badge pending', `Risk ${metrics.risk_score}/100`));
     card.appendChild(header);
-    card.appendChild(makeElement('p', '', `${metrics.total_links} links, ${metrics.approved_count} approved, ${metrics.pending_count} needing review.`));
+    card.appendChild(makeElement('p', '', `${metrics.total_links} tracked links, supplier risk ${metrics.supplier_risk}/100, customer risk ${metrics.customer_risk}/100.`));
     const actions = makeElement('div', 'relationship-actions');
     const open = makeElement('button', 'mini-button', 'Open brief');
     open.onclick = () => navigateCompany(company.ticker);
@@ -1159,11 +974,11 @@ function renderSectorView(sector) {
     setText('sector-count', `${companies.length.toLocaleString()} companies`);
     const summary = document.getElementById('sector-summary');
     clearElement(summary);
-    const approved = linked.reduce((sum, company) => sum + (companyMetrics(company).approved_count || 0), 0);
+    const sectorLinks = linked.reduce((sum, company) => sum + (companyMetrics(company).total_links || 0), 0);
     [
         ['Companies', companies.length],
         ['Linked companies', linked.length],
-        ['Approved links', approved],
+        ['Supply links', sectorLinks],
         ['Avg risk', linked.length ? Math.round(linked.reduce((sum, company) => sum + companyMetrics(company).risk_score, 0) / linked.length) : 0],
     ].forEach(([label, value]) => {
         const card = makeElement('article', 'radar-card');
@@ -1171,12 +986,15 @@ function renderSectorView(sector) {
         card.appendChild(makeElement('span', 'stat-value', value.toLocaleString()));
         summary.appendChild(card);
     });
-    const leaders = document.getElementById('sector-leaders');
-    clearElement(leaders);
-    linked
-        .sort((a, b) => relationshipCount(b) - relationshipCount(a))
-        .slice(0, 12)
-        .forEach(company => leaders.appendChild(renderCompanySignalCard(company)));
+    const tbody = document.getElementById('sector-company-table-body');
+    clearElement(tbody);
+    companies
+        .sort((a, b) => {
+            const capA = Number(a.market_cap || 0);
+            const capB = Number(b.market_cap || 0);
+            return capB - capA;
+        })
+        .forEach(company => tbody.appendChild(renderCompanyTableRow(company)));
 }
 
 function renderCompareView(updateRoute = true) {
@@ -1192,7 +1010,7 @@ function renderCompareView(updateRoute = true) {
     const grid = document.getElementById('compare-grid');
     clearElement(grid);
     if (!companies.length) {
-        grid.appendChild(makeElement('span', 'empty-state', 'Enter two tickers to compare valuation context, supply-chain risk, and relationship quality.'));
+        grid.appendChild(makeElement('span', 'empty-state', 'Enter two tickers to compare valuation context and supply-chain risk.'));
         return;
     }
     companies.forEach(company => {
@@ -1205,8 +1023,6 @@ function renderCompareView(updateRoute = true) {
             ['Risk score', `${metrics.risk_score}/100`],
             ['Supplier risk', `${metrics.supplier_risk}/100`],
             ['Customer risk', `${metrics.customer_risk}/100`],
-            ['Review completeness', `${metrics.review_score}/100`],
-            ['Avg confidence', formatConfidence(metrics.average_confidence)],
             ['Top supplier', metrics.top_upstream?.[0]?.ticker || 'N/A'],
             ['Top customer', metrics.top_downstream?.[0]?.ticker || 'N/A'],
         ];
