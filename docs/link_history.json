@@ -2640,13 +2640,13 @@
     }
   },
   {
-    "generated_at": "2026-05-31T04:20:16+00:00",
+    "generated_at": "2026-05-31T10:38:10+00:00",
     "generated_on": "2026-05-31",
-    "unique_links": 362,
-    "approved_links": 362,
+    "unique_links": 374,
+    "approved_links": 374,
     "pending_links": 0,
     "rejected_links": 0,
-    "linked_companies": 341,
+    "linked_companies": 352,
     "links": {
       "AA->F:MATERIAL SUPPLIER": {
         "relationship_key": "AA->F:MATERIAL SUPPLIER",
@@ -2657,7 +2657,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AA->HWM:RAW MATERIALS": {
         "relationship_key": "AA->HWM:RAW MATERIALS",
@@ -2668,7 +2668,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AAPL->MRVL:WI-FI CHIP SUPPLIER": {
         "relationship_key": "AAPL->MRVL:WI-FI CHIP SUPPLIER",
@@ -2679,7 +2679,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AAPL->TTMI:PCBS": {
         "relationship_key": "AAPL->TTMI:PCBS",
@@ -2690,7 +2690,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ABBV->GMAB:MANUFACTURING/MARKETING": {
         "relationship_key": "ABBV->GMAB:MANUFACTURING/MARKETING",
@@ -2701,7 +2701,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ACI->SBUX:COFFEE SERVICE PROVIDER": {
         "relationship_key": "ACI->SBUX:COFFEE SERVICE PROVIDER",
@@ -2712,7 +2712,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ACIW->HP:UNCLEAR OPERATIONAL DEPENDENCY": {
         "relationship_key": "ACIW->HP:UNCLEAR OPERATIONAL DEPENDENCY",
@@ -2723,7 +2723,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ACN->AVGO:CYBERSECURITY SERVICES DIVISION": {
         "relationship_key": "ACN->AVGO:CYBERSECURITY SERVICES DIVISION",
@@ -2734,7 +2734,18 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "ADM->BG:GRAIN SUPPLY": {
+        "relationship_key": "ADM->BG:GRAIN SUPPLY",
+        "source_ticker": "ADM",
+        "target_ticker": "BG",
+        "type": "Grain Supply",
+        "product": "Agricultural Commodities",
+        "review_status": "approved",
+        "confidence": 0.85,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "AER->AMZN:CARGO LEASING": {
         "relationship_key": "AER->AMZN:CARGO LEASING",
@@ -2745,7 +2756,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AKAM->LUMN:CDN SERVICES": {
         "relationship_key": "AKAM->LUMN:CDN SERVICES",
@@ -2756,7 +2767,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AM->AR:MIDSTREAM OPERATIONS AFFILIATE": {
         "relationship_key": "AM->AR:MIDSTREAM OPERATIONS AFFILIATE",
@@ -2767,7 +2778,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AMCR->CRH:UNKNOWN": {
         "relationship_key": "AMCR->CRH:UNKNOWN",
@@ -2778,7 +2789,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AMD->SMCI:SERVER PROCESSORS": {
         "relationship_key": "AMD->SMCI:SERVER PROCESSORS",
@@ -2789,7 +2800,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "Manual / AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AMGN->SNY:PRODUCT SUPPLY": {
         "relationship_key": "AMGN->SNY:PRODUCT SUPPLY",
@@ -2800,7 +2811,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AMZN->INFY:CLOUD SERVICES": {
         "relationship_key": "AMZN->INFY:CLOUD SERVICES",
@@ -2811,7 +2822,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AMZN->VMC:PHYSICAL INFRASTRUCTURE": {
         "relationship_key": "AMZN->VMC:PHYSICAL INFRASTRUCTURE",
@@ -2822,7 +2833,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "APD->LIN:RAW MATERIALS": {
         "relationship_key": "APD->LIN:RAW MATERIALS",
@@ -2833,7 +2844,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "APD->LPX:RAW MATERIALS": {
         "relationship_key": "APD->LPX:RAW MATERIALS",
@@ -2844,7 +2855,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "APD->LRCX:RAW MATERIALS": {
         "relationship_key": "APD->LRCX:RAW MATERIALS",
@@ -2855,7 +2866,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ARM->ALAB:CHIPLET-BASED AI INFRASTRUCTURE DESIGNS SUPPORT": {
         "relationship_key": "ARM->ALAB:CHIPLET-BASED AI INFRASTRUCTURE DESIGNS SUPPORT",
@@ -2866,7 +2877,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ARM->INTC:ADVANCED SILICON FABRICATION": {
         "relationship_key": "ARM->INTC:ADVANCED SILICON FABRICATION",
@@ -2877,7 +2888,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ARM->MRVL:IP LICENSING": {
         "relationship_key": "ARM->MRVL:IP LICENSING",
@@ -2888,7 +2899,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ASML->TSM:SEMICONDUCTOR EQUIPMENT": {
         "relationship_key": "ASML->TSM:SEMICONDUCTOR EQUIPMENT",
@@ -2899,7 +2910,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "Manual",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ASPI->TDY:RADIOLOGICAL ISOTOPES": {
         "relationship_key": "ASPI->TDY:RADIOLOGICAL ISOTOPES",
@@ -2910,7 +2921,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ATI->AMD:CHIPSET DEVELOPMENT": {
         "relationship_key": "ATI->AMD:CHIPSET DEVELOPMENT",
@@ -2921,7 +2932,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AVGO->A:HISTORICAL": {
         "relationship_key": "AVGO->A:HISTORICAL",
@@ -2932,7 +2943,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AVGO->INTC:SALE OF BUSINESS UNIT": {
         "relationship_key": "AVGO->INTC:SALE OF BUSINESS UNIT",
@@ -2943,7 +2954,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AVGO->STX:SSD CONTROLLER BUSINESS SALE": {
         "relationship_key": "AVGO->STX:SSD CONTROLLER BUSINESS SALE",
@@ -2954,7 +2965,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "AZTA->MKSI:VACUUM MEASUREMENT AND CONTROL INSTRUMENTS": {
         "relationship_key": "AZTA->MKSI:VACUUM MEASUREMENT AND CONTROL INSTRUMENTS",
@@ -2965,7 +2976,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "BA->ALK:AIRCRAFT SUPPLIER": {
         "relationship_key": "BA->ALK:AIRCRAFT SUPPLIER",
@@ -2976,7 +2987,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "BA->LUV:MANUFACTURING": {
         "relationship_key": "BA->LUV:MANUFACTURING",
@@ -2987,7 +2998,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "BABA->NVDA:PURCHASE OF RTX PRO 6000D": {
         "relationship_key": "BABA->NVDA:PURCHASE OF RTX PRO 6000D",
@@ -2998,7 +3009,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "BBY->TMUS:RETAILER OF MOBILE DEVICES": {
         "relationship_key": "BBY->TMUS:RETAILER OF MOBILE DEVICES",
@@ -3009,7 +3020,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "BNTX->PFE:VACCINE DEVELOPMENT": {
         "relationship_key": "BNTX->PFE:VACCINE DEVELOPMENT",
@@ -3020,18 +3031,18 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
-      "BP->CVE:REFINING": {
-        "relationship_key": "BP->CVE:REFINING",
+      "BP->CVE:SELLER OF ASSETS": {
+        "relationship_key": "BP->CVE:SELLER OF ASSETS",
         "source_ticker": "BP",
         "target_ticker": "CVE",
-        "type": "Refining",
-        "product": "Oil Refining",
+        "type": "Seller of Assets / Refining",
+        "product": "BP-Husky Toledo Refinery / Oil Refining",
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "BP->HAL:OIL WELL SERVICES": {
         "relationship_key": "BP->HAL:OIL WELL SERVICES",
@@ -3042,7 +3053,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "BWMX->VMC:MATERIAL SUPPLIER": {
         "relationship_key": "BWMX->VMC:MATERIAL SUPPLIER",
@@ -3053,7 +3064,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "BYD->JBL:MOBILITY BUSINESS IN CHINA": {
         "relationship_key": "BYD->JBL:MOBILITY BUSINESS IN CHINA",
@@ -3064,7 +3075,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CAT->ROAD:EQUIPMENT SUPPLIER": {
         "relationship_key": "CAT->ROAD:EQUIPMENT SUPPLIER",
@@ -3075,7 +3086,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CC->DD:FORMER OPERATIONS SPLIT, NOT CURRENT SUPPLY CHAIN DEPENDENCY": {
         "relationship_key": "CC->DD:FORMER OPERATIONS SPLIT, NOT CURRENT SUPPLY CHAIN DEPENDENCY",
@@ -3086,7 +3097,7 @@
         "review_status": "approved",
         "confidence": 0.9,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CCEP->COST:DISTRIBUTION": {
         "relationship_key": "CCEP->COST:DISTRIBUTION",
@@ -3097,7 +3108,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CDNS->AAPL:CHIP DESIGN TOOLS": {
         "relationship_key": "CDNS->AAPL:CHIP DESIGN TOOLS",
@@ -3108,7 +3119,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CDNS->TSLA:CHIP DESIGN TOOLS": {
         "relationship_key": "CDNS->TSLA:CHIP DESIGN TOOLS",
@@ -3119,7 +3130,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CE->CTAS:RAW_MATERIAL_SUPPLIER": {
         "relationship_key": "CE->CTAS:RAW_MATERIAL_SUPPLIER",
@@ -3130,7 +3141,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CEG->EXC:ELECTRIC POWER GENERATION PORTFOLIO": {
         "relationship_key": "CEG->EXC:ELECTRIC POWER GENERATION PORTFOLIO",
@@ -3141,7 +3152,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CHPT->CEG:ELECTRIC VEHICLE CHARGING INFRASTRUCTURE": {
         "relationship_key": "CHPT->CEG:ELECTRIC VEHICLE CHARGING INFRASTRUCTURE",
@@ -3152,7 +3163,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CHRW->HSY:LOGISTICS PROVIDER": {
         "relationship_key": "CHRW->HSY:LOGISTICS PROVIDER",
@@ -3163,7 +3174,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CIEN->KT:SUPPLY RELATIONSHIP": {
         "relationship_key": "CIEN->KT:SUPPLY RELATIONSHIP",
@@ -3174,7 +3185,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CIEN->SIFY:PRODUCT SUPPLIER": {
         "relationship_key": "CIEN->SIFY:PRODUCT SUPPLIER",
@@ -3185,7 +3196,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CIEN->T:NETWORK SERVICES": {
         "relationship_key": "CIEN->T:NETWORK SERVICES",
@@ -3196,7 +3207,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CIEN->VZ:SUPPLY RELATIONSHIP": {
         "relationship_key": "CIEN->VZ:SUPPLY RELATIONSHIP",
@@ -3207,7 +3218,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CLS->IBM:MANUFACTURING SERVICES": {
         "relationship_key": "CLS->IBM:MANUFACTURING SERVICES",
@@ -3218,7 +3229,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CMC->NUE:RAW MATERIALS": {
         "relationship_key": "CMC->NUE:RAW MATERIALS",
@@ -3229,7 +3240,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CMI->WPRT:TECHNOLOGY LICENSING PARTNER (NATURAL GAS-FUELED ENGINES)": {
         "relationship_key": "CMI->WPRT:TECHNOLOGY LICENSING PARTNER (NATURAL GAS-FUELED ENGINES)",
@@ -3240,7 +3251,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CNQ->PBA:LOGISTICS PROVIDER": {
         "relationship_key": "CNQ->PBA:LOGISTICS PROVIDER",
@@ -3251,7 +3262,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CNXU->SANM:MANUFACTURING SERVICES": {
         "relationship_key": "CNXU->SANM:MANUFACTURING SERVICES",
@@ -3262,7 +3273,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "COHR->NOC:RAW MATERIALS": {
         "relationship_key": "COHR->NOC:RAW MATERIALS",
@@ -3273,7 +3284,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "COP->PSX:REFINING SERVICES": {
         "relationship_key": "COP->PSX:REFINING SERVICES",
@@ -3284,7 +3295,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "COP->TTE:OPERATOR OF SURMONT CANADIAN FACILITY (PREVIOUSLY)": {
         "relationship_key": "COP->TTE:OPERATOR OF SURMONT CANADIAN FACILITY (PREVIOUSLY)",
@@ -3295,7 +3306,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CORZ->CRWV:VENDOR": {
         "relationship_key": "CORZ->CRWV:VENDOR",
@@ -3306,7 +3317,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CP->DE:LOGISTICS PROVIDER/MATERIAL PROVIDER": {
         "relationship_key": "CP->DE:LOGISTICS PROVIDER/MATERIAL PROVIDER",
@@ -3317,7 +3328,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CP->SNDR:RAIL LOGISTICS SERVICES": {
         "relationship_key": "CP->SNDR:RAIL LOGISTICS SERVICES",
@@ -3328,7 +3339,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CP->TECK:LOGISTICS": {
         "relationship_key": "CP->TECK:LOGISTICS",
@@ -3339,7 +3350,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CPB->SLGN:PACKAGING SUPPLIER": {
         "relationship_key": "CPB->SLGN:PACKAGING SUPPLIER",
@@ -3350,7 +3361,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CRL->CTVA:SUPPLIER/TESTING LABORATORY": {
         "relationship_key": "CRL->CTVA:SUPPLIER/TESTING LABORATORY",
@@ -3361,7 +3372,7 @@
         "review_status": "approved",
         "confidence": 0.9,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CRM->RNG:ENTERPRISE SOFTWARE SUBSCRIPTION": {
         "relationship_key": "CRM->RNG:ENTERPRISE SOFTWARE SUBSCRIPTION",
@@ -3372,7 +3383,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CRM->TU:ENTERPRISE SOFTWARE": {
         "relationship_key": "CRM->TU:ENTERPRISE SOFTWARE",
@@ -3383,7 +3394,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CRM->ZM:CRM PLATFORM INTEGRATION": {
         "relationship_key": "CRM->ZM:CRM PLATFORM INTEGRATION",
@@ -3394,7 +3405,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CRWD->DAL:CYBERSECURITY SERVICES": {
         "relationship_key": "CRWD->DAL:CYBERSECURITY SERVICES",
@@ -3405,7 +3416,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CRWV->NVDA:NOT A SUPPLY CHAIN RELATIONSHIP": {
         "relationship_key": "CRWV->NVDA:NOT A SUPPLY CHAIN RELATIONSHIP",
@@ -3416,7 +3427,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CSCO->CDW:DISTRIBUTOR": {
         "relationship_key": "CSCO->CDW:DISTRIBUTOR",
@@ -3427,7 +3438,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CSCO->MTSI:HIGH-SPEED NETWORKING COMPONENTS": {
         "relationship_key": "CSCO->MTSI:HIGH-SPEED NETWORKING COMPONENTS",
@@ -3438,7 +3449,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CSCO->TTMI:PCB MANUFACTURING": {
         "relationship_key": "CSCO->TTMI:PCB MANUFACTURING",
@@ -3449,7 +3460,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CSX->JBHT:INTERMODAL SERVICE": {
         "relationship_key": "CSX->JBHT:INTERMODAL SERVICE",
@@ -3460,7 +3471,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CVS->CAH:GENERIC DRUG SOURCING": {
         "relationship_key": "CVS->CAH:GENERIC DRUG SOURCING",
@@ -3471,7 +3482,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CVS->MDLN:MANUFACTURING PARTNER": {
         "relationship_key": "CVS->MDLN:MANUFACTURING PARTNER",
@@ -3482,7 +3493,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CVS->TGT:PHARMACY OPERATIONS": {
         "relationship_key": "CVS->TGT:PHARMACY OPERATIONS",
@@ -3493,7 +3504,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "CVX->EQT:RAW MATERIALS": {
         "relationship_key": "CVX->EQT:RAW MATERIALS",
@@ -3504,7 +3515,18 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "CVX->TRP:RAW MATERIALS": {
+        "relationship_key": "CVX->TRP:RAW MATERIALS",
+        "source_ticker": "CVX",
+        "target_ticker": "TRP",
+        "type": "Raw Materials",
+        "product": "Natural Gas",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "DBX->RBLX:CLOUD COMPUTING SERVICES": {
         "relationship_key": "DBX->RBLX:CLOUD COMPUTING SERVICES",
@@ -3515,7 +3537,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DD->MMM:CHEMICAL FEEDSTOCK": {
         "relationship_key": "DD->MMM:CHEMICAL FEEDSTOCK",
@@ -3526,7 +3548,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DD->Q:FORMATION OF A NEW COMPANY": {
         "relationship_key": "DD->Q:FORMATION OF A NEW COMPANY",
@@ -3537,7 +3559,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DELL->AMD:SERVER CHIPS": {
         "relationship_key": "DELL->AMD:SERVER CHIPS",
@@ -3548,7 +3570,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DELL->CRM:HARDWARE - SERVERS AND COMPUTE INFRASTRUCTURE": {
         "relationship_key": "DELL->CRM:HARDWARE - SERVERS AND COMPUTE INFRASTRUCTURE",
@@ -3559,7 +3581,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DELL->INTC:MICROPROCESSORS": {
         "relationship_key": "DELL->INTC:MICROPROCESSORS",
@@ -3570,7 +3592,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DGX->FMS:BOUGHT DIAGNOSTIC SERVICES": {
         "relationship_key": "DGX->FMS:BOUGHT DIAGNOSTIC SERVICES",
@@ -3581,7 +3603,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DHR->SSD:HISTORICAL SALE": {
         "relationship_key": "DHR->SSD:HISTORICAL SALE",
@@ -3592,7 +3614,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DOW->LRCX:ADVANCED SILICON FABRICATION": {
         "relationship_key": "DOW->LRCX:ADVANCED SILICON FABRICATION",
@@ -3603,7 +3625,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DOW->WAT:RAW MATERIALS AND MANUFACTURING PARTNER": {
         "relationship_key": "DOW->WAT:RAW MATERIALS AND MANUFACTURING PARTNER",
@@ -3614,7 +3636,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DOW->WMS:RAW MATERIALS": {
         "relationship_key": "DOW->WMS:RAW MATERIALS",
@@ -3625,7 +3647,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DUK->BEP:RENEWABLE POWER GENERATION BUSINESS": {
         "relationship_key": "DUK->BEP:RENEWABLE POWER GENERATION BUSINESS",
@@ -3636,7 +3658,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "DUK->DVN:ELECTRICITY SUPPLY": {
         "relationship_key": "DUK->DVN:ELECTRICITY SUPPLY",
@@ -3647,7 +3669,18 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "DVN->HAL:SERVICE PROVIDER": {
+        "relationship_key": "DVN->HAL:SERVICE PROVIDER",
+        "source_ticker": "DVN",
+        "target_ticker": "HAL",
+        "type": "Service Provider",
+        "product": "Well capping services",
+        "review_status": "approved",
+        "confidence": 0.85,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "E->TTE:RAW MATERIALS": {
         "relationship_key": "E->TTE:RAW MATERIALS",
@@ -3658,7 +3691,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "EMR->MKSI:SOLID-STATE RF AND DC PLASMA POWER SUPPLIES, MATCHING NETWORKS AND INSTRUMENTATION": {
         "relationship_key": "EMR->MKSI:SOLID-STATE RF AND DC PLASMA POWER SUPPLIES, MATCHING NETWORKS AND INSTRUMENTATION",
@@ -3669,7 +3702,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ENLT->DOX:SUPPLY RELATIONSHIP": {
         "relationship_key": "ENLT->DOX:SUPPLY RELATIONSHIP",
@@ -3680,7 +3713,18 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "ENTG->PTN:UNKNOWN": {
+        "relationship_key": "ENTG->PTN:UNKNOWN",
+        "source_ticker": "ENTG",
+        "target_ticker": "PTN",
+        "type": "unknown",
+        "product": "Graphite and silicon carbide",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "EPD->DVN:LOGISTICS SERVICES": {
         "relationship_key": "EPD->DVN:LOGISTICS SERVICES",
@@ -3691,7 +3735,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "EPD->ENB:PIPELINE PARTNER/LOGISTICS PROVIDER": {
         "relationship_key": "EPD->ENB:PIPELINE PARTNER/LOGISTICS PROVIDER",
@@ -3702,7 +3746,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "EQT->CVX:HISTORICAL SALE OF ASSETS": {
         "relationship_key": "EQT->CVX:HISTORICAL SALE OF ASSETS",
@@ -3713,7 +3757,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ERIC->MRVL:5G INFRASTRUCTURE": {
         "relationship_key": "ERIC->MRVL:5G INFRASTRUCTURE",
@@ -3724,7 +3768,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ERIC->QCOM:CDMA INFRASTRUCTURE EQUIPMENT PROVIDER": {
         "relationship_key": "ERIC->QCOM:CDMA INFRASTRUCTURE EQUIPMENT PROVIDER",
@@ -3735,7 +3779,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ERIC->TTMI:PCB MANUFACTURING": {
         "relationship_key": "ERIC->TTMI:PCB MANUFACTURING",
@@ -3746,7 +3790,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ERIC->VOD:TELECOMMUNICATIONS EQUIPMENT PROVIDER": {
         "relationship_key": "ERIC->VOD:TELECOMMUNICATIONS EQUIPMENT PROVIDER",
@@ -3757,7 +3801,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ESLT->LMT:SUPPLIER": {
         "relationship_key": "ESLT->LMT:SUPPLIER",
@@ -3768,7 +3812,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ET->BP:NATURAL GAS TRANSPORTATION SERVICES": {
         "relationship_key": "ET->BP:NATURAL GAS TRANSPORTATION SERVICES",
@@ -3779,7 +3823,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "EXC->CEG:ELECTRIC POWER GENERATION": {
         "relationship_key": "EXC->CEG:ELECTRIC POWER GENERATION",
@@ -3790,7 +3834,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "EXPD->UAL:LOGISTICS SERVICES": {
         "relationship_key": "EXPD->UAL:LOGISTICS SERVICES",
@@ -3801,7 +3845,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "F->MGA:AUTOMOTIVE SYSTEMS, ASSEMBLIES, MODULES, AND COMPONENTS": {
         "relationship_key": "F->MGA:AUTOMOTIVE SYSTEMS, ASSEMBLIES, MODULES, AND COMPONENTS",
@@ -3812,7 +3856,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "F->MOD:CUSTOM MANUFACTURING": {
         "relationship_key": "F->MOD:CUSTOM MANUFACTURING",
@@ -3823,7 +3867,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "FDX->AIT:LOGISTICS PROVIDER": {
         "relationship_key": "FDX->AIT:LOGISTICS PROVIDER",
@@ -3834,7 +3878,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "FDX->FND:LOGISTICS/TRANSPORTATION": {
         "relationship_key": "FDX->FND:LOGISTICS/TRANSPORTATION",
@@ -3845,7 +3889,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "FLEX->AAPL:MANUFACTURING PARTNER": {
         "relationship_key": "FLEX->AAPL:MANUFACTURING PARTNER",
@@ -3856,7 +3900,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "FTI->BP:MANUFACTURING PARTNER": {
         "relationship_key": "FTI->BP:MANUFACTURING PARTNER",
@@ -3867,7 +3911,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GE->WWD:ENGINE COMPONENTS": {
         "relationship_key": "GE->WWD:ENGINE COMPONENTS",
@@ -3878,7 +3922,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GEHC->HCA:DIAGNOSTIC IMAGING EQUIPMENT SUPPLIER": {
         "relationship_key": "GEHC->HCA:DIAGNOSTIC IMAGING EQUIPMENT SUPPLIER",
@@ -3889,7 +3933,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GEL->COP:ENGINEERING SERVICES PROVIDER": {
         "relationship_key": "GEL->COP:ENGINEERING SERVICES PROVIDER",
@@ -3900,7 +3944,18 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "GFL->WCN:SUPPLY RELATIONSHIP": {
+        "relationship_key": "GFL->WCN:SUPPLY RELATIONSHIP",
+        "source_ticker": "GFL",
+        "target_ticker": "WCN",
+        "type": "Supply Relationship",
+        "product": "Plastic bales for incineration",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "GFS->IBM:CHIP MANUFACTURING": {
         "relationship_key": "GFS->IBM:CHIP MANUFACTURING",
@@ -3911,7 +3966,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GFS->MRVL:ADVANCED SILICON FABRICATION": {
         "relationship_key": "GFS->MRVL:ADVANCED SILICON FABRICATION",
@@ -3922,7 +3977,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GFS->UMC:UNKNOWN OPERATIONAL SUPPLY CHAIN DEPENDENCY": {
         "relationship_key": "GFS->UMC:UNKNOWN OPERATIONAL SUPPLY CHAIN DEPENDENCY",
@@ -3933,7 +3988,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GIL->UA:SOCK PRODUCTION": {
         "relationship_key": "GIL->UA:SOCK PRODUCTION",
@@ -3944,7 +3999,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GIS->TSN:PET TREATS MANUFACTURING": {
         "relationship_key": "GIS->TSN:PET TREATS MANUFACTURING",
@@ -3955,18 +4010,18 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
-      "GLW->AAPL:MATERIAL SUPPLIER": {
-        "relationship_key": "GLW->AAPL:MATERIAL SUPPLIER",
+      "GLW->AAPL:GLASS SUPPLIER": {
+        "relationship_key": "GLW->AAPL:GLASS SUPPLIER",
         "source_ticker": "GLW",
         "target_ticker": "AAPL",
-        "type": "material supplier / Glass Supplier",
+        "type": "Glass Supplier",
         "product": "Gorilla Glass",
         "review_status": "approved",
-        "confidence": 1.0,
+        "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GLW->LASR:OPTICAL FIBERS FOR LASER COMMUNICATION": {
         "relationship_key": "GLW->LASR:OPTICAL FIBERS FOR LASER COMMUNICATION",
@@ -3977,7 +4032,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GLW->OLED:RAW MATERIALS SUPPLIER (GORILLA GLASS)": {
         "relationship_key": "GLW->OLED:RAW MATERIALS SUPPLIER (GORILLA GLASS)",
@@ -3988,7 +4043,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GLW->TLK:RAW MATERIALS": {
         "relationship_key": "GLW->TLK:RAW MATERIALS",
@@ -3999,7 +4054,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GM->MGA:ORIGINAL EQUIPMENT PARTS": {
         "relationship_key": "GM->MGA:ORIGINAL EQUIPMENT PARTS",
@@ -4010,7 +4065,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GM->MP:NEODYMIUM-IRON-BORON MAGNETS SUPPLY AGREEMENT": {
         "relationship_key": "GM->MP:NEODYMIUM-IRON-BORON MAGNETS SUPPLY AGREEMENT",
@@ -4021,7 +4076,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GMAB->ABBV:MARKETING AND DISTRIBUTION AGREEMENT": {
         "relationship_key": "GMAB->ABBV:MARKETING AND DISTRIBUTION AGREEMENT",
@@ -4032,7 +4087,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GOGO->TMUS:IN-FLIGHT WI-FI SERVICES": {
         "relationship_key": "GOGO->TMUS:IN-FLIGHT WI-FI SERVICES",
@@ -4043,7 +4098,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GOOG->GTLB:CLOUD PLATFORM": {
         "relationship_key": "GOOG->GTLB:CLOUD PLATFORM",
@@ -4054,7 +4109,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GOOG->PL:SALE_OF_ASSETS": {
         "relationship_key": "GOOG->PL:SALE_OF_ASSETS",
@@ -4065,7 +4120,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GTLB->MSFT:CLOUD PLATFORM": {
         "relationship_key": "GTLB->MSFT:CLOUD PLATFORM",
@@ -4076,7 +4131,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "GTLS->BKR:MANUFACTURER OF LIQUEFIED NATURAL GAS EQUIPMENT AND OTHER INDUSTRIAL PRODUCTS": {
         "relationship_key": "GTLS->BKR:MANUFACTURER OF LIQUEFIED NATURAL GAS EQUIPMENT AND OTHER INDUSTRIAL PRODUCTS",
@@ -4087,7 +4142,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HAL->DVN:OIL AND GAS SERVICES": {
         "relationship_key": "HAL->DVN:OIL AND GAS SERVICES",
@@ -4098,7 +4153,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HAL->E:WELL DRILLING AND MAINTENANCE": {
         "relationship_key": "HAL->E:WELL DRILLING AND MAINTENANCE",
@@ -4109,7 +4164,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HALO->ABBV:DRUG-DELIVERY TECHNOLOGY DEVELOPMENT AND COMMERCIALIZATION": {
         "relationship_key": "HALO->ABBV:DRUG-DELIVERY TECHNOLOGY DEVELOPMENT AND COMMERCIALIZATION",
@@ -4120,7 +4175,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HBM->WPM:RAW MATERIALS": {
         "relationship_key": "HBM->WPM:RAW MATERIALS",
@@ -4131,7 +4186,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HMC->TSLA:ZERO EMISSION VEHICLE CREDIT SUPPLIER": {
         "relationship_key": "HMC->TSLA:ZERO EMISSION VEHICLE CREDIT SUPPLIER",
@@ -4142,7 +4197,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HMY->AU:RAW MATERIALS": {
         "relationship_key": "HMY->AU:RAW MATERIALS",
@@ -4153,7 +4208,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HON->WWD:ENGINE COMPONENTS": {
         "relationship_key": "HON->WWD:ENGINE COMPONENTS",
@@ -4164,7 +4219,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HPE->CBRS:CLOUD INFRASTRUCTURE": {
         "relationship_key": "HPE->CBRS:CLOUD INFRASTRUCTURE",
@@ -4175,7 +4230,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HPE->INGM:PRODUCT DISTRIBUTION": {
         "relationship_key": "HPE->INGM:PRODUCT DISTRIBUTION",
@@ -4186,7 +4241,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HPE->LOGI:ORIGINAL EQUIPMENT MANUFACTURER (OEM)": {
         "relationship_key": "HPE->LOGI:ORIGINAL EQUIPMENT MANUFACTURER (OEM)",
@@ -4197,7 +4252,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HPQ->FDX:LOGISTICS PROVIDER": {
         "relationship_key": "HPQ->FDX:LOGISTICS PROVIDER",
@@ -4208,7 +4263,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HPQ->FTNT:SPONSORSHIP": {
         "relationship_key": "HPQ->FTNT:SPONSORSHIP",
@@ -4219,7 +4274,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HPQ->INTC:SUPPLY CHAIN": {
         "relationship_key": "HPQ->INTC:SUPPLY CHAIN",
@@ -4230,7 +4285,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HPQ->JAGX:TECHNOLOGY SUPPLIER": {
         "relationship_key": "HPQ->JAGX:TECHNOLOGY SUPPLIER",
@@ -4241,7 +4296,7 @@
         "review_status": "approved",
         "confidence": 0.9,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HPQ->STX:SUPPLY CHAIN": {
         "relationship_key": "HPQ->STX:SUPPLY CHAIN",
@@ -4252,7 +4307,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HPQ->XPO:LOGISTICS PROVIDER": {
         "relationship_key": "HPQ->XPO:LOGISTICS PROVIDER",
@@ -4263,7 +4318,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "HUM->SEM:PURCHASE OF ASSETS": {
         "relationship_key": "HUM->SEM:PURCHASE OF ASSETS",
@@ -4274,7 +4329,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "IBM->CDW:DISTRIBUTOR/RESELLER": {
         "relationship_key": "IBM->CDW:DISTRIBUTOR/RESELLER",
@@ -4285,7 +4340,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "IBM->CHRW:MAINFRAMES": {
         "relationship_key": "IBM->CHRW:MAINFRAMES",
@@ -4296,7 +4351,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "IBM->DAL:ENTERPRISE SOFTWARE/INFRASTRUCTURE": {
         "relationship_key": "IBM->DAL:ENTERPRISE SOFTWARE/INFRASTRUCTURE",
@@ -4307,7 +4362,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "IBM->SNDK:ADVANCED SILICON FABRICATION": {
         "relationship_key": "IBM->SNDK:ADVANCED SILICON FABRICATION",
@@ -4318,7 +4373,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "IBM->TTMI:PCB MANUFACTURING": {
         "relationship_key": "IBM->TTMI:PCB MANUFACTURING",
@@ -4329,7 +4384,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "IBM->WDC:ADVANCED SILICON FABRICATION": {
         "relationship_key": "IBM->WDC:ADVANCED SILICON FABRICATION",
@@ -4340,7 +4395,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "IBM->WIT:ENTERPRISE SOFTWARE/ INFRASTRUCTURE": {
         "relationship_key": "IBM->WIT:ENTERPRISE SOFTWARE/ INFRASTRUCTURE",
@@ -4351,7 +4406,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "INFY->IBM:IT SERVICES CONSULTING AND APPLICATION DEVELOPMENT & MAINTENANCE": {
         "relationship_key": "INFY->IBM:IT SERVICES CONSULTING AND APPLICATION DEVELOPMENT & MAINTENANCE",
@@ -4362,7 +4417,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "INFY->MSFT:ENTERPRISE SOFTWARE": {
         "relationship_key": "INFY->MSFT:ENTERPRISE SOFTWARE",
@@ -4373,7 +4428,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "INTC->AMD:LICENSED MANUFACTURING AGREEMENT": {
         "relationship_key": "INTC->AMD:LICENSED MANUFACTURING AGREEMENT",
@@ -4384,7 +4439,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "INTC->BR:VIRTUAL ANNUAL MEETING SERVICES": {
         "relationship_key": "INTC->BR:VIRTUAL ANNUAL MEETING SERVICES",
@@ -4395,7 +4450,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "INTC->DELL:SERVER CPUS": {
         "relationship_key": "INTC->DELL:SERVER CPUS",
@@ -4406,7 +4461,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "Manual",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "INTC->HPQ:ADVANCED SILICON FABRICATION": {
         "relationship_key": "INTC->HPQ:ADVANCED SILICON FABRICATION",
@@ -4417,7 +4472,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "INTC->JBL:MANUFACTURING FACILITY": {
         "relationship_key": "INTC->JBL:MANUFACTURING FACILITY",
@@ -4428,7 +4483,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "INTC->META:ADVANCED SILICON FABRICATION": {
         "relationship_key": "INTC->META:ADVANCED SILICON FABRICATION",
@@ -4439,7 +4494,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "INTC->MSFT:MICROPROCESSORS": {
         "relationship_key": "INTC->MSFT:MICROPROCESSORS",
@@ -4450,7 +4505,18 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "INTC->SMCI:SUPPLY CHAIN": {
+        "relationship_key": "INTC->SMCI:SUPPLY CHAIN",
+        "source_ticker": "INTC",
+        "target_ticker": "SMCI",
+        "type": "Supply Chain",
+        "product": "CPUs",
+        "review_status": "approved",
+        "confidence": 0.85,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "INTC->WIT:ADVANCED SILICON FABRICATION": {
         "relationship_key": "INTC->WIT:ADVANCED SILICON FABRICATION",
@@ -4461,7 +4527,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "IOT->SYY:SUPPLY RELATIONSHIP": {
         "relationship_key": "IOT->SYY:SUPPLY RELATIONSHIP",
@@ -4472,7 +4538,7 @@
         "review_status": "approved",
         "confidence": 0.9,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ITT->XYL:PUMP PRODUCTS": {
         "relationship_key": "ITT->XYL:PUMP PRODUCTS",
@@ -4483,7 +4549,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ITW->DE:MANUFACTURING FACILITY": {
         "relationship_key": "ITW->DE:MANUFACTURING FACILITY",
@@ -4494,7 +4560,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "JBLU->VLO:FUEL SUPPLIES": {
         "relationship_key": "JBLU->VLO:FUEL SUPPLIES",
@@ -4505,7 +4571,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "KDP->SBUX:K-CUP POD MANUFACTURER": {
         "relationship_key": "KDP->SBUX:K-CUP POD MANUFACTURER",
@@ -4516,7 +4582,18 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "KEYS->A:HISTORICAL CORPORATE RELATIONSHIP": {
+        "relationship_key": "KEYS->A:HISTORICAL CORPORATE RELATIONSHIP",
+        "source_ticker": "KEYS",
+        "target_ticker": "A",
+        "type": "historical corporate relationship",
+        "product": "electronic measurement business",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "KLAC->MU:PROCESS CONTROL AND YIELD MANAGEMENT SERVICES": {
         "relationship_key": "KLAC->MU:PROCESS CONTROL AND YIELD MANAGEMENT SERVICES",
@@ -4527,7 +4604,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "KMI->LIN:NATURAL GAS TRANSPORTATION SERVICES": {
         "relationship_key": "KMI->LIN:NATURAL GAS TRANSPORTATION SERVICES",
@@ -4538,7 +4615,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "KO->COST:BEVERAGES - NON-ALCOHOLIC": {
         "relationship_key": "KO->COST:BEVERAGES - NON-ALCOHOLIC",
@@ -4549,7 +4626,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "KO->KOF:BRAND LICENSE": {
         "relationship_key": "KO->KOF:BRAND LICENSE",
@@ -4560,7 +4637,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "KO->YUMC:BEVERAGE SUPPLIER": {
         "relationship_key": "KO->YUMC:BEVERAGE SUPPLIER",
@@ -4571,7 +4648,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LIN->CARR:RAW MATERIALS": {
         "relationship_key": "LIN->CARR:RAW MATERIALS",
@@ -4582,7 +4659,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LION->NFLX:CONTENT PROVIDER": {
         "relationship_key": "LION->NFLX:CONTENT PROVIDER",
@@ -4593,7 +4670,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LLY->VEEV:SOFTWARE SUBSCRIPTION": {
         "relationship_key": "LLY->VEEV:SOFTWARE SUBSCRIPTION",
@@ -4604,18 +4681,18 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LMT->ESLT:SUPPLY OF COMPONENTS": {
         "relationship_key": "LMT->ESLT:SUPPLY OF COMPONENTS",
         "source_ticker": "LMT",
         "target_ticker": "ESLT",
-        "type": "Supply of Components / Manufacturing Contract",
-        "product": "external fuel tanks for the F-35I 'Adir' / F-35I 'Adir' external fuel tanks",
+        "type": "Supply of Components / Supplier of Components",
+        "product": "external fuel tanks for the F-35I 'Adir' / F-35I 'Adir' aircraft components",
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LMT->HWM:MATERIAL SUPPLIER": {
         "relationship_key": "LMT->HWM:MATERIAL SUPPLIER",
@@ -4626,7 +4703,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LMT->TTMI:CONTRACT MANUFACTURING": {
         "relationship_key": "LMT->TTMI:CONTRACT MANUFACTURING",
@@ -4637,7 +4714,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LOT->TSLA:MANUFACTURING PARTNER": {
         "relationship_key": "LOT->TSLA:MANUFACTURING PARTNER",
@@ -4648,7 +4725,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LPL->AAPL:LCD PANELS": {
         "relationship_key": "LPL->AAPL:LCD PANELS",
@@ -4659,7 +4736,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LPL->DELL:LCD PANELS": {
         "relationship_key": "LPL->DELL:LCD PANELS",
@@ -4670,7 +4747,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LPL->SONY:OLED PANELS": {
         "relationship_key": "LPL->SONY:OLED PANELS",
@@ -4681,7 +4758,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LPX->DE:MANUFACTURING FACILITY": {
         "relationship_key": "LPX->DE:MANUFACTURING FACILITY",
@@ -4692,7 +4769,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LPX->GPK:RAW MATERIALS SUPPLIER": {
         "relationship_key": "LPX->GPK:RAW MATERIALS SUPPLIER",
@@ -4703,7 +4780,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "LUV->VLO:FUEL SUPPLIES": {
         "relationship_key": "LUV->VLO:FUEL SUPPLIES",
@@ -4714,7 +4791,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MAS->MU:RAW MATERIALS OR SUPPLY CHAIN": {
         "relationship_key": "MAS->MU:RAW MATERIALS OR SUPPLY CHAIN",
@@ -4725,7 +4802,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MBLY->GM:ADAS AND AUTONOMOUS DRIVING SYSTEMS SUPPLIER": {
         "relationship_key": "MBLY->GM:ADAS AND AUTONOMOUS DRIVING SYSTEMS SUPPLIER",
@@ -4736,7 +4813,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MCD->BYND:PRODUCT SUPPLIER": {
         "relationship_key": "MCD->BYND:PRODUCT SUPPLIER",
@@ -4747,7 +4824,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MDLN->CVS:SUPPLY RELATIONSHIP": {
         "relationship_key": "MDLN->CVS:SUPPLY RELATIONSHIP",
@@ -4758,7 +4835,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MDLN->DG:SUPPLY RELATIONSHIP": {
         "relationship_key": "MDLN->DG:SUPPLY RELATIONSHIP",
@@ -4769,7 +4846,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MDLN->TGT:SUPPLY RELATIONSHIP": {
         "relationship_key": "MDLN->TGT:SUPPLY RELATIONSHIP",
@@ -4780,7 +4857,18 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "META->BKNG:ADVERTISING": {
+        "relationship_key": "META->BKNG:ADVERTISING",
+        "source_ticker": "META",
+        "target_ticker": "BKNG",
+        "type": "Advertising",
+        "product": "advertising services",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "MGA->F:SUPPLY CHAIN": {
         "relationship_key": "MGA->F:SUPPLY CHAIN",
@@ -4791,7 +4879,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MGA->GM:SUPPLY CHAIN": {
         "relationship_key": "MGA->GM:SUPPLY CHAIN",
@@ -4802,7 +4890,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MGA->STLA:SUPPLY CHAIN": {
         "relationship_key": "MGA->STLA:SUPPLY CHAIN",
@@ -4813,7 +4901,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MGA->TM:SUPPLY CHAIN": {
         "relationship_key": "MGA->TM:SUPPLY CHAIN",
@@ -4824,7 +4912,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MGA->TSLA:SUPPLY CHAIN": {
         "relationship_key": "MGA->TSLA:SUPPLY CHAIN",
@@ -4835,7 +4923,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MGM->VICI:LEASE/PROPERTY OWNER OPERATOR RELATIONSHIP": {
         "relationship_key": "MGM->VICI:LEASE/PROPERTY OWNER OPERATOR RELATIONSHIP",
@@ -4846,7 +4934,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MLM->GVA:RAW MATERIALS": {
         "relationship_key": "MLM->GVA:RAW MATERIALS",
@@ -4857,7 +4945,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MOD->F:MANUFACTURING PARTNER": {
         "relationship_key": "MOD->F:MANUFACTURING PARTNER",
@@ -4868,7 +4956,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MP->GM:SUPPLY RELATIONSHIP": {
         "relationship_key": "MP->GM:SUPPLY RELATIONSHIP",
@@ -4879,7 +4967,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MPC->PSX:RAW MATERIALS": {
         "relationship_key": "MPC->PSX:RAW MATERIALS",
@@ -4890,7 +4978,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MPLX->WES:PROCESSING TERMINALS": {
         "relationship_key": "MPLX->WES:PROCESSING TERMINALS",
@@ -4901,7 +4989,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MPWR->INTC:ANALOG AND POWER MANAGEMENT ICS": {
         "relationship_key": "MPWR->INTC:ANALOG AND POWER MANAGEMENT ICS",
@@ -4912,7 +5000,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MRK->VEEV:REGULATORY AFFAIRS MANAGEMENT PLATFORM SUBSCRIPTION": {
         "relationship_key": "MRK->VEEV:REGULATORY AFFAIRS MANAGEMENT PLATFORM SUBSCRIPTION",
@@ -4923,7 +5011,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MRVL->AAPL:SUPPLY OF WI-FI CHIPS": {
         "relationship_key": "MRVL->AAPL:SUPPLY OF WI-FI CHIPS",
@@ -4934,7 +5022,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MRVL->MSFT:INFRASTRUCTURE PROCESSORS": {
         "relationship_key": "MRVL->MSFT:INFRASTRUCTURE PROCESSORS",
@@ -4945,7 +5033,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MSFT->MRVL:INFRASTRUCTURE DEPLOYMENT": {
         "relationship_key": "MSFT->MRVL:INFRASTRUCTURE DEPLOYMENT",
@@ -4956,18 +5044,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
-      },
-      "MSFT->TEAM:VULNERABILITY EXPOSURE": {
-        "relationship_key": "MSFT->TEAM:VULNERABILITY EXPOSURE",
-        "source_ticker": "MSFT",
-        "target_ticker": "TEAM",
-        "type": "Vulnerability Exposure",
-        "product": "Confluence server",
-        "review_status": "approved",
-        "confidence": 0.85,
-        "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MT->NUE:STEELWORKS": {
         "relationship_key": "MT->NUE:STEELWORKS",
@@ -4978,7 +5055,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MTD->IDXX:PRECISION BALANCES AND SCALES": {
         "relationship_key": "MTD->IDXX:PRECISION BALANCES AND SCALES",
@@ -4989,7 +5066,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MTSI->CSCO:SUPPLY RELATIONSHIP": {
         "relationship_key": "MTSI->CSCO:SUPPLY RELATIONSHIP",
@@ -5000,7 +5077,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MTSI->NOC:COMPONENTS FOR SURVEILLANCE DEVICES": {
         "relationship_key": "MTSI->NOC:COMPONENTS FOR SURVEILLANCE DEVICES",
@@ -5011,7 +5088,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MTZ->T:UNDERWATER CABLE SERVICES": {
         "relationship_key": "MTZ->T:UNDERWATER CABLE SERVICES",
@@ -5022,7 +5099,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MU->AMD:HIGH-BANDWIDTH MEMORY": {
         "relationship_key": "MU->AMD:HIGH-BANDWIDTH MEMORY",
@@ -5033,7 +5110,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "Manual",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MU->BP:NEITHER SUPPLY CHAIN NOR OPERATIONAL DEPENDENCY": {
         "relationship_key": "MU->BP:NEITHER SUPPLY CHAIN NOR OPERATIONAL DEPENDENCY",
@@ -5044,7 +5121,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MU->NVDA:HIGH-BANDWIDTH MEMORY": {
         "relationship_key": "MU->NVDA:HIGH-BANDWIDTH MEMORY",
@@ -5055,7 +5132,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "Manual",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MU->TXN:MANUFACTURING COMPONENT": {
         "relationship_key": "MU->TXN:MANUFACTURING COMPONENT",
@@ -5066,7 +5143,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "MUSA->WMT:RETAIL SPACE LEASING": {
         "relationship_key": "MUSA->WMT:RETAIL SPACE LEASING",
@@ -5077,7 +5154,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NCLH->CCL:CHARTERED SHIP OPERATIONS": {
         "relationship_key": "NCLH->CCL:CHARTERED SHIP OPERATIONS",
@@ -5088,7 +5165,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NE->EQNR:REVENUE SOURCE": {
         "relationship_key": "NE->EQNR:REVENUE SOURCE",
@@ -5099,7 +5176,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NE->SHEL:REVENUE SOURCE": {
         "relationship_key": "NE->SHEL:REVENUE SOURCE",
@@ -5110,7 +5187,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NEOG->MMM:PRODUCT SUPPLIER": {
         "relationship_key": "NEOG->MMM:PRODUCT SUPPLIER",
@@ -5121,7 +5198,18 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "NET->MSFT:CLOUD SECURITY SERVICES": {
+        "relationship_key": "NET->MSFT:CLOUD SECURITY SERVICES",
+        "source_ticker": "NET",
+        "target_ticker": "MSFT",
+        "type": "Cloud Security Services",
+        "product": "Cloud Security Solutions",
+        "review_status": "approved",
+        "confidence": 0.85,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "NFLX->ROKU:CONTENT DISTRIBUTION PLATFORM": {
         "relationship_key": "NFLX->ROKU:CONTENT DISTRIBUTION PLATFORM",
@@ -5132,7 +5220,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NOC->TTMI:RAW MATERIALS OR MANUFACTURING PARTNER": {
         "relationship_key": "NOC->TTMI:RAW MATERIALS OR MANUFACTURING PARTNER",
@@ -5143,7 +5231,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NOK->MRVL:SUPPLY OF PROCESSORS FOR 5G INFRASTRUCTURE": {
         "relationship_key": "NOK->MRVL:SUPPLY OF PROCESSORS FOR 5G INFRASTRUCTURE",
@@ -5154,7 +5242,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NRG->CNP:ELECTRICITY GENERATION": {
         "relationship_key": "NRG->CNP:ELECTRICITY GENERATION",
@@ -5165,7 +5253,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NRG->SYY:ELECTRICITY_SUPPLY": {
         "relationship_key": "NRG->SYY:ELECTRICITY_SUPPLY",
@@ -5176,7 +5264,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NSC->JBHT:RAILWAY_INTERMODAL_SERVICE": {
         "relationship_key": "NSC->JBHT:RAILWAY_INTERMODAL_SERVICE",
@@ -5187,7 +5275,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NTR->SQM:RAW MATERIALS": {
         "relationship_key": "NTR->SQM:RAW MATERIALS",
@@ -5198,7 +5286,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NTRA->ABT:TEST DEVELOPMENT AND VALIDATION SERVICES": {
         "relationship_key": "NTRA->ABT:TEST DEVELOPMENT AND VALIDATION SERVICES",
@@ -5209,7 +5297,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NVDA->AXON:ARTIFICIAL INTELLIGENCE SOFTWARE": {
         "relationship_key": "NVDA->AXON:ARTIFICIAL INTELLIGENCE SOFTWARE",
@@ -5220,7 +5308,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NVDA->BABA:RETAILER/CONSUMER RELATIONSHIP": {
         "relationship_key": "NVDA->BABA:RETAILER/CONSUMER RELATIONSHIP",
@@ -5231,7 +5319,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NVDA->CBRS:GPU SUPPLIER": {
         "relationship_key": "NVDA->CBRS:GPU SUPPLIER",
@@ -5242,7 +5330,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NVDA->CRWV:DATA CENTER SERVICES": {
         "relationship_key": "NVDA->CRWV:DATA CENTER SERVICES",
@@ -5253,7 +5341,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NVDA->META:GPU SUPPLIER": {
         "relationship_key": "NVDA->META:GPU SUPPLIER",
@@ -5264,7 +5352,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NVDA->SMCI:AI ACCELERATOR CHIPS": {
         "relationship_key": "NVDA->SMCI:AI ACCELERATOR CHIPS",
@@ -5275,18 +5363,18 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "Manual / AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
-      "NVDA->VRT:HIGH-DENSITY COMPUTE COOLING TECHNOLOGY": {
-        "relationship_key": "NVDA->VRT:HIGH-DENSITY COMPUTE COOLING TECHNOLOGY",
+      "NVDA->VRT:LIQUID COOLING INFRASTRUCTURE": {
+        "relationship_key": "NVDA->VRT:LIQUID COOLING INFRASTRUCTURE",
         "source_ticker": "NVDA",
         "target_ticker": "VRT",
-        "type": "High-Density Compute Cooling Technology / Liquid Cooling Infrastructure",
-        "product": "Direct Liquid Cooling and Immersion Cooling / Direct liquid cooling and immersion cooling systems",
+        "type": "Liquid Cooling Infrastructure",
+        "product": "Direct liquid cooling and immersion cooling systems",
         "review_status": "approved",
-        "confidence": 0.95,
+        "confidence": 0.9,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NVO->ALKS:FACILITY SALE": {
         "relationship_key": "NVO->ALKS:FACILITY SALE",
@@ -5297,7 +5385,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NVO->HIMS:LEGAL DISPUTE": {
         "relationship_key": "NVO->HIMS:LEGAL DISPUTE",
@@ -5308,7 +5396,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NVS->GMAB:MANUFACTURING/MARKETING": {
         "relationship_key": "NVS->GMAB:MANUFACTURING/MARKETING",
@@ -5319,7 +5407,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NVS->VEEV:REGULATORY AFFAIRS MANAGEMENT PLATFORM SUBSCRIPTION": {
         "relationship_key": "NVS->VEEV:REGULATORY AFFAIRS MANAGEMENT PLATFORM SUBSCRIPTION",
@@ -5330,7 +5418,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NXPI->ARM:IP LICENSEE": {
         "relationship_key": "NXPI->ARM:IP LICENSEE",
@@ -5341,7 +5429,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NXPI->AXON:ADVANCED SILICON FABRICATION": {
         "relationship_key": "NXPI->AXON:ADVANCED SILICON FABRICATION",
@@ -5352,7 +5440,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "NXPI->ROKU:COMPONENT SUPPLIER": {
         "relationship_key": "NXPI->ROKU:COMPONENT SUPPLIER",
@@ -5363,7 +5451,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ORCL->INFY:ENTERPRISE SOFTWARE": {
         "relationship_key": "ORCL->INFY:ENTERPRISE SOFTWARE",
@@ -5374,7 +5462,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "OTLY->SBUX:NON-DAIRY MILK OFFERINGS": {
         "relationship_key": "OTLY->SBUX:NON-DAIRY MILK OFFERINGS",
@@ -5385,7 +5473,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "OXY->EOG:PROPERTY SWAP": {
         "relationship_key": "OXY->EOG:PROPERTY SWAP",
@@ -5396,7 +5484,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PATH->MSFT:ENTERPRISE SOFTWARE": {
         "relationship_key": "PATH->MSFT:ENTERPRISE SOFTWARE",
@@ -5407,7 +5495,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PBA->CNQ:LOGISTICS PARTNER": {
         "relationship_key": "PBA->CNQ:LOGISTICS PARTNER",
@@ -5418,7 +5506,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PKOH->CLF:RAW MATERIALS": {
         "relationship_key": "PKOH->CLF:RAW MATERIALS",
@@ -5429,7 +5517,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PNR->EMR:SUPPLY RELATIONSHIP": {
         "relationship_key": "PNR->EMR:SUPPLY RELATIONSHIP",
@@ -5440,7 +5528,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "POR->ADSK:NEITHER SUPPLY CHAIN NOR OPERATIONAL DEPENDENCY": {
         "relationship_key": "POR->ADSK:NEITHER SUPPLY CHAIN NOR OPERATIONAL DEPENDENCY",
@@ -5451,7 +5539,18 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "POR->FIX:HVAC EQUIPMENT": {
+        "relationship_key": "POR->FIX:HVAC EQUIPMENT",
+        "source_ticker": "POR",
+        "target_ticker": "FIX",
+        "type": "HVAC Equipment",
+        "product": "HVAC Equipment",
+        "review_status": "approved",
+        "confidence": 0.85,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "PPC->WMT:PACKAGED FOODS SUPPLY": {
         "relationship_key": "PPC->WMT:PACKAGED FOODS SUPPLY",
@@ -5462,7 +5561,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PR->OXY:UNCONVENTIONAL OIL PRODUCTION SERVICES": {
         "relationship_key": "PR->OXY:UNCONVENTIONAL OIL PRODUCTION SERVICES",
@@ -5473,7 +5572,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PSKY->NFLX:CONTENT PROVIDER": {
         "relationship_key": "PSKY->NFLX:CONTENT PROVIDER",
@@ -5484,7 +5583,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PSX->DVN:PETROLEUM PRODUCTS": {
         "relationship_key": "PSX->DVN:PETROLEUM PRODUCTS",
@@ -5495,7 +5594,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PSX->VRT:NATURAL GAS PROCESSING": {
         "relationship_key": "PSX->VRT:NATURAL GAS PROCESSING",
@@ -5506,7 +5605,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PWR->AAPL:MANUFACTURING PARTNER": {
         "relationship_key": "PWR->AAPL:MANUFACTURING PARTNER",
@@ -5517,7 +5616,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PWR->EQT:PIPELINE CONSTRUCTION SERVICES": {
         "relationship_key": "PWR->EQT:PIPELINE CONSTRUCTION SERVICES",
@@ -5528,7 +5627,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "PWR->XEL:CONSTRUCTION MANAGEMENT SERVICES": {
         "relationship_key": "PWR->XEL:CONSTRUCTION MANAGEMENT SERVICES",
@@ -5539,7 +5638,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "QCOM->ERIC:INFRASTRUCTURE EQUIPMENT": {
         "relationship_key": "QCOM->ERIC:INFRASTRUCTURE EQUIPMENT",
@@ -5550,7 +5649,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "QCOM->NOK:SEMICONDUCTOR PRODUCTS": {
         "relationship_key": "QCOM->NOK:SEMICONDUCTOR PRODUCTS",
@@ -5561,7 +5660,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "RIO->CCK:RAW MATERIALS": {
         "relationship_key": "RIO->CCK:RAW MATERIALS",
@@ -5572,7 +5671,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SAIC->ITT:ENGINEERING AND CONSULTING": {
         "relationship_key": "SAIC->ITT:ENGINEERING AND CONSULTING",
@@ -5583,7 +5682,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SANM->ASTC:MANUFACTURING PARTNER": {
         "relationship_key": "SANM->ASTC:MANUFACTURING PARTNER",
@@ -5594,7 +5693,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SAP->ACN:ENTERPRISE SOFTWARE": {
         "relationship_key": "SAP->ACN:ENTERPRISE SOFTWARE",
@@ -5605,7 +5704,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SAP->IBM:SERVICES - MIGRATION SERVICES FOR BUSINESS SYSTEMS": {
         "relationship_key": "SAP->IBM:SERVICES - MIGRATION SERVICES FOR BUSINESS SYSTEMS",
@@ -5616,7 +5715,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SAP->INFY:ENTERPRISE SOFTWARE": {
         "relationship_key": "SAP->INFY:ENTERPRISE SOFTWARE",
@@ -5627,7 +5726,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SBUX->KDP:K-CUP PODS MANUFACTURING AND SUPPLY": {
         "relationship_key": "SBUX->KDP:K-CUP PODS MANUFACTURING AND SUPPLY",
@@ -5638,7 +5737,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SCWO->FERG:RAW MATERIALS SUPPLIERS": {
         "relationship_key": "SCWO->FERG:RAW MATERIALS SUPPLIERS",
@@ -5649,7 +5748,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SHEL->DINO:REFINING FACILITIES": {
         "relationship_key": "SHEL->DINO:REFINING FACILITIES",
@@ -5660,7 +5759,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SITM->AAPL:SUPPLY RELATIONSHIP": {
         "relationship_key": "SITM->AAPL:SUPPLY RELATIONSHIP",
@@ -5671,7 +5770,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SITM->DELL:SUPPLY RELATIONSHIP": {
         "relationship_key": "SITM->DELL:SUPPLY RELATIONSHIP",
@@ -5682,7 +5781,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SITM->GOOG:SUPPLY RELATIONSHIP": {
         "relationship_key": "SITM->GOOG:SUPPLY RELATIONSHIP",
@@ -5693,7 +5792,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SITM->GRMN:SUPPLY RELATIONSHIP": {
         "relationship_key": "SITM->GRMN:SUPPLY RELATIONSHIP",
@@ -5704,7 +5803,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SITM->MSFT:SUPPLY RELATIONSHIP": {
         "relationship_key": "SITM->MSFT:SUPPLY RELATIONSHIP",
@@ -5715,7 +5814,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SMWB->RDDT:MARKET RESEARCH DATA": {
         "relationship_key": "SMWB->RDDT:MARKET RESEARCH DATA",
@@ -5726,7 +5825,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SO->KBR:TECHNOLOGY DEVELOPMENT PARTNER": {
         "relationship_key": "SO->KBR:TECHNOLOGY DEVELOPMENT PARTNER",
@@ -5737,7 +5836,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SPOT->AMZN:NOT A SUPPLY-CHAIN RELATIONSHIP": {
         "relationship_key": "SPOT->AMZN:NOT A SUPPLY-CHAIN RELATIONSHIP",
@@ -5748,7 +5847,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SPWR->TTE:SUPPLIER OF SOLAR ENERGY": {
         "relationship_key": "SPWR->TTE:SUPPLIER OF SOLAR ENERGY",
@@ -5759,7 +5858,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SQM->NTR:RAW MATERIALS": {
         "relationship_key": "SQM->NTR:RAW MATERIALS",
@@ -5770,7 +5869,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "STLA->MGA:AUTOMOTIVE OEM AND TIER 1 SUPPLIER": {
         "relationship_key": "STLA->MGA:AUTOMOTIVE OEM AND TIER 1 SUPPLIER",
@@ -5781,7 +5880,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "STM->GRMN:SENSOR TECHNOLOGIES": {
         "relationship_key": "STM->GRMN:SENSOR TECHNOLOGIES",
@@ -5792,7 +5891,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "STX->HPQ:HARD DISK DRIVES": {
         "relationship_key": "STX->HPQ:HARD DISK DRIVES",
@@ -5803,7 +5902,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SU->DINO:REFINING SERVICES": {
         "relationship_key": "SU->DINO:REFINING SERVICES",
@@ -5814,7 +5913,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SU->ENB:RAW MATERIALS": {
         "relationship_key": "SU->ENB:RAW MATERIALS",
@@ -5825,7 +5924,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SU->MPC:RAW MATERIALS": {
         "relationship_key": "SU->MPC:RAW MATERIALS",
@@ -5836,7 +5935,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SU->SUN:RETAIL BRANDING": {
         "relationship_key": "SU->SUN:RETAIL BRANDING",
@@ -5847,7 +5946,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "SWKS->AAPL:RADIO FREQUENCY (RF) CHIPS": {
         "relationship_key": "SWKS->AAPL:RADIO FREQUENCY (RF) CHIPS",
@@ -5858,7 +5957,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "T->LUMN:FIBER CONNECTIVITY": {
         "relationship_key": "T->LUMN:FIBER CONNECTIVITY",
@@ -5869,7 +5968,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "T->MTZ:TELECOMMUNICATIONS SERVICES": {
         "relationship_key": "T->MTZ:TELECOMMUNICATIONS SERVICES",
@@ -5880,7 +5979,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TEAM->MSFT:SOFTWARE/INFRASTRUCTURAL DEPENDENCY": {
         "relationship_key": "TEAM->MSFT:SOFTWARE/INFRASTRUCTURAL DEPENDENCY",
@@ -5891,7 +5990,29 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "TER->IBM:SUPPLY RELATIONSHIP": {
+        "relationship_key": "TER->IBM:SUPPLY RELATIONSHIP",
+        "source_ticker": "TER",
+        "target_ticker": "IBM",
+        "type": "Supply Relationship",
+        "product": "Test Equipment",
+        "review_status": "approved",
+        "confidence": 0.85,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
+      },
+      "TER->INTC:SUPPLY RELATIONSHIP": {
+        "relationship_key": "TER->INTC:SUPPLY RELATIONSHIP",
+        "source_ticker": "TER",
+        "target_ticker": "INTC",
+        "type": "Supply Relationship",
+        "product": "Test Equipment",
+        "review_status": "approved",
+        "confidence": 0.85,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "TGT->DIS:DISTRIBUTION AGREEMENT": {
         "relationship_key": "TGT->DIS:DISTRIBUTION AGREEMENT",
@@ -5902,7 +6023,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TGT->MDLN:MANUFACTURING PARTNER": {
         "relationship_key": "TGT->MDLN:MANUFACTURING PARTNER",
@@ -5913,7 +6034,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TGT->ULTA:RETAILER": {
         "relationship_key": "TGT->ULTA:RETAILER",
@@ -5924,7 +6045,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TM->MGA:AUTOMOTIVE SYSTEMS, ASSEMBLIES, MODULES, AND COMPONENTS": {
         "relationship_key": "TM->MGA:AUTOMOTIVE SYSTEMS, ASSEMBLIES, MODULES, AND COMPONENTS",
@@ -5935,7 +6056,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TPL->EOG:WATER SUPPLY AND DISPOSAL SERVICES": {
         "relationship_key": "TPL->EOG:WATER SUPPLY AND DISPOSAL SERVICES",
@@ -5946,7 +6067,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TREX->HD:DISTRIBUTION CHANNEL": {
         "relationship_key": "TREX->HD:DISTRIBUTION CHANNEL",
@@ -5957,7 +6078,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TRVG->EXPE:SOFTWARE SERVICES": {
         "relationship_key": "TRVG->EXPE:SOFTWARE SERVICES",
@@ -5968,7 +6089,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSEM->STM:OUTSOURCING/CONTRACT MANUFACTURING": {
         "relationship_key": "TSEM->STM:OUTSOURCING/CONTRACT MANUFACTURING",
@@ -5979,7 +6100,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSEM->UMC:FOUNDRY SERVICES": {
         "relationship_key": "TSEM->UMC:FOUNDRY SERVICES",
@@ -5990,7 +6111,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSLA->HMC:SUPPLY RELATIONSHIP": {
         "relationship_key": "TSLA->HMC:SUPPLY RELATIONSHIP",
@@ -6001,7 +6122,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSLA->JBHT:ELECTRIC TRUCKS": {
         "relationship_key": "TSLA->JBHT:ELECTRIC TRUCKS",
@@ -6012,7 +6133,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSLA->MGA:AUTOMOTIVE SYSTEMS, ASSEMBLIES, MODULES, AND COMPONENTS": {
         "relationship_key": "TSLA->MGA:AUTOMOTIVE SYSTEMS, ASSEMBLIES, MODULES, AND COMPONENTS",
@@ -6023,7 +6144,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->AAPL:ADVANCED SILICON FABRICATION": {
         "relationship_key": "TSM->AAPL:ADVANCED SILICON FABRICATION",
@@ -6034,7 +6155,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "Manual / AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->ALAB:ADVANCED SILICON FABRICATION": {
         "relationship_key": "TSM->ALAB:ADVANCED SILICON FABRICATION",
@@ -6045,7 +6166,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->AMD:ADVANCED SILICON FABRICATION": {
         "relationship_key": "TSM->AMD:ADVANCED SILICON FABRICATION",
@@ -6056,7 +6177,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "Manual / AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->ARM:IP LICENSING / SEMICONDUCTOR IP": {
         "relationship_key": "TSM->ARM:IP LICENSING / SEMICONDUCTOR IP",
@@ -6067,7 +6188,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->AVGO:ADVANCED SILICON FABRICATION": {
         "relationship_key": "TSM->AVGO:ADVANCED SILICON FABRICATION",
@@ -6078,7 +6199,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->GRMN:CHIP MANUFACTURER - ELECTRONICS OEM": {
         "relationship_key": "TSM->GRMN:CHIP MANUFACTURER - ELECTRONICS OEM",
@@ -6089,7 +6210,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->INTC:OUTSOURCED PRODUCTION": {
         "relationship_key": "TSM->INTC:OUTSOURCED PRODUCTION",
@@ -6100,7 +6221,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->LSCC:CONTRACT MANUFACTURING": {
         "relationship_key": "TSM->LSCC:CONTRACT MANUFACTURING",
@@ -6111,7 +6232,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->MRVL:CHIP MANUFACTURING": {
         "relationship_key": "TSM->MRVL:CHIP MANUFACTURING",
@@ -6122,7 +6243,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->NVDA:ADVANCED SILICON FABRICATION": {
         "relationship_key": "TSM->NVDA:ADVANCED SILICON FABRICATION",
@@ -6133,7 +6254,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "Manual / AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->QCOM:ADVANCED SILICON FABRICATION": {
         "relationship_key": "TSM->QCOM:ADVANCED SILICON FABRICATION",
@@ -6144,7 +6265,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->STM:OUTSOURCED PRODUCTION": {
         "relationship_key": "TSM->STM:OUTSOURCED PRODUCTION",
@@ -6155,7 +6276,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSM->TXN:OUTSOURCED PRODUCTION": {
         "relationship_key": "TSM->TXN:OUTSOURCED PRODUCTION",
@@ -6166,7 +6287,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TSN->CALM:BROILER PROCESSING PLANT, HATCHERY AND FEED MILL (SALE)": {
         "relationship_key": "TSN->CALM:BROILER PROCESSING PLANT, HATCHERY AND FEED MILL (SALE)",
@@ -6177,7 +6298,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TT->FIX:HVAC EQUIPMENT PROVIDER": {
         "relationship_key": "TT->FIX:HVAC EQUIPMENT PROVIDER",
@@ -6188,7 +6309,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TTMI->AAPL:PCB MANUFACTURING": {
         "relationship_key": "TTMI->AAPL:PCB MANUFACTURING",
@@ -6199,7 +6320,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TTMI->CSCO:PCB MANUFACTURING": {
         "relationship_key": "TTMI->CSCO:PCB MANUFACTURING",
@@ -6210,7 +6331,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TTMI->LMT:PCB MANUFACTURING": {
         "relationship_key": "TTMI->LMT:PCB MANUFACTURING",
@@ -6221,7 +6342,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TTMI->NOC:PCB MANUFACTURING": {
         "relationship_key": "TTMI->NOC:PCB MANUFACTURING",
@@ -6232,7 +6353,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TU->TRI:NEWS SERVICES": {
         "relationship_key": "TU->TRI:NEWS SERVICES",
@@ -6243,7 +6364,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TWLO->HUBS:TELEPHONY SERVICES": {
         "relationship_key": "TWLO->HUBS:TELEPHONY SERVICES",
@@ -6254,7 +6375,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TXN->GRMN:SILICON MANUFACTURING": {
         "relationship_key": "TXN->GRMN:SILICON MANUFACTURING",
@@ -6265,7 +6386,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "TXN->MU:CHIP MANUFACTURER - SEMICONDUCTOR COMPONENT SUPPLIER": {
         "relationship_key": "TXN->MU:CHIP MANUFACTURER - SEMICONDUCTOR COMPONENT SUPPLIER",
@@ -6276,7 +6397,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "UAA->GIL:BRAND PARTNER": {
         "relationship_key": "UAA->GIL:BRAND PARTNER",
@@ -6287,7 +6408,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "UAL->BA:AIRCRAFT PURCHASE": {
         "relationship_key": "UAL->BA:AIRCRAFT PURCHASE",
@@ -6298,7 +6419,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "UMC->GFS:ADVANCED SILICON FABRICATION": {
         "relationship_key": "UMC->GFS:ADVANCED SILICON FABRICATION",
@@ -6309,7 +6430,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "UMC->TSEM:ADVANCED SILICON FABRICATION": {
         "relationship_key": "UMC->TSEM:ADVANCED SILICON FABRICATION",
@@ -6320,7 +6441,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "UPS->CNM:LOGISTICS": {
         "relationship_key": "UPS->CNM:LOGISTICS",
@@ -6331,7 +6452,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "URI->BYD:LOGISTICS": {
         "relationship_key": "URI->BYD:LOGISTICS",
@@ -6342,7 +6463,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "USLM->FERG:LIME SUPPLIER": {
         "relationship_key": "USLM->FERG:LIME SUPPLIER",
@@ -6353,18 +6474,29 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
+      },
+      "USLM->NVT:RAW_MATERIALS_SUPPLIER": {
+        "relationship_key": "USLM->NVT:RAW_MATERIALS_SUPPLIER",
+        "source_ticker": "USLM",
+        "target_ticker": "NVT",
+        "type": "raw_materials_supplier",
+        "product": "lime and minerals",
+        "review_status": "approved",
+        "confidence": 0.85,
+        "source_type": "AI Research",
+        "last_verified": "2026-05-31"
       },
       "VALE->TSLA:MATERIAL SUPPLIER": {
         "relationship_key": "VALE->TSLA:MATERIAL SUPPLIER",
         "source_ticker": "VALE",
         "target_ticker": "TSLA",
-        "type": "Material Supplier",
-        "product": "Low-carbon Class 1 nickel for electric vehicles' batteries",
+        "type": "Material Supplier / Raw Materials",
+        "product": "Low-carbon Class 1 nickel for electric vehicles' batteries / Nickel",
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VEEV->ALKS:CLOUD COMPUTING SOFTWARE": {
         "relationship_key": "VEEV->ALKS:CLOUD COMPUTING SOFTWARE",
@@ -6375,7 +6507,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VEEV->ALNY:CLOUD COMPUTING SOFTWARE": {
         "relationship_key": "VEEV->ALNY:CLOUD COMPUTING SOFTWARE",
@@ -6386,7 +6518,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VEEV->GILD:CLOUD COMPUTING SOFTWARE": {
         "relationship_key": "VEEV->GILD:CLOUD COMPUTING SOFTWARE",
@@ -6397,7 +6529,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VEEV->LLY:CLOUD COMPUTING SOFTWARE": {
         "relationship_key": "VEEV->LLY:CLOUD COMPUTING SOFTWARE",
@@ -6408,7 +6540,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VEEV->MRK:CLOUD COMPUTING SOFTWARE": {
         "relationship_key": "VEEV->MRK:CLOUD COMPUTING SOFTWARE",
@@ -6419,7 +6551,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VEEV->NVS:CLOUD COMPUTING SOFTWARE": {
         "relationship_key": "VEEV->NVS:CLOUD COMPUTING SOFTWARE",
@@ -6430,7 +6562,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VLO->CLH:RAW MATERIALS": {
         "relationship_key": "VLO->CLH:RAW MATERIALS",
@@ -6441,7 +6573,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VLO->JBLU:SUPPLY RELATIONSHIP": {
         "relationship_key": "VLO->JBLU:SUPPLY RELATIONSHIP",
@@ -6452,7 +6584,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VLO->LUV:SUPPLY RELATIONSHIP": {
         "relationship_key": "VLO->LUV:SUPPLY RELATIONSHIP",
@@ -6463,7 +6595,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VMC->AMZN:PROPERTY DEVELOPMENT": {
         "relationship_key": "VMC->AMZN:PROPERTY DEVELOPMENT",
@@ -6474,7 +6606,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VNOM->AMZN:NOT A SUPPLY CHAIN RELATIONSHIP": {
         "relationship_key": "VNOM->AMZN:NOT A SUPPLY CHAIN RELATIONSHIP",
@@ -6485,7 +6617,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VNOM->META:NOT A SUPPLY-CHAIN RELATIONSHIP": {
         "relationship_key": "VNOM->META:NOT A SUPPLY-CHAIN RELATIONSHIP",
@@ -6496,7 +6628,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VRSN->GOOG:CERTIFICATE VALIDATION SERVICE": {
         "relationship_key": "VRSN->GOOG:CERTIFICATE VALIDATION SERVICE",
@@ -6507,7 +6639,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VRSN->NET:REGISTRY OPERATOR": {
         "relationship_key": "VRSN->NET:REGISTRY OPERATOR",
@@ -6518,7 +6650,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VRT->INTC:LIQUID COOLING INFRASTRUCTURE": {
         "relationship_key": "VRT->INTC:LIQUID COOLING INFRASTRUCTURE",
@@ -6529,7 +6661,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VRT->NVDA:DATA CENTER COOLING": {
         "relationship_key": "VRT->NVDA:DATA CENTER COOLING",
@@ -6540,7 +6672,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "Manual",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "VZ->CIEN:TELECOM SERVICES -> COMMUNICATION EQUIPMENT": {
         "relationship_key": "VZ->CIEN:TELECOM SERVICES -> COMMUNICATION EQUIPMENT",
@@ -6551,7 +6683,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "WCC->KR:WHOLESALE DISTRIBUTION": {
         "relationship_key": "WCC->KR:WHOLESALE DISTRIBUTION",
@@ -6562,7 +6694,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "WES->MPLX:PIPELINE STORAGE": {
         "relationship_key": "WES->MPLX:PIPELINE STORAGE",
@@ -6573,7 +6705,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "WFG->IP:RAW MATERIALS": {
         "relationship_key": "WFG->IP:RAW MATERIALS",
@@ -6584,7 +6716,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "WPRT->CMI:NATURAL GAS ENGINE TECHNOLOGY": {
         "relationship_key": "WPRT->CMI:NATURAL GAS ENGINE TECHNOLOGY",
@@ -6595,7 +6727,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "XEL->PWR:TRANSMISSION LINE CONSTRUCTION MANAGEMENT": {
         "relationship_key": "XEL->PWR:TRANSMISSION LINE CONSTRUCTION MANAGEMENT",
@@ -6606,7 +6738,7 @@
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "XRX->SAP:HISTORICAL_MANUFACTURING_EQUIPMENT": {
         "relationship_key": "XRX->SAP:HISTORICAL_MANUFACTURING_EQUIPMENT",
@@ -6617,7 +6749,7 @@
         "review_status": "approved",
         "confidence": 0.85,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       },
       "ZIM->RL:FRAGRANCE SUPPLIER": {
         "relationship_key": "ZIM->RL:FRAGRANCE SUPPLIER",
@@ -6628,7 +6760,7 @@
         "review_status": "approved",
         "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-05-30"
+        "last_verified": "2026-05-31"
       }
     }
   }
