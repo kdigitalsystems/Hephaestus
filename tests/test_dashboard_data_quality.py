@@ -62,6 +62,25 @@ def test_pipeline_commits_link_history_with_dashboard_export():
     assert expected in (ROOT / ".github" / "workflows" / "gpu_pipeline.yml").read_text(encoding="utf-8")
 
 
+def test_workflows_and_asset_versions_are_current():
+    html = (ROOT / "docs" / "index.html").read_text(encoding="utf-8")
+    ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    gpu = (ROOT / ".github" / "workflows" / "gpu_pipeline.yml").read_text(encoding="utf-8")
+    app = (ROOT / "docs" / "app.js").read_text(encoding="utf-8")
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert "20260525-investor3" not in html
+    assert 'node-version: "24"' in ci
+    assert "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24" in ci
+    assert "Local GPU AI Pipeline" in gpu
+    assert "Titan Queue" not in gpu
+    assert "docs/link_history.json" in gpu
+    assert "link-history" in readme
+    assert "uniqueLinkCount" not in app
+    assert "qualityData" not in app
+    assert "investorMetrics" not in app
+
+
 def test_dashboard_validator_rejects_duplicate_relationship_tickers():
     data = {
         "industries": {

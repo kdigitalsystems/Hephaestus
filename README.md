@@ -274,7 +274,7 @@ Run a limited debug pipeline:
 ./run_pipeline.sh 25
 ```
 
-The pipeline now reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with Ollama, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard/review-decision changes.
+The pipeline now reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with Ollama, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard, link-history, and review-decision changes.
 
 Review behavior can be tuned with environment variables:
 

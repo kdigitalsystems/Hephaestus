@@ -1,43 +1,23 @@
 const fs = require("fs");
-const vm = require("vm");
 
-const appSource = fs.readFileSync("docs/app.js", "utf8");
-const prefix = appSource.split("fetch('dashboard_data.json')")[0];
+const data = JSON.parse(fs.readFileSync("docs/dashboard_data.json", "utf8"));
+const allCompanies = Object.values(data.industries || {}).flat();
+const relationshipKeys = new Set();
 
-const context = {
-  console,
-  document: {
-    createElement: () => ({
-      appendChild() {},
-      className: "",
-      textContent: "",
-    }),
-    getElementById: () => ({ textContent: "" }),
-  },
-};
-vm.createContext(context);
-vm.runInContext(
-  `${prefix}
-   globalThis.__setCompanies = (companies) => { allCompanies = companies; };
-   globalThis.__uniqueLinkCount = uniqueLinkCount;`,
-  context,
-);
+for (const company of allCompanies) {
+  for (const link of [...(company.upstream || []), ...(company.downstream || [])]) {
+    const key = link.relationship_key || link.edge_id;
+    if (key !== undefined && key !== null) {
+      relationshipKeys.add(String(key));
+    }
+  }
+}
 
-context.__setCompanies([
-  {
-    upstream: [
-      { edge_id: 1, relationship_key: "TSM->AMD:FOUNDRY" },
-      { edge_id: 99, relationship_key: "TSM->AMD:FOUNDRY" },
-    ],
-    downstream: [{ edge_id: 2 }],
-  },
-  {
-    upstream: [],
-    downstream: [{ edge_id: 2 }],
-  },
-]);
+const publishedCount = Number(data.investor_metrics?.unique_links || 0);
+if (publishedCount < 50) {
+  throw new Error(`published link count is too low: ${publishedCount}`);
+}
 
-const count = context.__uniqueLinkCount();
-if (count !== 2) {
-  throw new Error(`expected 2 unique links, got ${count}`);
+if (relationshipKeys.size !== publishedCount) {
+  throw new Error(`dashboard unique link mismatch: JSON has ${relationshipKeys.size}, metrics report ${publishedCount}`);
 }

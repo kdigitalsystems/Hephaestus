@@ -1,4 +1,4 @@
-name: Local GPU Titan Queue
+name: Local GPU AI Pipeline
 
 on:
   workflow_dispatch: 
@@ -7,6 +7,9 @@ on:
 
 permissions:
   contents: write 
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   run-ai-discovery:
@@ -76,7 +79,7 @@ jobs:
           echo "Updating live financial metrics..."
           venv/bin/python backend/update_metrics.py
 
-      - name: Execute Titan Queue & Export
+      - name: Execute AI Review Pipeline & Export
         env:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}

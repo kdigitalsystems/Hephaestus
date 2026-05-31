@@ -1,9 +1,6 @@
 let globalData = {};
-let qualityData = { pending_count: 0, approved_count: 0, rejected_count: 0, review_queue: [] };
-let investorMetrics = {};
 let allCompanies = [];
 let currentCompaniesList = [];
-let currentTitle = 'Companies';
 let currentRoute = { view: 'overview' };
 let sortCol = 'market_cap';
 let sortAsc = false;
@@ -89,19 +86,6 @@ function saveWatchlist() {
     localStorage.setItem('hephaestus_watchlist', JSON.stringify([...watchlist].sort()));
 }
 
-const uniqueLinkCount = () => {
-    const ids = new Set();
-    allCompanies.forEach(company => {
-        [...(company.upstream || []), ...(company.downstream || [])].forEach(dep => {
-            const key = dep.relationship_key || dep.edge_id;
-            if (key !== undefined && key !== null) {
-                ids.add(String(key));
-            }
-        });
-    });
-    return ids.size || Math.round(allCompanies.reduce((sum, company) => sum + relationshipCount(company), 0) / 2);
-};
-
 const hydrateCompanies = (data) => {
     allCompanies = Object.entries(data).flatMap(([sector, companies]) =>
         companies.map(company => ({
@@ -119,8 +103,6 @@ fetch('dashboard_data.json')
     })
     .then(data => {
         globalData = data.industries || {};
-        qualityData = data.quality || qualityData;
-        investorMetrics = data.investor_metrics || {};
         loadWatchlist();
         hydrateCompanies(globalData);
         populateFilters();
@@ -148,7 +130,6 @@ function resetDashboard() {
     document.getElementById('dependency-filter').value = '';
     document.getElementById('connected-filter').checked = false;
     currentCompaniesList = [];
-    currentTitle = 'Companies';
     renderLevel1();
 }
 
@@ -303,8 +284,7 @@ window.addEventListener('hashchange', () => applyRouteFromHash(false));
 function showCompanies() {
     if (!currentCompaniesList.length) {
         currentCompaniesList = [...allCompanies];
-        currentTitle = 'All Companies';
-        setText('current-industry-title', currentTitle);
+        setText('current-industry-title', 'All Companies');
     }
     document.getElementById('view-industries').classList.add('hidden');
     document.getElementById('view-quality').classList.add('hidden');
@@ -416,8 +396,7 @@ function applyFilters(updateRoute = true, forceShortQuery = false) {
     });
 
     currentCompaniesList = results;
-    currentTitle = query ? `Search Results (${results.length})` : sector || 'All Companies';
-    setText('current-industry-title', currentTitle);
+    setText('current-industry-title', query ? `Search Results (${results.length})` : sector || 'All Companies');
     renderLevel2();
 
     if (updateRoute) {
