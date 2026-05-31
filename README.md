@@ -274,17 +274,21 @@ Run a limited debug pipeline:
 ./run_pipeline.sh 25
 ```
 
-The pipeline now reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with Ollama, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard, link-history, and review-decision changes.
+The pipeline now reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with an Ollama consensus panel, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard, link-history, and review-decision changes.
 
 Review behavior can be tuned with environment variables:
 
 ```bash
-HEPHAESTUS_REVIEW_MODEL=qwen2.5:14b-instruct \
+HEPHAESTUS_REVIEW_MODELS=qwen2.5:7b-instruct,llama3.1:8b,mistral:7b-instruct \
 HEPHAESTUS_REVIEW_LIMIT=200 \
 HEPHAESTUS_REVIEW_MAX_SECONDS=3300 \
 HEPHAESTUS_REVIEW_MIN_CONFIDENCE=0.85 \
+HEPHAESTUS_REVIEW_CONSENSUS_MIN_VOTES=2 \
+HEPHAESTUS_REVIEW_CONSENSUS_MIN_RATIO=0.66 \
 ./run_pipeline.sh
 ```
+
+By default the reviewer runs three 7B/8B-class models one at a time so they fit on a 12GB GPU. A pending edge is auto-applied only when the configured consensus threshold agrees on the same action and direction. Split votes, low confidence, or direction disagreement stay `pending` instead of being published as approved links.
 
 To skip local AI review during a manual pipeline run:
 
@@ -292,10 +296,12 @@ To skip local AI review during a manual pipeline run:
 HEPHAESTUS_RUN_OLLAMA_REVIEW=0 ./run_pipeline.sh
 ```
 
-The scheduled GitHub workflow checks that Ollama is available on the self-hosted runner and pulls the configured review model if it is missing:
+The scheduled GitHub workflow checks that Ollama is available on the self-hosted runner and pulls the configured review models if they are missing:
 
 ```bash
-ollama pull qwen2.5:14b-instruct
+ollama pull qwen2.5:7b-instruct
+ollama pull llama3.1:8b
+ollama pull mistral:7b-instruct
 ```
 
 The scheduled workflow and local scripts both run the same publishing safety sequence:

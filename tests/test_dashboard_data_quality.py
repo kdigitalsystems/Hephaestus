@@ -79,7 +79,13 @@ def test_workflows_and_asset_versions_are_current():
     assert "Local GPU AI Pipeline" in gpu
     assert "Titan Queue" not in gpu
     assert "docs/link_history.json" in gpu
+    assert "HEPHAESTUS_REVIEW_MODELS" in gpu
+    assert "--models \"$HEPHAESTUS_REVIEW_MODELS\"" in gpu
+    assert "--consensus-min-votes" in gpu
+    assert "--consensus-min-ratio" in gpu
+    assert "qwen2.5:14b-instruct" not in gpu
     assert "link-history" in readme
+    assert "Ollama consensus panel" in readme
     assert "uniqueLinkCount" not in app
     assert "qualityData" not in app
     assert "investorMetrics" not in app

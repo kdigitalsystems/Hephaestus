@@ -15,10 +15,12 @@ jobs:
   run-ai-discovery:
     runs-on: [self-hosted, nvidia-gpu]
     env:
-      HEPHAESTUS_REVIEW_MODEL: qwen2.5:14b-instruct
+      HEPHAESTUS_REVIEW_MODELS: qwen2.5:7b-instruct,llama3.1:8b,mistral:7b-instruct
       HEPHAESTUS_REVIEW_LIMIT: "200"
       HEPHAESTUS_REVIEW_MAX_SECONDS: "3300"
       HEPHAESTUS_REVIEW_MIN_CONFIDENCE: "0.85"
+      HEPHAESTUS_REVIEW_CONSENSUS_MIN_VOTES: "2"
+      HEPHAESTUS_REVIEW_CONSENSUS_MIN_RATIO: "0.66"
 
     steps:
       - name: Checkout repository
@@ -57,12 +59,20 @@ jobs:
             exit 1
           fi
 
-          if ! awk '{print $1}' /tmp/ollama-list.txt | grep -Fx "$HEPHAESTUS_REVIEW_MODEL"; then
-            echo "Pulling missing review model: $HEPHAESTUS_REVIEW_MODEL"
-            ollama pull "$HEPHAESTUS_REVIEW_MODEL"
-          fi
+          IFS=',' read -ra REVIEW_MODELS <<< "$HEPHAESTUS_REVIEW_MODELS"
+          for MODEL in "${REVIEW_MODELS[@]}"; do
+            MODEL="$(echo "$MODEL" | xargs)"
+            if [ -z "$MODEL" ]; then
+              continue
+            fi
+            if ! awk '{print $1}' /tmp/ollama-list.txt | grep -Fx "$MODEL"; then
+              echo "Pulling missing review model: $MODEL"
+              ollama pull "$MODEL"
+              ollama list >/tmp/ollama-list.txt
+            fi
+          done
 
-          echo "Ollama review model is ready: $HEPHAESTUS_REVIEW_MODEL"
+          echo "Ollama consensus review models are ready: $HEPHAESTUS_REVIEW_MODELS"
 
       - name: Update Market Metrics
         env:
@@ -90,9 +100,9 @@ jobs:
           echo "Reapplying persisted edge review decisions..."
           venv/bin/python backend/edge_review_decisions.py apply
 
-          echo "Reviewing pending AI edges with local Ollama model..."
+          echo "Reviewing pending AI edges with local Ollama model consensus..."
           venv/bin/python backend/review_edges_with_ollama.py \
-            --model "$HEPHAESTUS_REVIEW_MODEL" \
+            --models "$HEPHAESTUS_REVIEW_MODELS" \
             --status pending \
             --limit "$HEPHAESTUS_REVIEW_LIMIT" \
             --apply \
@@ -100,6 +110,8 @@ jobs:
             --min-approve "$HEPHAESTUS_REVIEW_MIN_CONFIDENCE" \
             --min-reverse "$HEPHAESTUS_REVIEW_MIN_CONFIDENCE" \
             --min-reject "$HEPHAESTUS_REVIEW_MIN_CONFIDENCE" \
+            --consensus-min-votes "$HEPHAESTUS_REVIEW_CONSENSUS_MIN_VOTES" \
+            --consensus-min-ratio "$HEPHAESTUS_REVIEW_CONSENSUS_MIN_RATIO" \
             --report reports/ollama_edge_review_daily.csv
 
           echo "Cleaning up non-supply reviewed edges before publishing..."

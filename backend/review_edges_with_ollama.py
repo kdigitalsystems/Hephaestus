@@ -13,7 +13,8 @@ from database import SessionLocal
 from models import Edge, Node
 
 
-DEFAULT_MODEL = os.environ.get("HEPHAESTUS_REVIEW_MODEL", "qwen2.5:14b-instruct")
+DEFAULT_MODEL = os.environ.get("HEPHAESTUS_REVIEW_MODEL", "qwen2.5:7b-instruct")
+DEFAULT_MODELS = os.environ.get("HEPHAESTUS_REVIEW_MODELS")
 VALID_ACTIONS = {"approve", "reject", "reverse", "pending"}
 NON_SUPPLY_REVIEW_MARKERS = [
     "acquisition",
@@ -200,6 +201,10 @@ def correct_review_for_reason(edge, review):
     return review
 
 
+def split_models(value):
+    return [model.strip() for model in str(value or "").split(",") if model.strip()]
+
+
 def build_user_prompt(edge):
     return f"""
 Review this proposed edge:
@@ -335,11 +340,7 @@ def normalize_review(raw):
     }
 
 
-def review_edge(edge, model):
-    deterministic = deterministic_review(edge)
-    if deterministic:
-        return deterministic
-
+def review_edge_with_model(edge, model):
     response = ollama.chat(
         model=model,
         messages=[
@@ -350,7 +351,111 @@ def review_edge(edge, model):
         options={"temperature": 0},
     )
     review = normalize_review(parse_json_response(response["message"]["content"]))
-    return correct_review_for_reason(edge, review)
+    review = correct_review_for_reason(edge, review)
+    review["model"] = model
+    return review
+
+
+def action_threshold(action, args):
+    if action == "approve":
+        return args.min_approve
+    if action == "reject":
+        return args.min_reject
+    if action == "reverse":
+        return args.min_reverse
+    return 1.0
+
+
+def review_vote_key(review):
+    action = review["action"]
+    if action in {"approve", "reverse"}:
+        return (action, review["supplier_side"], review["customer_side"])
+    return (action, "neither", "neither") if action == "reject" else ("pending", "unknown", "unknown")
+
+
+def consensus_review(edge, reviews, args):
+    if not reviews:
+        return {
+            "action": "pending",
+            "supplier_side": "unknown",
+            "customer_side": "unknown",
+            "confidence": 0.0,
+            "relationship_type": edge.dependency_type or "",
+            "product": edge.product or "",
+            "reason": "No model reviews were available.",
+            "votes": "none",
+            "model_reviews": [],
+        }
+
+    groups = {}
+    for review in reviews:
+        groups.setdefault(review_vote_key(review), []).append(review)
+
+    winning_key, winning_reviews = max(
+        groups.items(),
+        key=lambda item: (len(item[1]), sum(review["confidence"] for review in item[1]) / len(item[1])),
+    )
+    action, supplier_side, customer_side = winning_key
+    vote_count = len(winning_reviews)
+    vote_ratio = vote_count / len(reviews)
+    avg_confidence = sum(review["confidence"] for review in winning_reviews) / vote_count
+    min_confidence = min(review["confidence"] for review in winning_reviews)
+    threshold = action_threshold(action, args)
+    strong_enough = (
+        action != "pending"
+        and vote_count >= min(args.consensus_min_votes, len(reviews))
+        and vote_ratio >= args.consensus_min_ratio
+        and avg_confidence >= threshold
+        and min_confidence >= max(0.5, threshold - 0.15)
+    )
+
+    best_review = max(winning_reviews, key=lambda review: review["confidence"])
+    vote_summary = ", ".join(
+        f"{key[0]}:{len(value)}" for key, value in sorted(groups.items(), key=lambda item: (-len(item[1]), item[0]))
+    )
+    reason = (
+        f"Consensus {vote_count}/{len(reviews)} for {action} "
+        f"(avg confidence {avg_confidence:.2f}; votes {vote_summary}). "
+        f"Lead rationale from {best_review.get('model', 'model')}: {best_review['reason']}"
+    )
+
+    if not strong_enough:
+        action = "pending"
+        supplier_side = "unknown"
+        customer_side = "unknown"
+        reason = (
+            f"Held for review because model consensus was insufficient. "
+            f"{reason}"
+        )
+
+    return {
+        "action": action,
+        "supplier_side": supplier_side,
+        "customer_side": customer_side,
+        "confidence": round(avg_confidence, 4),
+        "relationship_type": best_review["relationship_type"] or edge.dependency_type or "",
+        "product": best_review["product"] or edge.product or "",
+        "reason": reason,
+        "votes": vote_summary,
+        "model_reviews": reviews,
+    }
+
+
+def review_edge(edge, models, args):
+    deterministic = deterministic_review(edge)
+    if deterministic:
+        deterministic["model"] = "deterministic"
+        deterministic["votes"] = "deterministic:1"
+        deterministic["model_reviews"] = [dict(deterministic)]
+        return deterministic
+
+    reviews = [review_edge_with_model(edge, model) for model in models]
+    if len(reviews) == 1:
+        review = reviews[0]
+        review["votes"] = f"{review['action']}:1"
+        review["model_reviews"] = reviews
+        return review
+    return consensus_review(edge, reviews, args)
 
 
 def selected_edges(session, args):
@@ -382,7 +487,7 @@ def update_metadata(edge, review):
     if review["product"]:
         edge.product = review["product"][:255]
     edge.confidence_score = review["confidence"]
-    edge.review_note = f"Ollama review: {review['reason']}"[:1000]
+    edge.review_note = f"Ollama consensus review: {review['reason']}"[:1000]
     edge.reviewed_at = datetime.now(timezone.utc)
 
 
@@ -411,7 +516,7 @@ def apply_reverse(session, edge, review):
     if existing:
         apply_approval(existing, review)
         edge.review_status = "rejected"
-        edge.review_note = f"Ollama review: duplicate reversed edge approved as #{existing.id}. {review['reason']}"[:1000]
+        edge.review_note = f"Ollama consensus review: duplicate reversed edge approved as #{existing.id}. {review['reason']}"[:1000]
         edge.reviewed_at = datetime.now(timezone.utc)
         return existing.id
 
@@ -434,7 +539,7 @@ def apply_review(session, edge, review):
         return f"reversed_to_edge_{target_id}"
 
     edge.review_status = "pending"
-    edge.review_note = f"Ollama review left pending: {review['reason']}"[:1000]
+    edge.review_note = f"Ollama consensus review left pending: {review['reason']}"[:1000]
     return "pending"
 
 
@@ -450,6 +555,7 @@ def write_report(path, rows):
                 "source",
                 "target",
                 "model_action",
+                "consensus_votes",
                 "supplier_side",
                 "customer_side",
                 "model_confidence",
@@ -458,6 +564,7 @@ def write_report(path, rows):
                 "relationship_type",
                 "product",
                 "reason",
+                "model_reviews",
             ],
         )
         writer.writeheader()
@@ -465,8 +572,9 @@ def write_report(path, rows):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Use a local Ollama model to batch-review supply-chain edges.")
+    parser = argparse.ArgumentParser(description="Use local Ollama model consensus to batch-review supply-chain edges.")
     parser.add_argument("--model", default=DEFAULT_MODEL)
+    parser.add_argument("--models", default=DEFAULT_MODELS, help="Comma-separated Ollama models. Overrides --model when set.")
     parser.add_argument("--status", default="pending", choices=["pending", "approved", "rejected"])
     parser.add_argument("--limit", type=int, default=100)
     parser.add_argument("--source")
@@ -476,10 +584,15 @@ def main():
     parser.add_argument("--min-approve", type=float, default=0.82)
     parser.add_argument("--min-reject", type=float, default=0.86)
     parser.add_argument("--min-reverse", type=float, default=0.88)
+    parser.add_argument("--consensus-min-votes", type=int, default=2)
+    parser.add_argument("--consensus-min-ratio", type=float, default=0.66)
     parser.add_argument("--sleep", type=float, default=0.0)
     parser.add_argument("--max-seconds", type=float, default=0.0, help="Stop gracefully after this many seconds.")
     parser.add_argument("--report", default="reports/ollama_edge_review.csv")
     args = parser.parse_args()
+    models = split_models(args.models) if args.models else [args.model]
+    if len(models) == 1:
+        args.consensus_min_votes = 1
 
     session = SessionLocal()
     report_rows = []
@@ -488,7 +601,10 @@ def main():
 
     try:
         edges = selected_edges(session, args)
-        print(f"Reviewing {len(edges)} {args.status} edge(s) with {args.model}. apply={args.apply}")
+        print(
+            f"Reviewing {len(edges)} {args.status} edge(s) with {', '.join(models)}. "
+            f"consensus_min_votes={args.consensus_min_votes} consensus_min_ratio={args.consensus_min_ratio} apply={args.apply}"
+        )
 
         for index, edge in enumerate(edges, start=1):
             if args.max_seconds and time.monotonic() - started_at >= args.max_seconds:
@@ -498,7 +614,7 @@ def main():
             source = edge.source_node.ticker if edge.source_node else str(edge.source_id)
             target = edge.target_node.ticker if edge.target_node else str(edge.target_id)
             try:
-                review = review_edge(edge, args.model)
+                review = review_edge(edge, models, args)
                 counts[review["action"]] += 1
                 allowed = decision_allowed(review, args)
                 result = "held"
@@ -525,6 +641,7 @@ def main():
                     "source": source,
                     "target": target,
                     "model_action": review["action"],
+                    "consensus_votes": review.get("votes", ""),
                     "supplier_side": review["supplier_side"],
                     "customer_side": review["customer_side"],
                     "model_confidence": review["confidence"],
@@ -533,6 +650,7 @@ def main():
                     "relationship_type": review["relationship_type"],
                     "product": review["product"],
                     "reason": review["reason"],
+                    "model_reviews": json.dumps(review.get("model_reviews", []), sort_keys=True),
                 })
 
                 if args.sleep:
