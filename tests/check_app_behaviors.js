@@ -5,7 +5,7 @@ const appSource = fs.readFileSync("docs/app.js", "utf8");
 const htmlSource = fs.readFileSync("docs/index.html", "utf8");
 const elements = new Map();
 
-["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief", "Investor Radar", "Investment Radar", "Decision Support", "20260525-investor3"].forEach((label) => {
+["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief", "Investor Radar", "Investment Radar", "Decision Support", "20260525-investor3", "20260531-ticker-prefix1"].forEach((label) => {
   if (htmlSource.includes(label)) {
     throw new Error(`public dashboard still exposes redundant/developer label: ${label}`);
   }
@@ -93,7 +93,7 @@ if (context.routeToHash({ view: "company", ticker: "AMD", previous: { view: "com
 vm.runInContext(`
   allCompanies = [
     {
-      name: "Advanced Micro Devices",
+      name: "Advanced Micro Devices, Inc. Common Stock",
       ticker: "AMD",
       sector: "Technology",
       industry: "Semiconductors",
@@ -138,6 +138,22 @@ if (context.__caseInsensitiveTicker !== "AMD") {
   throw new Error("ticker lookup should be case-insensitive");
 }
 
+vm.runInContext("globalThis.__cleanDisplayName = displayCompanyName('Advanced Micro Devices, Inc. Common Stock');", context);
+
+if (context.__cleanDisplayName !== "Advanced Micro Devices, Inc.") {
+  throw new Error(`display name should remove security suffixes, got ${context.__cleanDisplayName}`);
+}
+
+vm.runInContext("globalThis.__sentenceName = sentenceEntityName('Super Micro Computer, Inc. Common Stock'); globalThis.__formattedSmallCurrency = formatNum(527.2);", context);
+
+if (context.__sentenceName !== "Super Micro Computer, Inc") {
+  throw new Error(`sentence entity name should avoid double periods, got ${context.__sentenceName}`);
+}
+
+if (context.__formattedSmallCurrency !== "$527.20") {
+  throw new Error(`small currency values should keep cents, got ${context.__formattedSmallCurrency}`);
+}
+
 element("search-input").value = "taiwan";
 element("sector-filter").value = "";
 element("dependency-filter").value = "";
@@ -174,6 +190,17 @@ if (context.__routeAfterTickerPrefix.view !== "companies" || context.__routeAfte
 
 if (JSON.stringify(context.__prefixResults) !== JSON.stringify(["AMAT", "AMD"])) {
   throw new Error(`expected AM ticker prefix matches only, got ${JSON.stringify(context.__prefixResults)}`);
+}
+
+element("search-input").value = "zzzznotaticker";
+element("sector-filter").value = "";
+element("dependency-filter").value = "";
+element("connected-filter").checked = false;
+
+vm.runInContext("applyFilters(true); globalThis.__emptySearchResults = currentCompaniesList.map(company => company.ticker); globalThis.__emptySearchCount = document.getElementById('result-count').textContent;", context);
+
+if (context.__emptySearchResults.length !== 0 || context.__emptySearchCount !== "0 results") {
+  throw new Error(`expected impossible search to stay empty, got ${JSON.stringify(context.__emptySearchResults)} and count ${context.__emptySearchCount}`);
 }
 
 element("search-input").value = "amd";

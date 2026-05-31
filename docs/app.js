@@ -31,8 +31,24 @@ const formatNum = (num, type = 'currency') => {
     if (value >= 1e12) return '$' + (value / 1e12).toFixed(2) + 'T';
     if (value >= 1e9) return '$' + (value / 1e9).toFixed(2) + 'B';
     if (value >= 1e6) return '$' + (value / 1e6).toFixed(2) + 'M';
-    return '$' + value.toLocaleString();
+    return '$' + value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
+
+const displayCompanyName = (name) => {
+    let value = String(name || '').replace(/\s+/g, ' ').trim();
+    [
+        /\s+(Class\s+[A-Z]\s+|New\s+)?Common Stock$/i,
+        /\s+Ordinary Shares.*$/i,
+        /\s+American Depositary Shares.*$/i,
+        /\s+Depositary Shares.*$/i,
+        /\s+Warrants.*$/i,
+    ].forEach(pattern => {
+        value = value.replace(pattern, '').trim();
+    });
+    return value || String(name || '').trim() || 'Unknown';
+};
+
+const sentenceEntityName = (name) => displayCompanyName(name).replace(/\.+$/, '');
 
 const relationshipCount = (company) => (company.upstream?.length || 0) + (company.downstream?.length || 0);
 const companyMetrics = (company) => company.investor_metrics || {
@@ -282,10 +298,6 @@ window.addEventListener('popstate', () => applyRouteFromHash(false));
 window.addEventListener('hashchange', () => applyRouteFromHash(false));
 
 function showCompanies() {
-    if (!currentCompaniesList.length) {
-        currentCompaniesList = [...allCompanies];
-        setText('current-industry-title', 'All Companies');
-    }
     document.getElementById('view-industries').classList.add('hidden');
     document.getElementById('view-quality').classList.add('hidden');
     document.getElementById('view-watchlist').classList.add('hidden');
@@ -468,7 +480,8 @@ function renderCompanyTableRow(company) {
 
     const changeClass = company.change >= 0 ? 'positive' : 'negative';
     const sign = company.change > 0 ? '+' : '';
-    const nameCell = makeElement('td', 'company-cell', company.name || '');
+    const nameCell = makeElement('td', 'company-cell', displayCompanyName(company.name));
+    nameCell.title = company.name || '';
 
     tr.appendChild(nameCell);
     tr.appendChild(makeElement('td', '', company.ticker || ''));
@@ -500,7 +513,7 @@ function renderLevel3(company, previousRoute = null) {
     document.getElementById('view-compare').classList.add('hidden');
     document.getElementById('view-sector').classList.add('hidden');
 
-    setText('detail-name', company.name || 'N/A');
+    setText('detail-name', displayCompanyName(company.name));
     setText('detail-ticker', company.ticker || 'N/A');
     setText('detail-industry', company.industry || company.sector || 'Uncategorized');
 
@@ -520,9 +533,9 @@ function renderStory(company) {
 
     setText('detail-story-title', `${company.ticker || company.name} dependency snapshot`);
 
-    let story = `${company.name} has ${upstream.length} tracked upstream supplier relationship${upstream.length === 1 ? '' : 's'} and ${downstream.length} tracked downstream customer relationship${downstream.length === 1 ? '' : 's'}.`;
-    if (primarySupplier) story += ` Its upstream exposure includes ${primarySupplier}.`;
-    if (primaryCustomer) story += ` Its downstream exposure includes ${primaryCustomer}.`;
+    let story = `${displayCompanyName(company.name)} has ${upstream.length} tracked upstream supplier relationship${upstream.length === 1 ? '' : 's'} and ${downstream.length} tracked downstream customer relationship${downstream.length === 1 ? '' : 's'}.`;
+    if (primarySupplier) story += ` Its upstream exposure includes ${sentenceEntityName(primarySupplier)}.`;
+    if (primaryCustomer) story += ` Its downstream exposure includes ${sentenceEntityName(primaryCustomer)}.`;
     if (!upstream.length && !downstream.length) story += ' This company is a good candidate for the next discovery pass.';
     setText('detail-story', story);
 }
@@ -557,7 +570,7 @@ function renderDecisionBrief(company) {
         const chip = makeElement('button', 'related-chip', dep.ticker);
         const linkedCompany = getCompanyByTicker(dep.ticker);
         chip.type = 'button';
-        chip.title = dep.name || dep.ticker;
+        chip.title = dep.name ? displayCompanyName(dep.name) : dep.ticker;
         chip.onclick = () => linkedCompany ? navigateCompany(linkedCompany.ticker) : navigateCompanies({ query: dep.ticker });
         chips.appendChild(chip);
     });
@@ -643,7 +656,7 @@ function renderXRay(company) {
 
         const topLine = makeElement('div', 'xray-topline');
         const companyLine = makeElement('div', 'xray-company-line');
-        companyLine.appendChild(makeElement('span', 'xray-name', dep.name || 'Unknown'));
+        companyLine.appendChild(makeElement('span', 'xray-name', displayCompanyName(dep.name)));
         companyLine.appendChild(makeElement('span', 'xray-ticker', dep.ticker ? `(${dep.ticker})` : ''));
 
         if (linkedCompany) {
@@ -727,7 +740,7 @@ function openEvidenceModal(dep, company = {}, direction = '') {
     clearElement(body);
     setText('modal-title', `${company.ticker || 'Company'} ${direction === 'upstream' ? '<-' : '->'} ${dep.ticker || dep.name || 'Counterparty'}`);
     [
-        ['Counterparty', `${dep.name || 'Unknown'} ${dep.ticker ? `(${dep.ticker})` : ''}`],
+        ['Counterparty', `${displayCompanyName(dep.name)} ${dep.ticker ? `(${dep.ticker})` : ''}`],
         ['Relationship', dep.type || 'Supply Link'],
         ['Product / service', dep.product || 'N/A'],
     ].forEach(([label, value]) => {
@@ -781,7 +794,7 @@ function renderCompanySignalCard(company) {
     const metrics = companyMetrics(company);
     const card = makeElement('article', 'signal-card');
     const header = makeElement('div', 'signal-card-header');
-    header.appendChild(makeElement('strong', '', `${company.ticker} - ${company.name}`));
+    header.appendChild(makeElement('strong', '', `${company.ticker} - ${displayCompanyName(company.name)}`));
     header.appendChild(makeElement('span', 'source-badge pending', `Risk ${metrics.risk_score}/100`));
     card.appendChild(header);
     card.appendChild(makeElement('p', '', `${metrics.total_links} tracked links, supplier risk ${metrics.supplier_risk}/100, customer risk ${metrics.customer_risk}/100.`));
@@ -849,7 +862,7 @@ function renderCompareView(updateRoute = true) {
     companies.forEach(company => {
         const metrics = companyMetrics(company);
         const card = makeElement('article', 'compare-card');
-        card.appendChild(makeElement('h3', '', `${company.ticker} - ${company.name}`));
+        card.appendChild(makeElement('h3', '', `${company.ticker} - ${displayCompanyName(company.name)}`));
         const rows = [
             ['Market cap', formatNum(company.market_cap)],
             ['Tracked links', metrics.total_links],
