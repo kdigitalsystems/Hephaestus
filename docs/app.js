@@ -222,6 +222,17 @@ function setRoute(route, push = true) {
     applyRoute(route);
 }
 
+function updateRouteHash(route, push = true) {
+    const hash = routeToHash(route);
+    if (push && window.location.hash !== hash) {
+        history.pushState(null, '', hash);
+    } else if (!push && window.location.hash !== hash) {
+        history.replaceState(null, '', hash);
+    }
+    currentRoute = route;
+    updateActiveNav(route);
+}
+
 function applyRouteFromHash(push = false) {
     const route = hashToRoute(window.location.hash);
     if (!window.location.hash) {
@@ -411,7 +422,8 @@ function applyFilters(updateRoute = true, forceShortQuery = false) {
 
     if (updateRoute) {
         const shouldPush = currentRoute.view !== 'companies';
-        navigateCompanies({
+        updateRouteHash({
+            view: 'companies',
             query,
             sector,
             dependency,
@@ -487,7 +499,10 @@ function renderCompanyTableRow(company) {
     return tr;
 }
 
-const getCompanyByTicker = (ticker) => allCompanies.find(company => company.ticker === ticker) || null;
+const getCompanyByTicker = (ticker) => {
+    const normalized = String(ticker || '').trim().toUpperCase();
+    return allCompanies.find(company => String(company.ticker || '').toUpperCase() === normalized) || null;
+};
 
 function renderLevel3(company, previousRoute = null) {
     currentRoute = {
@@ -841,7 +856,7 @@ function renderCompareView(updateRoute = true) {
     document.getElementById('view-compare').classList.remove('hidden');
     const tickerA = document.getElementById('compare-a').value.trim().toUpperCase();
     const tickerB = document.getElementById('compare-b').value.trim().toUpperCase();
-    if (updateRoute) navigateCompare({ a: tickerA, b: tickerB }, false);
+    if (updateRoute) updateRouteHash({ view: 'compare', a: tickerA, b: tickerB }, false);
     const companies = [getCompanyByTicker(tickerA), getCompanyByTicker(tickerB)].filter(Boolean);
     setText('compare-count', `${companies.length}/2 selected`);
     const grid = document.getElementById('compare-grid');

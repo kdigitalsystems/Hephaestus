@@ -56,6 +56,12 @@ def test_link_history_tracks_current_snapshot():
     assert len(latest["links"]) == data["investor_metrics"]["unique_links"]
 
 
+def test_pipeline_commits_link_history_with_dashboard_export():
+    expected = "git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json"
+    assert expected in (ROOT / "run_pipeline.sh").read_text(encoding="utf-8")
+    assert expected in (ROOT / ".github" / "workflows" / "gpu_pipeline.yml").read_text(encoding="utf-8")
+
+
 def test_dashboard_validator_rejects_duplicate_relationship_tickers():
     data = {
         "industries": {

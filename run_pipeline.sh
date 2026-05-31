@@ -65,7 +65,7 @@ echo "Validating published dashboard data..."
 python3 backend/validate_dashboard_data.py
 
 echo "Checking for dashboard changes..."
-git add docs/dashboard_data.json data/edge_review_decisions.json
+git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
 if ! git diff --cached --quiet; then
   git commit -m "Automated dashboard update: $(date +'%Y-%m-%d')"
   git push origin main

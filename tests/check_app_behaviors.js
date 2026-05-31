@@ -86,6 +86,10 @@ if (roundTrip.view !== "companies" || roundTrip.query !== "tsm" || roundTrip.sec
   throw new Error(`route round-trip failed: ${JSON.stringify(roundTrip)}`);
 }
 
+if (context.routeToHash({ view: "company", ticker: "AMD", previous: { view: "companies", query: "amd" } }) !== "#company?ticker=AMD") {
+  throw new Error("route hash should not leak nested previous route state");
+}
+
 vm.runInContext(`
   allCompanies = [
     {
@@ -109,6 +113,12 @@ vm.runInContext(`
   ];
   globalData = { Technology: [allCompanies[0]], Consumer: [allCompanies[1]] };
 `, context);
+
+vm.runInContext("globalThis.__caseInsensitiveTicker = getCompanyByTicker('amd')?.ticker;", context);
+
+if (context.__caseInsensitiveTicker !== "AMD") {
+  throw new Error("ticker lookup should be case-insensitive");
+}
 
 element("search-input").value = "taiwan";
 element("sector-filter").value = "";
@@ -142,6 +152,13 @@ vm.runInContext("applyFilters(true); globalThis.__routeAfterTickerSearch = curre
 
 if (context.__routeAfterTickerSearch.view !== "company" || context.__routeAfterTickerSearch.ticker !== "AMD") {
   throw new Error(`expected exact ticker search to open AMD detail, got ${JSON.stringify(context.__routeAfterTickerSearch)}`);
+}
+
+element("search-input").value = "taiwan";
+vm.runInContext("applyFilters(true); globalThis.__routeAfterListSearch = currentRoute;", context);
+
+if (context.__routeAfterListSearch.view !== "companies" || context.__routeAfterListSearch.query !== "taiwan") {
+  throw new Error(`expected list search to update route without rerouting, got ${JSON.stringify(context.__routeAfterListSearch)}`);
 }
 
 vm.runInContext(`
