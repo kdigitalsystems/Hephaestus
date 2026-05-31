@@ -55,6 +55,8 @@ const context = {
   window: {
     location: { hash: "" },
     addEventListener() {},
+    clearTimeout,
+    setTimeout,
     scrollTo() {},
   },
 };
@@ -109,6 +111,18 @@ vm.runInContext("applyFilters(false); globalThis.__filteredTickers = currentComp
 
 if (context.__filteredTickers.length !== 1 || context.__filteredTickers[0] !== "AMD") {
   throw new Error(`expected richer search/filter to match AMD only, got ${JSON.stringify(context.__filteredTickers)}`);
+}
+
+vm.runInContext("currentRoute = { view: 'overview' }; currentCompaniesList = [];", context);
+element("search-input").value = "a";
+element("sector-filter").value = "";
+element("dependency-filter").value = "";
+element("connected-filter").checked = false;
+
+vm.runInContext("applyFilters(true); globalThis.__routeAfterPartialTicker = currentRoute; globalThis.__partialResults = currentCompaniesList.map(company => company.ticker);", context);
+
+if (context.__routeAfterPartialTicker.view !== "overview" || context.__partialResults.length !== 0) {
+  throw new Error(`expected partial ticker typing to stay on overview, got route ${JSON.stringify(context.__routeAfterPartialTicker)} and results ${JSON.stringify(context.__partialResults)}`);
 }
 
 element("search-input").value = "amd";

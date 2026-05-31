@@ -8,6 +8,7 @@ let currentRoute = { view: 'overview' };
 let sortCol = 'market_cap';
 let sortAsc = false;
 let watchlist = new Set();
+let searchInputTimer = null;
 
 const clearElement = (element) => {
     while (element.firstChild) element.removeChild(element.firstChild);
@@ -85,7 +86,7 @@ const relationshipMatchesConfidence = (relationship, minimum) => {
 };
 const findExactTicker = (query) => {
     const normalized = String(query || '').trim().toUpperCase();
-    if (normalized.length < 2) return null;
+    if (!normalized) return null;
     return allCompanies.find(company => String(company.ticker || '').toUpperCase() === normalized) || null;
 };
 
@@ -400,12 +401,27 @@ function renderLevel1() {
     });
 }
 
-function applyFilters(updateRoute = true) {
+function handleSearchInput() {
+    window.clearTimeout(searchInputTimer);
+    searchInputTimer = window.setTimeout(() => applyFilters(true, false), 250);
+}
+
+function handleSearchKeydown(event) {
+    if (event.key !== 'Enter') return;
+    window.clearTimeout(searchInputTimer);
+    applyFilters(true, true);
+}
+
+function applyFilters(updateRoute = true, forceShortQuery = false) {
     const query = document.getElementById('search-input').value.toLowerCase().trim();
     const sector = document.getElementById('sector-filter').value;
     const dependency = document.getElementById('dependency-filter').value;
     const onlyConnected = document.getElementById('connected-filter').checked;
     const exactTicker = !sector && !dependency && !onlyConnected ? findExactTicker(query) : null;
+
+    if (query && query.length < 3 && !sector && !dependency && !onlyConnected && !forceShortQuery) {
+        return;
+    }
 
     if (exactTicker && updateRoute) {
         navigateCompany(exactTicker.ticker);
