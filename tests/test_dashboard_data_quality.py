@@ -70,6 +70,10 @@ def test_workflows_and_asset_versions_are_current():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
     assert "20260525-investor3" not in html
+    assert "actions/checkout@v6" in ci
+    assert "actions/setup-python@v6" in ci
+    assert "actions/setup-node@v6" in ci
+    assert "actions/checkout@v6" in gpu
     assert 'node-version: "24"' in ci
     assert "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24" in ci
     assert "Local GPU AI Pipeline" in gpu
