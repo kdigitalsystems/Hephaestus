@@ -5,11 +5,19 @@ const appSource = fs.readFileSync("docs/app.js", "utf8");
 const htmlSource = fs.readFileSync("docs/index.html", "utf8");
 const elements = new Map();
 
-["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief", "Investor Radar", "Investment Radar", "Decision Support", "20260525-investor3", "20260531-ticker-prefix1"].forEach((label) => {
+["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief", "Investor Radar", "Investment Radar", "Decision Support", "20260525-investor3", "20260531-ticker-prefix1", "20260531-ui-fixes2"].forEach((label) => {
   if (htmlSource.includes(label)) {
     throw new Error(`public dashboard still exposes redundant/developer label: ${label}`);
   }
 });
+
+if (!appSource.includes("graph-column") || !appSource.includes("graph-node-list")) {
+  throw new Error("X-Ray graph should use stacked columns so many companies do not overlap");
+}
+
+if (appSource.includes("graph-line") || appSource.includes("node.style.top") || appSource.includes("node.style.left")) {
+  throw new Error("X-Ray graph should not use absolute-positioned node placement");
+}
 
 const htmlIds = new Set([...htmlSource.matchAll(/id="([^"]+)"/g)].map((match) => match[1]));
 const appIdRefs = new Set([...appSource.matchAll(/getElementById\('([^']+)'\)/g)].map((match) => match[1]));

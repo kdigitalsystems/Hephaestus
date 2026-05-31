@@ -620,33 +620,44 @@ function renderMetrics(company) {
 function renderSupplyGraph(company) {
     const graph = document.getElementById('supply-graph');
     clearElement(graph);
-    const upstream = (company.upstream || []).slice(0, 5);
-    const downstream = (company.downstream || []).slice(0, 5);
+    const upstream = company.upstream || [];
+    const downstream = company.downstream || [];
+
+    const makeGraphColumn = (direction, title, links) => {
+        const column = makeElement('div', `graph-column ${direction}`);
+        const heading = makeElement('div', 'graph-column-title');
+        heading.appendChild(makeElement('span', '', title));
+        heading.appendChild(makeElement('strong', '', String(links.length)));
+        column.appendChild(heading);
+
+        const list = makeElement('div', 'graph-node-list');
+        if (!links.length) {
+            list.appendChild(makeElement('span', 'empty-state', direction === 'upstream' ? 'No upstream suppliers tracked.' : 'No downstream customers tracked.'));
+            column.appendChild(list);
+            return column;
+        }
+
+        links.forEach(dep => {
+            const node = makeElement('button', `graph-node ${direction} status-${relationshipStatus(dep)}`);
+            node.type = 'button';
+            node.appendChild(makeElement('strong', '', dep.ticker || displayCompanyName(dep.name)));
+            node.appendChild(makeElement('span', '', dep.product || dep.type || 'Supply Link'));
+            node.onclick = () => getCompanyByTicker(dep.ticker) ? navigateCompany(dep.ticker) : openEvidenceModal(dep, company, direction);
+            list.appendChild(node);
+        });
+        column.appendChild(list);
+        return column;
+    };
+
+    graph.appendChild(makeGraphColumn('upstream', 'Upstream', upstream));
+
     const center = makeElement('button', 'graph-node graph-center');
     center.type = 'button';
     center.appendChild(makeElement('strong', '', company.ticker || 'N/A'));
     center.appendChild(makeElement('span', '', `${relationshipCount(company)} links`));
     graph.appendChild(center);
 
-    const addGraphNode = (dep, direction, index, total) => {
-        const node = makeElement('button', `graph-node ${direction}`);
-        const y = total <= 1 ? 50 : 18 + (index * (64 / (total - 1)));
-        node.style.top = `${y}%`;
-        node.style.left = direction === 'upstream' ? '9%' : '74%';
-        node.type = 'button';
-        node.appendChild(makeElement('strong', '', dep.ticker || dep.name || 'N/A'));
-        node.appendChild(makeElement('span', '', dep.product || dep.type || 'Supply Link'));
-        node.onclick = () => getCompanyByTicker(dep.ticker) ? navigateCompany(dep.ticker) : openEvidenceModal(dep, company, direction);
-        graph.appendChild(node);
-        const line = makeElement('span', `graph-line ${direction} status-${relationshipStatus(dep)}`);
-        line.style.top = `${y}%`;
-        graph.appendChild(line);
-    };
-    upstream.forEach((dep, index) => addGraphNode(dep, 'upstream', index, upstream.length));
-    downstream.forEach((dep, index) => addGraphNode(dep, 'downstream', index, downstream.length));
-    if (!upstream.length && !downstream.length) {
-        graph.appendChild(makeElement('span', 'empty-state graph-empty', 'No graphable relationships yet.'));
-    }
+    graph.appendChild(makeGraphColumn('downstream', 'Downstream', downstream));
 }
 
 function renderXRay(company) {

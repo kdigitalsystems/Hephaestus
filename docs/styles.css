@@ -1284,6 +1284,11 @@ tbody tr:hover {
     min-height: 320px;
     margin-bottom: 18px;
     position: relative;
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(160px, 0.48fr) minmax(220px, 1fr);
+    gap: 16px;
+    align-items: stretch;
+    padding: 18px;
     overflow: hidden;
     border: 1px solid rgba(103, 248, 223, 0.14);
     border-radius: 8px;
@@ -1302,12 +1307,52 @@ tbody tr:hover {
     background-size: 34px 34px;
 }
 
+.graph-column,
 .graph-node {
-    width: min(180px, 24%);
-    min-height: 62px;
-    position: absolute;
+    min-width: 0;
+    position: relative;
     z-index: 1;
-    transform: translateY(-50%);
+}
+
+.graph-column {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid rgba(103, 248, 223, 0.13);
+    border-radius: 8px;
+    background: rgba(3, 7, 13, 0.54);
+}
+
+.graph-column-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: 0.74rem;
+    font-weight: 950;
+    text-transform: uppercase;
+}
+
+.graph-column-title strong {
+    color: var(--accent);
+    font-size: 0.95rem;
+}
+
+.graph-node-list {
+    min-height: 0;
+    max-height: 430px;
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.graph-node {
+    width: 100%;
+    min-height: 62px;
     display: grid;
     align-content: center;
     gap: 4px;
@@ -1320,10 +1365,15 @@ tbody tr:hover {
     text-align: center;
 }
 
+.graph-node:hover {
+    border-color: rgba(183, 255, 95, 0.65);
+    background: rgba(10, 22, 26, 0.94);
+}
+
 .graph-center {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    align-self: center;
+    justify-self: stretch;
+    min-height: 150px;
     border-color: rgba(183, 255, 95, 0.58);
     box-shadow: 0 0 34px rgba(103, 248, 223, 0.24);
 }
@@ -1338,34 +1388,6 @@ tbody tr:hover {
     font-size: 0.74rem;
     font-weight: 800;
     text-transform: uppercase;
-}
-
-.graph-line {
-    position: absolute;
-    z-index: 0;
-    height: 1px;
-    transform: translateY(-50%);
-    background: linear-gradient(90deg, transparent, rgba(103, 248, 223, 0.58), transparent);
-}
-
-.graph-line.upstream {
-    left: 28%;
-    width: 23%;
-}
-
-.graph-line.downstream {
-    left: 50%;
-    width: 24%;
-}
-
-.graph-line.status-pending {
-    background: linear-gradient(90deg, transparent, rgba(255, 183, 90, 0.78), transparent);
-}
-
-.graph-empty {
-    position: absolute;
-    inset: auto 0 20px;
-    text-align: center;
 }
 
 .map-column {
@@ -1708,6 +1730,18 @@ tbody tr:hover {
 
     .story-metrics {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .supply-graph {
+        grid-template-columns: 1fr;
+    }
+
+    .graph-center {
+        min-height: 112px;
+    }
+
+    .graph-node-list {
+        max-height: none;
     }
 }
 
