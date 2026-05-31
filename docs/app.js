@@ -71,19 +71,6 @@ const relationshipStatus = (relationship) => {
     return 'pending';
 };
 
-const statusLabel = (status) => status === 'approved' ? 'Approved' : status === 'rejected' ? 'Rejected' : 'Needs review';
-const formatConfidence = (value) => value === null || value === undefined || isNaN(Number(value)) ? 'N/A' : `${Math.round(Number(value) * 100)}%`;
-const formatDateLabel = (value) => {
-    if (!value || value === 'N/A') return 'N/A';
-    return String(value).replace('T', ' ').replace('+00:00', ' UTC');
-};
-
-const relationshipMatchesStatus = (relationship, status) => !status || relationshipStatus(relationship) === status;
-const relationshipMatchesConfidence = (relationship, minimum) => {
-    if (!minimum) return true;
-    const confidence = Number(relationship.confidence);
-    return !isNaN(confidence) && confidence >= Number(minimum);
-};
 const findExactTicker = (query) => {
     const normalized = String(query || '').trim().toUpperCase();
     if (!normalized) return null;
@@ -195,7 +182,7 @@ function navigateCompany(ticker) {
 }
 
 function navigateBackToCompanies() {
-    if (currentRoute.previous && currentRoute.previous.view === 'companies') {
+    if (currentRoute.previous && ['companies', 'sector'].includes(currentRoute.previous.view)) {
         setRoute(currentRoute.previous);
         return;
     }
@@ -342,32 +329,6 @@ function populateFilters() {
         const option = makeElement('option', '', type);
         option.value = type;
         dependencyFilter.appendChild(option);
-    });
-}
-
-function renderConnectedList() {
-    const list = document.getElementById('connected-list');
-    clearElement(list);
-
-    const connected = [...allCompanies]
-        .filter(company => company.connection_count > 0)
-        .sort((a, b) => b.connection_count - a.connection_count)
-        .slice(0, 6);
-
-    if (!connected.length) {
-        list.appendChild(makeElement('span', 'empty-state', 'No supply-chain relationships exported yet.'));
-        return;
-    }
-
-    connected.forEach((company, index) => {
-        const row = makeElement('button', 'rank-item');
-        row.onclick = () => navigateCompany(company.ticker);
-        row.appendChild(makeElement('span', 'rank-index', String(index + 1)));
-        const body = makeElement('span', 'rank-body');
-        body.appendChild(makeElement('strong', '', company.name || 'Unknown'));
-        body.appendChild(makeElement('small', '', `${company.ticker || 'N/A'} - ${company.connection_count} links`));
-        row.appendChild(body);
-        list.appendChild(row);
     });
 }
 
@@ -526,65 +487,6 @@ function renderCompanyTableRow(company) {
     return tr;
 }
 
-function renderQualityView() {
-    currentRoute = { view: 'quality' };
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.getElementById('view-industries').classList.add('hidden');
-    document.getElementById('view-quality').classList.remove('hidden');
-    document.getElementById('view-companies').classList.add('hidden');
-    document.getElementById('view-details').classList.add('hidden');
-    document.getElementById('view-watchlist').classList.add('hidden');
-    document.getElementById('view-compare').classList.add('hidden');
-    document.getElementById('view-sector').classList.add('hidden');
-
-    const pending = Number(qualityData.pending_count || 0);
-    setText('quality-approved', Number(qualityData.approved_count || 0).toLocaleString());
-    setText('quality-pending', pending.toLocaleString());
-    setText('quality-rejected', Number(qualityData.rejected_count || 0).toLocaleString());
-    setText('quality-count', `${pending.toLocaleString()} pending`);
-
-    const list = document.getElementById('review-queue');
-    clearElement(list);
-    const queue = qualityData.review_queue || [];
-    if (!queue.length) {
-        list.appendChild(makeElement('span', 'empty-state', 'No pending AI-discovered relationships are waiting for review.'));
-        return;
-    }
-
-    queue.forEach(edge => {
-        const card = makeElement('article', 'review-card');
-        const title = makeElement('div', 'review-title');
-        title.appendChild(makeElement('strong', '', `${edge.source_ticker || 'N/A'} -> ${edge.target_ticker || 'N/A'}`));
-        title.appendChild(makeElement('span', 'source-badge', `#${edge.edge_id}`));
-        card.appendChild(title);
-
-        card.appendChild(makeElement('div', 'relationship-product', `${edge.type || 'Supply Link'} | ${edge.product || 'Product not specified'}`));
-
-        const meta = makeElement('div', 'relationship-meta');
-        const confidence = edge.confidence === null || edge.confidence === undefined ? 'N/A' : `${Math.round(Number(edge.confidence) * 100)}%`;
-        meta.appendChild(makeElement('span', '', `Confidence ${confidence}`));
-        meta.appendChild(makeElement('span', '', edge.source_title || edge.source_type || 'AI research'));
-        if (edge.source_url && /^https?:\/\//i.test(edge.source_url)) {
-            const sourceLink = makeElement('a', 'source-link', 'Source');
-            sourceLink.href = edge.source_url;
-            sourceLink.target = '_blank';
-            sourceLink.rel = 'noopener noreferrer';
-            meta.appendChild(sourceLink);
-        }
-        card.appendChild(meta);
-
-        if (edge.evidence_excerpt) {
-            card.appendChild(makeElement('p', 'review-evidence', edge.evidence_excerpt));
-        }
-
-        const commands = makeElement('div', 'review-commands');
-        commands.appendChild(makeElement('code', 'review-command', `python3 backend/review_edges.py approve ${edge.edge_id} --note "Verified source"`));
-        commands.appendChild(makeElement('code', 'review-command', `python3 backend/review_edges.py reject ${edge.edge_id} --note "Incorrect relationship"`));
-        card.appendChild(commands);
-        list.appendChild(card);
-    });
-}
-
 const getCompanyByTicker = (ticker) => allCompanies.find(company => company.ticker === ticker) || null;
 
 function renderLevel3(company, previousRoute = null) {
@@ -684,59 +586,6 @@ function navigateCompareFromCurrent() {
     navigateCompare({ a: ticker, b: nextPeer || '' });
 }
 
-function renderChart(company) {
-    const chartContainer = document.getElementById('tv_chart_container');
-    clearElement(chartContainer);
-    chartContainer.classList.add('chart-loading');
-    const fallback = makeElement('div', 'chart-unavailable', 'Loading market chart...');
-    chartContainer.appendChild(fallback);
-
-    const markChartUnavailable = () => {
-        if (!chartContainer.querySelector('iframe')) {
-            fallback.textContent = 'Market chart unavailable for this entity';
-            chartContainer.classList.remove('chart-loading');
-        }
-    };
-
-    if (company.ticker && company.ticker !== "N/A" && window.TradingView) {
-        new window.TradingView.widget({
-            autosize: true,
-            symbol: company.ticker,
-            timezone: "America/New_York",
-            theme: "dark",
-            style: "3",
-            locale: "en",
-            enable_publishing: false,
-            backgroundColor: "#151a20",
-            gridColor: "#242c35",
-            hide_top_toolbar: true,
-            hide_legend: true,
-            save_image: false,
-            container_id: "tv_chart_container",
-            allow_symbol_change: false,
-            range: "60M"
-        });
-
-        let checks = 0;
-        const chartReadyCheck = window.setInterval(() => {
-            checks += 1;
-            if (chartContainer.querySelector('iframe')) {
-                fallback.remove();
-                if (!chartContainer.querySelector('.chart-caption')) {
-                    chartContainer.appendChild(makeElement('div', 'chart-caption', `${company.ticker} market chart`));
-                }
-                chartContainer.classList.remove('chart-loading');
-                window.clearInterval(chartReadyCheck);
-            } else if (checks >= 10) {
-                markChartUnavailable();
-                window.clearInterval(chartReadyCheck);
-            }
-        }, 500);
-    } else {
-        markChartUnavailable();
-    }
-}
-
 function renderMetrics(company) {
     setText('detail-price', `$${(company.price || 0).toFixed(2)}`);
     const changeEl = document.getElementById('detail-change');
@@ -757,18 +606,6 @@ function renderMetrics(company) {
     setText('detail-ceo', company.ceo || 'N/A');
     setText('detail-emp', company.employees ? company.employees.toLocaleString() : "N/A");
     setText('detail-summary', company.summary || 'No summary available.');
-}
-
-function renderSupplyMap(company) {
-    const map = document.getElementById('supply-map');
-    clearElement(map);
-
-    const upstream = (company.upstream || []).slice(0, 6);
-    const downstream = (company.downstream || []).slice(0, 6);
-
-    map.appendChild(renderMapColumn('Suppliers', upstream, 'upstream'));
-    map.appendChild(renderMapCenter(company));
-    map.appendChild(renderMapColumn('Customers', downstream, 'downstream'));
 }
 
 function renderSupplyGraph(company) {
@@ -801,33 +638,6 @@ function renderSupplyGraph(company) {
     if (!upstream.length && !downstream.length) {
         graph.appendChild(makeElement('span', 'empty-state graph-empty', 'No graphable relationships yet.'));
     }
-}
-
-function renderMapColumn(title, deps, direction) {
-    const column = makeElement('div', `map-column ${direction}`);
-    column.appendChild(makeElement('span', 'map-title', title));
-    if (!deps.length) {
-        column.appendChild(makeElement('span', 'empty-state', 'No tracked links'));
-        return column;
-    }
-
-    deps.forEach(dep => {
-        const node = makeElement('button', 'map-node');
-        const linkedCompany = getCompanyByTicker(dep.ticker);
-        if (linkedCompany) node.onclick = () => navigateCompany(linkedCompany.ticker);
-        node.appendChild(makeElement('strong', '', dep.ticker || dep.name || 'Unknown'));
-        node.appendChild(makeElement('small', '', dep.product || dep.type || 'Supply Link'));
-        column.appendChild(node);
-    });
-    return column;
-}
-
-function renderMapCenter(company) {
-    const center = makeElement('div', 'map-center');
-    center.appendChild(makeElement('span', 'center-ticker', company.ticker || 'N/A'));
-    center.appendChild(makeElement('strong', '', company.name || 'Unknown'));
-    center.appendChild(makeElement('small', '', `${company.connection_count || 0} tracked links`));
-    return center;
 }
 
 function renderXRay(company) {

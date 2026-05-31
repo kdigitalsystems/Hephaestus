@@ -11,6 +11,13 @@ const elements = new Map();
   }
 });
 
+const htmlIds = new Set([...htmlSource.matchAll(/id="([^"]+)"/g)].map((match) => match[1]));
+const appIdRefs = new Set([...appSource.matchAll(/getElementById\('([^']+)'\)/g)].map((match) => match[1]));
+const missingIds = [...appIdRefs].filter((id) => !htmlIds.has(id));
+if (missingIds.length) {
+  throw new Error(`app references missing DOM ids: ${missingIds.join(", ")}`);
+}
+
 function element(id) {
   if (!elements.has(id)) {
     elements.set(id, {
@@ -100,6 +107,7 @@ vm.runInContext(`
       downstream: [],
     },
   ];
+  globalData = { Technology: [allCompanies[0]], Consumer: [allCompanies[1]] };
 `, context);
 
 element("search-input").value = "taiwan";
@@ -134,4 +142,15 @@ vm.runInContext("applyFilters(true); globalThis.__routeAfterTickerSearch = curre
 
 if (context.__routeAfterTickerSearch.view !== "company" || context.__routeAfterTickerSearch.ticker !== "AMD") {
   throw new Error(`expected exact ticker search to open AMD detail, got ${JSON.stringify(context.__routeAfterTickerSearch)}`);
+}
+
+vm.runInContext(`
+  currentRoute = { view: "sector", sector: "Technology" };
+  navigateCompany("AMD");
+  navigateBackToCompanies();
+  globalThis.__routeAfterSectorBack = currentRoute;
+`, context);
+
+if (context.__routeAfterSectorBack.view !== "sector" || context.__routeAfterSectorBack.sector !== "Technology") {
+  throw new Error(`expected detail back button to restore sector route, got ${JSON.stringify(context.__routeAfterSectorBack)}`);
 }
