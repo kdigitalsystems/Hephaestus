@@ -222,7 +222,7 @@ The dashboard payload also includes investor-facing derived metrics:
 - `investor_metrics.unique_links`, `approved_links`, `pending_links`, and `sector_exposure` summarize the published graph.
 - Each company has `investor_metrics` with upstream/downstream counts, approval counts, top counterparties, average confidence, concentration score, explainable risk scores, and last verified date.
 - `docs/link_history.json` keeps one rolling snapshot per UTC date of published relationship keys so the dashboard can show what changed between daily runs without adding duplicate same-day snapshots.
-- The static UI uses those fields for the morning brief, search filters, watchlist cards, comparison views, source/evidence modals, sector pages, and company Decision Briefs.
+- The static UI uses those fields for search filters, watchlist cards, comparison views, source/evidence modals, sector pages, and company Decision Briefs.
 
 The risk scores are intentionally simple and explainable:
 
