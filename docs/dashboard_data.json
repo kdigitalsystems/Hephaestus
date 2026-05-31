@@ -213211,7 +213211,7 @@
       }
     ]
   },
-  "generated_at": "2026-05-30T11:08:28+00:00",
+  "generated_at": "2026-05-31T04:20:16+00:00",
   "investor_metrics": {
     "company_count": 3955,
     "sector_count": 10,
@@ -213448,25 +213448,161 @@
       }
     ],
     "change_summary": {
-      "previous_unique_links": 361,
+      "previous_unique_links": 239,
       "current_unique_links": 362,
-      "net_change": 1,
-      "new_count": 1,
-      "removed_count": 0,
+      "net_change": 123,
+      "new_count": 127,
+      "removed_count": 4,
       "changed_count": 0,
       "rejected_count": 0,
       "new_links": [
         {
-          "relationship_key": "MGM->VICI:LEASE/PROPERTY OWNER OPERATOR RELATIONSHIP",
-          "source_ticker": "MGM",
-          "target_ticker": "VICI",
-          "type": "Lease/Property Owner Operator Relationship",
-          "product": "Casino Resort Property",
+          "relationship_key": "AA->F:MATERIAL SUPPLIER",
+          "source_ticker": "AA",
+          "target_ticker": "F",
+          "type": "material supplier",
+          "product": "Advanced Aluminum Alloys",
+          "review_status": "approved",
+          "confidence": 0.85
+        },
+        {
+          "relationship_key": "AA->HWM:RAW MATERIALS",
+          "source_ticker": "AA",
+          "target_ticker": "HWM",
+          "type": "Raw Materials",
+          "product": "Aluminum",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AAPL->TTMI:PCBS",
+          "source_ticker": "AAPL",
+          "target_ticker": "TTMI",
+          "type": "PCBs",
+          "product": "Printed Circuit Boards",
+          "review_status": "approved",
+          "confidence": 0.85
+        },
+        {
+          "relationship_key": "AER->AMZN:CARGO LEASING",
+          "source_ticker": "AER",
+          "target_ticker": "AMZN",
+          "type": "Cargo Leasing",
+          "product": "Air Freight Capacity",
+          "review_status": "approved",
+          "confidence": 0.85
+        },
+        {
+          "relationship_key": "AMGN->SNY:PRODUCT SUPPLY",
+          "source_ticker": "AMGN",
+          "target_ticker": "SNY",
+          "type": "Product Supply",
+          "product": "Erythropoietin (Epogen)",
+          "review_status": "approved",
+          "confidence": 0.85
+        },
+        {
+          "relationship_key": "AMZN->INFY:CLOUD SERVICES",
+          "source_ticker": "AMZN",
+          "target_ticker": "INFY",
+          "type": "Cloud Services",
+          "product": "cloud services",
+          "review_status": "approved",
+          "confidence": 0.85
+        },
+        {
+          "relationship_key": "APD->LIN:RAW MATERIALS",
+          "source_ticker": "APD",
+          "target_ticker": "LIN",
+          "type": "Raw Materials",
+          "product": "Hydrogen",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "ARM->MRVL:IP LICENSING",
+          "source_ticker": "ARM",
+          "target_ticker": "MRVL",
+          "type": "IP Licensing",
+          "product": "ARM CPU cores and network interfaces",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "ASPI->TDY:RADIOLOGICAL ISOTOPES",
+          "source_ticker": "ASPI",
+          "target_ticker": "TDY",
+          "type": "Radiological Isotopes",
+          "product": "Radioactive Materials",
+          "review_status": "approved",
+          "confidence": 0.85
+        },
+        {
+          "relationship_key": "AZTA->MKSI:VACUUM MEASUREMENT AND CONTROL INSTRUMENTS",
+          "source_ticker": "AZTA",
+          "target_ticker": "MKSI",
+          "type": "Vacuum Measurement and Control Instruments",
+          "product": "Granville-Phillips",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "BABA->NVDA:PURCHASE OF RTX PRO 6000D",
+          "source_ticker": "BABA",
+          "target_ticker": "NVDA",
+          "type": "Purchase of RTX Pro 6000D",
+          "product": "RTX Pro 6000D",
+          "review_status": "approved",
+          "confidence": 0.85
+        },
+        {
+          "relationship_key": "BNTX->PFE:VACCINE DEVELOPMENT",
+          "source_ticker": "BNTX",
+          "target_ticker": "PFE",
+          "type": "Vaccine Development",
+          "product": "Comirnaty (Pfizer-BioNTech COVID-19 vaccine)",
           "review_status": "approved",
           "confidence": 0.95
         }
       ],
-      "removed_links": [],
+      "removed_links": [
+        {
+          "relationship_key": "AMWD->HD:MANUFACTURING - CABINETRY",
+          "source_ticker": "AMWD",
+          "target_ticker": "HD",
+          "type": "Manufacturing - Cabinetry",
+          "product": "Cabinetry",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "GLW->AAPL:GLASS SUPPLIER",
+          "source_ticker": "GLW",
+          "target_ticker": "AAPL",
+          "type": "Glass Supplier",
+          "product": "Gorilla Glass",
+          "review_status": "approved",
+          "confidence": 0.85
+        },
+        {
+          "relationship_key": "NVDA->CRWV:GPU SUPPLY",
+          "source_ticker": "NVDA",
+          "target_ticker": "CRWV",
+          "type": "GPU Supply / Chip Infrastructure / Data Center Infrastructure Provider",
+          "product": "GPUs / Blackwell hardware / AI Supercomputer Data Centers",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "PPL->NGG:ASSET SALE",
+          "source_ticker": "PPL",
+          "target_ticker": "NGG",
+          "type": "asset sale",
+          "product": "Western Power Distribution",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
       "changed_links": []
     },
     "history": [
@@ -213477,14 +213613,6 @@
         "approved_links": 239,
         "pending_links": 0,
         "linked_companies": 275
-      },
-      {
-        "generated_at": "2026-05-30T11:08:27+00:00",
-        "generated_on": "2026-05-30",
-        "unique_links": 361,
-        "approved_links": 361,
-        "pending_links": 0,
-        "linked_companies": 339
       }
     ]
   }
