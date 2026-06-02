@@ -5,7 +5,7 @@ const appSource = fs.readFileSync("docs/app.js", "utf8");
 const htmlSource = fs.readFileSync("docs/index.html", "utf8");
 const elements = new Map();
 
-["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief", "Investor Radar", "Investment Radar", "Decision Support", "20260525-investor3", "20260531-ticker-prefix1", "20260531-ui-fixes2"].forEach((label) => {
+["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief", "Investor Radar", "Investment Radar", "Decision Support", "20260525-investor3", "20260531-ticker-prefix1", "20260531-ui-fixes2", "20260531-xray-layout1", "20260601-chart-restore1"].forEach((label) => {
   if (htmlSource.includes(label)) {
     throw new Error(`public dashboard still exposes redundant/developer label: ${label}`);
   }
@@ -17,6 +17,14 @@ if (!appSource.includes("graph-column") || !appSource.includes("graph-node-list"
 
 if (appSource.includes("graph-line") || appSource.includes("node.style.top") || appSource.includes("node.style.left")) {
   throw new Error("X-Ray graph should not use absolute-positioned node placement");
+}
+
+if (!htmlSource.includes("https://s3.tradingview.com/tv.js") || !htmlSource.includes('id="tv_chart_container"')) {
+  throw new Error("company detail pages should include the TradingView price chart container");
+}
+
+if (!appSource.includes("function renderChart") || !appSource.includes("renderChart(company)") || !appSource.includes("new window.TradingView.widget")) {
+  throw new Error("company detail pages should render the price chart when a company opens");
 }
 
 const htmlIds = new Set([...htmlSource.matchAll(/id="([^"]+)"/g)].map((match) => match[1]));

@@ -518,6 +518,7 @@ function renderLevel3(company, previousRoute = null) {
     setText('detail-industry', company.industry || company.sector || 'Uncategorized');
 
     renderStory(company);
+    renderChart(company);
     renderDecisionBrief(company);
     renderMetrics(company);
     renderSupplyGraph(company);
@@ -538,6 +539,59 @@ function renderStory(company) {
     if (primaryCustomer) story += ` Its downstream exposure includes ${sentenceEntityName(primaryCustomer)}.`;
     if (!upstream.length && !downstream.length) story += ' This company is a good candidate for the next discovery pass.';
     setText('detail-story', story);
+}
+
+function renderChart(company) {
+    const chartContainer = document.getElementById('tv_chart_container');
+    clearElement(chartContainer);
+    chartContainer.classList.add('chart-loading');
+    const fallback = makeElement('div', 'chart-unavailable', 'Loading market chart...');
+    chartContainer.appendChild(fallback);
+
+    const markChartUnavailable = () => {
+        if (!chartContainer.querySelector('iframe')) {
+            fallback.textContent = 'Market chart unavailable for this entity';
+            chartContainer.classList.remove('chart-loading');
+        }
+    };
+
+    if (company.ticker && company.ticker !== "N/A" && window.TradingView) {
+        new window.TradingView.widget({
+            autosize: true,
+            symbol: company.ticker,
+            timezone: "America/New_York",
+            theme: "dark",
+            style: "3",
+            locale: "en",
+            enable_publishing: false,
+            backgroundColor: "#151a20",
+            gridColor: "#242c35",
+            hide_top_toolbar: true,
+            hide_legend: true,
+            save_image: false,
+            container_id: "tv_chart_container",
+            allow_symbol_change: false,
+            range: "60M",
+        });
+
+        let checks = 0;
+        const chartReadyCheck = window.setInterval(() => {
+            checks += 1;
+            if (chartContainer.querySelector('iframe')) {
+                fallback.remove();
+                if (!chartContainer.querySelector('.chart-caption')) {
+                    chartContainer.appendChild(makeElement('div', 'chart-caption', `${company.ticker} market chart`));
+                }
+                chartContainer.classList.remove('chart-loading');
+                window.clearInterval(chartReadyCheck);
+            } else if (checks >= 10) {
+                markChartUnavailable();
+                window.clearInterval(chartReadyCheck);
+            }
+        }, 500);
+    } else {
+        markChartUnavailable();
+    }
 }
 
 function renderDecisionBrief(company) {

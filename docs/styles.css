@@ -1105,6 +1105,7 @@ tbody tr:hover {
 }
 
 .dashboard-grid {
+    min-width: 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
@@ -1112,6 +1113,7 @@ tbody tr:hover {
 
 .metrics-section,
 .summary-box {
+    min-width: 0;
     padding: 22px;
 }
 
