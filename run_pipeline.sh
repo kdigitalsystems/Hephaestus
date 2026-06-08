@@ -21,6 +21,12 @@ REVIEW_CONSENSUS_MIN_VOTES="${HEPHAESTUS_REVIEW_CONSENSUS_MIN_VOTES:-2}"
 REVIEW_CONSENSUS_MIN_RATIO="${HEPHAESTUS_REVIEW_CONSENSUS_MIN_RATIO:-0.66}"
 RUN_OLLAMA_REVIEW="${HEPHAESTUS_RUN_OLLAMA_REVIEW:-1}"
 
+echo "Checking local database readiness..."
+if ! python3 backend/db_health.py; then
+  echo "Initializing local database schema..."
+  python3 backend/database.py
+fi
+
 echo "Ensuring core companies are tracked..."
 python3 backend/seed_db.py "${LIMIT_ARG[@]}"
 

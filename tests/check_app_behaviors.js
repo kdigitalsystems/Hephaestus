@@ -5,7 +5,7 @@ const appSource = fs.readFileSync("docs/app.js", "utf8");
 const htmlSource = fs.readFileSync("docs/index.html", "utf8");
 const elements = new Map();
 
-["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief", "Investor Radar", "Investment Radar", "Decision Support", "20260525-investor3", "20260531-ticker-prefix1", "20260531-ui-fixes2", "20260531-xray-layout1", "20260601-chart-restore1"].forEach((label) => {
+["Avg Confidence", "Last Verified", "Review Queue", "Approved", "Rejected", "Morning Brief", "Investor Radar", "Investment Radar", "Decision Support", "20260525-investor3", "20260531-ticker-prefix1", "20260531-ui-fixes2", "20260531-xray-layout1", "20260601-chart-restore1", "20260601-chart-restore2", "20260606-bugfix1", "20260607-deepfix1"].forEach((label) => {
   if (htmlSource.includes(label)) {
     throw new Error(`public dashboard still exposes redundant/developer label: ${label}`);
   }
@@ -27,6 +27,18 @@ if (!appSource.includes("function renderChart") || !appSource.includes("renderCh
   throw new Error("company detail pages should render the price chart when a company opens");
 }
 
+if (!appSource.includes("chartRenderToken") || !appSource.includes("renderToken !== chartRenderToken")) {
+  throw new Error("chart rendering should ignore stale async readiness checks after navigation");
+}
+
+if (!appSource.includes("'Details'") || !appSource.includes("No evidence excerpt was saved for this relationship.")) {
+  throw new Error("relationship rows without saved evidence should show an honest details state");
+}
+
+if (!htmlSource.includes("overview-stats") || !appSource.includes("function renderOverviewStats")) {
+  throw new Error("overview should render a concise data summary before filters");
+}
+
 const htmlIds = new Set([...htmlSource.matchAll(/id="([^"]+)"/g)].map((match) => match[1]));
 const appIdRefs = new Set([...appSource.matchAll(/getElementById\('([^']+)'\)/g)].map((match) => match[1]));
 const missingIds = [...appIdRefs].filter((id) => !htmlIds.has(id));
@@ -34,19 +46,51 @@ if (missingIds.length) {
   throw new Error(`app references missing DOM ids: ${missingIds.join(", ")}`);
 }
 
+function mockElement(tag = "div", id = "") {
+  const node = {
+    id,
+    tagName: tag,
+    value: "",
+    checked: false,
+    textContent: "",
+    className: "",
+    style: {},
+    children: [],
+    parentNode: null,
+    classList: { add() {}, remove() {}, toggle() {} },
+    appendChild(child) {
+      child.parentNode = node;
+      node.children.push(child);
+      return child;
+    },
+    removeChild(child) {
+      const index = node.children.indexOf(child);
+      if (index >= 0) node.children.splice(index, 1);
+      child.parentNode = null;
+      return child;
+    },
+    remove() {
+      if (node.parentNode) node.parentNode.removeChild(node);
+    },
+    querySelector() { return null; },
+  };
+  Object.defineProperty(node, "firstChild", {
+    get() {
+      return node.children[0] || null;
+    },
+  });
+  return node;
+}
+
 function element(id) {
   if (!elements.has(id)) {
-    elements.set(id, {
-      id,
-      value: "",
-      checked: false,
-      textContent: "",
-      classList: { add() {}, remove() {}, toggle() {} },
-      appendChild() {},
-      querySelector() { return null; },
-    });
+    elements.set(id, mockElement("div", id));
   }
   return elements.get(id);
+}
+
+function collectText(node) {
+  return [node.textContent, ...(node.children || []).map(collectText)].join("");
 }
 
 const context = {
@@ -56,16 +100,7 @@ const context = {
   clearTimeout,
   fetch: () => new Promise(() => {}),
   document: {
-    createElement: (tag) => ({
-      tagName: tag,
-      appendChild() {},
-      className: "",
-      textContent: "",
-      value: "",
-      checked: false,
-      style: {},
-      classList: { add() {}, remove() {}, toggle() {} },
-    }),
+    createElement: (tag) => mockElement(tag),
     getElementById: element,
     querySelectorAll: () => [],
   },
@@ -114,7 +149,7 @@ vm.runInContext(`
       sector: "Technology",
       industry: "Semiconductors",
       connection_count: 1,
-      upstream: [{ ticker: "TSM", name: "Taiwan Semiconductor", type: "Foundry", confidence: 0.95, review_status: "approved" }],
+      upstream: [{ ticker: "TSM", name: "Taiwan Semiconductor", type: "Foundry", confidence: 0.95, review_status: "approved", source_type: "AI Research", last_verified: "2026-06-01" }],
       downstream: [],
     },
     {
@@ -146,6 +181,7 @@ vm.runInContext(`
     },
   ];
   globalData = { Technology: [allCompanies[0], allCompanies[2], allCompanies[3]], Consumer: [allCompanies[1]] };
+  dashboardMeta = { investor_metrics: { unique_links: 12 } };
 `, context);
 
 vm.runInContext("globalThis.__caseInsensitiveTicker = getCompanyByTicker('amd')?.ticker;", context);
@@ -169,6 +205,24 @@ if (context.__sentenceName !== "Super Micro Computer, Inc") {
 if (context.__formattedSmallCurrency !== "$527.20") {
   throw new Error(`small currency values should keep cents, got ${context.__formattedSmallCurrency}`);
 }
+
+vm.runInContext("renderOverviewStats();", context);
+const overviewStatsText = collectText(element("overview-stats"));
+["4Companies", "12Supply links", "2Linked names", "TechnologyTop sector"].forEach((expected) => {
+  if (!overviewStatsText.includes(expected)) {
+    throw new Error(`overview stats missing ${expected}; got ${overviewStatsText}`);
+  }
+});
+
+vm.runInContext(`
+  openEvidenceModal({ ticker: "TSM", name: "Taiwan Semiconductor", type: "Foundry", product: "wafers", confidence: 0.95, source_type: "AI Research", last_verified: "2026-06-01" }, { ticker: "AMD" }, "upstream");
+`, context);
+const modalText = collectText(element("modal-body"));
+["95%", "AI Research", "2026-06-01", "No evidence excerpt was saved for this relationship."].forEach((expected) => {
+  if (!modalText.includes(expected)) {
+    throw new Error(`details modal missing ${expected}; got ${modalText}`);
+  }
+});
 
 element("search-input").value = "taiwan";
 element("sector-filter").value = "";
@@ -240,10 +294,33 @@ if (context.__routeAfterListSearch.view !== "companies" || context.__routeAfterL
 vm.runInContext(`
   currentRoute = { view: "sector", sector: "Technology" };
   navigateCompany("AMD");
+  globalThis.__sectorBackLabel = document.getElementById('detail-back-button').textContent;
   navigateBackToCompanies();
   globalThis.__routeAfterSectorBack = currentRoute;
 `, context);
 
 if (context.__routeAfterSectorBack.view !== "sector" || context.__routeAfterSectorBack.sector !== "Technology") {
   throw new Error(`expected detail back button to restore sector route, got ${JSON.stringify(context.__routeAfterSectorBack)}`);
+}
+
+if (context.__sectorBackLabel !== "Back to sector") {
+  throw new Error(`expected sector detail back button label to match destination, got ${context.__sectorBackLabel}`);
+}
+
+element("compare-a").value = "AMD";
+element("compare-b").value = "IBM";
+vm.runInContext(`
+  renderCompareView(false);
+  navigateCompany("AMD");
+  globalThis.__compareBackLabel = document.getElementById('detail-back-button').textContent;
+  navigateBackToCompanies();
+  globalThis.__routeAfterCompareBack = currentRoute;
+`, context);
+
+if (context.__routeAfterCompareBack.view !== "compare" || context.__routeAfterCompareBack.a !== "AMD" || context.__routeAfterCompareBack.b !== "IBM") {
+  throw new Error(`expected detail back button to restore compare route, got ${JSON.stringify(context.__routeAfterCompareBack)}`);
+}
+
+if (context.__compareBackLabel !== "Back to compare") {
+  throw new Error(`expected compare detail back button label to match destination, got ${context.__compareBackLabel}`);
 }

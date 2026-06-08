@@ -19,12 +19,17 @@ warnings.filterwarnings("ignore", category=UserWarning, module='wikipedia')
 
 def clean_company_name(name):
     """Aggressively strips Wall Street jargon, ADRs, and geographic tags."""
-    name = re.sub(r'(->i)(American Depositary|ADR|Sponsored ADR|Unsponsored ADR|Representing|Each representing).*', '', name)
-    name = re.sub(r'\(.*->\)', '', name)
-    
+    name = re.sub(r'\(.*?\)', '', name)
+    name = re.sub(
+        r'(American Depositary|Sponsored ADR|Unsponsored ADR|ADR|Representing|Each representing).*',
+        '',
+        name,
+        flags=re.IGNORECASE,
+    )
+
     stopwords = [
-        r'\bInc\.->\b', r'\bCorp\.->\b', r'\bCorporation\b', r'\bCompany\b',
-        r'\bLLC\b', r'\bPlc\b', r'\bLtd\.->\b', r'\bCommon Stock\b',
+        r'\bInc\.?(?=\s|,|$)', r'\bCorp\.?(?=\s|,|$)', r'\bCorporation\b', r'\bCompany\b',
+        r'\bLLC\b', r'\bPlc\b', r'\bLtd\.?(?=\s|,|$)', r'\bCommon Stock\b',
         r'\bClass A\b', r'\bClass B\b', r'\bOrdinary Shares\b', r'\bTrust\b',
         r'\bHoldings\b', r'\bHolding\b', r'\bGroup\b', r'\bS A\b', r'\bAG\b'
     ]
@@ -32,7 +37,9 @@ def clean_company_name(name):
     for word in stopwords:
         clean_name = re.sub(word, '', clean_name, flags=re.IGNORECASE)
         
-    return clean_name.replace(',', '').strip()
+    clean_name = clean_name.replace(',', '')
+    clean_name = re.sub(r'\s+', ' ', clean_name)
+    return clean_name.strip()
 
 def is_reversed_role_dependency(dependency_type):
     """Detect role labels that usually mean the LLM emitted customer -> supplier."""

@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260601-chart-restore2">
+    <link rel="stylesheet" href="styles.css?v=20260607-ui2">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
@@ -30,6 +30,15 @@
 
     <main class="container">
         <section id="view-industries">
+            <section class="overview-brief">
+                <div>
+                    <p class="eyebrow">Public Market Supply Chain Map</p>
+                    <h1>Find company exposure fast</h1>
+                    <p class="overview-copy">Search a ticker, scan sector coverage, or open a company brief to see upstream suppliers, downstream customers, market context, and relationship evidence.</p>
+                </div>
+                <div class="overview-stats" id="overview-stats"></div>
+            </section>
+
             <section class="control-panel">
                 <div class="search-group">
                     <label for="search-input">Search</label>
@@ -162,7 +171,7 @@
         </section>
 
         <section id="view-details" class="hidden">
-            <button class="btn-back" onclick="navigateBackToCompanies()">Back to screener</button>
+            <button class="btn-back" id="detail-back-button" onclick="navigateBackToCompanies()">Back to screener</button>
 
             <div class="detail-header">
                 <div>
@@ -272,6 +281,6 @@
         </section>
     </div>
 
-    <script src="app.js?v=20260601-chart-restore2"></script>
+    <script src="app.js?v=20260607-ui2"></script>
 </body>
 </html>

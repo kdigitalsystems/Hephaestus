@@ -79,9 +79,9 @@ jobs:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
-          # Failsafe: Just in case the DB gets deleted from GitHub, rebuild it.
-          if [ ! -f "backend/supply_chain.db" ]; then
-            echo "No database found! Bootstrapping from scratch..."
+          # Failsafe: rebuild when the DB is missing, empty, missing tables, or has no seeded nodes.
+          if ! venv/bin/python backend/db_health.py --require-nodes; then
+            echo "Database is not ready. Bootstrapping from scratch..."
             venv/bin/python backend/database.py
             venv/bin/python backend/seed_db.py
           fi

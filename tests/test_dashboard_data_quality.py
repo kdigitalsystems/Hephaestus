@@ -79,6 +79,8 @@ def test_workflows_and_asset_versions_are_current():
     assert "Local GPU AI Pipeline" in gpu
     assert "Titan Queue" not in gpu
     assert "docs/link_history.json" in gpu
+    assert "backend/db_health.py --require-nodes" in gpu
+    assert "python3 backend/db_health.py" in (ROOT / "run_pipeline.sh").read_text(encoding="utf-8")
     assert "HEPHAESTUS_REVIEW_MODELS" in gpu
     assert "--models \"$HEPHAESTUS_REVIEW_MODELS\"" in gpu
     assert "--consensus-min-votes" in gpu

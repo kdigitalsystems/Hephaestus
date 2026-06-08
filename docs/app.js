@@ -1,4 +1,5 @@
 let globalData = {};
+let dashboardMeta = {};
 let allCompanies = [];
 let currentCompaniesList = [];
 let currentRoute = { view: 'overview' };
@@ -6,6 +7,7 @@ let sortCol = 'market_cap';
 let sortAsc = false;
 let watchlist = new Set();
 let searchInputTimer = null;
+let chartRenderToken = 0;
 
 const clearElement = (element) => {
     while (element.firstChild) element.removeChild(element.firstChild);
@@ -119,6 +121,7 @@ fetch('dashboard_data.json')
     })
     .then(data => {
         globalData = data.industries || {};
+        dashboardMeta = data;
         loadWatchlist();
         hydrateCompanies(globalData);
         populateFilters();
@@ -179,7 +182,7 @@ function navigateCompany(ticker) {
 }
 
 function navigateBackToCompanies() {
-    if (currentRoute.previous && ['companies', 'sector'].includes(currentRoute.previous.view)) {
+    if (currentRoute.previous && ['companies', 'sector', 'compare', 'watchlist'].includes(currentRoute.previous.view)) {
         setRoute(currentRoute.previous);
         return;
     }
@@ -311,6 +314,33 @@ function renderOverview() {
     renderLevel1();
 }
 
+function renderOverviewStats() {
+    const container = document.getElementById('overview-stats');
+    if (!container) return;
+    clearElement(container);
+    const linkedCompanies = allCompanies.filter(company => relationshipCount(company) > 0).length;
+    const supplyLinks = Number(dashboardMeta.investor_metrics?.unique_links || 0);
+    const sectors = Object.keys(globalData).filter(key => Array.isArray(globalData[key])).length;
+    const topSector = Object.entries(globalData)
+        .filter(([, companies]) => Array.isArray(companies))
+        .map(([sector, companies]) => ({
+            sector,
+            links: companies.reduce((sum, company) => sum + relationshipCount(company), 0)
+        }))
+        .sort((a, b) => b.links - a.links)[0];
+    [
+        ['Companies', allCompanies.length.toLocaleString()],
+        ['Supply links', supplyLinks.toLocaleString()],
+        ['Linked names', linkedCompanies.toLocaleString()],
+        ['Top sector', topSector ? topSector.sector : `${sectors} sectors`],
+    ].forEach(([label, value]) => {
+        const item = makeElement('div', 'overview-stat');
+        item.appendChild(makeElement('strong', '', value));
+        item.appendChild(makeElement('span', '', label));
+        container.appendChild(item);
+    });
+}
+
 function populateFilters() {
     const sectorFilter = document.getElementById('sector-filter');
     const dependencyFilter = document.getElementById('dependency-filter');
@@ -345,6 +375,7 @@ function renderLevel1() {
     document.getElementById('view-companies').classList.add('hidden');
     document.getElementById('view-details').classList.add('hidden');
 
+    renderOverviewStats();
     const grid = document.getElementById('industry-grid');
     clearElement(grid);
 
@@ -516,6 +547,7 @@ function renderLevel3(company, previousRoute = null) {
     setText('detail-name', displayCompanyName(company.name));
     setText('detail-ticker', company.ticker || 'N/A');
     setText('detail-industry', company.industry || company.sector || 'Uncategorized');
+    updateDetailBackLabel(currentRoute.previous);
 
     renderStory(company);
     renderChart(company);
@@ -523,6 +555,18 @@ function renderLevel3(company, previousRoute = null) {
     renderMetrics(company);
     renderSupplyGraph(company);
     renderXRay(company);
+}
+
+function updateDetailBackLabel(previousRoute) {
+    const button = document.getElementById('detail-back-button');
+    if (!button) return;
+    const labels = {
+        companies: 'Back to screener',
+        sector: 'Back to sector',
+        compare: 'Back to compare',
+        watchlist: 'Back to watchlist',
+    };
+    button.textContent = labels[previousRoute?.view] || 'Back to screener';
 }
 
 function renderStory(company) {
@@ -543,12 +587,15 @@ function renderStory(company) {
 
 function renderChart(company) {
     const chartContainer = document.getElementById('tv_chart_container');
+    const renderToken = ++chartRenderToken;
+    if (!chartContainer) return;
     clearElement(chartContainer);
     chartContainer.classList.add('chart-loading');
     const fallback = makeElement('div', 'chart-unavailable', 'Loading market chart...');
     chartContainer.appendChild(fallback);
 
     const markChartUnavailable = () => {
+        if (renderToken !== chartRenderToken) return;
         if (!chartContainer.querySelector('iframe')) {
             fallback.textContent = 'Market chart unavailable for this entity';
             chartContainer.classList.remove('chart-loading');
@@ -576,9 +623,13 @@ function renderChart(company) {
 
         let checks = 0;
         const chartReadyCheck = window.setInterval(() => {
+            if (renderToken !== chartRenderToken) {
+                window.clearInterval(chartReadyCheck);
+                return;
+            }
             checks += 1;
             if (chartContainer.querySelector('iframe')) {
-                fallback.remove();
+                if (fallback.parentNode) fallback.remove();
                 if (!chartContainer.querySelector('.chart-caption')) {
                     chartContainer.appendChild(makeElement('div', 'chart-caption', `${company.ticker} market chart`));
                 }
@@ -738,19 +789,27 @@ function renderXRay(company) {
             card.appendChild(makeElement('div', 'relationship-product', dep.product));
         }
 
+        const meta = makeElement('div', 'relationship-meta');
+        const confidence = dep.confidence !== undefined && dep.confidence !== null ? `${Math.round(Number(dep.confidence) * 100)}% confidence` : 'Confidence N/A';
+        meta.appendChild(makeElement('span', 'source-badge', confidence));
+        meta.appendChild(makeElement('span', 'source-badge', dep.source_type || 'Source N/A'));
+        meta.appendChild(makeElement('span', 'source-badge', dep.last_verified ? `Verified ${dep.last_verified}` : 'Verification N/A'));
+        card.appendChild(meta);
+
         if (dep.evidence_excerpt) {
             card.appendChild(makeElement('p', 'relationship-evidence', dep.evidence_excerpt));
         }
 
         const actions = makeElement('div', 'relationship-actions');
-        const evidenceButton = makeElement('button', 'mini-button', 'Evidence');
+        const hasSourceUrl = dep.source && /^https?:\/\//i.test(dep.source);
+        const evidenceButton = makeElement('button', 'mini-button', dep.evidence_excerpt || hasSourceUrl ? 'Evidence' : 'Details');
         evidenceButton.type = 'button';
         evidenceButton.onclick = event => {
             event.stopPropagation();
             openEvidenceModal(dep, getCompanyByTicker(currentRoute.ticker) || {}, directionClass);
         };
         actions.appendChild(evidenceButton);
-        if (dep.source && /^https?:\/\//i.test(dep.source)) {
+        if (hasSourceUrl) {
             const sourceLink = makeElement('a', 'mini-button', 'Source');
             sourceLink.href = dep.source;
             sourceLink.target = '_blank';
@@ -808,6 +867,9 @@ function openEvidenceModal(dep, company = {}, direction = '') {
         ['Counterparty', `${displayCompanyName(dep.name)} ${dep.ticker ? `(${dep.ticker})` : ''}`],
         ['Relationship', dep.type || 'Supply Link'],
         ['Product / service', dep.product || 'N/A'],
+        ['Confidence', dep.confidence !== undefined && dep.confidence !== null ? `${Math.round(Number(dep.confidence) * 100)}%` : 'N/A'],
+        ['Source type', dep.source_type || 'N/A'],
+        ['Last verified', dep.last_verified || 'N/A'],
     ].forEach(([label, value]) => {
         const row = makeElement('div', 'modal-row');
         row.appendChild(makeElement('span', '', label));
@@ -816,6 +878,8 @@ function openEvidenceModal(dep, company = {}, direction = '') {
     });
     if (dep.evidence_excerpt) {
         body.appendChild(makeElement('p', 'modal-evidence', dep.evidence_excerpt));
+    } else {
+        body.appendChild(makeElement('p', 'modal-evidence muted', 'No evidence excerpt was saved for this relationship.'));
     }
     if (dep.source && /^https?:\/\//i.test(dep.source)) {
         const link = makeElement('a', 'source-link modal-source', 'Open source');
@@ -909,13 +973,14 @@ function renderSectorView(sector) {
 }
 
 function renderCompareView(updateRoute = true) {
-    currentRoute = { view: 'compare' };
     window.scrollTo({ top: 0, behavior: 'smooth' });
     hideAllViews();
     document.getElementById('view-compare').classList.remove('hidden');
     const tickerA = document.getElementById('compare-a').value.trim().toUpperCase();
     const tickerB = document.getElementById('compare-b').value.trim().toUpperCase();
-    if (updateRoute) updateRouteHash({ view: 'compare', a: tickerA, b: tickerB }, false);
+    const route = { view: 'compare', a: tickerA, b: tickerB };
+    currentRoute = route;
+    if (updateRoute) updateRouteHash(route, false);
     const companies = [getCompanyByTicker(tickerA), getCompanyByTicker(tickerB)].filter(Boolean);
     setText('compare-count', `${companies.length}/2 selected`);
     const grid = document.getElementById('compare-grid');

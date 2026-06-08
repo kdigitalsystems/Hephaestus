@@ -6,7 +6,7 @@ The project is designed around a simple split:
 
 - Local Python jobs own ingestion, enrichment, LLM-assisted discovery, and export.
 - SQLite stores the company and supply-chain graph.
-- A static frontend reads `docs/dashboard_data.json` and renders the investor radar, watchlist, comparison view, sector pages, decision briefs, and Supply Chain X-Ray.
+- A static frontend reads `docs/dashboard_data.json` and renders the market overview, screener, watchlist, comparison view, sector pages, company briefs, and Supply Chain X-Ray.
 
 ## Repository Layout
 
@@ -14,6 +14,7 @@ The project is designed around a simple split:
 backend/
   auto_discover_edges.py  LLM-assisted supply-chain discovery
   database.py             SQLAlchemy engine/session setup
+  db_health.py            SQLite readiness check for local and scheduled runs
   export.py               SQLite to docs/dashboard_data.json export
   main.py                 URL scrape -> LLM parse -> database workflow
   models.py               Node and Edge ORM models
@@ -29,6 +30,7 @@ docs/
   app.js                  Dashboard behavior
   styles.css              Dashboard styling
   dashboard_data.json     Exported dashboard data
+  link_history.json       Daily published link-count history
 one_off_scripts/
   alpaca_fetch.py         Manual Alpaca/Yahoo diagnostic script
 run_pipeline.sh           Seed, enrich, export, and optionally push dashboard data
@@ -71,6 +73,18 @@ Create the SQLite schema:
 
 ```bash
 python3 backend/database.py
+```
+
+Check whether the local database file is usable:
+
+```bash
+python3 backend/db_health.py
+```
+
+Require a seeded company universe before a scheduled run:
+
+```bash
+python3 backend/db_health.py --require-nodes
 ```
 
 Seed public companies from Alpaca:
@@ -274,7 +288,7 @@ Run a limited debug pipeline:
 ./run_pipeline.sh 25
 ```
 
-The pipeline now reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with an Ollama consensus panel, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard, link-history, and review-decision changes.
+The pipeline checks local database readiness, initializes the SQLite schema if needed, reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with an Ollama consensus panel, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard, link-history, and review-decision changes.
 
 Review behavior can be tuned with environment variables:
 
@@ -347,7 +361,7 @@ Published relationship payloads also include `relationship_key`, a stable suppli
 Start Ollama with `ollama serve` and make sure the configured model is available.
 
 Dashboard shows no companies:
-Run `seed_db.py`, then `update_metrics.py`, then `export.py`. The broad screener prefers nodes with market cap and current price. Approved relationship endpoints without fresh market data are restored by `repair_dashboard_from_decisions.py` under `Linked Companies`.
+Run `python3 backend/db_health.py --require-nodes` first. If it reports a missing, empty, unreadable, or unseeded database, run `python3 backend/database.py`, `python3 backend/seed_db.py`, then `python3 backend/update_metrics.py`. The broad screener prefers nodes with market cap and current price. Approved relationship endpoints without fresh market data are restored by `repair_dashboard_from_decisions.py` under `Linked Companies`.
 
 Dashboard shows no Supply Chain X-Ray relationships:
 Run `seed_edges.py` for starter edges or `auto_discover_edges.py` for LLM-assisted discovery, review/apply the discovered edges, then run `export.py`, `repair_dashboard_from_decisions.py`, and `validate_dashboard_data.py`.

@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
 import edge_review_decisions
-from auto_discover_edges import upsert_pending_edge
+from auto_discover_edges import clean_company_name, upsert_pending_edge
 from models import Base, Edge, Node
 
 
@@ -43,6 +43,13 @@ def test_auto_discovery_upsert_keeps_one_edge_for_duplicate_dependency():
     assert first_created is True
     assert second_created is False
     assert session.query(Edge).count() == 1
+
+
+def test_clean_company_name_removes_security_and_adr_noise():
+    assert clean_company_name("Acme Inc. Common Stock") == "Acme"
+    assert clean_company_name("Taiwan Semiconductor Manufacturing Company Ltd. (ADR)") == "Taiwan Semiconductor Manufacturing"
+    assert clean_company_name("Banco Bilbao Sponsored ADR Representing Shares") == "Banco Bilbao"
+    assert "->" not in clean_company_name("Example Corp. (Legacy listing)")
 
 
 def test_review_decision_apply_updates_existing_unique_edge():

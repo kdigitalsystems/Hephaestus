@@ -203,6 +203,70 @@ button {
     padding: 42px 32px 76px;
 }
 
+.overview-brief {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
+    gap: 22px;
+    align-items: stretch;
+    margin-bottom: 18px;
+    padding: 24px;
+    border: 1px solid rgba(103, 248, 223, 0.16);
+    border-radius: 8px;
+    background:
+        linear-gradient(135deg, rgba(103, 248, 223, 0.09), transparent 38%),
+        linear-gradient(245deg, rgba(255, 106, 200, 0.055), transparent 34%),
+        rgba(7, 13, 20, 0.78);
+    box-shadow: var(--shadow-soft);
+}
+
+.overview-brief h1 {
+    max-width: 740px;
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 4.4rem);
+    line-height: 0.98;
+    letter-spacing: 0;
+}
+
+.overview-copy {
+    max-width: 760px;
+    margin: 16px 0 0;
+    color: var(--text-soft);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.overview-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.overview-stat {
+    min-height: 92px;
+    display: grid;
+    align-content: center;
+    gap: 5px;
+    padding: 14px;
+    border: 1px solid rgba(103, 248, 223, 0.14);
+    border-radius: 8px;
+    background: rgba(3, 7, 13, 0.56);
+}
+
+.overview-stat strong {
+    color: var(--accent);
+    font-size: 1.35rem;
+    font-weight: 950;
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+}
+
+.overview-stat span {
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    font-weight: 850;
+    text-transform: uppercase;
+}
+
 .hidden {
     display: none !important;
 }
@@ -1546,6 +1610,10 @@ tbody tr:hover {
     font-size: 0.8rem;
 }
 
+.relationship-meta .source-badge {
+    white-space: normal;
+}
+
 .relationship-product {
     margin-top: 8px;
     font-size: 0.9rem;
@@ -1663,6 +1731,11 @@ tbody tr:hover {
     line-height: 1.6;
 }
 
+.modal-evidence.muted {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
 .modal-source {
     display: inline-flex;
     width: fit-content;
@@ -1708,6 +1781,7 @@ tbody tr:hover {
 }
 
 @media (max-width: 1050px) {
+    .overview-brief,
     .overview-panel,
     .radar-grid,
     .comparison-grid,
@@ -1771,6 +1845,15 @@ tbody tr:hover {
     .overview-panel {
         gap: 18px;
         padding-top: 10px;
+    }
+
+    .overview-brief {
+        gap: 16px;
+        padding: 18px;
+    }
+
+    .overview-stat {
+        min-height: 76px;
     }
 
     .overview-panel > div:first-child {
