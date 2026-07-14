@@ -1,0 +1,51 @@
+name: Cleanup old Actions artifacts
+
+on:
+  schedule:
+    - cron: "17 4 */3 * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  cleanup:
+    runs-on: [self-hosted, terrascout-ci]
+    timeout-minutes: 10
+    steps:
+      - name: Delete artifacts older than four days
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          cutoff=$(date -u -d '4 days ago' +%s)
+          ids_file=$(mktemp)
+          trap 'rm -f "$ids_file"' EXIT
+          page=1
+
+          # Collect IDs before deleting so pagination cannot skip artifacts as the list shrinks.
+          while :; do
+            response=$(gh api -H 'Accept: application/vnd.github+json' "/repos/$REPOSITORY/actions/artifacts?per_page=100&page=$page")
+            count=$(jq '.artifacts | length' <<< "$response")
+            [ "$count" -eq 0 ] && break
+
+            while IFS=$'\t' read -r id created; do
+              [ -z "$id" ] && continue
+              created_epoch=$(date -u -d "$created" +%s)
+              if [ "$created_epoch" -lt "$cutoff" ]; then
+                printf '%s\n' "$id" >> "$ids_file"
+              fi
+            done < <(jq -r '.artifacts[] | [.id, .created_at] | @tsv' <<< "$response")
+
+            page=$((page + 1))
+          done
+
+          deleted=0
+          while IFS= read -r id; do
+            [ -z "$id" ] && continue
+            gh api -X DELETE "/repos/$REPOSITORY/actions/artifacts/$id"
+            deleted=$((deleted + 1))
+          done < "$ids_file"
+
+          echo "Deleted $deleted artifact(s) older than four days."
