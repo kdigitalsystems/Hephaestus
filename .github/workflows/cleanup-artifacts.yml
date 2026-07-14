@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   cleanup:
-    runs-on: [self-hosted, terrascout-ci]
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Delete artifacts older than four days
