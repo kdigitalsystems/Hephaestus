@@ -12,10 +12,16 @@ from database import SessionLocal
 from models import Node, Edge
 from parser import extract_dependencies
 from yahooquery import search as yq_search, Ticker
+from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_text
+from additional_sources import get_additional_supply_chain_text
 
 # --- CONFIGURATION ---
 wikipedia.set_user_agent("HephaestusTerminal/1.0 (research@saqibdesktop.local)")
 warnings.filterwarnings("ignore", category=UserWarning, module='wikipedia')
+USE_SEC_SOURCE = os.environ.get("HEPHAESTUS_USE_SEC_SOURCE", "1") != "0"
+USE_SEC_EXHIBITS = os.environ.get("HEPHAESTUS_USE_SEC_EXHIBITS", "1") != "0"
+USE_ADDITIONAL_SOURCES = os.environ.get("HEPHAESTUS_USE_ADDITIONAL_SOURCES", "1") != "0"
+CONTEXT_MAX_CHARS = int(os.environ.get("HEPHAESTUS_CONTEXT_MAX_CHARS", "15000"))
 
 def clean_company_name(name):
     """Aggressively strips Wall Street jargon, ADRs, and geographic tags."""
@@ -66,24 +72,76 @@ def is_reversed_role_dependency(dependency_type):
     ]
     return any(marker in dep_type for marker in role_markers)
 
-def is_non_supply_dependency(dependency_type):
-    dep_type = (dependency_type or "").strip().lower()
+def is_non_supply_dependency(*labels):
+    label_text = " ".join(str(label or "") for label in labels).strip().lower()
     non_supply_markers = [
         "competitor",
         "investor",
+        "alleged liability",
+        "asset sale",
+        "banned",
+        "breach incident",
         "acquisition",
         "acquired",
+        "data breach",
         "merger",
         "option deal",
         "funding",
+        "generic substitutes",
+        "intellectual property theft",
+        "joint exploration agreement",
+        "joint vaccine",
+        "legal dispute",
+        "lawsuit",
+        "neither supply chain",
+        "neither supply-chain",
+        "news report",
+        "not a supply chain relationship",
+        "not a supply-chain relationship",
+        "not current supply chain",
+        "not an operational supply chain",
+        "not an operational supply-chain",
+        "not known to be a customer",
+        "not to purchase",
+        "prohibited",
         "shareholder",
-        "subsidiary",
-        "parent company",
+        "rights to",
+        "sale_of_assets",
+        "settlement",
+        "parent company of",
         "merged company",
         "ownership",
-        "competition"
+        "sold its subsidiary",
+        "spun off",
+        "spun-off",
+        "suing",
+        "unknown operational supply chain",
+        "zero emission vehicle credit",
+        "competition",
+        "stolen",
+        "theft",
+        "trade secret"
     ]
-    return any(marker in dep_type for marker in non_supply_markers)
+    return any(marker in label_text for marker in non_supply_markers)
+
+
+def has_invalid_dependency_label(value):
+    return str(value or "").strip().lower() in {"news", "unknown"}
+
+
+def is_speculative_dependency(*labels):
+    label_text = " ".join(str(label or "") for label in labels).strip().lower()
+    speculative_markers = [
+        "likely",
+        "might",
+        "may be",
+        "not explicitly stated",
+        "no evidence",
+        "suggesting",
+        "would be",
+        "would use",
+    ]
+    return any(marker in label_text for marker in speculative_markers)
 
 def normalize_dependency(dep):
     """Keep edge direction as supplier/provider -> customer/receiver."""
@@ -247,6 +305,41 @@ class IntelGatherer:
             print(f"  [-] Yahoo news unavailable for {ticker}: {e}")
             return ""
 
+    @staticmethod
+    def get_sec_data(company_name, ticker):
+        if not USE_SEC_SOURCE:
+            return ""
+        try:
+            return get_sec_supply_chain_text(ticker, company_name=company_name)
+        except Exception as e:
+            print(f"  [-] SEC data unavailable for {ticker}: {e}")
+            return ""
+
+    @staticmethod
+    def get_sec_exhibits(company_name, ticker):
+        if not USE_SEC_EXHIBITS:
+            return ""
+        try:
+            return get_sec_exhibit_supply_chain_text(ticker, company_name=company_name)
+        except Exception as e:
+            print(f"  [-] SEC exhibits unavailable for {ticker}: {e}")
+            return ""
+
+    @staticmethod
+    def get_additional_sources(company):
+        if not USE_ADDITIONAL_SOURCES:
+            return ""
+        try:
+            return get_additional_supply_chain_text(
+                company.name,
+                company.ticker,
+                sector=company.sector,
+                industry=company.industry,
+            )
+        except Exception as e:
+            print(f"  [-] Additional sources unavailable for {company.ticker}: {e}")
+            return ""
+
 def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
     print(f"--- Starting Refined Titan Queue (Limit: {limit}) ---")
     if target_sectors:
@@ -278,14 +371,17 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
 
         for company in lonely_nodes:
             print(f"\n[->] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
-            
+
             intel_blob = ""
             intel_blob += IntelGatherer.get_wiki_data(company.name, company.ticker)
+            intel_blob += IntelGatherer.get_sec_data(company.name, company.ticker)
+            intel_blob += IntelGatherer.get_sec_exhibits(company.name, company.ticker)
+            intel_blob += IntelGatherer.get_additional_sources(company)
             intel_blob += IntelGatherer.get_yahoo_news(company.ticker)
-            
+
             # THE CONTEXT CAP
-            intel_blob = intel_blob[:6500]
-            
+            intel_blob = intel_blob[:CONTEXT_MAX_CHARS]
+
             if len(intel_blob) < 400:
                 print(f"  [-] Insufficient data found for {company.ticker}.")
                 continue
@@ -304,8 +400,15 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
 
             for dep in dependencies:
                 dep = normalize_dependency(dep)
-                if is_non_supply_dependency(dep.get('dependency_type')):
+                if is_non_supply_dependency(
+                    dep.get('dependency_type'),
+                    dep.get('product'),
+                    dep.get('evidence_excerpt'),
+                ) or has_invalid_dependency_label(dep.get('dependency_type')):
                     print(f"  [!] Ignored non-supply relationship: {dep.get('dependency_type')}")
+                    continue
+                if is_speculative_dependency(dep.get('evidence_excerpt')):
+                    print(f"  [!] Ignored speculative relationship: {dep.get('dependency_type')}")
                     continue
 
                 s_node = EntityResolver.resolve(session, dep.get('source_ticker')) or \

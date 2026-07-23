@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260607-ui2">
+    <link rel="stylesheet" href="styles.css?v=20260723-pro1">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
@@ -19,11 +19,11 @@
                 <span class="brand-subtitle">Supply chain intelligence for public markets</span>
             </span>
         </button>
-        <div class="topbar-actions">
-            <button class="topbar-link" data-nav="overview" onclick="navigateOverview()">Overview</button>
-            <button class="topbar-link" data-nav="companies" onclick="navigateCompanies()">Screener</button>
-            <button class="topbar-link" data-nav="watchlist" onclick="navigateWatchlist()">Watchlist</button>
-            <button class="topbar-link" data-nav="compare" onclick="navigateCompare()">Compare</button>
+        <div class="topbar-actions" aria-label="Primary navigation">
+            <button class="topbar-link" data-nav="overview" onclick="navigateOverview()" title="Dashboard overview">Overview</button>
+            <button class="topbar-link" data-nav="companies" onclick="navigateCompanies()" title="Company screener">Screener</button>
+            <button class="topbar-link" data-nav="watchlist" onclick="navigateWatchlist()" title="Local watchlist">Watchlist</button>
+            <button class="topbar-link" data-nav="compare" onclick="navigateCompare()" title="Compare two companies">Compare</button>
             <div id="last-updated" class="sync-status">Updating...</div>
         </div>
     </header>
@@ -34,7 +34,8 @@
                 <div>
                     <p class="eyebrow">Public Market Supply Chain Map</p>
                     <h1>Find company exposure fast</h1>
-                    <p class="overview-copy">Search a ticker, scan sector coverage, or open a company brief to see upstream suppliers, downstream customers, market context, and relationship evidence.</p>
+                    <p class="overview-copy">Search a ticker, filter by sector or relationship type, and open a company brief for suppliers, customers, market context, and source evidence.</p>
+                    <div class="quick-actions" id="quick-actions"></div>
                 </div>
                 <div class="overview-stats" id="overview-stats"></div>
             </section>
@@ -42,7 +43,8 @@
             <section class="control-panel">
                 <div class="search-group">
                     <label for="search-input">Search</label>
-                    <input type="text" id="search-input" class="search-bar" placeholder="Company, ticker, sector, supplier, or customer" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)">
+                    <input type="text" id="search-input" class="search-bar" placeholder="Company, ticker, sector, supplier, or customer" aria-describedby="search-helper" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)">
+                    <div id="search-helper" class="field-helper">Type a ticker such as AMD, or search a supplier, customer, product, or sector.</div>
                 </div>
                 <div class="filter-group">
                     <label for="sector-filter">Sector</label>
@@ -60,6 +62,7 @@
                     <input type="checkbox" id="connected-filter" onchange="applyFilters()">
                     <span>Has supply-chain data</span>
                 </label>
+                <button class="clear-filters" type="button" onclick="clearFilters()">Clear</button>
             </section>
 
             <section class="insight-panel">

@@ -41,7 +41,7 @@ run_pipeline.sh           Seed, enrich, export, and optionally push dashboard da
 - Python 3.10+
 - Ollama running locally for LLM extraction, for example `ollama serve`
 - Alpaca API credentials for seeding active US equities
-- Network access for Alpaca, YahooQuery, Wikipedia, and article scraping
+- Network access for Alpaca, YahooQuery, Wikipedia, SEC EDGAR, and article scraping
 
 Install Python dependencies:
 
@@ -138,6 +138,42 @@ Run LLM-assisted discovery for companies that do not yet have relationships:
 ```bash
 python3 backend/auto_discover_edges.py --limit 5
 ```
+
+Discovery combines Wikipedia operations/product sections, recent YahooQuery headlines, recent SEC EDGAR annual filings, SEC material-contract exhibits, company IR/web pages, configured source URLs, government procurement summaries, and sector-aware regulatory datasets. SEC annual filings and exhibits are primary-source evidence and are enabled by default; they can be disabled for faster local experiments:
+
+```bash
+HEPHAESTUS_USE_SEC_SOURCE=0 python3 backend/auto_discover_edges.py --limit 5
+HEPHAESTUS_USE_SEC_EXHIBITS=0 python3 backend/auto_discover_edges.py --limit 5
+```
+
+SEC requests use `HEPHAESTUS_SEC_USER_AGENT` when set, falling back to the project default user agent.
+
+Broader source collection is also enabled by default. Use these toggles when you want a narrower or faster run:
+
+```bash
+HEPHAESTUS_USE_ADDITIONAL_SOURCES=0 python3 backend/auto_discover_edges.py --limit 5
+HEPHAESTUS_USE_IR_SOURCES=0 python3 backend/auto_discover_edges.py --limit 5
+HEPHAESTUS_USE_PROCUREMENT_SOURCE=0 python3 backend/auto_discover_edges.py --limit 5
+HEPHAESTUS_USE_REGULATORY_SOURCE=0 python3 backend/auto_discover_edges.py --limit 5
+```
+
+To add company-specific source URLs such as investor presentations, annual-report PDFs converted to web pages, shipment-data pages, earnings-call transcripts, partner pages, or paid dataset exports, copy `data/source_urls.example.json` to `data/source_urls.json` and add ticker-keyed entries:
+
+```json
+{
+  "sources": {
+    "AMD": [
+      {
+        "url": "https://ir.amd.com/",
+        "title": "AMD Investor Relations",
+        "source_type": "Company IR"
+      }
+    ]
+  }
+}
+```
+
+Set `HEPHAESTUS_SOURCE_CONFIG=/path/to/source_urls.json` to use another file. Press/news article body fetching is off by default because it is noisier and publisher terms vary; enable it with `HEPHAESTUS_FETCH_NEWS_ARTICLES=1`. Increase or reduce the source context budget with `HEPHAESTUS_CONTEXT_MAX_CHARS`.
 
 Optional sector targeting:
 

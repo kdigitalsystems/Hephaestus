@@ -339,6 +339,29 @@ function renderOverviewStats() {
         item.appendChild(makeElement('span', '', label));
         container.appendChild(item);
     });
+    renderQuickActions();
+}
+
+function renderQuickActions() {
+    const container = document.getElementById('quick-actions');
+    if (!container) return;
+    clearElement(container);
+    const mostConnected = dashboardMeta.investor_metrics?.most_connected || [];
+    const topTickers = mostConnected
+        .map(company => company.ticker)
+        .filter(Boolean)
+        .slice(0, 4);
+    if (!topTickers.length) return;
+
+    const label = makeElement('span', 'quick-actions-label', 'Open top briefs');
+    container.appendChild(label);
+    topTickers.forEach(ticker => {
+        const button = makeElement('button', 'quick-action-chip', ticker);
+        button.type = 'button';
+        button.title = `Open ${ticker} company brief`;
+        button.onclick = () => navigateCompany(ticker);
+        container.appendChild(button);
+    });
 }
 
 function populateFilters() {
@@ -405,6 +428,14 @@ function handleSearchKeydown(event) {
     if (event.key !== 'Enter') return;
     window.clearTimeout(searchInputTimer);
     applyFilters(true, true);
+}
+
+function clearFilters() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('sector-filter').value = '';
+    document.getElementById('dependency-filter').value = '';
+    document.getElementById('connected-filter').checked = false;
+    navigateCompanies({}, false);
 }
 
 function applyFilters(updateRoute = true, forceShortQuery = false) {
@@ -511,15 +542,23 @@ function renderCompanyTableRow(company) {
 
     const changeClass = company.change >= 0 ? 'positive' : 'negative';
     const sign = company.change > 0 ? '+' : '';
-    const nameCell = makeElement('td', 'company-cell', displayCompanyName(company.name));
+    const nameCell = makeElement('td', 'company-cell');
+    const nameWrap = makeElement('div', 'company-name-wrap');
+    nameWrap.appendChild(makeElement('strong', '', displayCompanyName(company.name)));
+    nameWrap.appendChild(makeElement('span', '', company.industry || company.sector || 'Uncategorized'));
+    nameCell.appendChild(nameWrap);
     nameCell.title = company.name || '';
 
     tr.appendChild(nameCell);
-    tr.appendChild(makeElement('td', '', company.ticker || ''));
+    const tickerCell = makeElement('td', '');
+    tickerCell.appendChild(makeElement('span', 'table-ticker', company.ticker || ''));
+    tr.appendChild(tickerCell);
     tr.appendChild(makeElement('td', '', `$${(company.price || 0).toFixed(2)}`));
     tr.appendChild(makeElement('td', changeClass, `${sign}${(company.change || 0).toFixed(2)}%`));
     tr.appendChild(makeElement('td', '', formatNum(company.market_cap)));
-    tr.appendChild(makeElement('td', '', String(company.connection_count || 0)));
+    const linkCell = makeElement('td', '');
+    linkCell.appendChild(makeElement('span', company.connection_count ? 'link-count-pill active' : 'link-count-pill', String(company.connection_count || 0)));
+    tr.appendChild(linkCell);
     tr.appendChild(makeElement('td', '', formatNum(company.trailing_pe, 'ratio')));
     return tr;
 }

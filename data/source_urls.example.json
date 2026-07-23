@@ -1,0 +1,18 @@
+{
+  "sources": {
+    "AAPL": [
+      {
+        "url": "https://www.apple.com/investor-relations/",
+        "title": "Apple Investor Relations",
+        "source_type": "Company IR"
+      }
+    ],
+    "*": [
+      {
+        "url": "https://www.usaspending.gov/",
+        "title": "USAspending public procurement reference",
+        "source_type": "Government Procurement"
+      }
+    ]
+  }
+}
