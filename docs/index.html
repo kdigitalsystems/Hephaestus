@@ -7,7 +7,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260723-pro1">
+    <script>
+        try {
+            document.documentElement.dataset.theme = localStorage.getItem('hephaestus_theme') || 'dark';
+        } catch (_error) {
+            document.documentElement.dataset.theme = 'dark';
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css?v=20260723-theme1">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
@@ -24,6 +31,12 @@
             <button class="topbar-link" data-nav="companies" onclick="navigateCompanies()" title="Company screener">Screener</button>
             <button class="topbar-link" data-nav="watchlist" onclick="navigateWatchlist()" title="Local watchlist">Watchlist</button>
             <button class="topbar-link" data-nav="compare" onclick="navigateCompare()" title="Compare two companies">Compare</button>
+            <button class="theme-toggle" type="button" id="theme-toggle" onclick="toggleTheme()" aria-label="Switch to light theme" title="Switch theme">
+                <span class="theme-toggle-track">
+                    <span class="theme-toggle-thumb"></span>
+                </span>
+                <span id="theme-toggle-label">Dark</span>
+            </button>
             <div id="last-updated" class="sync-status">Updating...</div>
         </div>
     </header>
@@ -41,10 +54,17 @@
             </section>
 
             <section class="control-panel">
-                <div class="search-group">
-                    <label for="search-input">Search</label>
-                    <input type="text" id="search-input" class="search-bar" placeholder="Company, ticker, sector, supplier, or customer" aria-describedby="search-helper" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)">
-                    <div id="search-helper" class="field-helper">Type a ticker such as AMD, or search a supplier, customer, product, or sector.</div>
+                <div class="search-group primary-search">
+                    <div class="field-label-row">
+                        <label for="search-input">Ticker / Company Search</label>
+                        <span class="search-shortcut">Press /</span>
+                    </div>
+                    <div class="search-shell">
+                        <span class="search-prefix">Ticker</span>
+                        <input type="text" id="search-input" class="search-bar" placeholder="AMD, Nvidia, TSMC, lithium, cloud..." aria-describedby="search-helper" autocomplete="off" spellcheck="false" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)">
+                        <button class="search-clear" type="button" onclick="clearSearchInput()" aria-label="Clear search" title="Clear search">Clear</button>
+                    </div>
+                    <div id="search-helper" class="field-helper">Search ticker, company, supplier, customer, product, or sector.</div>
                 </div>
                 <div class="filter-group">
                     <label for="sector-filter">Sector</label>

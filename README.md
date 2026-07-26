@@ -12,6 +12,7 @@ The project is designed around a simple split:
 
 ```text
 backend/
+  additional_sources.py   Company IR, procurement, regulatory, and configured source collectors
   auto_discover_edges.py  LLM-assisted supply-chain discovery
   database.py             SQLAlchemy engine/session setup
   db_health.py            SQLite readiness check for local and scheduled runs
@@ -22,10 +23,13 @@ backend/
   repair_dashboard_from_decisions.py
                           Restores approved links into the published dashboard export
   scraper.py              Web article text extraction
+  sec_sources.py          SEC filing and material-contract exhibit collectors
   seed_db.py              Alpaca equity universe seeding
   seed_edges.py           Manual starter relationships
   update_metrics.py       YahooQuery financial/profile enrichment
 docs/
+  DATA_SOURCES.md         Source inventory and source-quality guidance
+  TESTING.md              Local checks, CI jobs, and scheduled pipeline notes
   index.html              Static dashboard shell
   app.js                  Dashboard behavior
   styles.css              Dashboard styling
@@ -48,6 +52,8 @@ Install Python dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+
+For testing and CI details, see `docs/TESTING.md`. For source coverage and source-quality guidance, see `docs/DATA_SOURCES.md`.
 
 ## Credentials
 
@@ -139,7 +145,20 @@ Run LLM-assisted discovery for companies that do not yet have relationships:
 python3 backend/auto_discover_edges.py --limit 5
 ```
 
-Discovery combines Wikipedia operations/product sections, recent YahooQuery headlines, recent SEC EDGAR annual filings, SEC material-contract exhibits, company IR/web pages, configured source URLs, government procurement summaries, and sector-aware regulatory datasets. SEC annual filings and exhibits are primary-source evidence and are enabled by default; they can be disabled for faster local experiments:
+Discovery combines Wikipedia operations/product sections, recent YahooQuery headlines, recent SEC EDGAR annual filings, SEC material-contract exhibits, company IR/web pages, configured source URLs, government procurement summaries, and sector-aware regulatory datasets.
+
+The current source mix includes:
+
+- SEC EDGAR annual/quarterly filings and material-contract exhibits.
+- Company IR, newsroom, and website pages discovered from market profile data.
+- Custom configured URLs for investor presentations, earnings transcripts, shipment-data exports, paid datasets, partner pages, and other curated evidence.
+- USAspending award summaries.
+- SAM.gov opportunities when `HEPHAESTUS_SAM_API_KEY` is set.
+- openFDA device 510(k), device recall, and drug enforcement records for healthcare, medical device, pharma, and biotech companies.
+- FCC equipment authorization data for technology, electronics, telecom, wireless, and hardware companies.
+- NHTSA manufacturer records for vehicle-related companies.
+
+SEC annual filings and exhibits are primary-source evidence and are enabled by default; they can be disabled for faster local experiments:
 
 ```bash
 HEPHAESTUS_USE_SEC_SOURCE=0 python3 backend/auto_discover_edges.py --limit 5
@@ -155,6 +174,13 @@ HEPHAESTUS_USE_ADDITIONAL_SOURCES=0 python3 backend/auto_discover_edges.py --lim
 HEPHAESTUS_USE_IR_SOURCES=0 python3 backend/auto_discover_edges.py --limit 5
 HEPHAESTUS_USE_PROCUREMENT_SOURCE=0 python3 backend/auto_discover_edges.py --limit 5
 HEPHAESTUS_USE_REGULATORY_SOURCE=0 python3 backend/auto_discover_edges.py --limit 5
+```
+
+SAM.gov opportunities require a public API key from SAM.gov:
+
+```bash
+export HEPHAESTUS_SAM_API_KEY="your-sam-api-key"
+python3 backend/auto_discover_edges.py --limit 5 --sectors Industrials Technology
 ```
 
 To add company-specific source URLs such as investor presentations, annual-report PDFs converted to web pages, shipment-data pages, earnings-call transcripts, partner pages, or paid dataset exports, copy `data/source_urls.example.json` to `data/source_urls.json` and add ticker-keyed entries:
@@ -301,12 +327,22 @@ Then visit `http://localhost:8000`.
 Useful local smoke checks:
 
 ```bash
+python3 -m pytest tests/test_additional_sources.py tests/test_sec_sources.py -q
+python3 -m compileall -q backend tests
 node --check docs/app.js
 node tests/check_app_link_count.js
 node tests/check_app_behaviors.js
 python3 backend/validate_dashboard_data.py
+git diff --check
+```
+
+Full local test suite:
+
+```bash
 python3 -m pytest -q
 ```
+
+GitHub CI runs Python tests on Python 3.10 and 3.12, frontend/dashboard checks on Node 24, shell syntax checks, committed whitespace checks, and dashboard validation. Standard CI disables live source fetching and relies on mocked unit tests for external API collectors. The scheduled GPU pipeline runs the SQLite-backed relationship audit after live discovery and review.
 
 The static site includes `docs/sitemap.xml` and `docs/robots.txt` for GitHub Pages discovery. The app uses hash routes such as `#company?ticker=AMD` internally, but the sitemap points search engines at the canonical dashboard entry point because URL fragments are not reliable sitemap targets.
 

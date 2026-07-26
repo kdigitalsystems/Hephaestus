@@ -278,10 +278,20 @@ element("sector-filter").value = "";
 element("dependency-filter").value = "";
 element("connected-filter").checked = false;
 
-vm.runInContext("applyFilters(true); globalThis.__routeAfterTickerSearch = currentRoute;", context);
+vm.runInContext("applyFilters(true); globalThis.__routeAfterTickerSearch = currentRoute; globalThis.__exactTickerResults = currentCompaniesList.map(company => company.ticker);", context);
 
-if (context.__routeAfterTickerSearch.view !== "company" || context.__routeAfterTickerSearch.ticker !== "AMD") {
-  throw new Error(`expected exact ticker search to open AMD detail, got ${JSON.stringify(context.__routeAfterTickerSearch)}`);
+if (context.__routeAfterTickerSearch.view !== "companies" || context.__routeAfterTickerSearch.query !== "amd") {
+  throw new Error(`expected exact ticker typing to stay in list search, got ${JSON.stringify(context.__routeAfterTickerSearch)}`);
+}
+
+if (JSON.stringify(context.__exactTickerResults) !== JSON.stringify(["AMD"])) {
+  throw new Error(`expected exact ticker typing to filter to AMD only, got ${JSON.stringify(context.__exactTickerResults)}`);
+}
+
+vm.runInContext("handleSearchKeydown({ key: 'Enter' }); globalThis.__routeAfterTickerEnter = currentRoute;", context);
+
+if (context.__routeAfterTickerEnter.view !== "company" || context.__routeAfterTickerEnter.ticker !== "AMD") {
+  throw new Error(`expected Enter on exact ticker to open AMD detail, got ${JSON.stringify(context.__routeAfterTickerEnter)}`);
 }
 
 element("search-input").value = "taiwan";

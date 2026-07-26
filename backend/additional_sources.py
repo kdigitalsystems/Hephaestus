@@ -2,6 +2,7 @@ import json
 import os
 import re
 from pathlib import Path
+from datetime import date, timedelta
 from urllib.parse import urljoin
 
 import requests
@@ -34,6 +35,15 @@ SUPPLY_SOURCE_TERMS = (
     "strategic supplier",
     "sole source",
     "single source",
+    "component",
+    "components",
+    "device",
+    "devices",
+    "recall",
+    "contract",
+    "solicitation",
+    "award",
+    "authorization",
 )
 IR_PATHS = (
     "/investors",
@@ -52,6 +62,32 @@ REGULATED_SECTOR_MARKERS = (
     "biotechnology",
     "aerospace",
     "defense",
+)
+HEALTH_SECTOR_MARKERS = (
+    "health",
+    "medical",
+    "pharmaceutical",
+    "biotechnology",
+    "biotech",
+    "drug",
+    "life sciences",
+)
+ELECTRONICS_SECTOR_MARKERS = (
+    "technology",
+    "semiconductor",
+    "communication",
+    "communications",
+    "electronics",
+    "hardware",
+    "telecom",
+    "wireless",
+)
+DEFENSE_PROCUREMENT_MARKERS = (
+    "aerospace",
+    "defense",
+    "industrial",
+    "technology",
+    "engineering",
 )
 
 
@@ -82,6 +118,16 @@ def clean_company_query(name):
         flags=re.IGNORECASE,
     )
     return re.sub(r"\s+", " ", name.replace(",", " ")).strip()
+
+
+def quoted_query(value):
+    cleaned = clean_company_query(value)
+    return f'"{cleaned}"' if cleaned else ""
+
+
+def sector_matches(sector="", industry="", markers=()):
+    haystack = f"{sector} {industry}".lower()
+    return any(marker in haystack for marker in markers)
 
 
 def truncate_join(sections, max_chars):
@@ -119,6 +165,12 @@ def fetch_url_text(url, timeout=15):
     if "json" in content_type:
         return json.dumps(response.json(), ensure_ascii=True)
     return html_to_text(response.text)
+
+
+def fetch_json(url, params=None, timeout=20):
+    response = requests.get(url, params=params, headers=source_headers(), timeout=timeout)
+    response.raise_for_status()
+    return response.json()
 
 
 def load_source_config(path=None):
@@ -250,6 +302,145 @@ def usaspending_text(ticker, company_name="", max_awards=5, max_chars=2600):
     return source_section("Government Procurement - USAspending", company_name, ticker, text, url=url, max_chars=max_chars)
 
 
+def sam_opportunities_params(company_name, api_key, limit=5, days_back=365):
+    today = date.today()
+    posted_from = today - timedelta(days=days_back)
+    return {
+        "api_key": api_key,
+        "limit": limit,
+        "postedFrom": posted_from.strftime("%m/%d/%Y"),
+        "postedTo": today.strftime("%m/%d/%Y"),
+        "title": clean_company_query(company_name),
+    }
+
+
+def sam_opportunities_text(ticker, company_name="", sector="", industry="", max_opportunities=5, max_chars=2600):
+    api_key = os.environ.get("HEPHAESTUS_SAM_API_KEY")
+    if not api_key or not company_name:
+        return ""
+    if not sector_matches(sector, industry, DEFENSE_PROCUREMENT_MARKERS):
+        return ""
+
+    url = "https://api.sam.gov/prod/opportunities/v2/search"
+    try:
+        payload = fetch_json(url, params=sam_opportunities_params(company_name, api_key, limit=max_opportunities))
+    except requests.RequestException as exc:
+        print(f"  [-] SAM.gov opportunities unavailable for {ticker}: {exc}")
+        return ""
+
+    opportunities = payload.get("opportunitiesData") or payload.get("data") or []
+    lines = []
+    for opportunity in opportunities[:max_opportunities]:
+        title = opportunity.get("title") or opportunity.get("noticeTitle") or ""
+        agency = opportunity.get("fullParentPathName") or opportunity.get("department") or opportunity.get("organizationName") or ""
+        notice_type = opportunity.get("type") or opportunity.get("noticeType") or ""
+        description = html_to_text(opportunity.get("description") or opportunity.get("synopsis") or "")
+        posted = opportunity.get("postedDate") or ""
+        lines.append(f"{posted} {notice_type} opportunity from {agency}: {title}. {description}")
+    return source_section("Government Procurement - SAM.gov Opportunities", company_name, ticker, "\n".join(lines), url=url, max_chars=max_chars)
+
+
+def openfda_search(endpoint, search, limit=5):
+    return fetch_json(f"https://api.fda.gov/{endpoint}.json", params={"search": search, "limit": limit})
+
+
+def openfda_device_510k_text(ticker, company_name="", sector="", industry="", limit=5, max_chars=2200):
+    if not company_name or not sector_matches(sector, industry, HEALTH_SECTOR_MARKERS):
+        return ""
+    query = quoted_query(company_name)
+    if not query:
+        return ""
+    try:
+        payload = openfda_search("device/510k", f"applicant:{query}", limit=limit)
+    except requests.RequestException as exc:
+        print(f"  [-] openFDA 510(k) unavailable for {ticker}: {exc}")
+        return ""
+
+    lines = []
+    for row in payload.get("results", [])[:limit]:
+        lines.append(
+            f"FDA 510(k) {row.get('k_number') or ''}: {row.get('applicant') or company_name} "
+            f"received clearance for {row.get('device_name') or row.get('advisory_committee_description') or 'a medical device'} "
+            f"on {row.get('decision_date') or 'unknown date'}."
+        )
+    return source_section("Regulatory Dataset - openFDA Device 510(k)", company_name, ticker, "\n".join(lines), url="https://api.fda.gov/device/510k.json", max_chars=max_chars)
+
+
+def openfda_device_recall_text(ticker, company_name="", sector="", industry="", limit=5, max_chars=2200):
+    if not company_name or not sector_matches(sector, industry, HEALTH_SECTOR_MARKERS):
+        return ""
+    query = quoted_query(company_name)
+    if not query:
+        return ""
+    try:
+        payload = openfda_search("device/recall", f"firm_name:{query}", limit=limit)
+    except requests.RequestException as exc:
+        print(f"  [-] openFDA device recall unavailable for {ticker}: {exc}")
+        return ""
+
+    lines = []
+    for row in payload.get("results", [])[:limit]:
+        lines.append(
+            f"FDA device recall {row.get('res_event_number') or ''}: {row.get('firm_name') or company_name} "
+            f"recalled {row.get('product_description') or 'a device'} because {row.get('reason_for_recall') or 'a recall reason was reported'}."
+        )
+    return source_section("Regulatory Dataset - openFDA Device Recall", company_name, ticker, "\n".join(lines), url="https://api.fda.gov/device/recall.json", max_chars=max_chars)
+
+
+def openfda_drug_enforcement_text(ticker, company_name="", sector="", industry="", limit=5, max_chars=2200):
+    if not company_name or not sector_matches(sector, industry, HEALTH_SECTOR_MARKERS):
+        return ""
+    query = quoted_query(company_name)
+    if not query:
+        return ""
+    try:
+        payload = openfda_search("drug/enforcement", f"recalling_firm:{query}", limit=limit)
+    except requests.RequestException as exc:
+        print(f"  [-] openFDA drug enforcement unavailable for {ticker}: {exc}")
+        return ""
+
+    lines = []
+    for row in payload.get("results", [])[:limit]:
+        lines.append(
+            f"FDA drug enforcement {row.get('recall_number') or ''}: {row.get('recalling_firm') or company_name} "
+            f"recalled {row.get('product_description') or 'a product'} because {row.get('reason_for_recall') or 'a recall reason was reported'}."
+        )
+    return source_section("Regulatory Dataset - openFDA Drug Enforcement", company_name, ticker, "\n".join(lines), url="https://api.fda.gov/drug/enforcement.json", max_chars=max_chars)
+
+
+def openfda_regulatory_text(ticker, company_name="", sector="", industry="", max_chars=5200):
+    sections = [
+        openfda_device_510k_text(ticker, company_name=company_name, sector=sector, industry=industry),
+        openfda_device_recall_text(ticker, company_name=company_name, sector=sector, industry=industry),
+        openfda_drug_enforcement_text(ticker, company_name=company_name, sector=sector, industry=industry),
+    ]
+    return truncate_join(sections, max_chars)
+
+
+def fcc_equipment_authorization_text(ticker, company_name="", sector="", industry="", limit=5, max_chars=2600):
+    if not company_name or not sector_matches(sector, industry, ELECTRONICS_SECTOR_MARKERS):
+        return ""
+    url = "https://opendata.fcc.gov/resource/3b3k-34jp.json"
+    params = {
+        "$limit": limit,
+        "$q": clean_company_query(company_name),
+    }
+    try:
+        rows = fetch_json(url, params=params)
+    except requests.RequestException as exc:
+        print(f"  [-] FCC equipment authorization unavailable for {ticker}: {exc}")
+        return ""
+
+    lines = []
+    for row in rows[:limit]:
+        grantee = row.get("grantee_name") or row.get("applicant_name") or row.get("name") or company_name
+        fcc_id = row.get("fcc_id") or row.get("fccid") or row.get("application_id") or ""
+        equipment = row.get("equipment_class") or row.get("product_description") or row.get("description") or ""
+        grant_date = row.get("grant_date") or row.get("date") or ""
+        lines.append(f"FCC equipment authorization {fcc_id}: {grantee} received authorization for {equipment} on {grant_date}.")
+    return source_section("Regulatory Dataset - FCC Equipment Authorization", company_name, ticker, "\n".join(lines), url=url, max_chars=max_chars)
+
+
 def nhtsa_manufacturer_text(ticker, company_name="", sector="", industry="", max_chars=1600):
     haystack = f"{sector} {industry}".lower()
     if not any(marker in haystack for marker in ("auto", "automobile", "vehicle", "truck", "motor")):
@@ -318,7 +509,10 @@ def get_additional_supply_chain_text(company_name, ticker, sector="", industry="
         sections.append(company_ir_text(ticker, company_name=company_name))
     if bool_env("HEPHAESTUS_USE_PROCUREMENT_SOURCE", default=True):
         sections.append(usaspending_text(ticker, company_name=company_name))
+        sections.append(sam_opportunities_text(ticker, company_name=company_name, sector=sector, industry=industry))
     if bool_env("HEPHAESTUS_USE_REGULATORY_SOURCE", default=True):
+        sections.append(openfda_regulatory_text(ticker, company_name=company_name, sector=sector, industry=industry))
+        sections.append(fcc_equipment_authorization_text(ticker, company_name=company_name, sector=sector, industry=industry))
         sections.append(nhtsa_manufacturer_text(ticker, company_name=company_name, sector=sector, industry=industry))
     sections.append(yahoo_news_article_text(ticker, company_name=company_name))
     return truncate_join(sections, max_chars)

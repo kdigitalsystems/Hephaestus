@@ -9,6 +9,24 @@ let watchlist = new Set();
 let searchInputTimer = null;
 let chartRenderToken = 0;
 
+function readStoredValue(key, fallback) {
+    try {
+        return localStorage.getItem(key) || fallback;
+    } catch (_error) {
+        return fallback;
+    }
+}
+
+function writeStoredValue(key, value) {
+    try {
+        localStorage.setItem(key, value);
+    } catch (_error) {
+        // Storage may be unavailable in tests or strict privacy modes.
+    }
+}
+
+let currentTheme = readStoredValue('hephaestus_theme', 'dark');
+
 const clearElement = (element) => {
     while (element.firstChild) element.removeChild(element.firstChild);
 };
@@ -101,7 +119,38 @@ function loadWatchlist() {
 }
 
 function saveWatchlist() {
-    localStorage.setItem('hephaestus_watchlist', JSON.stringify([...watchlist].sort()));
+    writeStoredValue('hephaestus_watchlist', JSON.stringify([...watchlist].sort()));
+}
+
+function applyTheme(theme) {
+    currentTheme = theme === 'light' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = currentTheme;
+    writeStoredValue('hephaestus_theme', currentTheme);
+
+    const label = document.getElementById('theme-toggle-label');
+    const button = document.getElementById('theme-toggle');
+    if (label) label.textContent = currentTheme === 'dark' ? 'Dark' : 'Light';
+    if (button) {
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        button.setAttribute('aria-label', `Switch to ${nextTheme} theme`);
+        button.title = `Switch to ${nextTheme} theme`;
+    }
+}
+
+function toggleTheme() {
+    applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+}
+
+if (document.addEventListener) {
+    document.addEventListener('keydown', event => {
+        if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey) return;
+        const activeTag = document.activeElement?.tagName;
+        if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
+        const input = document.getElementById('search-input');
+        if (!input || document.getElementById('view-industries')?.classList.contains('hidden')) return;
+        event.preventDefault();
+        input.focus();
+    });
 }
 
 const hydrateCompanies = (data) => {
@@ -123,6 +172,7 @@ fetch('dashboard_data.json')
         globalData = data.industries || {};
         dashboardMeta = data;
         loadWatchlist();
+        applyTheme(currentTheme);
         hydrateCompanies(globalData);
         populateFilters();
         renderOverview();
@@ -427,7 +477,7 @@ function handleSearchInput() {
 function handleSearchKeydown(event) {
     if (event.key !== 'Enter') return;
     window.clearTimeout(searchInputTimer);
-    applyFilters(true, true);
+    applyFilters(true, true, true);
 }
 
 function clearFilters() {
@@ -438,7 +488,32 @@ function clearFilters() {
     navigateCompanies({}, false);
 }
 
-function applyFilters(updateRoute = true, forceShortQuery = false) {
+function clearSearchInput() {
+    const input = document.getElementById('search-input');
+    input.value = '';
+    input.focus();
+    applyFilters(true);
+}
+
+function updateSearchHelper() {
+    const helper = document.getElementById('search-helper');
+    const input = document.getElementById('search-input');
+    if (!helper || !input) return;
+    const rawQuery = input.value.trim();
+    if (!rawQuery) {
+        helper.textContent = 'Search ticker, company, supplier, customer, product, or sector.';
+        return;
+    }
+    const exactTicker = findExactTicker(rawQuery);
+    if (exactTicker) {
+        helper.textContent = `Exact ticker match: ${exactTicker.ticker}. Press Enter to open the company brief.`;
+        return;
+    }
+    const count = currentCompaniesList.length;
+    helper.textContent = `${count} result${count === 1 ? '' : 's'} match "${rawQuery}".`;
+}
+
+function applyFilters(updateRoute = true, forceShortQuery = false, openExactTicker = false) {
     const query = document.getElementById('search-input').value.toLowerCase().trim();
     const sector = document.getElementById('sector-filter').value;
     const dependency = document.getElementById('dependency-filter').value;
@@ -451,7 +526,7 @@ function applyFilters(updateRoute = true, forceShortQuery = false) {
         return;
     }
 
-    if (exactTicker && updateRoute) {
+    if (exactTicker && updateRoute && openExactTicker) {
         navigateCompany(exactTicker.ticker);
         return;
     }
@@ -504,6 +579,7 @@ function renderLevel2() {
     document.querySelectorAll('.sort-icon').forEach(icon => icon.textContent = '');
     setText(`sort-${sortCol}`, sortAsc ? '^' : 'v');
     setText('result-count', `${currentCompaniesList.length} results`);
+    updateSearchHelper();
 
     const companies = [...currentCompaniesList];
     companies.sort((a, b) => {
