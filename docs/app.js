@@ -519,7 +519,7 @@ function applyFilters(updateRoute = true, forceShortQuery = false, openExactTick
     const dependency = document.getElementById('dependency-filter').value;
     const onlyConnected = document.getElementById('connected-filter').checked;
     const exactTicker = !sector && !dependency && !onlyConnected ? findExactTicker(query) : null;
-    const tickerPrefixSearch = !sector && !dependency && !onlyConnected && query.length >= 2 &&
+    const tickerPrefixSearch = !sector && !dependency && !onlyConnected && forceShortQuery && query.length >= 2 &&
         allCompanies.some(company => (company.ticker || '').toLowerCase().startsWith(query));
 
     if (query && query.length < 3 && !tickerPrefixSearch && !sector && !dependency && !onlyConnected && !forceShortQuery) {

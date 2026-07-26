@@ -252,14 +252,20 @@ element("sector-filter").value = "";
 element("dependency-filter").value = "";
 element("connected-filter").checked = false;
 
-vm.runInContext("applyFilters(true); globalThis.__routeAfterTickerPrefix = currentRoute; globalThis.__prefixResults = currentCompaniesList.map(company => company.ticker).sort();", context);
+vm.runInContext("applyFilters(true); globalThis.__routeAfterTickerPrefixTyping = currentRoute; globalThis.__prefixTypingResults = currentCompaniesList.map(company => company.ticker).sort();", context);
+
+if (context.__routeAfterTickerPrefixTyping.view !== "overview" || context.__prefixTypingResults.length !== 0) {
+  throw new Error(`expected two-letter ticker typing to stay on overview, got ${JSON.stringify(context.__routeAfterTickerPrefixTyping)} and results ${JSON.stringify(context.__prefixTypingResults)}`);
+}
+
+vm.runInContext("handleSearchKeydown({ key: 'Enter' }); globalThis.__routeAfterTickerPrefix = currentRoute; globalThis.__prefixResults = currentCompaniesList.map(company => company.ticker).sort();", context);
 
 if (context.__routeAfterTickerPrefix.view !== "companies" || context.__routeAfterTickerPrefix.query !== "am") {
-  throw new Error(`expected ticker prefix search to route to companies, got ${JSON.stringify(context.__routeAfterTickerPrefix)}`);
+  throw new Error(`expected committed ticker prefix search to route to companies, got ${JSON.stringify(context.__routeAfterTickerPrefix)}`);
 }
 
 if (JSON.stringify(context.__prefixResults) !== JSON.stringify(["AMAT", "AMD"])) {
-  throw new Error(`expected AM ticker prefix matches only, got ${JSON.stringify(context.__prefixResults)}`);
+  throw new Error(`expected committed AM ticker prefix matches only, got ${JSON.stringify(context.__prefixResults)}`);
 }
 
 element("search-input").value = "zzzznotaticker";
