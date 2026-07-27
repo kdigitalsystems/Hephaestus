@@ -8,6 +8,8 @@ let sortAsc = false;
 let watchlist = new Set();
 let searchInputTimer = null;
 let chartRenderToken = 0;
+const LIVE_SEARCH_MIN_CHARS = 3;
+const PREFIX_SEARCH_MIN_CHARS = 2;
 
 function readStoredValue(key, fallback) {
     try {
@@ -311,7 +313,7 @@ function applyRoute(route) {
         document.getElementById('sector-filter').value = route.sector || '';
         document.getElementById('dependency-filter').value = route.dependency || '';
         document.getElementById('connected-filter').checked = route.connected === '1';
-        applyFilters(false);
+        applyFilters(false, true);
         return;
     }
 
@@ -471,16 +473,23 @@ function renderLevel1() {
 
 function handleSearchInput() {
     window.clearTimeout(searchInputTimer);
+    updateSearchHelper(true);
     searchInputTimer = window.setTimeout(() => applyFilters(true, false), 250);
 }
 
 function handleSearchKeydown(event) {
     if (event.key !== 'Enter') return;
+    if (event.preventDefault) event.preventDefault();
+    commitSearch();
+}
+
+function commitSearch() {
     window.clearTimeout(searchInputTimer);
     applyFilters(true, true, true);
 }
 
 function clearFilters() {
+    window.clearTimeout(searchInputTimer);
     document.getElementById('search-input').value = '';
     document.getElementById('sector-filter').value = '';
     document.getElementById('dependency-filter').value = '';
@@ -492,10 +501,11 @@ function clearSearchInput() {
     const input = document.getElementById('search-input');
     input.value = '';
     input.focus();
+    window.clearTimeout(searchInputTimer);
     applyFilters(true);
 }
 
-function updateSearchHelper() {
+function updateSearchHelper(searchPending = false) {
     const helper = document.getElementById('search-helper');
     const input = document.getElementById('search-input');
     if (!helper || !input) return;
@@ -506,28 +516,44 @@ function updateSearchHelper() {
     }
     const exactTicker = findExactTicker(rawQuery);
     if (exactTicker) {
-        helper.textContent = `Exact ticker match: ${exactTicker.ticker}. Press Enter to open the company brief.`;
+        helper.textContent = `Exact ticker match: ${exactTicker.ticker}. Press Enter or Search to open the company brief.`;
+        return;
+    }
+    if (rawQuery.length < LIVE_SEARCH_MIN_CHARS) {
+        helper.textContent = `Keep typing, or press Enter to search ticker prefixes such as "${rawQuery.toUpperCase()}".`;
+        return;
+    }
+    if (searchPending) {
+        helper.textContent = `Searching for "${rawQuery}"...`;
         return;
     }
     const count = currentCompaniesList.length;
     helper.textContent = `${count} result${count === 1 ? '' : 's'} match "${rawQuery}".`;
 }
 
-function applyFilters(updateRoute = true, forceShortQuery = false, openExactTicker = false) {
+function applyFilters(updateRoute = true, committedSearch = false, openExactTicker = false) {
     const query = document.getElementById('search-input').value.toLowerCase().trim();
     const sector = document.getElementById('sector-filter').value;
     const dependency = document.getElementById('dependency-filter').value;
     const onlyConnected = document.getElementById('connected-filter').checked;
+    const hasStructuredFilter = Boolean(sector || dependency || onlyConnected);
     const exactTicker = !sector && !dependency && !onlyConnected ? findExactTicker(query) : null;
-    const tickerPrefixSearch = !sector && !dependency && !onlyConnected && forceShortQuery && query.length >= 2 &&
+    const tickerPrefixSearch = !hasStructuredFilter && committedSearch && query.length >= PREFIX_SEARCH_MIN_CHARS &&
         allCompanies.some(company => (company.ticker || '').toLowerCase().startsWith(query));
-
-    if (query && query.length < 3 && !tickerPrefixSearch && !sector && !dependency && !onlyConnected && !forceShortQuery) {
-        return;
-    }
 
     if (exactTicker && updateRoute && openExactTicker) {
         navigateCompany(exactTicker.ticker);
+        return;
+    }
+
+    if (query && query.length < LIVE_SEARCH_MIN_CHARS && !tickerPrefixSearch && !hasStructuredFilter) {
+        currentCompaniesList = [];
+        if (currentRoute.view !== 'overview') {
+            if (updateRoute) updateRouteHash({ view: 'overview' }, false);
+            else currentRoute = { view: 'overview' };
+            renderLevel1();
+        }
+        updateSearchHelper();
         return;
     }
 

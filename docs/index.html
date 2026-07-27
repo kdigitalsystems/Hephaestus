@@ -62,6 +62,7 @@
                     <div class="search-shell">
                         <span class="search-prefix">Ticker</span>
                         <input type="text" id="search-input" class="search-bar" placeholder="AMD, Nvidia, TSMC, lithium, cloud..." aria-describedby="search-helper" autocomplete="off" spellcheck="false" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)">
+                        <button class="search-submit" type="button" onclick="commitSearch()" aria-label="Search">Search</button>
                         <button class="search-clear" type="button" onclick="clearSearchInput()" aria-label="Clear search" title="Clear search">Clear</button>
                     </div>
                     <div id="search-helper" class="field-helper">Search ticker, company, supplier, customer, product, or sector.</div>

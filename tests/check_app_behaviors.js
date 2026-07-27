@@ -39,6 +39,10 @@ if (!htmlSource.includes("overview-stats") || !appSource.includes("function rend
   throw new Error("overview should render a concise data summary before filters");
 }
 
+if (!htmlSource.includes("onclick=\"commitSearch()\"") || !appSource.includes("function commitSearch")) {
+  throw new Error("ticker search should expose an explicit committed Search action");
+}
+
 const htmlIds = new Set([...htmlSource.matchAll(/id="([^"]+)"/g)].map((match) => match[1]));
 const appIdRefs = new Set([...appSource.matchAll(/getElementById\('([^']+)'\)/g)].map((match) => match[1]));
 const missingIds = [...appIdRefs].filter((id) => !htmlIds.has(id));
@@ -258,6 +262,15 @@ if (context.__routeAfterTickerPrefixTyping.view !== "overview" || context.__pref
   throw new Error(`expected two-letter ticker typing to stay on overview, got ${JSON.stringify(context.__routeAfterTickerPrefixTyping)} and results ${JSON.stringify(context.__prefixTypingResults)}`);
 }
 
+vm.runInContext("currentRoute = { view: 'companies', query: 'amd' }; currentCompaniesList = [allCompanies[0], allCompanies[2]];", context);
+element("search-input").value = "am";
+vm.runInContext("applyFilters(true); globalThis.__routeAfterStalePrefixTyping = currentRoute; globalThis.__stalePrefixResults = currentCompaniesList.map(company => company.ticker).sort();", context);
+
+if (context.__routeAfterStalePrefixTyping.view !== "overview" || context.__stalePrefixResults.length !== 0) {
+  throw new Error(`expected two-letter ticker typing to clear stale results, got ${JSON.stringify(context.__routeAfterStalePrefixTyping)} and results ${JSON.stringify(context.__stalePrefixResults)}`);
+}
+
+element("search-input").value = "am";
 vm.runInContext("handleSearchKeydown({ key: 'Enter' }); globalThis.__routeAfterTickerPrefix = currentRoute; globalThis.__prefixResults = currentCompaniesList.map(company => company.ticker).sort();", context);
 
 if (context.__routeAfterTickerPrefix.view !== "companies" || context.__routeAfterTickerPrefix.query !== "am") {
@@ -266,6 +279,21 @@ if (context.__routeAfterTickerPrefix.view !== "companies" || context.__routeAfte
 
 if (JSON.stringify(context.__prefixResults) !== JSON.stringify(["AMAT", "AMD"])) {
   throw new Error(`expected committed AM ticker prefix matches only, got ${JSON.stringify(context.__prefixResults)}`);
+}
+
+vm.runInContext("currentRoute = { view: 'overview' }; currentCompaniesList = [];", context);
+element("search-input").value = "a";
+vm.runInContext("handleSearchKeydown({ key: 'Enter' }); globalThis.__routeAfterOneLetterEnter = currentRoute; globalThis.__oneLetterResults = currentCompaniesList.map(company => company.ticker);", context);
+
+if (context.__routeAfterOneLetterEnter.view !== "overview" || context.__oneLetterResults.length !== 0) {
+  throw new Error(`expected one-letter committed search to stay on overview unless exact, got ${JSON.stringify(context.__routeAfterOneLetterEnter)} and results ${JSON.stringify(context.__oneLetterResults)}`);
+}
+
+element("search-input").value = "am";
+vm.runInContext("applyRoute({ view: 'companies', query: 'am' }); globalThis.__routeAfterCommittedPrefixRoute = currentRoute; globalThis.__committedPrefixRouteResults = currentCompaniesList.map(company => company.ticker).sort();", context);
+
+if (context.__routeAfterCommittedPrefixRoute.view !== "companies" || JSON.stringify(context.__committedPrefixRouteResults) !== JSON.stringify(["AMAT", "AMD"])) {
+  throw new Error(`expected restored AM route to behave as a committed prefix search, got ${JSON.stringify(context.__routeAfterCommittedPrefixRoute)} and results ${JSON.stringify(context.__committedPrefixRouteResults)}`);
 }
 
 element("search-input").value = "zzzznotaticker";
