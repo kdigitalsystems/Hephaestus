@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T03:42:25+00:00",
+  "generated_at": "2026-07-27T04:33:21+00:00",
   "model_name": "graph-signal-v1",
   "universe_size": 50,
   "horizon_days": 30,
@@ -100,7 +100,7 @@
       "bull_case": "Demand and execution improve while the signal from META remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -193,7 +193,7 @@
       "bull_case": "Demand and execution improve while the signal from RMBS remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -286,7 +286,7 @@
       "bull_case": "Demand and execution improve while the signal from META remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -379,7 +379,7 @@
       "bull_case": "Demand and execution improve while the signal from SMTC remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -472,7 +472,7 @@
       "bull_case": "Demand and execution improve while the signal from NVDA remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -565,7 +565,7 @@
       "bull_case": "Demand and execution improve while the signal from RMBS remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -647,7 +647,7 @@
       "bull_case": "Demand and execution improve while the signal from STX remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -740,7 +740,7 @@
       "bull_case": "Demand and execution improve while the signal from CRM remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -833,7 +833,7 @@
       "bull_case": "Demand and execution improve while the signal from MSFT remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -926,7 +926,7 @@
       "bull_case": "Demand and execution improve while the signal from Q remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1008,7 +1008,7 @@
       "bull_case": "Demand and execution improve while the signal from GOOG remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1079,7 +1079,7 @@
       "bull_case": "Demand and execution improve while the signal from AUR remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1161,7 +1161,7 @@
       "bull_case": "Demand and execution improve while the signal from ACN remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1221,7 +1221,7 @@
       "bull_case": "Demand and execution improve while the signal from TSM remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1314,7 +1314,7 @@
       "bull_case": "Demand and execution improve while the signal from MRVL remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1385,7 +1385,7 @@
       "bull_case": "Demand and execution improve while the signal from MU remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1478,7 +1478,7 @@
       "bull_case": "Demand and execution improve while the signal from MGA remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1538,7 +1538,7 @@
       "bull_case": "Demand and execution improve while the signal from SNPS remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1609,7 +1609,7 @@
       "bull_case": "Demand and execution improve while the signal from ROKU remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1680,7 +1680,7 @@
       "bull_case": "Demand and execution improve while the signal from AMAT remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1773,7 +1773,7 @@
       "bull_case": "Demand and execution improve while the signal from DVN remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1833,7 +1833,7 @@
       "bull_case": "Demand and execution improve while the signal from CIEN remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1904,7 +1904,7 @@
       "bull_case": "Demand and execution improve while the signal from CBRS remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -1975,7 +1975,7 @@
       "bull_case": "Demand and execution improve while the signal from AVGO remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2035,7 +2035,7 @@
       "bull_case": "Demand and execution improve while the signal from CDW remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2091,12 +2091,13 @@
           "source_url": "AI Multi-Source Research"
         }
       ],
-      "scenario_summary": "ABBV has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from GMAB remains supportive.",
-      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "scenario_summary": "AbbVie (ABBV) is expected to see positive momentum over the next 30 days, driven by strong direct and network signals. The recent price change indicates a significant upward trend, while analyst recommendations are bullish with a target gap of 3.25%. A key factor is the downstream relationship with Genmab A/S (GMAB), which contributes positively to AbbVie's outlook.",
+      "bull_case": "AbbVie could see continued strength in its stock price due to robust direct and network signals, strong analyst support, and a positive relationship with Genmab A/S. The recent price change suggests ongoing momentum, and the target gap indicates potential for further gains. The marketing partnership with Genmab A/S for Epkinly/Tepkinly could drive additional revenue streams.",
+      "bear_case": "While AbbVie has strong direct and network signals, there are risks that could dampen its upward trajectory. The recent price change, though positive, may have already factored in some of the bullish sentiment. Additionally, any setbacks or regulatory issues with Genmab A/S's products could negatively impact AbbVie's performance. Analysts' recommendations, while currently favorable, might face scrutiny if market conditions worsen.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
-      "research_only": true
+      "generated_at": "2026-07-27T04:33:21+00:00",
+      "research_only": true,
+      "scenario_model": "qwen2.5:7b-instruct"
     },
     {
       "prediction_id": "GOOGL-20260727-graph-signal-v1",
@@ -2132,7 +2133,7 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2169,7 +2170,7 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2262,7 +2263,7 @@
       "bull_case": "Demand and execution improve while the signal from VEEV remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2322,7 +2323,7 @@
       "bull_case": "Demand and execution improve while the signal from NVDA remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2382,7 +2383,7 @@
       "bull_case": "Demand and execution improve while the signal from BBY remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2442,7 +2443,7 @@
       "bull_case": "Demand and execution improve while the signal from PPC remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2491,7 +2492,7 @@
       "bull_case": "Demand and execution improve while the signal from IBM remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2528,7 +2529,7 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2577,7 +2578,7 @@
       "bull_case": "Demand and execution improve while the signal from MU remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2614,7 +2615,7 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2663,7 +2664,7 @@
       "bull_case": "Demand and execution improve while the signal from LRCX remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2723,7 +2724,7 @@
       "bull_case": "Demand and execution improve while the signal from CARR remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2760,7 +2761,7 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2797,7 +2798,7 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -2853,12 +2854,13 @@
           "source_url": "AI Multi-Source Research"
         }
       ],
-      "scenario_summary": "COST has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from KO remains supportive.",
-      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "scenario_summary": "Costco's stock is expected to rise over the next 30 days due to strong direct signals and positive analyst recommendations. The recent price change indicates a significant upward trend, while analyst targets suggest substantial growth potential.",
+      "bull_case": "With robust direct signals and favorable analyst recommendations, Costco could see continued strength in its retail operations. Positive trends in the non-alcoholic beverages sector, as evidenced by upstream connections with Coca-Cola Company (KO) and Coca-Cola Europacific Partners plc (CCEP), further support this outlook. Analysts project a significant target gap of 15.17%, indicating strong upside potential.",
+      "bear_case": "Despite positive signals, Costco's stock could face challenges if the non-alcoholic beverages sector experiences downturns or if analysts revise their projections downward. Additionally, any negative market conditions affecting retail sectors could dampen investor sentiment and impact stock performance.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
-      "research_only": true
+      "generated_at": "2026-07-27T04:33:21+00:00",
+      "research_only": true,
+      "scenario_model": "qwen2.5:7b-instruct"
     },
     {
       "prediction_id": "SHEL-20260727-graph-signal-v1",
@@ -2950,7 +2952,7 @@
       "bull_case": "Demand and execution improve while the signal from NE remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -3010,7 +3012,7 @@
       "bull_case": "Demand and execution improve while the signal from SNY remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -3047,7 +3049,7 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -3084,7 +3086,7 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -3121,7 +3123,7 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -3199,12 +3201,13 @@
           "source_url": "AI Multi-Source Research"
         }
       ],
-      "scenario_summary": "BHP has no decisive research signal over the next 30 days.",
-      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
-      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "scenario_summary": "BHP's stock price has shown a recent increase of 75%, but the analyst target gap suggests a potential downside, with analysts expecting BHP to underperform by 12.04%. The network signal is positive, indicating some bullish sentiment in the market. However, the direct signal is slightly bearish, suggesting caution. Connections with downstream companies like VALE and FCX provide support, while connections with upstream supplier TECK pose a slight drag.",
+      "bull_case": "BHP could benefit from improved demand for raw materials due to global economic recovery, especially in the construction sector. Positive developments in China's infrastructure projects could boost iron ore prices, benefiting BHP as one of the world\u2019s largest producers. Additionally, cost-cutting measures and operational efficiencies could enhance profitability.",
+      "bear_case": "Despite recent price increases, BHP faces challenges from lower commodity prices due to oversupply concerns. The analyst target gap suggests potential underperformance, indicating investor skepticism. Moreover, increased competition in the mining sector and geopolitical risks could dampen earnings, putting pressure on stock performance.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
-      "research_only": true
+      "generated_at": "2026-07-27T04:33:21+00:00",
+      "research_only": true,
+      "scenario_model": "qwen2.5:7b-instruct"
     },
     {
       "prediction_id": "AMGN-20260727-graph-signal-v1",
@@ -3252,7 +3255,7 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -3289,7 +3292,7 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     },
     {
@@ -3326,7 +3329,7 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-07-27T03:42:25+00:00",
+      "generated_at": "2026-07-27T04:33:21+00:00",
       "research_only": true
     }
   ]
