@@ -334,7 +334,7 @@ python3 backend/validate_predictions.py
 Use local Ollama only for scenario narration:
 
 ```bash
-python3 backend/generate_predictions.py --limit 50 --use-ollama --ollama-model qwen2.5:7b-instruct
+python3 backend/generate_predictions.py --limit 50 --use-ollama --require-ollama --ollama-model qwen2.5:7b-instruct
 ```
 
 `docs/prediction_history.json` retains prediction snapshots. On later runs, signals whose 30-day horizon has matured are compared with the current exported price, recorded as correct or incorrect, and used to conservatively recalibrate relationship-type transfer weights. Early results are shrunk toward neutral weights so a few lucky predictions do not distort the model. The Ollama pass also retrieves a small, local set of resolved historical outcomes with matching tickers, sectors, or relationship types for scenario context. This retrieval layer is deliberately bounded and auditable; it can evolve to an embedding store later without changing the published prediction contract.
@@ -375,7 +375,7 @@ python3 -m pytest -q
 
 GitHub CI runs Python tests on Python 3.10 and 3.12, frontend/dashboard checks on Node 24, shell syntax checks, committed whitespace checks, and dashboard validation. Standard CI disables live source fetching and relies on mocked unit tests for external API collectors. The scheduled GPU pipeline runs the SQLite-backed relationship audit after live discovery and review.
 
-Research-signal generation is isolated in `.github/workflows/predictions.yml`. It uses the self-hosted GPU runner and Ollama, writes only `docs/predictions.json` and `docs/prediction_history.json`, and does not alter the daily discovery/update workflow. Standard CI includes a separate prediction-export check that runs without Ollama.
+Research-signal generation is isolated in `.github/workflows/predictions.yml`. It uses the self-hosted GPU runner and Ollama, writes only `docs/predictions.json` and `docs/prediction_history.json`, and does not alter the daily discovery/update workflow. The prediction and daily graph workflows share a concurrency group before their publishing steps, preventing simultaneous pushes to `main`. Standard CI includes a separate prediction-export check that runs without Ollama. Scheduled prediction generation fails when Ollama cannot produce any valid, evidence-bound scenario rather than quietly publishing a model-fallback run.
 
 The static site includes `docs/sitemap.xml` and `docs/robots.txt` for GitHub Pages discovery. The app uses hash routes such as `#company?ticker=AMD` internally, but the sitemap points search engines at the canonical dashboard entry point because URL fragments are not reliable sitemap targets.
 
@@ -473,6 +473,9 @@ Run `seed_edges.py` for starter edges or `auto_discover_edges.py` for LLM-assist
 
 Supply Links decreased after a daily run:
 Check `data/edge_review_decisions.json` and the workflow logs. Approved links should accumulate, but rejected/pending edges are intentionally hidden. If the count drops unexpectedly, run `python3 backend/repair_dashboard_from_decisions.py` and `python3 backend/validate_dashboard_data.py`; the pipeline now runs both automatically after every export.
+
+Database is locked:
+The local SQLite database now waits briefly for a competing reader or writer to finish. Avoid running two ingestion, audit, or rebuild commands against the same database at once. When the repository is opened through a `\\wsl.localhost` path, run database commands from WSL rather than using a Windows Python interpreter against the network share; SQLite locking is not reliable across that boundary.
 
 Alpaca authentication fails:
 Check `ALPACA_API_KEY`, `ALPACA_SECRET_KEY`, or `~/.ssh/alpaca_paper_keys`.

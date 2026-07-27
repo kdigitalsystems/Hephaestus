@@ -24,6 +24,7 @@ def main() -> None:
     parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY_PATH)
     parser.add_argument("--limit", type=int, default=TOP_COMPANY_LIMIT)
     parser.add_argument("--use-ollama", action="store_true", help="Use a local model only to narrate evidence-bound scenarios.")
+    parser.add_argument("--require-ollama", action="store_true", help="Fail instead of publishing when no Ollama scenario can be validated.")
     parser.add_argument("--ollama-model", default="qwen2.5:7b-instruct")
     args = parser.parse_args()
 
@@ -36,6 +37,8 @@ def main() -> None:
     payload, updated_history = generate_predictions(dashboard, history, max(1, args.limit))
     if args.use_ollama:
         result = enhance_scenarios_with_ollama(payload, args.ollama_model, updated_history)
+        if args.require_ollama and result["updated"] == 0:
+            raise SystemExit("Ollama did not produce any valid evidence-bound scenarios; refusing to publish this scheduled run.")
         generated_by_id = {prediction["prediction_id"]: prediction for prediction in payload["predictions"]}
         updated_history = [generated_by_id.get(entry.get("prediction_id"), entry) for entry in updated_history]
         print(f"Ollama scenarios: {result['updated']} updated, {result['failed']} retained deterministic prose")

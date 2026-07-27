@@ -83,6 +83,12 @@ def test_ollama_scenario_parser_rejects_unstructured_or_incomplete_answers():
     }
 
 
+def test_ollama_scenario_parser_rejects_trading_instructions():
+    response = '{"scenario_summary": "Buy this stock now.", "bull_case": "x", "bear_case": "y"}'
+
+    assert parse_ollama_scenario(response) is None
+
+
 def test_retrieval_prefers_resolved_examples_with_shared_relationship_types():
     prediction = {"ticker": "SUP", "sector": "Technology", "connection_paths": [{"relationship_type": "Customer"}]}
     history = [

@@ -63,3 +63,23 @@ def test_database_status_can_require_seeded_nodes(tmp_path):
     ok, message = database_status(db_path, require_nodes=True)
     assert ok is True
     assert message == "database is ready"
+
+
+def test_database_status_uses_a_bounded_sqlite_wait(monkeypatch, tmp_path):
+    db_path = tmp_path / "ready.db"
+    with sqlite3.connect(db_path) as connection:
+        connection.execute("CREATE TABLE nodes (id INTEGER PRIMARY KEY)")
+        connection.execute("CREATE TABLE edges (id INTEGER PRIMARY KEY)")
+
+    original_connect = sqlite3.connect
+    observed_timeouts = []
+
+    def recording_connect(*args, **kwargs):
+        observed_timeouts.append(kwargs.get("timeout"))
+        return original_connect(*args, **kwargs)
+
+    monkeypatch.setattr("db_health.sqlite3.connect", recording_connect)
+    ok, _ = database_status(db_path)
+
+    assert ok is True
+    assert observed_timeouts == [30]

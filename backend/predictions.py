@@ -24,6 +24,11 @@ DEFAULT_HISTORY_PATH = DOCS_DIR / "prediction_history.json"
 TOP_COMPANY_LIMIT = 50
 HORIZON_DAYS = 30
 MODEL_VERSION = "graph-signal-v1"
+UNSAFE_SCENARIO_PATTERNS = (
+    r"\b(buy|sell|short|cover|accumulate|trade)\b",
+    r"\bprice target\b",
+    r"\bshould (buy|sell|trade)\b",
+)
 
 RECOMMENDATION_SCORES = {
     "strong buy": 0.30,
@@ -291,7 +296,11 @@ def parse_ollama_scenario(response: str) -> dict[str, str] | None:
     required = {"scenario_summary", "bull_case", "bear_case"}
     if not required <= set(payload) or any(not isinstance(payload[key], str) for key in required):
         return None
-    return {key: payload[key].strip()[:600] for key in required}
+    scenario = {key: payload[key].strip()[:600] for key in required}
+    combined = " ".join(scenario.values()).lower()
+    if not all(scenario.values()) or any(re.search(pattern, combined) for pattern in UNSAFE_SCENARIO_PATTERNS):
+        return None
+    return scenario
 
 
 def retrieve_prior_outcomes(history: list[dict[str, Any]], prediction: dict[str, Any], limit: int = 3) -> list[dict[str, Any]]:

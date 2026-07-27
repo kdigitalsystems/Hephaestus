@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: hephaestus-main-publisher
+  cancel-in-progress: false
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   HEPHAESTUS_PREDICTION_MODEL: qwen2.5:7b-instruct
@@ -54,6 +58,7 @@ jobs:
           venv/bin/python backend/generate_predictions.py \
             --limit 50 \
             --use-ollama \
+            --require-ollama \
             --ollama-model "$HEPHAESTUS_PREDICTION_MODEL"
 
       - name: Validate prediction export

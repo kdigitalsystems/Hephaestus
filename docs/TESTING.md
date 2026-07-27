@@ -59,11 +59,11 @@ The scheduled pipeline requires the self-hosted GPU runner, Alpaca credentials, 
 
 ## Research Signal Workflow
 
-`.github/workflows/predictions.yml` is intentionally separate from the daily graph-discovery workflow. It runs on the existing self-hosted GPU runner, verifies that Ollama is available, and generates a research-only top-50-company export:
+`.github/workflows/predictions.yml` is intentionally separate from the daily graph-discovery workflow. It runs on the existing self-hosted GPU runner, verifies that Ollama is available, and generates a research-only top-50-company export. Both publishing workflows share a GitHub Actions concurrency group, so they cannot race while writing to `main`:
 
 ```bash
-python backend/generate_predictions.py --limit 50 --use-ollama --ollama-model qwen2.5:7b-instruct
+python backend/generate_predictions.py --limit 50 --use-ollama --require-ollama --ollama-model qwen2.5:7b-instruct
 python backend/validate_predictions.py
 ```
 
-The deterministic scorer sets direction and confidence from published market inputs and approved supply-chain relationships. Ollama may only narrate the structured bull/bear scenarios; it cannot change scores, directions, or add unsupported evidence. Each run appends a snapshot to `docs/prediction_history.json`. When a 30-day horizon matures, the next run compares the stored starting price with the current exported price, records the outcome, and lightly recalibrates relationship-type transfer weights from resolved history. Scenario narration receives a bounded retrieval of relevant resolved outcomes, selected locally by ticker, sector, and relationship type.
+The deterministic scorer sets direction and confidence from published market inputs and approved supply-chain relationships. Ollama may only narrate the structured bull/bear scenarios; it cannot change scores, directions, or add unsupported evidence. Invalid prose, including trading instructions or price-target language, is rejected. The scheduled job fails rather than silently publishing fallback scenarios when Ollama produces no valid output. Each run appends a snapshot to `docs/prediction_history.json`. When a 30-day horizon matures, the next run compares the stored starting price with the current exported price, records the outcome, and lightly recalibrates relationship-type transfer weights from resolved history. Scenario narration receives a bounded retrieval of relevant resolved outcomes, selected locally by ticker, sector, and relationship type.

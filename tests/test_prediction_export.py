@@ -21,5 +21,8 @@ def test_prediction_workflow_is_separate_from_daily_graph_updates():
 
     assert "runs-on: [self-hosted, nvidia-gpu]" in workflow
     assert "--use-ollama" in workflow
+    assert "--require-ollama" in workflow
+    assert "group: hephaestus-main-publisher" in workflow
+    assert "group: hephaestus-main-publisher" in daily_workflow
     assert "docs/predictions.json docs/prediction_history.json" in workflow
     assert "generate_predictions.py" not in daily_workflow

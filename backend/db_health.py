@@ -6,6 +6,7 @@ import sqlite3
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DB_PATH = os.path.join(BASE_DIR, "supply_chain.db")
 REQUIRED_TABLES = {"nodes", "edges"}
+SQLITE_TIMEOUT_SECONDS = 30
 
 
 def database_status(path=DEFAULT_DB_PATH, require_nodes=False):
@@ -15,7 +16,8 @@ def database_status(path=DEFAULT_DB_PATH, require_nodes=False):
         return False, "database file is empty"
 
     try:
-        with sqlite3.connect(path) as connection:
+        with sqlite3.connect(path, timeout=SQLITE_TIMEOUT_SECONDS) as connection:
+            connection.execute(f"PRAGMA busy_timeout = {SQLITE_TIMEOUT_SECONDS * 1000}")
             rows = connection.execute(
                 "SELECT name FROM sqlite_master WHERE type = 'table'"
             ).fetchall()

@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, inspect, text
+from sqlalchemy import create_engine, event, inspect, text
 from sqlalchemy.orm import sessionmaker
 from models import Base
 
@@ -7,8 +7,19 @@ from models import Base
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "supply_chain.db")
 
-# Set up the SQLAlchemy engine
-engine = create_engine(f"sqlite:///{DB_PATH}", echo=False)
+# Allow short-lived readers/writers from scheduled jobs to finish instead of
+# failing an otherwise healthy SQLite database immediately.
+SQLITE_TIMEOUT_SECONDS = 30
+engine = create_engine(
+    f"sqlite:///{DB_PATH}",
+    echo=False,
+    connect_args={"timeout": SQLITE_TIMEOUT_SECONDS},
+)
+
+
+@event.listens_for(engine, "connect")
+def configure_sqlite_connection(dbapi_connection, _connection_record):
+    dbapi_connection.execute(f"PRAGMA busy_timeout = {SQLITE_TIMEOUT_SECONDS * 1000}")
 
 # Create a configured "Session" class to interact with the DB
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
