@@ -13,6 +13,7 @@ node --check docs/app.js
 node tests/check_app_behaviors.js
 node tests/check_app_link_count.js
 python backend/validate_dashboard_data.py
+python backend/validate_predictions.py
 git diff --check
 ```
 
@@ -31,6 +32,7 @@ If the host Python is missing packages such as SQLAlchemy, Ollama, or BeautifulS
 - `python-tests`: installs Python dependencies, compiles backend/tests, and runs `pytest` on Python 3.10 and 3.12.
 - `dashboard-checks`: runs the JavaScript syntax and dashboard behavior checks, then validates `docs/dashboard_data.json`.
 - `quality-gates`: checks shell script syntax and committed whitespace.
+- `prediction-checks`: validates the bounded prediction export and the deterministic graph-learning tests. It does not invoke Ollama or make market-data requests.
 
 CI disables live source fetches with:
 
@@ -54,3 +56,14 @@ python backend/validate_dashboard_data.py
 ```
 
 The scheduled pipeline requires the self-hosted GPU runner, Alpaca credentials, and local Ollama review models.
+
+## Research Signal Workflow
+
+`.github/workflows/predictions.yml` is intentionally separate from the daily graph-discovery workflow. It runs on the existing self-hosted GPU runner, verifies that Ollama is available, and generates a research-only top-50-company export:
+
+```bash
+python backend/generate_predictions.py --limit 50 --use-ollama --ollama-model qwen2.5:7b-instruct
+python backend/validate_predictions.py
+```
+
+The deterministic scorer sets direction and confidence from published market inputs and approved supply-chain relationships. Ollama may only narrate the structured bull/bear scenarios; it cannot change scores, directions, or add unsupported evidence. Each run appends a snapshot to `docs/prediction_history.json`. When a 30-day horizon matures, the next run compares the stored starting price with the current exported price, records the outcome, and lightly recalibrates relationship-type transfer weights from resolved history. Scenario narration receives a bounded retrieval of relevant resolved outcomes, selected locally by ticker, sector, and relationship type.

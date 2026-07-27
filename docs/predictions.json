@@ -1,0 +1,3333 @@
+{
+  "generated_at": "2026-07-27T03:42:25+00:00",
+  "model_name": "graph-signal-v1",
+  "universe_size": 50,
+  "horizon_days": 30,
+  "calibration": {
+    "resolved_predictions": 0,
+    "hit_rate": null,
+    "relationship_weights": {}
+  },
+  "disclaimer": "Research signals only. They are not investment advice, price targets, or a recommendation to buy or sell any security.",
+  "predictions": [
+    {
+      "prediction_id": "NVDA-20260727-graph-signal-v1",
+      "ticker": "NVDA",
+      "company_name": "NVIDIA Corporation Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.73,
+      "score": 0.481,
+      "direct_signal": 0.181,
+      "network_signal": 0.3,
+      "starting_price": 206.84,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.35,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "META",
+          "connected_name": "Meta Platforms, Inc. Class A Common Stock",
+          "relationship_type": "GPU Supplier",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.175,
+          "contribution": 0.092,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "VRT",
+          "connected_name": "Vertiv Holdings Co Class A Common Stock",
+          "relationship_type": "Liquid Cooling Infrastructure",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.148,
+          "contribution": 0.083,
+          "evidence": "Vertiv and Nvidia joint objective over the next three years is to address the challenge of cooling high-density compute by integrating direct liquid cooling and immersion cooling into a single system.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "CRWV",
+          "connected_name": "CoreWeave, Inc. Class A Common Stock",
+          "relationship_type": "Hardware Leasing",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.122,
+          "contribution": 0.072,
+          "evidence": "In August 2023, CoreWeave secured a $2.3 billion debt financing facility led by Magnetar Capital and Blackstone by using Nvidia's H100 GPUs as collateral.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "TSM",
+          "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+          "relationship_type": "Advanced Silicon Fabrication / Foundry Services",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.32,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.054,
+          "evidence": "Most fabless semiconductor companies such as AMD... are customers of TSMC, / Most fabless semiconductor companies such as Nvidia are customers of TSMC.",
+          "source_url": "Manual System Jumpstart / AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MU",
+          "connected_name": "Micron Technology, Inc. Common Stock",
+          "relationship_type": "High-Bandwidth Memory",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.32,
+          "connected_direct_signal": 0.165,
+          "contribution": 0.053,
+          "evidence": "Manual System Jumpstart",
+          "source_url": "Manual System Jumpstart"
+        }
+      ],
+      "scenario_summary": "NVDA has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from META remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "MSFT-20260727-graph-signal-v1",
+      "ticker": "MSFT",
+      "company_name": "Microsoft Corporation Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.73,
+      "score": 0.476,
+      "direct_signal": 0.176,
+      "network_signal": 0.3,
+      "starting_price": 381.7,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.38,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "RMBS",
+          "connected_name": "Rambus Inc. Common Stock",
+          "relationship_type": "Licensed Technology or Software",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.568,
+          "connected_direct_signal": 0.16,
+          "contribution": 0.091,
+          "evidence": "Licensees of Rambus's RDRAM technology included companies such as Microsoft,",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "SPOT",
+          "connected_name": "Spotify Technology S.A.",
+          "relationship_type": "Software Provider",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.127,
+          "contribution": 0.067,
+          "evidence": "The service is available on most devices, including Windows, macOS, and Linux computers,",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "SNOW",
+          "connected_name": "Snowflake Inc.",
+          "relationship_type": "Cloud Infrastructure Provider",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.574,
+          "connected_direct_signal": 0.098,
+          "contribution": 0.056,
+          "evidence": "The platform allows organizations to unify data warehousing, data lakes, data engineering, and data sharing into a single service on public cloud infrastructure such as Amazon Web Services (AWS), Microsoft Azure, and Google Cloud Platform (GCP).",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "TEAM",
+          "connected_name": "Atlassian Corporation Class A Common Stock",
+          "relationship_type": "Software/Infrastructural Dependency",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.189,
+          "contribution": 0.051,
+          "evidence": "In 2013, Atlassian announced a Jira service desk product with full service-level agreement support.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MRVL",
+          "connected_name": "Marvell Technology, Inc. Common Stock",
+          "relationship_type": "Infrastructure Processors",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.154,
+          "contribution": 0.047,
+          "evidence": "On November 12, 2019, Marvell announced that its ThunderX2 SoCs have been deployed on Microsoft Azure.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "MSFT has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from RMBS remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "GOOG-20260727-graph-signal-v1",
+      "ticker": "GOOG",
+      "company_name": "Alphabet Inc. Class C Capital Stock",
+      "sector": "Communication Services",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.72,
+      "score": 0.474,
+      "direct_signal": 0.174,
+      "network_signal": 0.3,
+      "starting_price": 319.09,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.36,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 32.18,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "META",
+          "connected_name": "Meta Platforms, Inc. Class A Common Stock",
+          "relationship_type": "Search Advertising",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.574,
+          "connected_direct_signal": 0.175,
+          "contribution": 0.1,
+          "evidence": "The company also operates an advertising network for its own sites and third parties; as of 2023, advertising accounted for 97.8 percent of its total revenue.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MRVL",
+          "connected_name": "Marvell Technology, Inc. Common Stock",
+          "relationship_type": "Manufacturer -> Material Provider",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.574,
+          "connected_direct_signal": 0.154,
+          "contribution": 0.088,
+          "evidence": "Google's Chromecast products are powered by Marvell SoCs.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "FRVO",
+          "connected_name": "Fervo Energy Company Class A common stock",
+          "relationship_type": "Energy Supply",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.574,
+          "connected_direct_signal": 0.146,
+          "contribution": 0.084,
+          "evidence": "In 2021, Fervo Energy signed a 115 megawatt power purchase agreement with NV Energy to supply carbon-free baseload electricity for Google's data centers in Nevada.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "SPOT",
+          "connected_name": "Spotify Technology S.A.",
+          "relationship_type": "Smart Home Devices",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.127,
+          "contribution": 0.071,
+          "evidence": "The service is available on most devices, including Windows, macOS, and Linux computers, IOS and Android smartphones and tablets, Smart Home devices such as the Amazon Echo and Google Nest lines of products, and digital media players like Roku.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "SNOW",
+          "connected_name": "Snowflake Inc.",
+          "relationship_type": "Cloud Infrastructure Provider",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.098,
+          "contribution": 0.055,
+          "evidence": "The platform allows organizations to unify data warehousing, data lakes, data engineering, and data sharing into a single service on public cloud infrastructure such as Amazon Web Services (AWS), Microsoft Azure, and Google Cloud Platform (GCP).",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "GOOG has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from META remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "AMZN-20260727-graph-signal-v1",
+      "ticker": "AMZN",
+      "company_name": "Amazon.com, Inc. Common Stock",
+      "sector": "Consumer Cyclical",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.72,
+      "score": 0.47,
+      "direct_signal": 0.178,
+      "network_signal": 0.292,
+      "starting_price": 232.11,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.96,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 34.91,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "SMTC",
+          "connected_name": "Semtech Corporation Common Stock",
+          "relationship_type": "operational supply-chain dependency",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.542,
+          "connected_direct_signal": 0.149,
+          "contribution": 0.081,
+          "evidence": "Semtech's chips were utilized in products using the Amazon Sidewalk protocol.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "SPOT",
+          "connected_name": "Spotify Technology S.A.",
+          "relationship_type": "Service Provider",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.127,
+          "contribution": 0.071,
+          "evidence": "The service is available on most devices, including Smart Home devices such as the Amazon Echo and Google Nest lines of products.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "VMC",
+          "connected_name": "Vulcan Materials Company(Holding Company)",
+          "relationship_type": "Physical Infrastructure",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.1,
+          "contribution": 0.053,
+          "evidence": "Amazon occupies buildings in Seattle developed primarily by Vulcan, Inc.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "AER",
+          "connected_name": "Aercap Holdings N.V.",
+          "relationship_type": "Cargo Leasing",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.113,
+          "contribution": 0.031,
+          "evidence": "The company's cargo division serves customers including Amazon, Maersk, and ASL Airlines Ireland.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "VMC",
+          "connected_name": "Vulcan Materials Company(Holding Company)",
+          "relationship_type": "Property Development",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.1,
+          "contribution": 0.031,
+          "evidence": "The first 14 buildings Amazon occupied in South Lake Union were developed primarily by Vulcan, Inc. from 2008 onward...",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "AMZN has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from SMTC remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "TSM-20260727-graph-signal-v1",
+      "ticker": "TSM",
+      "company_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.72,
+      "score": 0.468,
+      "direct_signal": 0.168,
+      "network_signal": 0.3,
+      "starting_price": 403.41,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.93,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 33.22,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "NVDA",
+          "connected_name": "NVIDIA Corporation Common Stock",
+          "relationship_type": "Advanced Silicon Fabrication / Foundry Services",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.62,
+          "connected_direct_signal": 0.181,
+          "contribution": 0.112,
+          "evidence": "Most fabless semiconductor companies such as AMD... are customers of TSMC, / Most fabless semiconductor companies such as Nvidia are customers of TSMC.",
+          "source_url": "Manual System Jumpstart / AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "AVGO",
+          "connected_name": "Broadcom Inc. Common Stock",
+          "relationship_type": "chip manufacturing",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.62,
+          "connected_direct_signal": 0.176,
+          "contribution": 0.109,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MRVL",
+          "connected_name": "Marvell Technology, Inc. Common Stock",
+          "relationship_type": "chip manufacturing / Foundry Services",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.62,
+          "connected_direct_signal": 0.154,
+          "contribution": 0.095,
+          "evidence": "Most fabless semiconductor companies such as AMD... are customers of TSMC,",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "STM",
+          "connected_name": "STMicroelectronics N.V.",
+          "relationship_type": "outsourced production / contract manufacturing",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.135,
+          "contribution": 0.079,
+          "evidence": "Some integrated device manufacturers that have their own fabrication facilities, such as Intel, NXP, STMicroelectronics, and Texas Instruments, outsource some of their production to TSMC.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "QCOM",
+          "connected_name": "QUALCOMM Incorporated Common Stock",
+          "relationship_type": "foundry services / Foundry Services",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.62,
+          "connected_direct_signal": 0.108,
+          "contribution": 0.067,
+          "evidence": "Most fabless semiconductor companies such as AMD, Apple, ARM, Broadcom, Marvell, MediaTek, Qualcomm, and Nvidia are customers of TSMC, / Most fabless semiconductor companies such as Qualcomm are customers of TSMC.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "TSM has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from NVDA remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "IBM-20260727-graph-signal-v1",
+      "ticker": "IBM",
+      "company_name": "International Business Machines Corporation",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.68,
+      "score": 0.397,
+      "direct_signal": 0.097,
+      "network_signal": 0.3,
+      "starting_price": 214.19,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 2.35,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 14.54,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "RMBS",
+          "connected_name": "Rambus Inc. Common Stock",
+          "relationship_type": "Licensed Technology or Software",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.16,
+          "contribution": 0.094,
+          "evidence": "Licensees of Rambus's RDRAM technology included companies such as IBM,",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "AXON",
+          "connected_name": "Axon Enterprise, Inc. Common Stock",
+          "relationship_type": "Cloud Infrastructure",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.149,
+          "contribution": 0.083,
+          "evidence": "The company piloted Axon Pro in various small cities and towns, uploading footage for online storage on a web-based service known as Evidence.com.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "DAL",
+          "connected_name": "Delta Air Lines, Inc.",
+          "relationship_type": "Enterprise Software/Infrastructure",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.157,
+          "contribution": 0.083,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "TTMI",
+          "connected_name": "TTM Technologies, Inc. Common Stock",
+          "relationship_type": "PCB Manufacturing",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.148,
+          "contribution": 0.078,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "SNDK",
+          "connected_name": "Sandisk Corporation Common Stock",
+          "relationship_type": "Advanced Silicon Fabrication",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.125,
+          "contribution": 0.074,
+          "evidence": "In 1991, SunDisk produced the first flash-based solid-state drive (SSD) in a 2.5-inch hard disk drive form factor for IBM with a 20 MB capacity priced at about $1,000.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "IBM has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from RMBS remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "AVGO-20260727-graph-signal-v1",
+      "ticker": "AVGO",
+      "company_name": "Broadcom Inc. Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.67,
+      "score": 0.386,
+      "direct_signal": 0.176,
+      "network_signal": 0.211,
+      "starting_price": 381.92,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.55,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "STX",
+          "connected_name": "Seagate Technology Holdings PLC Ordinary Shares (Ireland)",
+          "relationship_type": "SSD Controller Business Sale",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.62,
+          "connected_direct_signal": 0.11,
+          "contribution": 0.068,
+          "evidence": "Sold its SSD controller business to Seagate Technology in May 2014.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "TSM",
+          "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+          "relationship_type": "chip manufacturing",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.32,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.054,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "A",
+          "connected_name": "Agilent Technologies Inc.",
+          "relationship_type": "historical",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.082,
+          "contribution": 0.049,
+          "evidence": "In August 2005, Agilent announced the sale of its business which produced semiconductor integrated circuits (known as \"chips\") for consumer and industrial uses to Kohlberg Kravis Roberts and Silver Lake Partners for $2.66 billion.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "ACN",
+          "connected_name": "Accenture PLC",
+          "relationship_type": "Cybersecurity Services Division",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.32,
+          "connected_direct_signal": 0.126,
+          "contribution": 0.04,
+          "evidence": "Agreed to acquire Symantec's 300-person cybersecurity services division from Broadcom on January 7, 2020.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "AVGO has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from STX remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "DELL-20260727-graph-signal-v1",
+      "ticker": "DELL",
+      "company_name": "Dell Technologies Inc.",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.67,
+      "score": 0.385,
+      "direct_signal": 0.085,
+      "network_signal": 0.3,
+      "starting_price": 437.5,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.33,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 14.52,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "CRM",
+          "connected_name": "Salesforce, Inc.",
+          "relationship_type": "Hardware - Servers and Compute Infrastructure",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.099,
+          "evidence": "In 2008, Salesforce migrated from Sun Fire E25K servers to Dell servers with AMD processors.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "AXON",
+          "connected_name": "Axon Enterprise, Inc. Common Stock",
+          "relationship_type": "cloud services",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.149,
+          "contribution": 0.078,
+          "evidence": "The company piloted Axon Pro in various small cities and towns.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "SITM",
+          "connected_name": "SiTime Corporation Common Stock",
+          "relationship_type": "Supply Relationship",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.173,
+          "contribution": 0.052,
+          "evidence": "It also reported its top customers as Apple, Fitbit, Garmin, Samsung, Google, Microsoft, Dell, HiKVision and Huami.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "LPL",
+          "connected_name": "LG Display Co. Ltd.",
+          "relationship_type": "LCD Panels",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.139,
+          "contribution": 0.042,
+          "evidence": "Some examples of products that use LCD panels from LG display are Apple\\u2019s 2009 27-inch iMac, Apple\\u2019s Thunderbolt Display, and Dell\\u2019s U2711 LCD Monitor.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "AMD",
+          "connected_name": "Advanced Micro Devices, Inc. Common Stock",
+          "relationship_type": "Server Chips",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.072,
+          "contribution": 0.042,
+          "evidence": "On May 18, 2006, Dell announced that it would roll out new servers based on AMD's Opteron chips by year's end...",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "DELL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from CRM remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "INTC-20260727-graph-signal-v1",
+      "ticker": "INTC",
+      "company_name": "Intel Corporation Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.65,
+      "score": 0.352,
+      "direct_signal": 0.052,
+      "network_signal": 0.3,
+      "starting_price": 92.32,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -8.0,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 25.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Hold",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "MSFT",
+          "connected_name": "Microsoft Corporation Common Stock",
+          "relationship_type": "Microprocessors",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.176,
+          "contribution": 0.093,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "META",
+          "connected_name": "Meta Platforms, Inc. Class A Common Stock",
+          "relationship_type": "Advanced Silicon Fabrication",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.175,
+          "contribution": 0.092,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "BR",
+          "connected_name": "Broadridge Financial Solutions Inc",
+          "relationship_type": "virtual annual meeting services",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.131,
+          "contribution": 0.069,
+          "evidence": "Broadridge facilitated its first virtual annual meeting for Intel Corp in 2009.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "DELL",
+          "connected_name": "Dell Technologies Inc.",
+          "relationship_type": "Server CPUs / Supply Relationship",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.62,
+          "connected_direct_signal": 0.085,
+          "contribution": 0.053,
+          "evidence": "Manual System Jumpstart / AI Multi-Source Research",
+          "source_url": "Manual System Jumpstart / AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "TSM",
+          "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+          "relationship_type": "outsourced production / Advanced Manufacturing Services",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.051,
+          "evidence": "Some integrated device manufacturers that have their own fabrication facilities, such as Intel, NXP, STMicroelectronics, and Texas Instruments, outsource some of their production to TSMC.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "INTC has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from MSFT remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "AAPL-20260727-graph-signal-v1",
+      "ticker": "AAPL",
+      "company_name": "Apple Inc. Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.64,
+      "score": 0.336,
+      "direct_signal": 0.036,
+      "network_signal": 0.3,
+      "starting_price": 333.02,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 3.41,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": -4.27,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "Q",
+          "connected_name": "Qnity Electronics, Inc.",
+          "relationship_type": "Supply Chain",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.155,
+          "contribution": 0.091,
+          "evidence": "Also in March 2026, the company was added to the domestic supply chain of Apple Inc.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "GLW",
+          "connected_name": "Corning Incorporated",
+          "relationship_type": "Supplier",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.135,
+          "contribution": 0.079,
+          "evidence": "Corning is one of the main suppliers to Apple Inc. since working with Steve Jobs in 2007 to develop the iPhone.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "TSM",
+          "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+          "relationship_type": "Advanced Silicon Fabrication",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.32,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.054,
+          "evidence": "Manual System Jumpstart",
+          "source_url": "Manual System Jumpstart"
+        },
+        {
+          "connected_ticker": "MRVL",
+          "connected_name": "Marvell Technology, Inc. Common Stock",
+          "relationship_type": "Supply of Wi-Fi Chips",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.154,
+          "contribution": 0.047,
+          "evidence": "Marvell supplied the Wi-Fi chip for the original (first-generation) Apple iPhone.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "SITM",
+          "connected_name": "SiTime Corporation Common Stock",
+          "relationship_type": "Supply Relationship",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.173,
+          "contribution": 0.047,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "AAPL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from Q remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "META-20260727-graph-signal-v1",
+      "ticker": "META",
+      "company_name": "Meta Platforms, Inc. Class A Common Stock",
+      "sector": "Communication Services",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.64,
+      "score": 0.333,
+      "direct_signal": 0.175,
+      "network_signal": 0.158,
+      "starting_price": 595.19,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.68,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "GOOG",
+          "connected_name": "Alphabet Inc. Class C Capital Stock",
+          "relationship_type": "Search Advertising",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.296,
+          "connected_direct_signal": 0.174,
+          "contribution": 0.052,
+          "evidence": "The company also operates an advertising network for its own sites and third parties; as of 2023, advertising accounted for 97.8 percent of its total revenue.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "NVDA",
+          "connected_name": "NVIDIA Corporation Common Stock",
+          "relationship_type": "GPU Supplier",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.181,
+          "contribution": 0.049,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "AKAM",
+          "connected_name": "Akamai Technologies, Inc. Common Stock",
+          "relationship_type": "Content Delivery Network (CDN)",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.288,
+          "connected_direct_signal": 0.15,
+          "contribution": 0.043,
+          "evidence": "The National Security Agency and Federal Bureau of Investigation used Facebook's Akamai CDN to collect information on Facebook users.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "INTC",
+          "connected_name": "Intel Corporation Common Stock",
+          "relationship_type": "Advanced Silicon Fabrication",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.052,
+          "contribution": 0.014,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "META has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from GOOG remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "TM-20260727-graph-signal-v1",
+      "ticker": "TM",
+      "company_name": "Toyota Motor Corporation American Depositary Shares (Each representing ten Ordinary Shares)",
+      "sector": "Consumer Cyclical",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.63,
+      "score": 0.324,
+      "direct_signal": 0.182,
+      "network_signal": 0.142,
+      "starting_price": 177.42,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.21,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 34.72,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "AUR",
+          "connected_name": "Aurora Innovation, Inc. Class A Common Stock",
+          "relationship_type": "Installed Vehicle Base",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.153,
+          "contribution": 0.09,
+          "evidence": "The first vehicle to be outfitted with the Aurora Driver was the Toyota Sienna.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MGA",
+          "connected_name": "Magna International",
+          "relationship_type": "Automotive Systems, Assemblies, Modules, and Components",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.058,
+          "contribution": 0.034,
+          "evidence": "It produces automotive systems, assemblies, modules, and components, which are supplied to Toyota...",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MGA",
+          "connected_name": "Magna International",
+          "relationship_type": "Supply Chain",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.058,
+          "contribution": 0.018,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "TM has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from AUR remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "SAP-20260727-graph-signal-v1",
+      "ticker": "SAP",
+      "company_name": "SAP SE",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.63,
+      "score": 0.323,
+      "direct_signal": 0.177,
+      "network_signal": 0.146,
+      "starting_price": 160.0,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 4.07,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "ACN",
+          "connected_name": "Accenture PLC",
+          "relationship_type": "Enterprise Software",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.126,
+          "contribution": 0.074,
+          "evidence": "Accenture uses SAP ERP system for their operations.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "IBM",
+          "connected_name": "International Business Machines Corporation",
+          "relationship_type": "Services - Migration services for business systems",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.097,
+          "contribution": 0.051,
+          "evidence": "Xerox asked IBM to migrate its business systems to IBM technology.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "INFY",
+          "connected_name": "Infosys Limited American Depositary Shares",
+          "relationship_type": "Enterprise Software",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.033,
+          "contribution": 0.017,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "XRX",
+          "connected_name": "Xerox Holdings Corporation Common Stock",
+          "relationship_type": "historical_manufacturing_equipment",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.013,
+          "contribution": 0.003,
+          "evidence": "When Xerox exited the computer hardware manufacturing industry in 1971...",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "SAP has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from ACN remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "ASML-20260727-graph-signal-v1",
+      "ticker": "ASML",
+      "company_name": "ASML Holding N.V. New York Registry Shares",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.6,
+      "score": 0.321,
+      "direct_signal": 0.122,
+      "network_signal": 0.198,
+      "starting_price": 1757.09,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.75,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 20.11,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "TSM",
+          "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+          "relationship_type": "Semiconductor Equipment",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.62,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.104,
+          "evidence": "Manual System Jumpstart",
+          "source_url": "Manual System Jumpstart"
+        },
+        {
+          "connected_ticker": "GOOG",
+          "connected_name": "Alphabet Inc. Class C Capital Stock",
+          "relationship_type": "operational supply-chain dependency",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.542,
+          "connected_direct_signal": 0.174,
+          "contribution": 0.095,
+          "evidence": "since 2025, Google Colab officially supports Julia natively.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "ASML has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from TSM remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "ARM-20260727-graph-signal-v1",
+      "ticker": "ARM",
+      "company_name": "Arm Holdings plc American Depositary Shares",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.61,
+      "score": 0.28,
+      "direct_signal": 0.055,
+      "network_signal": 0.225,
+      "starting_price": 260.01,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -7.96,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 15.66,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "MRVL",
+          "connected_name": "Marvell Technology, Inc. Common Stock",
+          "relationship_type": "IP Licensing",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.154,
+          "contribution": 0.091,
+          "evidence": "Marvell OCTEON and ARMADA DPUs integrate a CPU, network interfaces and programmable data acceleration engines on a specialized electronic circuit.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "TSM",
+          "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+          "relationship_type": "IP Licensing / Semiconductor IP / Foundry Services",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.32,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.054,
+          "evidence": "Most fabless semiconductor companies such as AMD... are customers of TSMC, / Most fabless semiconductor companies such as ARM are customers of TSMC.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "INTC",
+          "connected_name": "Intel Corporation Common Stock",
+          "relationship_type": "Foundry Services for Arm SoCs",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.052,
+          "contribution": 0.03,
+          "evidence": "ARM Holdings partnered with Intel Foundry Services to bring Arm SoCs to Intel's 18A process.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "NXPI",
+          "connected_name": "NXP Semiconductors N.V. Common Stock",
+          "relationship_type": "IP Licensee",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.087,
+          "contribution": 0.026,
+          "evidence": "ARM only creates and licenses its technology as intellectual property (IP), rather than manufacturing and selling its own physical CPUs, GPUs, SoCs or microcontrollers.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "AAPL",
+          "connected_name": "Apple Inc. Common Stock",
+          "relationship_type": "Licensed CPU Designs",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.568,
+          "connected_direct_signal": 0.036,
+          "contribution": 0.021,
+          "evidence": "Arm processors are used as the main CPU for most mobile phones many PDAs and handhelds, like the Apple iPod and iPad.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "ARM has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from MRVL remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "TXN-20260727-graph-signal-v1",
+      "ticker": "TXN",
+      "company_name": "Texas Instruments Incorporated Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.6,
+      "score": 0.267,
+      "direct_signal": 0.084,
+      "network_signal": 0.182,
+      "starting_price": 279.58,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.53,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 14.47,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "MU",
+          "connected_name": "Micron Technology, Inc. Common Stock",
+          "relationship_type": "chip manufacturer - semiconductor component supplier",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.165,
+          "contribution": 0.087,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "TSM",
+          "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+          "relationship_type": "outsourced production / Advanced Manufacturing Services",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.051,
+          "evidence": "Some integrated device manufacturers that have their own fabrication facilities, such as Intel, NXP, STMicroelectronics, and Texas Instruments, outsource some of their production to TSMC.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MU",
+          "connected_name": "Micron Technology, Inc. Common Stock",
+          "relationship_type": "Manufacturing Component",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.165,
+          "contribution": 0.045,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "TXN has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from MU remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "TSLA-20260727-graph-signal-v1",
+      "ticker": "TSLA",
+      "company_name": "Tesla, Inc. Common Stock",
+      "sector": "Consumer Cyclical",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.6,
+      "score": 0.261,
+      "direct_signal": 0.125,
+      "network_signal": 0.136,
+      "starting_price": 313.03,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -2.45,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 28.67,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "MGA",
+          "connected_name": "Magna International",
+          "relationship_type": "Automotive Systems, Assemblies, Modules, and Components",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.058,
+          "contribution": 0.034,
+          "evidence": "It produces automotive systems, assemblies, modules, and components, which are supplied to Tesla...",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "JBHT",
+          "connected_name": "J.B. Hunt Transport Services, Inc. Common Stock",
+          "relationship_type": "Electric Trucks",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.055,
+          "contribution": 0.032,
+          "evidence": "J.B. Hunt has reserved several Tesla electric trucks.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "VALE",
+          "connected_name": "VALE S.A.",
+          "relationship_type": "Material Supplier",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.089,
+          "contribution": 0.027,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "LOT",
+          "connected_name": "Lotus Technology Inc. American Depositary Shares",
+          "relationship_type": "Manufacturing Partner",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.086,
+          "contribution": 0.026,
+          "evidence": "Tesla signed a production contract with Group Lotus to produce 'gliders' (complete cars minus powertrain) through December 2011.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MGA",
+          "connected_name": "Magna International",
+          "relationship_type": "Supply Chain",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.058,
+          "contribution": 0.016,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "TSLA has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from MGA remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "GE-20260727-graph-signal-v1",
+      "ticker": "GE",
+      "company_name": "GE Aerospace",
+      "sector": "Industrials",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.57,
+      "score": 0.26,
+      "direct_signal": 0.115,
+      "network_signal": 0.146,
+      "starting_price": 353.73,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 1.0,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 14.36,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "SNPS",
+          "connected_name": "Synopsys, Inc. Common Stock",
+          "relationship_type": "Advanced Silicon Fabrication",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.153,
+          "contribution": 0.09,
+          "evidence": "The company was initially established as Optimal Solutions with a charter to develop and market logic synthesis technology developed by the team at General Electric's Advanced Computer-Aided Engineering Group.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "WWD",
+          "connected_name": "Woodward, Inc. Common Stock",
+          "relationship_type": "Engine Components",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.094,
+          "contribution": 0.056,
+          "evidence": "Some of the engines controlled by Woodward include those from General Electric (CT7/T700), and Pratt & Whitney Canada (PT6A series).",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "GE has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from SNPS remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "NFLX-20260727-graph-signal-v1",
+      "ticker": "NFLX",
+      "company_name": "Netflix, Inc. Common Stock",
+      "sector": "Communication Services",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.59,
+      "score": 0.257,
+      "direct_signal": 0.164,
+      "network_signal": 0.094,
+      "starting_price": 70.09,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 1.21,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "ROKU",
+          "connected_name": "Roku, Inc. Class A Common Stock",
+          "relationship_type": "Content Distribution Platform",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.077,
+          "contribution": 0.041,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "PSKY",
+          "connected_name": "Paramount Skydance Corporation Class B Common Stock",
+          "relationship_type": "Content Provider",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.107,
+          "contribution": 0.029,
+          "evidence": "Epix films came to Netflix 90 days after premiering on Epix, including films from Paramount.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "LION",
+          "connected_name": "Lionsgate Studios Corp.",
+          "relationship_type": "Content Provider",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.088,
+          "contribution": 0.024,
+          "evidence": "Epix films came to Netflix 90 days after premiering on Epix, including films from Lionsgate.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "NFLX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from ROKU remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "LRCX-20260727-graph-signal-v1",
+      "ticker": "LRCX",
+      "company_name": "Lam Research Corporation Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.58,
+      "score": 0.238,
+      "direct_signal": 0.126,
+      "network_signal": 0.111,
+      "starting_price": 305.21,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -2.37,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 21.99,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "AMAT",
+          "connected_name": "Applied Materials, Inc. Common Stock",
+          "relationship_type": "operational supply-chain dependency",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.104,
+          "contribution": 0.058,
+          "evidence": "Throughout semiconductor manufacturing, these technologies help create transistors, interconnects, advanced memory, and packaging structures.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "DOW",
+          "connected_name": "Dow Inc.",
+          "relationship_type": "Advanced Silicon Fabrication",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.1,
+          "contribution": 0.027,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "APD",
+          "connected_name": "Air Products & Chemicals, Inc.",
+          "relationship_type": "Raw Materials",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.087,
+          "contribution": 0.026,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "LRCX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from AMAT remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "CVX-20260727-graph-signal-v1",
+      "ticker": "CVX",
+      "company_name": "Chevron Corporation",
+      "sector": "Energy",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.58,
+      "score": 0.231,
+      "direct_signal": 0.071,
+      "network_signal": 0.16,
+      "starting_price": 194.79,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.17,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 9.78,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "DVN",
+          "connected_name": "Devon Energy Corporation",
+          "relationship_type": "Raw Materials",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.169,
+          "contribution": 0.095,
+          "evidence": "It is organized in Delaware with headquarters in Houston, Texas. Its operations are in the Delaware Basin, Eagle Ford Group, and the Rocky Mountains (Williston Basin and Powder River Basin).",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "EQT",
+          "connected_name": "EQT CORP",
+          "relationship_type": "Historical Sale of Assets",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.32,
+          "connected_direct_signal": 0.124,
+          "contribution": 0.04,
+          "evidence": "The company also explored and drilled in the Marcellus Shale formation under several northeastern US states; these operations were sold to EQT Corporation in 2020.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "BJ",
+          "connected_name": "BJs Wholesale Club Holdings, Inc. Common Stock",
+          "relationship_type": "Gasoline Supplier",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.296,
+          "connected_direct_signal": 0.043,
+          "contribution": 0.013,
+          "evidence": "As of January 30, 2010 BJ's operated 104 gasoline stations at their clubs.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "ENB",
+          "connected_name": "Enbridge, Inc",
+          "relationship_type": "Oil Supply",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.574,
+          "connected_direct_signal": 0.013,
+          "contribution": 0.007,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "E",
+          "connected_name": "ENI S.p.A.",
+          "relationship_type": "Raw Materials",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.574,
+          "connected_direct_signal": 0.007,
+          "contribution": 0.004,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "CVX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from DVN remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "VZ-20260727-graph-signal-v1",
+      "ticker": "VZ",
+      "company_name": "Verizon Communications",
+      "sector": "Communication Services",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.54,
+      "score": 0.212,
+      "direct_signal": 0.095,
+      "network_signal": 0.117,
+      "starting_price": 46.38,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 5.23,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 10.22,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "CIEN",
+          "connected_name": "Ciena Corporation",
+          "relationship_type": "Telecom Services -> Communication Equipment",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.146,
+          "contribution": 0.077,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "CIEN",
+          "connected_name": "Ciena Corporation",
+          "relationship_type": "Supply Relationship",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.146,
+          "contribution": 0.04,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "VZ has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from CIEN remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "TTE-20260727-graph-signal-v1",
+      "ticker": "TTE",
+      "company_name": "TotalEnergies SE",
+      "sector": "Energy",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.57,
+      "score": 0.209,
+      "direct_signal": 0.071,
+      "network_signal": 0.139,
+      "starting_price": 86.8,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.34,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 9.45,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "CBRS",
+          "connected_name": "Cerebras Systems Inc. Class A Common Stock",
+          "relationship_type": "Cloud Computing Services",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.153,
+          "contribution": 0.085,
+          "evidence": "Customers included TotalEnergies, nference, the National Center for Supercomputing Applications (NCSA), and the Leibniz Supercomputing Centre.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "COP",
+          "connected_name": "ConocoPhillips",
+          "relationship_type": "Operator of Surmont Canadian Facility (previously)",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.096,
+          "contribution": 0.029,
+          "evidence": "In 2023, Conoco purchased another 50% stake in the Surmont Canadian facility from TotalEnergies for $3 billion.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "SPWR",
+          "connected_name": "SunPower Inc. Common Stock",
+          "relationship_type": "Supplier of Solar Energy",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.089,
+          "contribution": 0.024,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "TTE has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from CBRS remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "STX-20260727-graph-signal-v1",
+      "ticker": "STX",
+      "company_name": "Seagate Technology Holdings PLC Ordinary Shares (Ireland)",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.55,
+      "score": 0.185,
+      "direct_signal": 0.11,
+      "network_signal": 0.074,
+      "starting_price": 851.69,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -3.13,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 18.42,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "AVGO",
+          "connected_name": "Broadcom Inc. Common Stock",
+          "relationship_type": "SSD Controller Business Sale",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.32,
+          "connected_direct_signal": 0.176,
+          "contribution": 0.056,
+          "evidence": "Sold its SSD controller business to Seagate Technology in May 2014.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "BLZE",
+          "connected_name": "Backblaze, Inc. Class A Common Stock",
+          "relationship_type": "raw materials supply chain dependency",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.28,
+          "connected_direct_signal": 0.107,
+          "contribution": 0.03,
+          "evidence": "On January 21, 2014, numerous tech articles around the globe published findings from the cloud storage provider Backblaze that Sea",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "HPQ",
+          "connected_name": "HP Inc.",
+          "relationship_type": "Hard Disk Drives",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": -0.02,
+          "contribution": -0.012,
+          "evidence": "Not explicitly mentioned in the text but a well-known supplier of hard disk drives to HP.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "STX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from AVGO remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "CSCO-20260727-graph-signal-v1",
+      "ticker": "CSCO",
+      "company_name": "Cisco Systems, Inc. Common Stock (DE)",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.52,
+      "score": 0.184,
+      "direct_signal": 0.092,
+      "network_signal": 0.092,
+      "starting_price": 114.17,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 1.59,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 14.06,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "CDW",
+          "connected_name": "CDW Corporation Common Stock",
+          "relationship_type": "distributor",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.093,
+          "contribution": 0.049,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MTSI",
+          "connected_name": "MACOM Technology Solutions Holdings, Inc. Common Stock",
+          "relationship_type": "Supply Relationship",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.141,
+          "contribution": 0.043,
+          "evidence": "The company's networking and communications products are used in satellite applications, and they are consumed by clients like Cisco for wired and wireless networking applications.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "CSCO has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from CDW remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "ABBV-20260727-graph-signal-v1",
+      "ticker": "ABBV",
+      "company_name": "ABBVIE INC.",
+      "sector": "Healthcare",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.52,
+      "score": 0.183,
+      "direct_signal": 0.049,
+      "network_signal": 0.134,
+      "starting_price": 259.36,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.32,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 3.25,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "GMAB",
+          "connected_name": "Genmab A/S ADS",
+          "relationship_type": "Manufacturing/Marketing",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.088,
+          "evidence": "Proprietary, marketed with partners: Epkinly/Tepkinly (epcoritamab) for the treatment of Relapsed/refractory diffuse large B-cell lymphoma (DLBCL)",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "GMAB",
+          "connected_name": "Genmab A/S ADS",
+          "relationship_type": "Marketing and Distribution Agreement",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.046,
+          "evidence": "Epkinly/Tepkinly is marketed with AbbVie.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "ABBV has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from GMAB remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "GOOGL-20260727-graph-signal-v1",
+      "ticker": "GOOGL",
+      "company_name": "Alphabet Inc. Class A Common Stock",
+      "sector": "Communication Services",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.46,
+      "score": 0.181,
+      "direct_signal": 0.181,
+      "network_signal": 0.0,
+      "starting_price": 319.74,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.45,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 33.89,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "GOOGL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "BABA-20260727-graph-signal-v1",
+      "ticker": "BABA",
+      "company_name": "Alibaba Group Holding Limited American Depositary Shares, each represents eight Ordinary Shares",
+      "sector": "Consumer Cyclical",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.46,
+      "score": 0.18,
+      "direct_signal": 0.18,
+      "network_signal": 0.0,
+      "starting_price": 112.14,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.58,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "BABA has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "NVS-20260727-graph-signal-v1",
+      "ticker": "NVS",
+      "company_name": "Novartis AG",
+      "sector": "Healthcare",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.55,
+      "score": 0.178,
+      "direct_signal": -0.004,
+      "network_signal": 0.182,
+      "starting_price": 155.01,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.7,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": -0.16,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Hold",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "VEEV",
+          "connected_name": "Veeva Systems Inc.",
+          "relationship_type": "Regulatory Affairs Management Platform Subscription",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.155,
+          "contribution": 0.081,
+          "evidence": "The company has 1,552 customers including Novartis.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "GMAB",
+          "connected_name": "Genmab A/S ADS",
+          "relationship_type": "Product Co-development and Commercialization",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.288,
+          "connected_direct_signal": 0.168,
+          "contribution": 0.048,
+          "evidence": "Marketed by partners: Kesimpta (ofatumumab) for the treatment of relapsing remitting multiple sclerosis",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "VEEV",
+          "connected_name": "Veeva Systems Inc.",
+          "relationship_type": "Cloud Computing Software",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.155,
+          "contribution": 0.047,
+          "evidence": "Veeva provides cloud computing software for Novartis.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MRK",
+          "connected_name": "Merck & Co., Inc.",
+          "relationship_type": "Raw Materials",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.537,
+          "connected_direct_signal": 0.044,
+          "contribution": 0.024,
+          "evidence": "Not directly stated but RotaTeq vaccine is provided by Novartis to Merck & Co.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "VOD",
+          "connected_name": "Vodafone Group Plc American Depositary Shares",
+          "relationship_type": "Business Partner (healthcare services)",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.288,
+          "connected_direct_signal": -0.066,
+          "contribution": -0.019,
+          "evidence": "One of its early success stories is with the Novartis-led \\u201cSMS for Life\\u201d project in Tanzania, for which Vodafone developed and deployed a text-message based system that enables all the country\\u2019s 4,600 public health facilities to report their levels of anti-malarial medications so that stock level data can be viewed centrally in real-time, enabling timely re-supply of stock.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "NVS has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from VEEV remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "ANET-20260727-graph-signal-v1",
+      "ticker": "ANET",
+      "company_name": "Arista Networks",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.51,
+      "score": 0.172,
+      "direct_signal": 0.097,
+      "network_signal": 0.076,
+      "starting_price": 173.99,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.01,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 10.53,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "NVDA",
+          "connected_name": "NVIDIA Corporation Common Stock",
+          "relationship_type": "AI-Driven Operations",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.181,
+          "contribution": 0.101,
+          "evidence": "EOS operates as a single software base across Arista's entire hardware portfolio, while also supporting virtualized (vEOS) and containerized (cEOS) deployments in Cloud, AI environments.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "FTNT",
+          "connected_name": "Fortinet, Inc. Common Stock",
+          "relationship_type": "Integrated Security Solutions",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": -0.045,
+          "contribution": -0.025,
+          "evidence": "Key capabilities of Arista's SD-WAN portfolio include integrated security and segmentation.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "ANET has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from NVDA remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "TMUS-20260727-graph-signal-v1",
+      "ticker": "TMUS",
+      "company_name": "T-Mobile US, Inc. Common Stock",
+      "sector": "Communication Services",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.51,
+      "score": 0.165,
+      "direct_signal": 0.18,
+      "network_signal": -0.015,
+      "starting_price": 180.09,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 4.79,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "BBY",
+          "connected_name": "Best Buy Company, Inc.",
+          "relationship_type": "operational supply-chain dependency",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": -0.017,
+          "contribution": -0.01,
+          "evidence": "Best Buy sells cellular phones from Verizon Wireless, AT&T Mobility, T-Mobile, Boost Mobile and Ting Mobile in the United States.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "BBY",
+          "connected_name": "Best Buy Company, Inc.",
+          "relationship_type": "Retailer of Mobile Devices",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": -0.017,
+          "contribution": -0.005,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "TMUS has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from BBY remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "WMT-20260727-graph-signal-v1",
+      "ticker": "WMT",
+      "company_name": "Walmart Inc. Common Stock",
+      "sector": "Consumer Defensive",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.51,
+      "score": 0.163,
+      "direct_signal": 0.134,
+      "network_signal": 0.029,
+      "starting_price": 109.47,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 1.25,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 26.31,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "PPC",
+          "connected_name": "Pilgrim's Pride Corporation Common Stock",
+          "relationship_type": "packaged foods supply",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.072,
+          "contribution": 0.02,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "MUSA",
+          "connected_name": "MURPHY USA INC.",
+          "relationship_type": "Retail Space Leasing",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.035,
+          "contribution": 0.01,
+          "evidence": "Murphy USA operates a chain of retail gas stations that are primarily located in proximity to Walmart stores.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "WMT has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from PPC remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "SNDK-20260727-graph-signal-v1",
+      "ticker": "SNDK",
+      "company_name": "Sandisk Corporation Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.47,
+      "score": 0.155,
+      "direct_signal": 0.125,
+      "network_signal": 0.03,
+      "starting_price": 1436.56,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -7.37,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "IBM",
+          "connected_name": "International Business Machines Corporation",
+          "relationship_type": "Advanced Silicon Fabrication",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.097,
+          "contribution": 0.03,
+          "evidence": "In 1991, SunDisk produced the first flash-based solid-state drive (SSD) in a 2.5-inch hard disk drive form factor for IBM with a 20 MB capacity priced at about $1,000.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "SNDK has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from IBM remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "SPCX-20260727-graph-signal-v1",
+      "ticker": "SPCX",
+      "company_name": "Space Exploration Technologies Corp. Class A Common Stock",
+      "sector": "Industrials",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.44,
+      "score": 0.155,
+      "direct_signal": 0.155,
+      "network_signal": 0.0,
+      "starting_price": 115.07,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.74,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "SPCX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "KLAC-20260727-graph-signal-v1",
+      "ticker": "KLAC",
+      "company_name": "KLA Corporation Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.47,
+      "score": 0.153,
+      "direct_signal": 0.066,
+      "network_signal": 0.087,
+      "starting_price": 210.52,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -2.02,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 11.17,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "MU",
+          "connected_name": "Micron Technology, Inc. Common Stock",
+          "relationship_type": "Process Control and Yield Management Services",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.165,
+          "contribution": 0.087,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "KLAC has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from MU remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PLTR-20260727-graph-signal-v1",
+      "ticker": "PLTR",
+      "company_name": "Palantir Technologies Inc. Class A Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.44,
+      "score": 0.15,
+      "direct_signal": 0.15,
+      "network_signal": 0.0,
+      "starting_price": 122.92,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.9,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PLTR has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "AMAT-20260727-graph-signal-v1",
+      "ticker": "AMAT",
+      "company_name": "Applied Materials, Inc. Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.46,
+      "score": 0.14,
+      "direct_signal": 0.104,
+      "network_signal": 0.036,
+      "starting_price": 536.25,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -3.59,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 17.05,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "LRCX",
+          "connected_name": "Lam Research Corporation Common Stock",
+          "relationship_type": "operational supply-chain dependency",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.288,
+          "connected_direct_signal": 0.126,
+          "contribution": 0.036,
+          "evidence": "Throughout semiconductor manufacturing, these technologies help create transistors, interconnects, advanced memory, and packaging structures.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "AMAT has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from LRCX remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "LIN-20260727-graph-signal-v1",
+      "ticker": "LIN",
+      "company_name": "Linde plc Ordinary Shares",
+      "sector": "Basic Materials",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.49,
+      "score": 0.135,
+      "direct_signal": 0.067,
+      "network_signal": 0.068,
+      "starting_price": 512.28,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 1.35,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 7.13,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "CARR",
+          "connected_name": "Carrier Global Corporation",
+          "relationship_type": "Raw Materials",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.08,
+          "contribution": 0.042,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "APD",
+          "connected_name": "Air Products & Chemicals, Inc.",
+          "relationship_type": "Raw Materials",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.087,
+          "contribution": 0.026,
+          "evidence": "The company also has a long-term supply agreement for the production of hydrogen with Air Products.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "LIN has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from CARR remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "SKHY-20260727-graph-signal-v1",
+      "ticker": "SKHY",
+      "company_name": "SK hynix Inc. American Depositary Shares",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.43,
+      "score": 0.133,
+      "direct_signal": 0.133,
+      "network_signal": 0.0,
+      "starting_price": 154.57,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -5.65,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "SKHY has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "ORCL-20260727-graph-signal-v1",
+      "ticker": "ORCL",
+      "company_name": "Oracle Corp",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.43,
+      "score": 0.131,
+      "direct_signal": 0.131,
+      "network_signal": 0.0,
+      "starting_price": 114.99,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -6.11,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "ORCL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "COST-20260727-graph-signal-v1",
+      "ticker": "COST",
+      "company_name": "Costco Wholesale Corporation Common Stock",
+      "sector": "Consumer Defensive",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.49,
+      "score": 0.125,
+      "direct_signal": 0.094,
+      "network_signal": 0.031,
+      "starting_price": 935.03,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 1.08,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 15.17,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "KO",
+          "connected_name": "Coca-Cola Company",
+          "relationship_type": "Beverages - Non-Alcoholic",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.066,
+          "contribution": 0.018,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "CCEP",
+          "connected_name": "Coca-Cola Europacific Partners plc Ordinary Shares",
+          "relationship_type": "distribution",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.049,
+          "contribution": 0.013,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "COST has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from KO remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "SHEL-20260727-graph-signal-v1",
+      "ticker": "SHEL",
+      "company_name": "Shell plc American Depositary Shares (Each represents two Ordinary shares)",
+      "sector": "Energy",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.51,
+      "score": 0.124,
+      "direct_signal": 0.07,
+      "network_signal": 0.053,
+      "starting_price": 88.38,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.01,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 9.83,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "NE",
+          "connected_name": "Noble Corporation plc",
+          "relationship_type": "Revenue Source",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.081,
+          "contribution": 0.022,
+          "evidence": "In 2020, 21.7% of revenues were from Shell.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "XOM",
+          "connected_name": "ExxonMobil Holdings Corporation",
+          "relationship_type": "Refinery Services",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.296,
+          "connected_direct_signal": 0.058,
+          "contribution": 0.017,
+          "evidence": "Shell uses ExxonMobil's refinery services for crude oil processing.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "DINO",
+          "connected_name": "HF Sinclair Corporation",
+          "relationship_type": "Refining facilities",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.62,
+          "connected_direct_signal": 0.011,
+          "contribution": 0.007,
+          "evidence": "In May 2021, HollyFrontier agreed to purchase the Shell Anacortes Refinery near Anacortes, Washington, with capacity of 149,000 bbl/d, for $350 million.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "E",
+          "connected_name": "ENI S.p.A.",
+          "relationship_type": "Raw Materials",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.574,
+          "connected_direct_signal": 0.007,
+          "contribution": 0.004,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "DINO",
+          "connected_name": "HF Sinclair Corporation",
+          "relationship_type": "Refining Facilities",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.288,
+          "connected_direct_signal": 0.011,
+          "contribution": 0.003,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "SHEL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from NE remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "NVO-20260727-graph-signal-v1",
+      "ticker": "NVO",
+      "company_name": "Novo-Nordisk A/S",
+      "sector": "Healthcare",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.48,
+      "score": 0.12,
+      "direct_signal": 0.025,
+      "network_signal": 0.095,
+      "starting_price": 48.77,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.12,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": -3.06,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "SNY",
+          "connected_name": "Sanofi ADS",
+          "relationship_type": "Raw Materials",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.132,
+          "contribution": 0.074,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "ALKS",
+          "connected_name": "Alkermes plc Ordinary Shares",
+          "relationship_type": "Facility Sale",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.589,
+          "connected_direct_signal": 0.036,
+          "contribution": 0.021,
+          "evidence": "In May 2024, Alkermes completed the sale of its Athlone, Ireland facility to Novo Nordisk.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "NVO has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from SNY remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "GEV-20260727-graph-signal-v1",
+      "ticker": "GEV",
+      "company_name": "GE Vernova Inc.",
+      "sector": "Industrials",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.41,
+      "score": 0.108,
+      "direct_signal": 0.108,
+      "network_signal": 0.0,
+      "starting_price": 1014.75,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.79,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 21.52,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "GEV has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "UNH-20260727-graph-signal-v1",
+      "ticker": "UNH",
+      "company_name": "UNITEDHEALTH GROUP INCORPORATED (Delaware)",
+      "sector": "Healthcare",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.4,
+      "score": 0.077,
+      "direct_signal": 0.077,
+      "network_signal": 0.0,
+      "starting_price": 420.74,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.06,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 12.95,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "UNH has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "RTX-20260727-graph-signal-v1",
+      "ticker": "RTX",
+      "company_name": "RTX Corporation",
+      "sector": "Industrials",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.39,
+      "score": 0.063,
+      "direct_signal": 0.063,
+      "network_signal": 0.0,
+      "starting_price": 212.79,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.93,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 6.59,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "RTX has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "BHP-20260727-graph-signal-v1",
+      "ticker": "BHP",
+      "company_name": "BHP Group Limited American Depositary Shares (Each representing two Ordinary Shares)",
+      "sector": "Basic Materials",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.48,
+      "score": 0.062,
+      "direct_signal": -0.039,
+      "network_signal": 0.1,
+      "starting_price": 83.72,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.75,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": -12.04,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Hold",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "VALE",
+          "connected_name": "VALE S.A.",
+          "relationship_type": "Raw Materials",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.574,
+          "connected_direct_signal": 0.089,
+          "contribution": 0.051,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "FCX",
+          "connected_name": "Freeport-McMoran Inc.",
+          "relationship_type": "Molybdenum Mining Operations",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": 0.086,
+          "contribution": 0.048,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "VALE",
+          "connected_name": "VALE S.A.",
+          "relationship_type": "Raw Materials",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.293,
+          "connected_direct_signal": 0.089,
+          "contribution": 0.026,
+          "evidence": "The company's iron ore mines are primarily in Brazil.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "TECK",
+          "connected_name": "Teck Resources Limited",
+          "relationship_type": "Raw Materials Supplier",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.558,
+          "connected_direct_signal": -0.045,
+          "contribution": -0.025,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "BHP has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "AMGN-20260727-graph-signal-v1",
+      "ticker": "AMGN",
+      "company_name": "Amgen Inc. Common Stock",
+      "sector": "Healthcare",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.41,
+      "score": 0.055,
+      "direct_signal": 0.022,
+      "network_signal": 0.033,
+      "starting_price": 376.04,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.89,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": -5.15,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "LLY",
+          "connected_name": "Eli Lilly & Co.",
+          "relationship_type": "Manufacturing Partner",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.574,
+          "connected_direct_signal": 0.058,
+          "contribution": 0.033,
+          "evidence": "baricitinib (Olumiant), an immunomodulatory medication used for the treatment of rheumatoid arthritis, alopecia areata, and COVID-19",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "AMGN has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "JNJ-20260727-graph-signal-v1",
+      "ticker": "JNJ",
+      "company_name": "Johnson & Johnson",
+      "sector": "Healthcare",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.38,
+      "score": 0.049,
+      "direct_signal": 0.049,
+      "network_signal": 0.0,
+      "starting_price": 263.4,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.75,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 2.73,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "JNJ has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PANW-20260727-graph-signal-v1",
+      "ticker": "PANW",
+      "company_name": "Palo Alto Networks, Inc. Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.38,
+      "score": 0.042,
+      "direct_signal": 0.042,
+      "network_signal": 0.0,
+      "starting_price": 323.79,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.31,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 3.43,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PANW has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-07-27T03:42:25+00:00",
+      "research_only": true
+    }
+  ]
+}

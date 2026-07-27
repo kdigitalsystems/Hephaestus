@@ -1,5 +1,6 @@
 let globalData = {};
 let dashboardMeta = {};
+let predictionData = { predictions: [], calibration: {} };
 let allCompanies = [];
 let currentCompaniesList = [];
 let currentRoute = { view: 'overview' };
@@ -186,6 +187,14 @@ fetch('dashboard_data.json')
         setText('last-updated', 'Failed to load data');
     });
 
+fetch('predictions.json')
+    .then(response => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
+    .then(data => {
+        predictionData = data || { predictions: [], calibration: {} };
+        if (currentRoute.view === 'predictions') renderPredictionsView();
+    })
+    .catch(error => console.warn('Prediction data load failed:', error));
+
 function getLastUpdatedLabel() {
     const dates = allCompanies
         .map(company => company.last_updated)
@@ -216,6 +225,10 @@ function navigateWatchlist() {
     setRoute({ view: 'watchlist' });
 }
 
+function navigatePredictions() {
+    setRoute({ view: 'predictions' });
+}
+
 function navigateCompare(route = {}, push = true) {
     setRoute({ view: 'compare', ...route }, push);
 }
@@ -234,7 +247,7 @@ function navigateCompany(ticker) {
 }
 
 function navigateBackToCompanies() {
-    if (currentRoute.previous && ['companies', 'sector', 'compare', 'watchlist'].includes(currentRoute.previous.view)) {
+    if (currentRoute.previous && ['companies', 'sector', 'compare', 'watchlist', 'predictions'].includes(currentRoute.previous.view)) {
         setRoute(currentRoute.previous);
         return;
     }
@@ -327,6 +340,11 @@ function applyRoute(route) {
         return;
     }
 
+    if (route.view === 'predictions') {
+        renderPredictionsView();
+        return;
+    }
+
     if (route.view === 'compare') {
         document.getElementById('compare-a').value = route.a || '';
         document.getElementById('compare-b').value = route.b || '';
@@ -356,6 +374,7 @@ function showCompanies() {
     document.getElementById('view-industries').classList.add('hidden');
     document.getElementById('view-quality').classList.add('hidden');
     document.getElementById('view-watchlist').classList.add('hidden');
+    document.getElementById('view-predictions').classList.add('hidden');
     document.getElementById('view-compare').classList.add('hidden');
     document.getElementById('view-sector').classList.add('hidden');
     document.getElementById('view-companies').classList.remove('hidden');
@@ -445,6 +464,7 @@ function renderLevel1() {
     document.getElementById('view-industries').classList.remove('hidden');
     document.getElementById('view-quality').classList.add('hidden');
     document.getElementById('view-watchlist').classList.add('hidden');
+    document.getElementById('view-predictions').classList.add('hidden');
     document.getElementById('view-compare').classList.add('hidden');
     document.getElementById('view-sector').classList.add('hidden');
     document.getElementById('view-companies').classList.add('hidden');
@@ -683,6 +703,7 @@ function renderLevel3(company, previousRoute = null) {
     document.getElementById('view-companies').classList.add('hidden');
     document.getElementById('view-details').classList.remove('hidden');
     document.getElementById('view-watchlist').classList.add('hidden');
+    document.getElementById('view-predictions').classList.add('hidden');
     document.getElementById('view-compare').classList.add('hidden');
     document.getElementById('view-sector').classList.add('hidden');
 
@@ -1038,7 +1059,7 @@ function closeEvidenceModal() {
 }
 
 function hideAllViews() {
-    ['view-industries', 'view-quality', 'view-companies', 'view-details', 'view-watchlist', 'view-compare', 'view-sector'].forEach(id => {
+    ['view-industries', 'view-quality', 'view-companies', 'view-details', 'view-watchlist', 'view-predictions', 'view-compare', 'view-sector'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
     });
 }
@@ -1059,6 +1080,79 @@ function renderWatchlistView() {
     companies
         .sort((a, b) => companyMetrics(b).risk_score - companyMetrics(a).risk_score)
         .forEach(company => grid.appendChild(renderCompanySignalCard(company)));
+}
+
+function renderPredictionsView() {
+    currentRoute = { view: 'predictions' };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    hideAllViews();
+    document.getElementById('view-predictions').classList.remove('hidden');
+    const predictions = Array.isArray(predictionData.predictions) ? predictionData.predictions : [];
+    const calibration = predictionData.calibration || {};
+    const generatedAt = predictionData.generated_at ? new Date(predictionData.generated_at) : null;
+    setText('prediction-updated', generatedAt && !Number.isNaN(generatedAt.valueOf()) ? `Updated ${generatedAt.toLocaleDateString()}` : 'Awaiting signal run');
+    setText('prediction-disclaimer', predictionData.disclaimer || 'Research signals only. They are not investment advice or trading instructions.');
+
+    const calibrationEl = document.getElementById('prediction-calibration');
+    clearElement(calibrationEl);
+    const resolved = Number(calibration.resolved_predictions || 0);
+    const hitRate = calibration.hit_rate === null || calibration.hit_rate === undefined ? 'Calibrating' : `${Math.round(Number(calibration.hit_rate) * 100)}% hit rate`;
+    [
+        [`Top ${predictionData.universe_size || predictions.length} companies`, `${predictionData.horizon_days || 30}-day horizon`],
+        [hitRate, `${resolved} resolved signal${resolved === 1 ? '' : 's'}`],
+        ['One-hop graph signals', 'Direct inputs + relationship evidence'],
+    ].forEach(([title, detail]) => {
+        const item = makeElement('div', 'prediction-calibration-item');
+        item.appendChild(makeElement('strong', '', title));
+        item.appendChild(makeElement('span', '', detail));
+        calibrationEl.appendChild(item);
+    });
+
+    const grid = document.getElementById('prediction-grid');
+    clearElement(grid);
+    if (!predictions.length) {
+        grid.appendChild(makeElement('p', 'empty-state', 'No generated signals are available yet.'));
+        return;
+    }
+    predictions.forEach(prediction => {
+        const card = makeElement('article', `prediction-card ${prediction.direction || 'neutral'}`);
+        const header = makeElement('div', 'prediction-card-header');
+        const title = makeElement('div', '');
+        title.appendChild(makeElement('strong', 'prediction-ticker', prediction.ticker || 'N/A'));
+        title.appendChild(makeElement('span', 'prediction-company', displayCompanyName(prediction.company_name)));
+        header.appendChild(title);
+        header.appendChild(makeElement('span', `prediction-direction ${prediction.direction || 'neutral'}`, String(prediction.direction || 'neutral').toUpperCase()));
+        card.appendChild(header);
+        card.appendChild(makeElement('p', 'prediction-summary', prediction.scenario_summary || 'No scenario summary available.'));
+        const metrics = makeElement('div', 'prediction-metrics');
+        [
+            ['Confidence', `${Math.round(Number(prediction.confidence || 0) * 100)}%`],
+            ['Direct', Number(prediction.direct_signal || 0).toFixed(2)],
+            ['Network', Number(prediction.network_signal || 0).toFixed(2)],
+        ].forEach(([label, value]) => {
+            const metric = makeElement('div', '');
+            metric.appendChild(makeElement('span', '', label));
+            metric.appendChild(makeElement('strong', '', value));
+            metrics.appendChild(metric);
+        });
+        card.appendChild(metrics);
+        const paths = prediction.connection_paths || [];
+        if (paths.length) {
+            const pathsEl = makeElement('div', 'prediction-paths');
+            pathsEl.appendChild(makeElement('span', 'prediction-path-label', 'Top graph inputs'));
+            paths.slice(0, 2).forEach(path => {
+                pathsEl.appendChild(makeElement('span', 'prediction-path', `${path.connected_ticker} - ${path.relationship_type} (${Number(path.contribution || 0).toFixed(2)})`));
+            });
+            card.appendChild(pathsEl);
+        }
+        const actions = makeElement('div', 'relationship-actions');
+        const open = makeElement('button', 'mini-button', 'Open brief');
+        open.type = 'button';
+        open.onclick = () => navigateCompany(prediction.ticker);
+        actions.appendChild(open);
+        card.appendChild(actions);
+        grid.appendChild(card);
+    });
 }
 
 function renderCompanySignalCard(company) {

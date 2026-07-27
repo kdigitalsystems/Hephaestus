@@ -14,7 +14,7 @@
             document.documentElement.dataset.theme = 'dark';
         }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260723-theme1">
+    <link rel="stylesheet" href="styles.css?v=20260726-predictions1">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
@@ -31,6 +31,7 @@
             <button class="topbar-link" data-nav="companies" onclick="navigateCompanies()" title="Company screener">Screener</button>
             <button class="topbar-link" data-nav="watchlist" onclick="navigateWatchlist()" title="Local watchlist">Watchlist</button>
             <button class="topbar-link" data-nav="compare" onclick="navigateCompare()" title="Compare two companies">Compare</button>
+            <button class="topbar-link" data-nav="predictions" onclick="navigatePredictions()" title="Graph-aware research signals">Predictions</button>
             <button class="theme-toggle" type="button" id="theme-toggle" onclick="toggleTheme()" aria-label="Switch to light theme" title="Switch theme">
                 <span class="theme-toggle-track">
                     <span class="theme-toggle-thumb"></span>
@@ -141,6 +142,20 @@
                 <span id="watchlist-count" class="result-count">0 saved</span>
             </div>
             <div id="watchlist-grid" class="comparison-grid"></div>
+        </section>
+
+        <section id="view-predictions" class="hidden">
+            <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
+            <div class="table-header">
+                <div>
+                    <p class="eyebrow">Research Signals</p>
+                    <h2>Hephaestus Predictions</h2>
+                </div>
+                <span id="prediction-updated" class="result-count">Loading...</span>
+            </div>
+            <p id="prediction-disclaimer" class="prediction-disclaimer"></p>
+            <div id="prediction-calibration" class="prediction-calibration"></div>
+            <div id="prediction-grid" class="prediction-grid"></div>
         </section>
 
         <section id="view-compare" class="hidden">
@@ -305,6 +320,6 @@
         </section>
     </div>
 
-    <script src="app.js?v=20260607-ui2"></script>
+    <script src="app.js?v=20260726-predictions1"></script>
 </body>
 </html>

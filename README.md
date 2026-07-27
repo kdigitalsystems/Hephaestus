@@ -17,6 +17,7 @@ backend/
   database.py             SQLAlchemy engine/session setup
   db_health.py            SQLite readiness check for local and scheduled runs
   export.py               SQLite to docs/dashboard_data.json export
+  generate_predictions.py Top-50 graph-aware research signal exporter
   main.py                 URL scrape -> LLM parse -> database workflow
   models.py               Node and Edge ORM models
   parser.py               Ollama structured extraction prompt/schema
@@ -35,6 +36,8 @@ docs/
   styles.css              Dashboard styling
   dashboard_data.json     Exported dashboard data
   link_history.json       Daily published link-count history
+  predictions.json        Published, research-only top-50 signal export
+  prediction_history.json Outcome history used for conservative recalibration
 one_off_scripts/
   alpaca_fetch.py         Manual Alpaca/Yahoo diagnostic script
 run_pipeline.sh           Seed, enrich, export, and optionally push dashboard data
@@ -308,6 +311,34 @@ The risk scores are intentionally simple and explainable:
 
 The website's Supply Links number counts unique stable relationship keys. Relationship rows appear from both sides of a connection, so the raw number of upstream/downstream rows is usually about twice the unique link count.
 
+## Graph-Aware Research Signals
+
+Hephaestus also publishes a bounded research-signal view for the 50 largest exported companies by market capitalization. It is research tooling, not investment advice, a price target, or a recommendation to trade.
+
+Each signal combines a small set of explainable direct inputs with one-hop supply-chain propagation:
+
+- Direct inputs: recent published price change, analyst target gap, and the exported analyst recommendation.
+- Customer-to-supplier propagation: a positive customer signal can contribute a dampened positive demand signal to a tracked supplier.
+- Supplier-to-customer propagation: supplier-side signals use a smaller weight because their effect on the customer is more ambiguous.
+- Relationship confidence, approval state, and later measured relationship-type performance constrain every transfer.
+
+Every published prediction contains its direct and network scores, structured inputs, contributing relationship paths with source evidence, confidence, bull/bear scenarios, model version, and generation time. Scores remain deterministic and auditable. A local Ollama model may generate concise scenario prose from this already-selected evidence, but it cannot choose a direction, change confidence, set a price target, or introduce new facts.
+
+Run a local deterministic export:
+
+```bash
+python3 backend/generate_predictions.py --limit 50
+python3 backend/validate_predictions.py
+```
+
+Use local Ollama only for scenario narration:
+
+```bash
+python3 backend/generate_predictions.py --limit 50 --use-ollama --ollama-model qwen2.5:7b-instruct
+```
+
+`docs/prediction_history.json` retains prediction snapshots. On later runs, signals whose 30-day horizon has matured are compared with the current exported price, recorded as correct or incorrect, and used to conservatively recalibrate relationship-type transfer weights. Early results are shrunk toward neutral weights so a few lucky predictions do not distort the model. The Ollama pass also retrieves a small, local set of resolved historical outcomes with matching tickers, sectors, or relationship types for scenario context. This retrieval layer is deliberately bounded and auditable; it can evolve to an embedding store later without changing the published prediction contract.
+
 The Watchlist is local to the browser via `localStorage`; it does not require accounts or a backend. The Compare view is routeable with hash parameters, for example `#compare?a=AMD&b=NVDA`.
 
 The dashboard reads:
@@ -343,6 +374,8 @@ python3 -m pytest -q
 ```
 
 GitHub CI runs Python tests on Python 3.10 and 3.12, frontend/dashboard checks on Node 24, shell syntax checks, committed whitespace checks, and dashboard validation. Standard CI disables live source fetching and relies on mocked unit tests for external API collectors. The scheduled GPU pipeline runs the SQLite-backed relationship audit after live discovery and review.
+
+Research-signal generation is isolated in `.github/workflows/predictions.yml`. It uses the self-hosted GPU runner and Ollama, writes only `docs/predictions.json` and `docs/prediction_history.json`, and does not alter the daily discovery/update workflow. Standard CI includes a separate prediction-export check that runs without Ollama.
 
 The static site includes `docs/sitemap.xml` and `docs/robots.txt` for GitHub Pages discovery. The app uses hash routes such as `#company?ticker=AMD` internally, but the sitemap points search engines at the canonical dashboard entry point because URL fragments are not reliable sitemap targets.
 

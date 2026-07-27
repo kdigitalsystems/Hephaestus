@@ -39,6 +39,14 @@ if (!htmlSource.includes("overview-stats") || !appSource.includes("function rend
   throw new Error("overview should render a concise data summary before filters");
 }
 
+if (!htmlSource.includes('data-nav="predictions"') || !htmlSource.includes('id="view-predictions"')) {
+  throw new Error("dashboard should expose the bounded Hephaestus Predictions view");
+}
+
+if (!appSource.includes("function renderPredictionsView") || !appSource.includes("fetch('predictions.json')")) {
+  throw new Error("prediction view should load and render the published research-signal export");
+}
+
 if (!htmlSource.includes("onclick=\"commitSearch()\"") || !appSource.includes("function commitSearch")) {
   throw new Error("ticker search should expose an explicit committed Search action");
 }
@@ -260,6 +268,10 @@ vm.runInContext("applyFilters(true); globalThis.__routeAfterTickerPrefixTyping =
 
 if (context.__routeAfterTickerPrefixTyping.view !== "overview" || context.__prefixTypingResults.length !== 0) {
   throw new Error(`expected two-letter ticker typing to stay on overview, got ${JSON.stringify(context.__routeAfterTickerPrefixTyping)} and results ${JSON.stringify(context.__prefixTypingResults)}`);
+}
+
+if (context.routeToHash({ view: "predictions" }) !== "#predictions") {
+  throw new Error("prediction route should be shareable without extra query state");
 }
 
 vm.runInContext("currentRoute = { view: 'companies', query: 'amd' }; currentCompaniesList = [allCompanies[0], allCompanies[2]];", context);
