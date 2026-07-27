@@ -560,7 +560,8 @@ function applyFilters(updateRoute = true, committedSearch = false, openExactTick
     let results = allCompanies.filter(company => {
         const deps = [...(company.upstream || []), ...(company.downstream || [])];
         const counterpartyText = deps.map(dep => `${dep.name || ''} ${dep.ticker || ''} ${dep.product || ''} ${dep.type || ''}`).join(' ').toLowerCase();
-        const matchesQuery = tickerPrefixSearch ? (company.ticker || '').toLowerCase().startsWith(query) : !query ||
+        const matchesQuery = exactTicker ? String(company.ticker || '').toUpperCase() === exactTicker.ticker :
+            tickerPrefixSearch ? (company.ticker || '').toLowerCase().startsWith(query) : !query ||
             (company.name || '').toLowerCase().includes(query) ||
             (company.ticker || '').toLowerCase().includes(query) ||
             (company.sector || '').toLowerCase().includes(query) ||

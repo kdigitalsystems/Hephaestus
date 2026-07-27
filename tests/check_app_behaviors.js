@@ -162,7 +162,7 @@ vm.runInContext(`
       sector: "Consumer",
       industry: "Retail",
       connection_count: 1,
-      upstream: [{ ticker: "PRIVATE", name: "Private Vendor", type: "Logistics", confidence: 0.6, review_status: "pending" }],
+      upstream: [{ ticker: "AMD", name: "Advanced Micro Devices", type: "Processors", confidence: 0.6, review_status: "pending" }],
       downstream: [],
     },
     {
