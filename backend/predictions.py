@@ -13,7 +13,7 @@ import re
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -227,7 +227,10 @@ def build_prediction(company: dict[str, Any], company_by_ticker: dict[str, dict[
     }
 
 
-def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str, dict[str, Any]], now: datetime) -> list[dict[str, Any]]:
+PriceLookup = Callable[[str, datetime], tuple[float | None, str]]
+
+
+def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str, dict[str, Any]], now: datetime, price_lookup: PriceLookup | None = None) -> list[dict[str, Any]]:
     for entry in history:
         if entry.get("outcome"):
             continue
@@ -237,17 +240,32 @@ def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str,
             continue
         if generated.tzinfo is None:
             generated = generated.replace(tzinfo=timezone.utc)
-        if now < generated + timedelta(days=int(entry.get("horizon_days") or HORIZON_DAYS)):
+        target_at = generated + timedelta(days=int(entry.get("horizon_days") or HORIZON_DAYS))
+        if now < target_at:
             continue
         company = company_by_ticker.get(str(entry.get("ticker") or "").upper())
         start = as_number(entry.get("starting_price"))
-        end = as_number(company.get("price")) if company else 0.0
+        end = 0.0
+        source = "latest_exported_price_fallback"
+        if price_lookup:
+            try:
+                historical_close, historical_source = price_lookup(str(entry.get("ticker") or ""), target_at)
+            except Exception:
+                historical_close, historical_source = None, "historical_close_unavailable"
+            end = as_number(historical_close)
+            source = historical_source
+        if end <= 0:
+            end = as_number(company.get("price")) if company else 0.0
+            source = "latest_exported_price_fallback"
         if start <= 0 or end <= 0:
             continue
         return_pct = round(((end - start) / start) * 100, 2)
         direction = entry.get("direction")
         entry["realized_return_pct"] = return_pct
         entry["evaluated_at"] = now.isoformat()
+        entry["evaluation_target_date"] = target_at.date().isoformat()
+        entry["outcome_price"] = round(end, 4)
+        entry["outcome_price_source"] = source
         entry["outcome"] = "correct" if (direction == "up" and return_pct > 0) or (direction == "down" and return_pct < 0) or (direction == "neutral" and abs(return_pct) <= 2) else "incorrect"
     return history
 
@@ -260,11 +278,11 @@ def load_json(path: Path, fallback: Any) -> Any:
         return fallback
 
 
-def generate_predictions(dashboard_data: dict[str, Any], history: list[dict[str, Any]] | None = None, limit: int = TOP_COMPANY_LIMIT, now: datetime | None = None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+def generate_predictions(dashboard_data: dict[str, Any], history: list[dict[str, Any]] | None = None, limit: int = TOP_COMPANY_LIMIT, now: datetime | None = None, price_lookup: PriceLookup | None = None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     now = now or utc_now()
     all_companies = list(iter_companies(dashboard_data))
     company_by_ticker = {str(company["ticker"]).upper(): company for company in all_companies}
-    history = evaluate_history(list(history or []), company_by_ticker, now)
+    history = evaluate_history(list(history or []), company_by_ticker, now, price_lookup)
     calibration = calibration_from_history(history)
     universe = select_top_companies(all_companies, limit)
     indexed = relationship_index(all_companies)

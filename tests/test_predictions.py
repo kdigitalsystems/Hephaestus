@@ -73,6 +73,36 @@ def test_history_is_evaluated_and_used_for_calibration():
     assert "customer" in payload["calibration"]["relationship_weights"]
 
 
+def test_history_uses_historical_close_for_matured_outcomes():
+    older = datetime.now(timezone.utc) - timedelta(days=35)
+    history = [{
+        "ticker": "BASE",
+        "direction": "up",
+        "starting_price": 100,
+        "horizon_days": 30,
+        "generated_at": older.isoformat(),
+        "connection_paths": [],
+    }]
+    observed = []
+
+    def historical_close(ticker, target_at):
+        observed.append((ticker, target_at.date()))
+        return 90, "yahoo_historical_close:2026-01-31"
+
+    _, updated_history = generate_predictions(
+        dashboard(company("BASE", 200, price=110)),
+        history,
+        price_lookup=historical_close,
+    )
+
+    outcome = updated_history[0]
+    assert observed and observed[0][0] == "BASE"
+    assert outcome["outcome"] == "incorrect"
+    assert outcome["outcome_price"] == 90
+    assert outcome["outcome_price_source"] == "yahoo_historical_close:2026-01-31"
+    assert outcome["evaluation_target_date"] == observed[0][1].isoformat()
+
+
 def test_ollama_scenario_parser_rejects_unstructured_or_incomplete_answers():
     assert parse_ollama_scenario("not JSON") is None
     assert parse_ollama_scenario('{"scenario_summary": "x"}') is None

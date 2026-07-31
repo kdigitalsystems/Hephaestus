@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from historical_prices import historical_close_on_or_after
 from predictions import (
     DEFAULT_DASHBOARD_PATH,
     DEFAULT_HISTORY_PATH,
@@ -34,7 +35,12 @@ def main() -> None:
     history = load_json(args.history, [])
     if not isinstance(history, list):
         history = []
-    payload, updated_history = generate_predictions(dashboard, history, max(1, args.limit))
+    payload, updated_history = generate_predictions(
+        dashboard,
+        history,
+        max(1, args.limit),
+        price_lookup=historical_close_on_or_after,
+    )
     if args.use_ollama:
         result = enhance_scenarios_with_ollama(payload, args.ollama_model, updated_history)
         if args.require_ollama and result["updated"] == 0:
