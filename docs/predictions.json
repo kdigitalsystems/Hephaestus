@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T09:41:05+00:00",
+  "generated_at": "2026-08-18T05:58:31+00:00",
   "model_name": "graph-signal-v1",
   "universe_size": 50,
   "horizon_days": 30,
@@ -11,7 +11,7 @@
   "disclaimer": "Research signals only. They are not investment advice, price targets, or a recommendation to buy or sell any security.",
   "predictions": [
     {
-      "prediction_id": "NVDA-20260817-graph-signal-v1",
+      "prediction_id": "NVDA-20260818-graph-signal-v1",
       "ticker": "NVDA",
       "company_name": "NVIDIA Corporation Common Stock",
       "sector": "Technology",
@@ -100,11 +100,11 @@
       "bull_case": "Demand and execution improve while the signal from META remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "TSM-20260817-graph-signal-v1",
+      "prediction_id": "TSM-20260818-graph-signal-v1",
       "ticker": "TSM",
       "company_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
       "sector": "Technology",
@@ -193,11 +193,11 @@
       "bull_case": "Demand and execution improve while the signal from NVDA remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "MSFT-20260817-graph-signal-v1",
+      "prediction_id": "MSFT-20260818-graph-signal-v1",
       "ticker": "MSFT",
       "company_name": "Microsoft Corporation Common Stock",
       "sector": "Technology",
@@ -286,11 +286,11 @@
       "bull_case": "Demand and execution improve while the signal from RMBS remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "TXN-20260817-graph-signal-v1",
+      "prediction_id": "TXN-20260818-graph-signal-v1",
       "ticker": "TXN",
       "company_name": "Texas Instruments Incorporated Common Stock",
       "sector": "Technology",
@@ -357,11 +357,11 @@
       "bull_case": "Demand and execution improve while the signal from MU remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "MRVL-20260817-graph-signal-v1",
+      "prediction_id": "MRVL-20260818-graph-signal-v1",
       "ticker": "MRVL",
       "company_name": "Marvell Technology, Inc. Common Stock",
       "sector": "Technology",
@@ -450,11 +450,11 @@
       "bull_case": "Demand and execution improve while the signal from MSFT remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "META-20260817-graph-signal-v1",
+      "prediction_id": "META-20260818-graph-signal-v1",
       "ticker": "META",
       "company_name": "Meta Platforms, Inc. Class A Common Stock",
       "sector": "Communication Services",
@@ -532,11 +532,11 @@
       "bull_case": "Demand and execution improve while the signal from NVDA remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "QCOM-20260817-graph-signal-v1",
+      "prediction_id": "QCOM-20260818-graph-signal-v1",
       "ticker": "QCOM",
       "company_name": "QUALCOMM Incorporated Common Stock",
       "sector": "Technology",
@@ -614,12 +614,12 @@
       "bull_case": "QCOM's strong performance in recent price changes and the support from its key upstream partners such as TSMC could drive QCOM's stock higher. The positive direct signal and network signal indicate a favorable market sentiment towards QCOM, which could lead to an upward trend over the next month.",
       "bear_case": "Despite the positive signals, the analyst recommendation of 'Hold' suggests that there might be some uncertainty in the market regarding QCOM's future performance. Additionally, the lack of direct support from downstream companies like Ericsson (ERIC) and the neutral stance of analysts could act as a counterweight to the bullish sentiment.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true,
       "scenario_model": "qwen2.5:7b-instruct"
     },
     {
-      "prediction_id": "TM-20260817-graph-signal-v1",
+      "prediction_id": "TM-20260818-graph-signal-v1",
       "ticker": "TM",
       "company_name": "Toyota Motor Corporation American Depositary Shares (Each representing ten Ordinary Shares)",
       "sector": "Consumer Cyclical",
@@ -686,12 +686,12 @@
       "bull_case": "The bull case for TM is bolstered by its strong analyst recommendation and the positive outlook on its supply chain partners, particularly Magna International (MGA). The recent price increase of 65% reflects investor confidence in the company's future growth prospects. Additionally, the connection with Aurora Innovation, Inc., through the installed vehicle base, further supports a bullish stance as it indicates potential for advanced technology integration and market expansion.",
       "bear_case": "Despite the positive signals, there are some bearish factors to consider. The network signal is relatively low at 0.048, which might indicate limited overall market interest or support. Furthermore, while Magna International (MGA) shows a downstream relationship with TM, its direct signal of only 0.053 and the contribution of just 0.032 to the overall network signal could suggest potential supply chain risks or challenges that may dampen growth expectations.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true,
       "scenario_model": "qwen2.5:7b-instruct"
     },
     {
-      "prediction_id": "SKHY-20260817-graph-signal-v1",
+      "prediction_id": "SKHY-20260818-graph-signal-v1",
       "ticker": "SKHY",
       "company_name": "SK hynix Inc. American Depositary Shares",
       "sector": "Technology",
@@ -724,11 +724,11 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "NFLX-20260817-graph-signal-v1",
+      "prediction_id": "NFLX-20260818-graph-signal-v1",
       "ticker": "NFLX",
       "company_name": "Netflix, Inc. Common Stock",
       "sector": "Communication Services",
@@ -795,11 +795,11 @@
       "bull_case": "Demand and execution improve while the signal from LION remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "RIO-20260817-graph-signal-v1",
+      "prediction_id": "RIO-20260818-graph-signal-v1",
       "ticker": "RIO",
       "company_name": "Rio Tinto plc",
       "sector": "Basic Materials",
@@ -888,11 +888,11 @@
       "bull_case": "Demand and execution improve while the signal from PAAS remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "SPCX-20260817-graph-signal-v1",
+      "prediction_id": "SPCX-20260818-graph-signal-v1",
       "ticker": "SPCX",
       "company_name": "Space Exploration Technologies Corp. Class A Common Stock",
       "sector": "Industrials",
@@ -925,11 +925,11 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "UBER-20260817-graph-signal-v1",
+      "prediction_id": "UBER-20260818-graph-signal-v1",
       "ticker": "UBER",
       "company_name": "Uber Technologies, Inc.",
       "sector": "Technology",
@@ -962,11 +962,11 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "ORCL-20260817-graph-signal-v1",
+      "prediction_id": "ORCL-20260818-graph-signal-v1",
       "ticker": "ORCL",
       "company_name": "Oracle Corp",
       "sector": "Technology",
@@ -999,11 +999,11 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "WMT-20260817-graph-signal-v1",
+      "prediction_id": "WMT-20260818-graph-signal-v1",
       "ticker": "WMT",
       "company_name": "Walmart Inc. Common Stock",
       "sector": "Consumer Defensive",
@@ -1059,11 +1059,11 @@
       "bull_case": "Demand and execution improve while the signal from MUSA remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "SONY-20260817-graph-signal-v1",
+      "prediction_id": "SONY-20260818-graph-signal-v1",
       "ticker": "SONY",
       "company_name": "Sony Group Corporation American Depositary Shares (Each Representing One Share of Dollar Validated Common Stock)",
       "sector": "Technology",
@@ -1108,11 +1108,11 @@
       "bull_case": "Demand and execution improve while the signal from LPL remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "TSLA-20260817-graph-signal-v1",
+      "prediction_id": "TSLA-20260818-graph-signal-v1",
       "ticker": "TSLA",
       "company_name": "Tesla, Inc. Common Stock",
       "sector": "Consumer Cyclical",
@@ -1201,11 +1201,11 @@
       "bull_case": "Demand and execution improve while the signal from MGA remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "SNDK-20260817-graph-signal-v1",
+      "prediction_id": "SNDK-20260818-graph-signal-v1",
       "ticker": "SNDK",
       "company_name": "Sandisk Corporation Common Stock",
       "sector": "Technology",
@@ -1250,11 +1250,11 @@
       "bull_case": "Demand and execution improve while the signal from IBM remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "TMUS-20260817-graph-signal-v1",
+      "prediction_id": "TMUS-20260818-graph-signal-v1",
       "ticker": "TMUS",
       "company_name": "T-Mobile US, Inc. Common Stock",
       "sector": "Communication Services",
@@ -1310,11 +1310,11 @@
       "bull_case": "Demand and execution improve while the signal from BBY remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "STX-20260817-graph-signal-v1",
+      "prediction_id": "STX-20260818-graph-signal-v1",
       "ticker": "STX",
       "company_name": "Seagate Technology Holdings PLC Ordinary Shares (Ireland)",
       "sector": "Technology",
@@ -1381,11 +1381,11 @@
       "bull_case": "Demand and execution improve while the signal from AVGO remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "TJX-20260817-graph-signal-v1",
+      "prediction_id": "TJX-20260818-graph-signal-v1",
       "ticker": "TJX",
       "company_name": "TJX Companies, Inc. (The)",
       "sector": "Consumer Cyclical",
@@ -1418,11 +1418,11 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "PBR-20260817-graph-signal-v1",
+      "prediction_id": "PBR-20260818-graph-signal-v1",
       "ticker": "PBR",
       "company_name": "PETROLEO BRASILEIRO S.A.-PETROBRAS ADS (REP 1 COMMON SHARE)",
       "sector": "Energy",
@@ -1455,11 +1455,11 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "UNH-20260817-graph-signal-v1",
+      "prediction_id": "UNH-20260818-graph-signal-v1",
       "ticker": "UNH",
       "company_name": "UNITEDHEALTH GROUP INCORPORATED (Delaware)",
       "sector": "Healthcare",
@@ -1492,11 +1492,11 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "SHEL-20260817-graph-signal-v1",
+      "prediction_id": "SHEL-20260818-graph-signal-v1",
       "ticker": "SHEL",
       "company_name": "Shell plc American Depositary Shares (Each represents two Ordinary shares)",
       "sector": "Energy",
@@ -1585,11 +1585,11 @@
       "bull_case": "Demand and execution improve while the signal from NE remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "XOM-20260817-graph-signal-v1",
+      "prediction_id": "XOM-20260818-graph-signal-v1",
       "ticker": "XOM",
       "company_name": "ExxonMobil Holdings Corporation",
       "sector": "Energy",
@@ -1634,11 +1634,11 @@
       "bull_case": "Demand and execution improve while the signal from SHEL remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "NOW-20260817-graph-signal-v1",
+      "prediction_id": "NOW-20260818-graph-signal-v1",
       "ticker": "NOW",
       "company_name": "SERVICENOW, INC.",
       "sector": "Technology",
@@ -1671,11 +1671,11 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "T-20260817-graph-signal-v1",
+      "prediction_id": "T-20260818-graph-signal-v1",
       "ticker": "T",
       "company_name": "AT&T Inc.",
       "sector": "Communication Services",
@@ -1764,11 +1764,11 @@
       "bull_case": "Demand and execution improve while the signal from CIEN remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "MCD-20260817-graph-signal-v1",
+      "prediction_id": "MCD-20260818-graph-signal-v1",
       "ticker": "MCD",
       "company_name": "McDonald's Corporation",
       "sector": "Consumer Cyclical",
@@ -1813,11 +1813,11 @@
       "bull_case": "Demand and execution improve while the signal from IP remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "SBUX-20260817-graph-signal-v1",
+      "prediction_id": "SBUX-20260818-graph-signal-v1",
       "ticker": "SBUX",
       "company_name": "Starbucks Corporation Common Stock",
       "sector": "Consumer Cyclical",
@@ -1895,12 +1895,12 @@
       "bull_case": "The bull case suggests that SBUX will benefit from the growing demand for plant-based alternatives in the coffee market. With the addition of Oatly oat milk, Starbucks can cater to a broader customer base and potentially increase sales. Analysts' positive outlook and strong analyst target gap also support this bullish scenario.",
       "bear_case": "The bear case considers potential challenges such as competition from other non-dairy brands and the overall market's reaction to new product launches. Additionally, any negative feedback or issues related to Oatly could impact SBUX negatively.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true,
       "scenario_model": "qwen2.5:7b-instruct"
     },
     {
-      "prediction_id": "NEE-20260817-graph-signal-v1",
+      "prediction_id": "NEE-20260818-graph-signal-v1",
       "ticker": "NEE",
       "company_name": "NextEra Energy, Inc.",
       "sector": "Utilities",
@@ -1933,11 +1933,11 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "MRK-20260817-graph-signal-v1",
+      "prediction_id": "MRK-20260818-graph-signal-v1",
       "ticker": "MRK",
       "company_name": "Merck & Co., Inc.",
       "sector": "Healthcare",
@@ -2026,12 +2026,12 @@
       "bull_case": "Merck & Co. benefits from robust analyst support, a recent price increase, and strong relationships with key suppliers in the pharmaceutical industry. The company's vaccine portfolio, particularly Gardasil and RotaTeq, along with potential future collaborations, could drive significant growth. Additionally, the U.S. government's agreement to purchase Molnupiravir underscores Merck's position as a leading player in antiviral treatments.",
       "bear_case": "Despite positive signals from analysts and recent price increases, Merck & Co.'s upward trajectory may face challenges due to its reliance on upstream suppliers for critical components of its vaccine portfolio. Any disruptions or delays in supply could negatively impact the company's operations. Furthermore, competition in the pharmaceutical industry remains intense, which could limit growth opportunities.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true,
       "scenario_model": "qwen2.5:7b-instruct"
     },
     {
-      "prediction_id": "ABT-20260817-graph-signal-v1",
+      "prediction_id": "ABT-20260818-graph-signal-v1",
       "ticker": "ABT",
       "company_name": "Abbott Laboratories",
       "sector": "Healthcare",
@@ -2076,11 +2076,11 @@
       "bull_case": "Demand and execution improve while the signal from NTRA remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "NEM-20260817-graph-signal-v1",
+      "prediction_id": "NEM-20260818-graph-signal-v1",
       "ticker": "NEM",
       "company_name": "Newmont Corporation",
       "sector": "Basic Materials",
@@ -2113,11 +2113,11 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "SYK-20260817-graph-signal-v1",
+      "prediction_id": "SYK-20260818-graph-signal-v1",
       "ticker": "SYK",
       "company_name": "Stryker Corporation",
       "sector": "Healthcare",
@@ -2150,11 +2150,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "PH-20260817-graph-signal-v1",
+      "prediction_id": "PH-20260818-graph-signal-v1",
       "ticker": "PH",
       "company_name": "Parker-Hannifin Corporation",
       "sector": "Industrials",
@@ -2199,11 +2199,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "PG-20260817-graph-signal-v1",
+      "prediction_id": "PG-20260818-graph-signal-v1",
       "ticker": "PG",
       "company_name": "Procter & Gamble Company",
       "sector": "Consumer Defensive",
@@ -2236,11 +2236,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "VRTX-20260817-graph-signal-v1",
+      "prediction_id": "VRTX-20260818-graph-signal-v1",
       "ticker": "VRTX",
       "company_name": "Vertex Pharmaceuticals Incorporated Common Stock",
       "sector": "Healthcare",
@@ -2273,11 +2273,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "NVO-20260817-graph-signal-v1",
+      "prediction_id": "NVO-20260818-graph-signal-v1",
       "ticker": "NVO",
       "company_name": "Novo-Nordisk A/S",
       "sector": "Healthcare",
@@ -2333,11 +2333,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "SCCO-20260817-graph-signal-v1",
+      "prediction_id": "SCCO-20260818-graph-signal-v1",
       "ticker": "SCCO",
       "company_name": "Southern Copper Corporation",
       "sector": "Basic Materials",
@@ -2370,11 +2370,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "TMO-20260817-graph-signal-v1",
+      "prediction_id": "TMO-20260818-graph-signal-v1",
       "ticker": "TMO",
       "company_name": "Thermo Fisher Scientific, Inc.",
       "sector": "Healthcare",
@@ -2419,11 +2419,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "PLTR-20260817-graph-signal-v1",
+      "prediction_id": "PLTR-20260818-graph-signal-v1",
       "ticker": "PLTR",
       "company_name": "Palantir Technologies Inc. Class A Common Stock",
       "sector": "Technology",
@@ -2456,11 +2456,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "VZ-20260817-graph-signal-v1",
+      "prediction_id": "VZ-20260818-graph-signal-v1",
       "ticker": "VZ",
       "company_name": "Verizon Communications",
       "sector": "Communication Services",
@@ -2516,11 +2516,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "SHOP-20260817-graph-signal-v1",
+      "prediction_id": "SHOP-20260818-graph-signal-v1",
       "ticker": "SHOP",
       "company_name": "Shopify Inc. Class A subordinate voting shares",
       "sector": "Technology",
@@ -2553,11 +2553,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "RTX-20260817-graph-signal-v1",
+      "prediction_id": "RTX-20260818-graph-signal-v1",
       "ticker": "RTX",
       "company_name": "RTX Corporation",
       "sector": "Industrials",
@@ -2590,11 +2590,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "UL-20260817-graph-signal-v1",
+      "prediction_id": "UL-20260818-graph-signal-v1",
       "ticker": "UL",
       "company_name": "Unilever plc",
       "sector": "Consumer Defensive",
@@ -2639,12 +2639,12 @@
       "bull_case": "Despite the current negative price trend, Unilever\u2019s strong brand portfolio and diversified product range could drive growth. Analysts project significant upside potential with an average target of $18.99 per share, indicating that positive news or strategic partnerships could reverse the recent decline.",
       "bear_case": "The recent price drop is concerning, especially given the weak contribution from Vodafone\u2019s advisory role. If market conditions worsen or if Unilever fails to meet its growth targets, this could lead to further declines in stock value. Additionally, without strong analyst support, any negative news could exacerbate investor concerns.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true,
       "scenario_model": "qwen2.5:7b-instruct"
     },
     {
-      "prediction_id": "PEP-20260817-graph-signal-v1",
+      "prediction_id": "PEP-20260818-graph-signal-v1",
       "ticker": "PEP",
       "company_name": "PepsiCo, Inc. Common Stock",
       "sector": "Consumer Defensive",
@@ -2677,11 +2677,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "NVS-20260817-graph-signal-v1",
+      "prediction_id": "NVS-20260818-graph-signal-v1",
       "ticker": "NVS",
       "company_name": "Novartis AG",
       "sector": "Healthcare",
@@ -2770,11 +2770,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "PM-20260817-graph-signal-v1",
+      "prediction_id": "PM-20260818-graph-signal-v1",
       "ticker": "PM",
       "company_name": "Philip Morris International Inc.",
       "sector": "Consumer Defensive",
@@ -2807,11 +2807,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "PANW-20260817-graph-signal-v1",
+      "prediction_id": "PANW-20260818-graph-signal-v1",
       "ticker": "PANW",
       "company_name": "Palo Alto Networks, Inc. Common Stock",
       "sector": "Technology",
@@ -2844,11 +2844,11 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "TTE-20260817-graph-signal-v1",
+      "prediction_id": "TTE-20260818-graph-signal-v1",
       "ticker": "TTE",
       "company_name": "TotalEnergies SE",
       "sector": "Energy",
@@ -2915,7 +2915,7 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-17T09:41:05+00:00",
+      "generated_at": "2026-08-18T05:58:31+00:00",
       "research_only": true
     }
   ]
