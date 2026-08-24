@@ -26,6 +26,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Refresh main before generation
+        run: |
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
       - name: Set up virtual environment
         run: |
           python3 -m venv venv
@@ -74,6 +80,7 @@ jobs:
           git add docs/predictions.json docs/prediction_history.json
           if ! git diff --cached --quiet; then
             git commit -m "Automated research signals: Update top-50 graph predictions"
+            git pull --rebase origin main
             git push origin main
           else
             echo "No research signal changes to publish."

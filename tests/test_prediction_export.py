@@ -25,5 +25,9 @@ def test_prediction_workflow_is_separate_from_daily_graph_updates():
     assert "--require-ollama" in workflow
     assert "group: hephaestus-main-publisher" in workflow
     assert "group: hephaestus-main-publisher" in daily_workflow
+    assert "git reset --hard origin/main" in workflow
+    assert "git reset --hard origin/main" in daily_workflow
+    assert "git pull --rebase origin main" in workflow
+    assert "git pull --rebase origin main" in daily_workflow
     assert "docs/predictions.json docs/prediction_history.json" in workflow
     assert "generate_predictions.py" not in daily_workflow

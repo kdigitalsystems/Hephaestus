@@ -30,6 +30,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Refresh main before generation
+        run: |
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
       - name: Set up Virtual Environment and Dependencies
         run: |
           echo "Creating virtual environment..."
@@ -145,6 +151,7 @@ jobs:
           
           if ! git diff --cached --quiet; then
             git commit -m "Automated AI extraction: Update Supply Chain X-Ray"
+            git pull --rebase origin main
             git push origin main
           else
             echo "No new edges discovered today. Skipping commit."
