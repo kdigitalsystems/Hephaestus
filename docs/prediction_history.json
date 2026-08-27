@@ -90,7 +90,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 1.36,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 209.66,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "MSFT-20260727-graph-signal-v1",
@@ -183,7 +189,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 30.04,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 496.37,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "GOOG-20260727-graph-signal-v1",
@@ -276,7 +288,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 6.27,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 339.1,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "AMZN-20260727-graph-signal-v1",
@@ -369,7 +387,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 12.14,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 260.28,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "TSM-20260727-graph-signal-v1",
@@ -462,7 +486,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 3.54,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 417.69,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "IBM-20260727-graph-signal-v1",
@@ -555,7 +585,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 7.32,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 229.87,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "AVGO-20260727-graph-signal-v1",
@@ -637,7 +673,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -6.89,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 355.59,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "DELL-20260727-graph-signal-v1",
@@ -730,7 +772,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 6.02,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 463.82,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "INTC-20260727-graph-signal-v1",
@@ -823,7 +871,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -4.42,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 88.24,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "AAPL-20260727-graph-signal-v1",
@@ -916,7 +970,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -5.88,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 313.45,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "META-20260727-graph-signal-v1",
@@ -998,7 +1058,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -3.2,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 576.14,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "TM-20260727-graph-signal-v1",
@@ -1069,7 +1135,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 8.13,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 191.84,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SAP-20260727-graph-signal-v1",
@@ -1151,7 +1223,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 32.3,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 211.68,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "ASML-20260727-graph-signal-v1",
@@ -1211,7 +1289,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -0.65,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 1745.64,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "ARM-20260727-graph-signal-v1",
@@ -1304,7 +1388,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -3.44,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 251.06,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "TXN-20260727-graph-signal-v1",
@@ -1375,7 +1465,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -6.37,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 261.77,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "TSLA-20260727-graph-signal-v1",
@@ -1468,7 +1564,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 10.48,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 345.82,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "GE-20260727-graph-signal-v1",
@@ -1528,7 +1630,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 0.19,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 354.39,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "NFLX-20260727-graph-signal-v1",
@@ -1599,7 +1707,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 16.22,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 81.46,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "LRCX-20260727-graph-signal-v1",
@@ -1670,7 +1784,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 2.51,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 312.88,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "CVX-20260727-graph-signal-v1",
@@ -1763,7 +1883,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 2.78,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 200.21,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "VZ-20260727-graph-signal-v1",
@@ -1823,7 +1949,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 8.21,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 50.19,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "TTE-20260727-graph-signal-v1",
@@ -1894,7 +2026,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 0.38,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 87.13,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "STX-20260727-graph-signal-v1",
@@ -1965,7 +2103,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -0.62,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 846.37,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "CSCO-20260727-graph-signal-v1",
@@ -2025,7 +2169,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -1.59,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 112.36,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "ABBV-20260727-graph-signal-v1",
@@ -2086,7 +2236,13 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": 1.36,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 262.9,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "GOOGL-20260727-graph-signal-v1",
@@ -2123,7 +2279,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 6.96,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 342.0,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "BABA-20260727-graph-signal-v1",
@@ -2160,7 +2322,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 6.86,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 119.83,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "NVS-20260727-graph-signal-v1",
@@ -2253,7 +2421,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 1.63,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 157.54,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "ANET-20260727-graph-signal-v1",
@@ -2313,7 +2487,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 16.24,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 202.25,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "TMUS-20260727-graph-signal-v1",
@@ -2373,7 +2553,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -0.27,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 179.61,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "WMT-20260727-graph-signal-v1",
@@ -2433,7 +2619,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -4.69,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 104.34,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "SNDK-20260727-graph-signal-v1",
@@ -2482,7 +2674,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 4.37,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 1499.37,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SPCX-20260727-graph-signal-v1",
@@ -2519,7 +2717,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 21.34,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 139.63,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "KLAC-20260727-graph-signal-v1",
@@ -2568,7 +2772,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -12.68,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 183.83,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "PLTR-20260727-graph-signal-v1",
@@ -2605,7 +2815,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 44.4,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 177.5,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "AMAT-20260727-graph-signal-v1",
@@ -2654,7 +2870,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -10.53,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 479.76,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "LIN-20260727-graph-signal-v1",
@@ -2714,7 +2936,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -4.28,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 490.33,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "SKHY-20260727-graph-signal-v1",
@@ -2751,7 +2979,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 2.23,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 158.02,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "ORCL-20260727-graph-signal-v1",
@@ -2788,7 +3022,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 29.46,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 148.87,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "COST-20260727-graph-signal-v1",
@@ -2849,7 +3089,13 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": 2.26,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 956.12,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SHEL-20260727-graph-signal-v1",
@@ -2942,7 +3188,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 3.09,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 91.11,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "NVO-20260727-graph-signal-v1",
@@ -3002,7 +3254,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -3.24,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 47.19,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "GEV-20260727-graph-signal-v1",
@@ -3039,7 +3297,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -6.08,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 953.09,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "UNH-20260727-graph-signal-v1",
@@ -3076,7 +3340,13 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -4.69,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 401.01,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "RTX-20260727-graph-signal-v1",
@@ -3113,7 +3383,13 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -0.38,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 211.99,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "correct"
   },
   {
     "prediction_id": "BHP-20260727-graph-signal-v1",
@@ -3196,7 +3472,13 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": 15.06,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 96.33,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "AMGN-20260727-graph-signal-v1",
@@ -3245,7 +3527,13 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 17.1,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 440.34,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "JNJ-20260727-graph-signal-v1",
@@ -3282,7 +3570,13 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 2.51,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 270.0,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "PANW-20260727-graph-signal-v1",
@@ -3319,7 +3613,13 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-27T12:18:01+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 4.79,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-26",
+    "outcome_price": 339.31,
+    "outcome_price_source": "yahoo_historical_close:2026-08-26",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "NVDA-20260728-graph-signal-v1",
@@ -3412,7 +3712,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 8.94,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 225.33,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "MSFT-20260728-graph-signal-v1",
@@ -3505,7 +3811,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 31.45,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 501.736,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "GOOG-20260728-graph-signal-v1",
@@ -3598,7 +3910,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 5.99,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 338.2,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "AMZN-20260728-graph-signal-v1",
@@ -3691,7 +4009,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 10.68,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 256.91,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "TSM-20260728-graph-signal-v1",
@@ -3784,7 +4108,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 5.28,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 424.715,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "IBM-20260728-graph-signal-v1",
@@ -3877,7 +4207,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 11.73,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 239.31,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "AVGO-20260728-graph-signal-v1",
@@ -3959,7 +4295,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -3.32,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 369.225,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "DELL-20260728-graph-signal-v1",
@@ -4052,7 +4394,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 6.24,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 464.78,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "INTC-20260728-graph-signal-v1",
@@ -4145,7 +4493,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -1.58,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 90.86,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "AAPL-20260728-graph-signal-v1",
@@ -4238,7 +4592,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -5.47,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 314.81,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "META-20260728-graph-signal-v1",
@@ -4320,7 +4680,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -4.05,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 571.07,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "TM-20260728-graph-signal-v1",
@@ -4391,7 +4757,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 8.78,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 192.99,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SAP-20260728-graph-signal-v1",
@@ -4473,7 +4845,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 38.66,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 221.85,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "ASML-20260728-graph-signal-v1",
@@ -4533,7 +4911,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -1.73,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 1726.63,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "ARM-20260728-graph-signal-v1",
@@ -4626,7 +5010,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -2.21,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 254.275,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "TXN-20260728-graph-signal-v1",
@@ -4697,7 +5087,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -4.65,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 266.58,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "TSLA-20260728-graph-signal-v1",
@@ -4790,7 +5186,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 12.66,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 352.66,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "GE-20260728-graph-signal-v1",
@@ -4850,7 +5252,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -1.81,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 347.33,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "NFLX-20260728-graph-signal-v1",
@@ -4921,7 +5329,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 13.87,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 79.808,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "LRCX-20260728-graph-signal-v1",
@@ -4992,7 +5406,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 3.14,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 314.79,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "CVX-20260728-graph-signal-v1",
@@ -5085,7 +5505,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 1.88,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 198.45,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "VZ-20260728-graph-signal-v1",
@@ -5145,7 +5571,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 7.41,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 49.815,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "TTE-20260728-graph-signal-v1",
@@ -5216,7 +5648,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -0.24,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 86.595,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "STX-20260728-graph-signal-v1",
@@ -5287,7 +5725,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -1.46,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 839.25,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "CSCO-20260728-graph-signal-v1",
@@ -5347,7 +5791,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -1.83,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 112.085,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "ABBV-20260728-graph-signal-v1",
@@ -5408,7 +5858,13 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": 0.17,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 259.81,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "GOOGL-20260728-graph-signal-v1",
@@ -5445,7 +5901,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 6.64,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 340.96,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "BABA-20260728-graph-signal-v1",
@@ -5482,7 +5944,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 3.25,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 115.7864,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "NVS-20260728-graph-signal-v1",
@@ -5575,7 +6043,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 0.26,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 155.415,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "ANET-20260728-graph-signal-v1",
@@ -5635,7 +6109,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 15.89,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 201.645,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "TMUS-20260728-graph-signal-v1",
@@ -5695,7 +6175,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -0.88,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 178.501,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "WMT-20260728-graph-signal-v1",
@@ -5755,7 +6241,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -6.0,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 102.9,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "SNDK-20260728-graph-signal-v1",
@@ -5804,7 +6296,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 2.25,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 1468.9,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SPCX-20260728-graph-signal-v1",
@@ -5841,7 +6339,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 21.98,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 140.36,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "KLAC-20260728-graph-signal-v1",
@@ -5890,7 +6394,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -13.17,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 182.79,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "PLTR-20260728-graph-signal-v1",
@@ -5927,7 +6437,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 50.57,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 185.0804,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "AMAT-20260728-graph-signal-v1",
@@ -5976,7 +6492,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -11.59,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 474.11,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "LIN-20260728-graph-signal-v1",
@@ -6036,7 +6558,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -5.09,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 486.19,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "SKHY-20260728-graph-signal-v1",
@@ -6073,7 +6601,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 4.75,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 161.915,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "ORCL-20260728-graph-signal-v1",
@@ -6110,7 +6644,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 29.13,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 148.4899,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "COST-20260728-graph-signal-v1",
@@ -6171,7 +6711,13 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": 1.0,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 944.36,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SHEL-20260728-graph-signal-v1",
@@ -6264,7 +6810,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 2.39,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 90.49,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "NVO-20260728-graph-signal-v1",
@@ -6324,7 +6876,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -5.85,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 45.915,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "GEV-20260728-graph-signal-v1",
@@ -6361,7 +6919,13 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -6.55,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 948.2588,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "UNH-20260728-graph-signal-v1",
@@ -6398,7 +6962,13 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -5.02,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 399.61,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "RTX-20260728-graph-signal-v1",
@@ -6435,7 +7005,13 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -0.82,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 211.05,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "BHP-20260728-graph-signal-v1",
@@ -6518,7 +7094,13 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": 14.78,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 96.09,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "AMGN-20260728-graph-signal-v1",
@@ -6567,7 +7149,13 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 17.52,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 441.91,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "JNJ-20260728-graph-signal-v1",
@@ -6604,7 +7192,13 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 1.5,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 267.35,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "correct"
   },
   {
     "prediction_id": "PANW-20260728-graph-signal-v1",
@@ -6641,7 +7235,13 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-07-28T07:14:14+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 17.26,
+    "evaluated_at": "2026-08-27T15:24:15+00:00",
+    "evaluation_target_date": "2026-08-27",
+    "outcome_price": 379.6851,
+    "outcome_price_source": "yahoo_historical_close:2026-08-27",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "TSM-20260729-graph-signal-v1",
@@ -39485,5 +40085,3306 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-26T06:38:36+00:00",
     "research_only": true
+  },
+  {
+    "prediction_id": "NVDA-20260827-graph-signal-v1",
+    "ticker": "NVDA",
+    "company_name": "NVIDIA Corporation Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.73,
+    "score": 0.487,
+    "direct_signal": 0.187,
+    "network_signal": 0.3,
+    "starting_price": 224.735,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.97,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 35.0,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "VRT",
+        "connected_name": "Vertiv Holdings Co Class A Common Stock",
+        "relationship_type": "Liquid Cooling Infrastructure",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.606,
+        "connected_direct_signal": 0.172,
+        "contribution": 0.104,
+        "evidence": "Vertiv and Nvidia joint objective over the next three years is to address the challenge of cooling high-density compute by integrating direct liquid cooling and immersion cooling into a single system.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "CRWV",
+        "connected_name": "CoreWeave, Inc. Class A Common Stock",
+        "relationship_type": "Hardware Leasing",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.64,
+        "connected_direct_signal": 0.153,
+        "contribution": 0.098,
+        "evidence": "In August 2023, CoreWeave secured a $2.3 billion debt financing facility led by Magnetar Capital and Blackstone by using Nvidia's H100 GPUs as collateral.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "META",
+        "connected_name": "Meta Platforms, Inc. Class A Common Stock",
+        "relationship_type": "GPU Supplier",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.527,
+        "connected_direct_signal": 0.168,
+        "contribution": 0.089,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "TSM",
+        "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+        "relationship_type": "Advanced Silicon Fabrication / Foundry Services",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.363,
+        "connected_direct_signal": 0.174,
+        "contribution": 0.063,
+        "evidence": "Most fabless semiconductor companies such as AMD... are customers of TSMC, / Most fabless semiconductor companies such as Nvidia are customers of TSMC.",
+        "source_url": "Manual System Jumpstart / AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "MU",
+        "connected_name": "Micron Technology, Inc. Common Stock",
+        "relationship_type": "High-Bandwidth Memory",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.348,
+        "connected_direct_signal": 0.175,
+        "contribution": 0.061,
+        "evidence": "Manual System Jumpstart",
+        "source_url": "Manual System Jumpstart"
+      }
+    ],
+    "scenario_summary": "NVDA has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from VRT remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "TSM-20260827-graph-signal-v1",
+    "ticker": "TSM",
+    "company_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.72,
+    "score": 0.474,
+    "direct_signal": 0.174,
+    "network_signal": 0.3,
+    "starting_price": 422.905,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 1.06,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 31.11,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "NVDA",
+        "connected_name": "NVIDIA Corporation Common Stock",
+        "relationship_type": "Advanced Silicon Fabrication / Foundry Services",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.65,
+        "connected_direct_signal": 0.187,
+        "contribution": 0.121,
+        "evidence": "Most fabless semiconductor companies such as AMD... are customers of TSMC, / Most fabless semiconductor companies such as Nvidia are customers of TSMC.",
+        "source_url": "Manual System Jumpstart / AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "AVGO",
+        "connected_name": "Broadcom Inc. Common Stock",
+        "relationship_type": "chip manufacturing",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.62,
+        "connected_direct_signal": 0.182,
+        "contribution": 0.113,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "STM",
+        "connected_name": "STMicroelectronics N.V.",
+        "relationship_type": "outsourced production / contract manufacturing",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.64,
+        "connected_direct_signal": 0.171,
+        "contribution": 0.109,
+        "evidence": "Some integrated device manufacturers that have their own fabrication facilities, such as Intel, NXP, STMicroelectronics, and Texas Instruments, outsource some of their production to TSMC.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "AMD",
+        "connected_name": "Advanced Micro Devices, Inc. Common Stock",
+        "relationship_type": "Advanced Silicon Fabrication / Foundry Services",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.65,
+        "connected_direct_signal": 0.156,
+        "contribution": 0.101,
+        "evidence": "Most fabless semiconductor companies such as AMD are customers of TSMC.",
+        "source_url": "Manual System Jumpstart / AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "LSCC",
+        "connected_name": "Lattice Semiconductor Corporation Common Stock",
+        "relationship_type": "contract manufacturing",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.527,
+        "connected_direct_signal": 0.185,
+        "contribution": 0.098,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "TSM has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from NVDA remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "AMD-20260827-graph-signal-v1",
+    "ticker": "AMD",
+    "company_name": "Advanced Micro Devices, Inc. Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.71,
+    "score": 0.456,
+    "direct_signal": 0.156,
+    "network_signal": 0.3,
+    "starting_price": 473.545,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -1.75,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 29.63,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "TSM",
+        "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+        "relationship_type": "Advanced Silicon Fabrication / Foundry Services",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.363,
+        "connected_direct_signal": 0.174,
+        "contribution": 0.063,
+        "evidence": "Most fabless semiconductor companies such as AMD are customers of TSMC.",
+        "source_url": "Manual System Jumpstart / AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "MU",
+        "connected_name": "Micron Technology, Inc. Common Stock",
+        "relationship_type": "High-Bandwidth Memory",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.348,
+        "connected_direct_signal": 0.175,
+        "contribution": 0.061,
+        "evidence": "Manual System Jumpstart",
+        "source_url": "Manual System Jumpstart"
+      },
+      {
+        "connected_ticker": "DELL",
+        "connected_name": "Dell Technologies Inc.",
+        "relationship_type": "Operational Supply Chain",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.62,
+        "connected_direct_signal": 0.085,
+        "contribution": 0.053,
+        "evidence": "On May 18, 2006, Dell announced that it would roll out new servers based on AMD's Opteron chips by year's end,",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "ATI",
+        "connected_name": "ATI Inc.",
+        "relationship_type": "Chipset Development",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.272,
+        "connected_direct_signal": 0.111,
+        "contribution": 0.03,
+        "evidence": "The initiative went further with ATI, VIA and SiS developing its own chipset for Athlon 64 processors and later Athlon 64 X2 and Athlon 64 FX processors...",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "HP",
+        "connected_name": "Helmerich & Payne, Inc.",
+        "relationship_type": "Processor Sales",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.574,
+        "connected_direct_signal": 0.05,
+        "contribution": 0.029,
+        "evidence": "In June 2011, HP announced new business and consumer notebooks equipped with the latest versions of AMD APUs \u2013 accelerated processing units.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "AMD has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from TSM remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "GOOG-20260827-graph-signal-v1",
+    "ticker": "GOOG",
+    "company_name": "Alphabet Inc. Class C Capital Stock",
+    "sector": "Communication Services",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.71,
+    "score": 0.45,
+    "direct_signal": 0.15,
+    "network_signal": 0.3,
+    "starting_price": 336.43,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.03,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 25.53,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "FRVO",
+        "connected_name": "Fervo Energy Company Class A common stock",
+        "relationship_type": "Energy Supply",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.623,
+        "connected_direct_signal": 0.186,
+        "contribution": 0.116,
+        "evidence": "In 2021, Fervo Energy signed a 115 megawatt power purchase agreement with NV Energy to supply carbon-free baseload electricity for Google's data centers in Nevada.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "META",
+        "connected_name": "Meta Platforms, Inc. Class A Common Stock",
+        "relationship_type": "Search Advertising",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.574,
+        "connected_direct_signal": 0.168,
+        "contribution": 0.097,
+        "evidence": "The company also operates an advertising network for its own sites and third parties; as of 2023, advertising accounted for 97.8 percent of its total revenue.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "SITM",
+        "connected_name": "SiTime Corporation Common Stock",
+        "relationship_type": "Supply Relationship",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.272,
+        "connected_direct_signal": 0.187,
+        "contribution": 0.051,
+        "evidence": "It also reported its top customers as Apple, Fitbit, Garmin, Samsung, Google, Microsoft, Dell, HiKVision and Huami.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "MRVL",
+        "connected_name": "Marvell Technology, Inc. Common Stock",
+        "relationship_type": "Manufacturer -> Material Provider",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.623,
+        "connected_direct_signal": 0.081,
+        "contribution": 0.05,
+        "evidence": "Google's Chromecast products are powered by Marvell SoCs.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "SPOT",
+        "connected_name": "Spotify Technology S.A.",
+        "relationship_type": "Smart Home Devices",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.606,
+        "connected_direct_signal": 0.076,
+        "contribution": 0.046,
+        "evidence": "The service is available on most devices, including Windows, macOS, and Linux computers, IOS and Android smartphones and tablets, Smart Home devices such as the Amazon Echo and Google Nest lines of products, and digital media players like Roku.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "GOOG has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from FRVO remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "AMZN-20260827-graph-signal-v1",
+    "ticker": "AMZN",
+    "company_name": "Amazon.com, Inc. Common Stock",
+    "sector": "Consumer Cyclical",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.7,
+    "score": 0.434,
+    "direct_signal": 0.151,
+    "network_signal": 0.283,
+    "starting_price": 258.265,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.37,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 26.62,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "SMTC",
+        "connected_name": "Semtech Corporation Common Stock",
+        "relationship_type": "operational supply-chain dependency",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.521,
+        "connected_direct_signal": 0.172,
+        "contribution": 0.089,
+        "evidence": "Semtech's chips were utilized in products using the Amazon Sidewalk protocol.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VMC",
+        "connected_name": "Vulcan Materials Company(Holding Company)",
+        "relationship_type": "Physical Infrastructure",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.572,
+        "connected_direct_signal": 0.101,
+        "contribution": 0.058,
+        "evidence": "Amazon occupies buildings in Seattle developed primarily by Vulcan, Inc.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "SPOT",
+        "connected_name": "Spotify Technology S.A.",
+        "relationship_type": "Service Provider",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.606,
+        "connected_direct_signal": 0.076,
+        "contribution": 0.046,
+        "evidence": "The service is available on most devices, including Smart Home devices such as the Amazon Echo and Google Nest lines of products.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "RIVN",
+        "connected_name": "Rivian Automotive, Inc. Class A Common Stock",
+        "relationship_type": "Delivery Van Sales",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.574,
+        "connected_direct_signal": 0.06,
+        "contribution": 0.034,
+        "evidence": "The EVD is sold to Amazon for its deliveries.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VMC",
+        "connected_name": "Vulcan Materials Company(Holding Company)",
+        "relationship_type": "Property Development",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.33,
+        "connected_direct_signal": 0.101,
+        "contribution": 0.033,
+        "evidence": "The first 14 buildings Amazon occupied in South Lake Union were developed primarily by Vulcan, Inc. from 2008 onward...",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "AMZN has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from SMTC remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "MSFT-20260827-graph-signal-v1",
+    "ticker": "MSFT",
+    "company_name": "Microsoft Corporation Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.69,
+    "score": 0.413,
+    "direct_signal": 0.113,
+    "network_signal": 0.3,
+    "starting_price": 490.95,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.75,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 15.99,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "RMBS",
+        "connected_name": "Rambus Inc. Common Stock",
+        "relationship_type": "Licensed Technology or Software",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.644,
+        "connected_direct_signal": 0.124,
+        "contribution": 0.08,
+        "evidence": "Licensees of Rambus's RDRAM technology included companies such as Microsoft,",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "SITM",
+        "connected_name": "SiTime Corporation Common Stock",
+        "relationship_type": "Supply Relationship",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.272,
+        "connected_direct_signal": 0.187,
+        "contribution": 0.051,
+        "evidence": "It also reported its top customers as Apple, Fitbit, Garmin, Samsung, Google, Microsoft, Dell, HiKVision and Huami.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "SPOT",
+        "connected_name": "Spotify Technology S.A.",
+        "relationship_type": "Software Provider",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.572,
+        "connected_direct_signal": 0.076,
+        "contribution": 0.044,
+        "evidence": "The service is available on most devices, including Windows, macOS, and Linux computers,",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "SNOW",
+        "connected_name": "Snowflake Inc.",
+        "relationship_type": "Cloud Infrastructure Provider",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.65,
+        "connected_direct_signal": 0.059,
+        "contribution": 0.038,
+        "evidence": "The platform allows organizations to unify data warehousing, data lakes, data engineering, and data sharing into a single service on public cloud infrastructure such as Amazon Web Services (AWS), Microsoft Azure, and Google Cloud Platform (GCP).",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "NET",
+        "connected_name": "Cloudflare, Inc. Class A common stock, par value $0.001 per share",
+        "relationship_type": "Cloud Security Services",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.272,
+        "connected_direct_signal": 0.113,
+        "contribution": 0.031,
+        "evidence": "Not Found",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "MSFT has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from RMBS remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "INTC-20260827-graph-signal-v1",
+    "ticker": "INTC",
+    "company_name": "Intel Corporation Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.68,
+    "score": 0.397,
+    "direct_signal": 0.097,
+    "network_signal": 0.3,
+    "starting_price": 91.115,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 1.3,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 26.08,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Hold",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "AMD",
+        "connected_name": "Advanced Micro Devices, Inc. Common Stock",
+        "relationship_type": "Semi-Custom Graphics Processing Unit Sales",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.568,
+        "connected_direct_signal": 0.156,
+        "contribution": 0.089,
+        "evidence": "In November 2017, AMD and Intel announced that Intel would market a product combining in a single package an Intel Core CPU, a semi-custom AMD Radeon GPU",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "META",
+        "connected_name": "Meta Platforms, Inc. Class A Common Stock",
+        "relationship_type": "Advanced Silicon Fabrication",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.527,
+        "connected_direct_signal": 0.168,
+        "contribution": 0.089,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "MSFT",
+        "connected_name": "Microsoft Corporation Common Stock",
+        "relationship_type": "Microprocessors",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.482,
+        "connected_direct_signal": 0.113,
+        "contribution": 0.054,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "MPWR",
+        "connected_name": "Monolithic Power Systems, Inc. Common Stock",
+        "relationship_type": "Analog and Power Management ICs",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.272,
+        "connected_direct_signal": 0.183,
+        "contribution": 0.05,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "DELL",
+        "connected_name": "Dell Technologies Inc.",
+        "relationship_type": "Server CPUs / Supply Relationship",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.567,
+        "connected_direct_signal": 0.085,
+        "contribution": 0.048,
+        "evidence": "Manual System Jumpstart / AI Multi-Source Research",
+        "source_url": "Manual System Jumpstart / AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "INTC is expected to move up over the next 30 days, with a direct signal of 0.097 and a network signal of 0.3. The recent price change indicates a positive trend, while analyst targets suggest potential upside. However, connections with AMD, META, MSFT, MPWR, and DELL indicate mixed signals, which could impact the overall outlook.",
+    "bull_case": "INTC's strong direct signal and positive network effect from its relationships with tech giants like AMD, META, and MSFT point towards a bullish scenario. The recent price increase and analyst targets also support this view, suggesting that INTC may see continued growth in demand for its products and services.",
+    "bear_case": "Despite the overall positive outlook, connections with downstream companies such as AMD, META, and DELL show weaker signals, which could dampen expectations. Additionally, past outcomes indicate that INTC's performance has not always aligned with market predictions, raising concerns about potential volatility.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true,
+    "scenario_model": "qwen2.5:7b-instruct"
+  },
+  {
+    "prediction_id": "DELL-20260827-graph-signal-v1",
+    "ticker": "DELL",
+    "company_name": "Dell Technologies Inc.",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.67,
+    "score": 0.385,
+    "direct_signal": 0.085,
+    "network_signal": 0.3,
+    "starting_price": 464.1662,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 3.24,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 9.93,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "AMD",
+        "connected_name": "Advanced Micro Devices, Inc. Common Stock",
+        "relationship_type": "Server Chips",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.64,
+        "connected_direct_signal": 0.156,
+        "contribution": 0.1,
+        "evidence": "On May 18, 2006, Dell announced that it would roll out new servers based on AMD's Opteron chips by year's end...",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "SITM",
+        "connected_name": "SiTime Corporation Common Stock",
+        "relationship_type": "Supply Relationship",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.304,
+        "connected_direct_signal": 0.187,
+        "contribution": 0.057,
+        "evidence": "It also reported its top customers as Apple, Fitbit, Garmin, Samsung, Google, Microsoft, Dell, HiKVision and Huami.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "CRM",
+        "connected_name": "Salesforce, Inc.",
+        "relationship_type": "Hardware - Servers and Compute Infrastructure",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.64,
+        "connected_direct_signal": 0.085,
+        "contribution": 0.055,
+        "evidence": "In 2008, Salesforce migrated from Sun Fire E25K servers to Dell servers with AMD processors.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "AMD",
+        "connected_name": "Advanced Micro Devices, Inc. Common Stock",
+        "relationship_type": "Operational Supply Chain",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.32,
+        "connected_direct_signal": 0.156,
+        "contribution": 0.05,
+        "evidence": "On May 18, 2006, Dell announced that it would roll out new servers based on AMD's Opteron chips by year's end,",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "AXON",
+        "connected_name": "Axon Enterprise, Inc. Common Stock",
+        "relationship_type": "cloud services",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.572,
+        "connected_direct_signal": 0.081,
+        "contribution": 0.047,
+        "evidence": "The company piloted Axon Pro in various small cities and towns.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "Dell Technologies is expected to see a positive movement in its stock price over the next 30 days, driven by strong analyst support and a favorable network signal. Recent price changes indicate a slight upward trend, while analyst targets suggest significant upside potential. Connections with AMD, SiTime Corporation, Salesforce, Axon Enterprise, and other tech companies through supply chains and operational relationships are contributing positively to Dell's outlook.",
+    "bull_case": "Dell is set for an upward trajectory due to robust analyst recommendations, a strong network signal, and positive connections with key tech suppliers like AMD. The company\u2019s recent price changes also point towards growing investor confidence. With Dell serving as a critical supplier in the hardware infrastructure space, its partnerships could drive increased demand and profitability.",
+    "bear_case": "Despite the optimistic outlook, there are potential risks that could dampen Dell's performance. While connections with tech giants like AMD and Salesforce provide support, any disruptions in these relationships or broader market downturns could negatively impact Dell\u2019s stock price. Additionally, the recent price changes, while positive, may already reflect some of the bullish sentiment.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true,
+    "scenario_model": "qwen2.5:7b-instruct"
+  },
+  {
+    "prediction_id": "AVGO-20260827-graph-signal-v1",
+    "ticker": "AVGO",
+    "company_name": "Broadcom Inc. Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.66,
+    "score": 0.368,
+    "direct_signal": 0.182,
+    "network_signal": 0.186,
+    "starting_price": 361.485,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.08,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 35.0,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "STX",
+        "connected_name": "Seagate Technology Holdings PLC Ordinary Shares (Ireland)",
+        "relationship_type": "SSD Controller Business Sale",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.538,
+        "connected_direct_signal": 0.16,
+        "contribution": 0.086,
+        "evidence": "Sold its SSD controller business to Seagate Technology in May 2014.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "TSM",
+        "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+        "relationship_type": "chip manufacturing",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.32,
+        "connected_direct_signal": 0.174,
+        "contribution": 0.056,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "A",
+        "connected_name": "Agilent Technologies Inc.",
+        "relationship_type": "historical",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.538,
+        "connected_direct_signal": 0.06,
+        "contribution": 0.032,
+        "evidence": "In August 2005, Agilent announced the sale of its business which produced semiconductor integrated circuits (known as \"chips\") for consumer and industrial uses to Kohlberg Kravis Roberts and Silver Lake Partners for $2.66 billion.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "ACN",
+        "connected_name": "Accenture PLC",
+        "relationship_type": "Cybersecurity Services Division",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.292,
+        "connected_direct_signal": 0.041,
+        "contribution": 0.012,
+        "evidence": "Agreed to acquire Symantec's 300-person cybersecurity services division from Broadcom on January 7, 2020.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "AVGO has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from STX remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "ARM-20260827-graph-signal-v1",
+    "ticker": "ARM",
+    "company_name": "Arm Holdings plc American Depositary Shares",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.66,
+    "score": 0.363,
+    "direct_signal": 0.08,
+    "network_signal": 0.283,
+    "starting_price": 259.4491,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 1.67,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 10.4,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "ALAB",
+        "connected_name": "Astera Labs, Inc. Common Stock",
+        "relationship_type": "Chiplet-based AI Infrastructure Designs Support",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.527,
+        "connected_direct_signal": 0.144,
+        "contribution": 0.076,
+        "evidence": "In late 2025, the company joined the Arm Total Design ecosystem to support chiplet-based AI infrastructure designs.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "INTC",
+        "connected_name": "Intel Corporation Common Stock",
+        "relationship_type": "Foundry Services for Arm SoCs",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.538,
+        "connected_direct_signal": 0.097,
+        "contribution": 0.052,
+        "evidence": "ARM Holdings partnered with Intel Foundry Services to bring Arm SoCs to Intel's 18A process.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "TSM",
+        "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+        "relationship_type": "IP Licensing / Semiconductor IP / Foundry Services",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.292,
+        "connected_direct_signal": 0.174,
+        "contribution": 0.051,
+        "evidence": "Most fabless semiconductor companies such as AMD... are customers of TSMC, / Most fabless semiconductor companies such as ARM are customers of TSMC.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "MRVL",
+        "connected_name": "Marvell Technology, Inc. Common Stock",
+        "relationship_type": "IP Licensing",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.538,
+        "connected_direct_signal": 0.081,
+        "contribution": 0.043,
+        "evidence": "Marvell OCTEON and ARMADA DPUs integrate a CPU, network interfaces and programmable data acceleration engines on a specialized electronic circuit.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "NXPI",
+        "connected_name": "NXP Semiconductors N.V. Common Stock",
+        "relationship_type": "IP Licensee",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.278,
+        "connected_direct_signal": 0.123,
+        "contribution": 0.034,
+        "evidence": "ARM only creates and licenses its technology as intellectual property (IP), rather than manufacturing and selling its own physical CPUs, GPUs, SoCs or microcontrollers.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "ARM has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from ALAB remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "AAPL-20260827-graph-signal-v1",
+    "ticker": "AAPL",
+    "company_name": "Apple Inc. Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.65,
+    "score": 0.351,
+    "direct_signal": 0.051,
+    "network_signal": 0.3,
+    "starting_price": 309.44,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.36,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 4.85,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "Q",
+        "connected_name": "Qnity Electronics, Inc.",
+        "relationship_type": "Supply Chain",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.621,
+        "connected_direct_signal": 0.19,
+        "contribution": 0.118,
+        "evidence": "Also in March 2026, the company was added to the domestic supply chain of Apple Inc.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "GLW",
+        "connected_name": "Corning Incorporated",
+        "relationship_type": "Supplier",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.538,
+        "connected_direct_signal": 0.167,
+        "contribution": 0.09,
+        "evidence": "Corning is one of the main suppliers to Apple Inc. since working with Steve Jobs in 2007 to develop the iPhone.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "AMX",
+        "connected_name": "America Movil S.A.B de C.V American Depositary Shares (each representing the right to receive twenty (20) Series B Shares)",
+        "relationship_type": "Mobile Phones",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.574,
+        "connected_direct_signal": 0.12,
+        "contribution": 0.069,
+        "evidence": "In 2008, Am\u00e9rica M\u00f3vil launched the iPhone in Latin America.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "TSM",
+        "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+        "relationship_type": "Advanced Silicon Fabrication",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.32,
+        "connected_direct_signal": 0.174,
+        "contribution": 0.056,
+        "evidence": "Manual System Jumpstart",
+        "source_url": "Manual System Jumpstart"
+      },
+      {
+        "connected_ticker": "TTMI",
+        "connected_name": "TTM Technologies, Inc. Common Stock",
+        "relationship_type": "PCB Manufacturing",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.295,
+        "connected_direct_signal": 0.189,
+        "contribution": 0.056,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "AAPL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from Q remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "META-20260827-graph-signal-v1",
+    "ticker": "META",
+    "company_name": "Meta Platforms, Inc. Class A Common Stock",
+    "sector": "Communication Services",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.64,
+    "score": 0.332,
+    "direct_signal": 0.168,
+    "network_signal": 0.163,
+    "starting_price": 571.6688,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.83,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 32.02,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "NVDA",
+        "connected_name": "NVIDIA Corporation Common Stock",
+        "relationship_type": "GPU Supplier",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.272,
+        "connected_direct_signal": 0.187,
+        "contribution": 0.051,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "GOOG",
+        "connected_name": "Alphabet Inc. Class C Capital Stock",
+        "relationship_type": "Search Advertising",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.296,
+        "connected_direct_signal": 0.15,
+        "contribution": 0.044,
+        "evidence": "The company also operates an advertising network for its own sites and third parties; as of 2023, advertising accounted for 97.8 percent of its total revenue.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "AKAM",
+        "connected_name": "Akamai Technologies, Inc. Common Stock",
+        "relationship_type": "Content Delivery Network (CDN)",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.263,
+        "connected_direct_signal": 0.159,
+        "contribution": 0.042,
+        "evidence": "The National Security Agency and Federal Bureau of Investigation used Facebook's Akamai CDN to collect information on Facebook users.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "INTC",
+        "connected_name": "Intel Corporation Common Stock",
+        "relationship_type": "Advanced Silicon Fabrication",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.272,
+        "connected_direct_signal": 0.097,
+        "contribution": 0.026,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "META has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from NVDA remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "ASML-20260827-graph-signal-v1",
+    "ticker": "ASML",
+    "company_name": "ASML Holding N.V. New York Registry Shares",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.6,
+    "score": 0.318,
+    "direct_signal": 0.142,
+    "network_signal": 0.176,
+    "starting_price": 1744.43,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.18,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 23.63,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "TSM",
+        "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+        "relationship_type": "Semiconductor Equipment",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.567,
+        "connected_direct_signal": 0.174,
+        "contribution": 0.098,
+        "evidence": "Manual System Jumpstart",
+        "source_url": "Manual System Jumpstart"
+      },
+      {
+        "connected_ticker": "GOOG",
+        "connected_name": "Alphabet Inc. Class C Capital Stock",
+        "relationship_type": "operational supply-chain dependency",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.521,
+        "connected_direct_signal": 0.15,
+        "contribution": 0.078,
+        "evidence": "since 2025, Google Colab officially supports Julia natively.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "ASML has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from TSM remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "CVX-20260827-graph-signal-v1",
+    "ticker": "CVX",
+    "company_name": "Chevron Corporation",
+    "sector": "Energy",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.63,
+    "score": 0.315,
+    "direct_signal": 0.071,
+    "network_signal": 0.244,
+    "starting_price": 199.29,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.28,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 9.53,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "DVN",
+        "connected_name": "Devon Energy Corporation",
+        "relationship_type": "Raw Materials",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.558,
+        "connected_direct_signal": 0.16,
+        "contribution": 0.089,
+        "evidence": "It is organized in Delaware with headquarters in Houston, Texas. Its operations are in the Delaware Basin, Eagle Ford Group, and the Rocky Mountains (Williston Basin and Powder River Basin).",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "EQT",
+        "connected_name": "EQT CORP",
+        "relationship_type": "Historical Sale of Assets",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.348,
+        "connected_direct_signal": 0.152,
+        "contribution": 0.053,
+        "evidence": "The company also explored and drilled in the Marcellus Shale formation under several northeastern US states; these operations were sold to EQT Corporation in 2020.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "ENB",
+        "connected_name": "Enbridge, Inc",
+        "relationship_type": "Oil Supply",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.623,
+        "connected_direct_signal": 0.06,
+        "contribution": 0.038,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "TRP",
+        "connected_name": "TC Energy Corporation",
+        "relationship_type": "Raw Materials",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.589,
+        "connected_direct_signal": 0.061,
+        "contribution": 0.036,
+        "evidence": "TC Energy transports natural gas from production to end use markets.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "BJ",
+        "connected_name": "BJs Wholesale Club Holdings, Inc. Common Stock",
+        "relationship_type": "Gasoline Supplier",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.321,
+        "connected_direct_signal": 0.076,
+        "contribution": 0.024,
+        "evidence": "As of January 30, 2010 BJ's operated 104 gasoline stations at their clubs.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "CVX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from DVN remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "GE-20260827-graph-signal-v1",
+    "ticker": "GE",
+    "company_name": "GE Aerospace",
+    "sector": "Industrials",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.59,
+    "score": 0.3,
+    "direct_signal": 0.113,
+    "network_signal": 0.187,
+    "starting_price": 351.85,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.02,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 15.08,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "WWD",
+        "connected_name": "Woodward, Inc. Common Stock",
+        "relationship_type": "Engine Components",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.589,
+        "connected_direct_signal": 0.166,
+        "contribution": 0.098,
+        "evidence": "Some of the engines controlled by Woodward include those from General Electric (CT7/T700), and Pratt & Whitney Canada (PT6A series).",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "SNPS",
+        "connected_name": "Synopsys, Inc. Common Stock",
+        "relationship_type": "Advanced Silicon Fabrication",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.589,
+        "connected_direct_signal": 0.153,
+        "contribution": 0.09,
+        "evidence": "The company was initially established as Optimal Solutions with a charter to develop and market logic synthesis technology developed by the team at General Electric's Advanced Computer-Aided Engineering Group.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "GE has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from WWD remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "TXN-20260827-graph-signal-v1",
+    "ticker": "TXN",
+    "company_name": "Texas Instruments Incorporated Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.62,
+    "score": 0.292,
+    "direct_signal": 0.119,
+    "network_signal": 0.173,
+    "starting_price": 264.4,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.69,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 22.81,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "MU",
+        "connected_name": "Micron Technology, Inc. Common Stock",
+        "relationship_type": "chip manufacturer - semiconductor component supplier",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.482,
+        "connected_direct_signal": 0.175,
+        "contribution": 0.084,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "TSM",
+        "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+        "relationship_type": "outsourced production / Advanced Manufacturing Services",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.264,
+        "connected_direct_signal": 0.174,
+        "contribution": 0.046,
+        "evidence": "Some integrated device manufacturers that have their own fabrication facilities, such as Intel, NXP, STMicroelectronics, and Texas Instruments, outsource some of their production to TSMC.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "MU",
+        "connected_name": "Micron Technology, Inc. Common Stock",
+        "relationship_type": "Manufacturing Component",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.249,
+        "connected_direct_signal": 0.175,
+        "contribution": 0.043,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "TXN has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from MU remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "TSLA-20260827-graph-signal-v1",
+    "ticker": "TSLA",
+    "company_name": "Tesla, Inc. Common Stock",
+    "sector": "Consumer Cyclical",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.61,
+    "score": 0.276,
+    "direct_signal": 0.08,
+    "network_signal": 0.195,
+    "starting_price": 346.86,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.16,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 12.46,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "JBHT",
+        "connected_name": "J.B. Hunt Transport Services, Inc. Common Stock",
+        "relationship_type": "Electric Trucks",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.64,
+        "connected_direct_signal": 0.095,
+        "contribution": 0.061,
+        "evidence": "J.B. Hunt has reserved several Tesla electric trucks.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "MGA",
+        "connected_name": "Magna International",
+        "relationship_type": "Automotive Systems, Assemblies, Modules, and Components",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.65,
+        "connected_direct_signal": 0.076,
+        "contribution": 0.049,
+        "evidence": "It produces automotive systems, assemblies, modules, and components, which are supplied to Tesla...",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "LOT",
+        "connected_name": "Lotus Technology Inc. American Depositary Shares",
+        "relationship_type": "Manufacturing Partner",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.304,
+        "connected_direct_signal": 0.137,
+        "contribution": 0.042,
+        "evidence": "Tesla signed a production contract with Group Lotus to produce 'gliders' (complete cars minus powertrain) through December 2011.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "MGA",
+        "connected_name": "Magna International",
+        "relationship_type": "Supply Chain",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.287,
+        "connected_direct_signal": 0.076,
+        "contribution": 0.022,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VALE",
+        "connected_name": "VALE S.A.",
+        "relationship_type": "Material Supplier",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.33,
+        "connected_direct_signal": 0.066,
+        "contribution": 0.022,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "TSLA has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from JBHT remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "ANET-20260827-graph-signal-v1",
+    "ticker": "ANET",
+    "company_name": "Arista Networks",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.57,
+    "score": 0.27,
+    "direct_signal": 0.155,
+    "network_signal": 0.115,
+    "starting_price": 202.97,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 6.32,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 19.14,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "NVDA",
+        "connected_name": "NVIDIA Corporation Common Stock",
+        "relationship_type": "AI-Driven Operations",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.606,
+        "connected_direct_signal": 0.187,
+        "contribution": 0.113,
+        "evidence": "EOS operates as a single software base across Arista's entire hardware portfolio, while also supporting virtualized (vEOS) and containerized (cEOS) deployments in Cloud, AI environments.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "FTNT",
+        "connected_name": "Fortinet, Inc. Common Stock",
+        "relationship_type": "Integrated Security Solutions",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.606,
+        "connected_direct_signal": 0.002,
+        "contribution": 0.001,
+        "evidence": "Key capabilities of Arista's SD-WAN portfolio include integrated security and segmentation.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "ANET has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from NVDA remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "LRCX-20260827-graph-signal-v1",
+    "ticker": "LRCX",
+    "company_name": "Lam Research Corporation Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.6,
+    "score": 0.265,
+    "direct_signal": 0.118,
+    "network_signal": 0.147,
+    "starting_price": 318.075,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.17,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 16.7,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "AMAT",
+        "connected_name": "Applied Materials, Inc. Common Stock",
+        "relationship_type": "operational supply-chain dependency",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.536,
+        "connected_direct_signal": 0.175,
+        "contribution": 0.094,
+        "evidence": "Throughout semiconductor manufacturing, these technologies help create transistors, interconnects, advanced memory, and packaging structures.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "DOW",
+        "connected_name": "Dow Inc.",
+        "relationship_type": "Advanced Silicon Fabrication",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.272,
+        "connected_direct_signal": 0.103,
+        "contribution": 0.028,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "APD",
+        "connected_name": "Air Products & Chemicals, Inc.",
+        "relationship_type": "Raw Materials",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.304,
+        "connected_direct_signal": 0.082,
+        "contribution": 0.025,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "LRCX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from AMAT remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "KO-20260827-graph-signal-v1",
+    "ticker": "KO",
+    "company_name": "Coca-Cola Company",
+    "sector": "Consumer Defensive",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.58,
+    "score": 0.233,
+    "direct_signal": 0.043,
+    "network_signal": 0.19,
+    "starting_price": 89.19,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -3.28,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 6.17,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "YUMC",
+        "connected_name": "Yum China Holdings, Inc. Common Stock",
+        "relationship_type": "Beverage Supplier",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.527,
+        "connected_direct_signal": 0.161,
+        "contribution": 0.085,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "COST",
+        "connected_name": "Costco Wholesale Corporation Common Stock",
+        "relationship_type": "Beverages - Non-Alcoholic",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.572,
+        "connected_direct_signal": 0.084,
+        "contribution": 0.048,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "DRI",
+        "connected_name": "Darden Restaurants, Inc.",
+        "relationship_type": "Distribution Partner",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.589,
+        "connected_direct_signal": 0.051,
+        "contribution": 0.03,
+        "evidence": "The bottlers then sell, distribute, and merchandise Coca-Cola to retail stores, restaurants, and vending machines throughout the world.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "KOF",
+        "connected_name": "Coca-Cola FEMSA, S.A.B DE C.V",
+        "relationship_type": "Brand License",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.589,
+        "connected_direct_signal": 0.046,
+        "contribution": 0.027,
+        "evidence": "It is the largest franchise Coca-Cola bottler in the world,",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "KO has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from YUMC remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "KLAC-20260827-graph-signal-v1",
+    "ticker": "KLAC",
+    "company_name": "KLA Corporation Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.51,
+    "score": 0.212,
+    "direct_signal": 0.128,
+    "network_signal": 0.084,
+    "starting_price": 185.51,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.03,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 26.33,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "MU",
+        "connected_name": "Micron Technology, Inc. Common Stock",
+        "relationship_type": "Process Control and Yield Management Services",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.482,
+        "connected_direct_signal": 0.175,
+        "contribution": 0.084,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "KLAC has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from MU remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "AMAT-20260827-graph-signal-v1",
+    "ticker": "AMAT",
+    "company_name": "Applied Materials, Inc. Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.5,
+    "score": 0.208,
+    "direct_signal": 0.175,
+    "network_signal": 0.033,
+    "starting_price": 483.605,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.44,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 32.4,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "LRCX",
+        "connected_name": "Lam Research Corporation Common Stock",
+        "relationship_type": "operational supply-chain dependency",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.276,
+        "connected_direct_signal": 0.118,
+        "contribution": 0.033,
+        "evidence": "Throughout semiconductor manufacturing, these technologies help create transistors, interconnects, advanced memory, and packaging structures.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "AMAT has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from LRCX remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "CSCO-20260827-graph-signal-v1",
+    "ticker": "CSCO",
+    "company_name": "Cisco Systems, Inc. Common Stock (DE)",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.53,
+    "score": 0.202,
+    "direct_signal": 0.116,
+    "network_signal": 0.086,
+    "starting_price": 112.15,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.0,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 22.82,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "MTSI",
+        "connected_name": "MACOM Technology Solutions Holdings, Inc. Common Stock",
+        "relationship_type": "Supply Relationship",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.304,
+        "connected_direct_signal": 0.17,
+        "contribution": 0.052,
+        "evidence": "The company's networking and communications products are used in satellite applications, and they are consumed by clients like Cisco for wired and wireless networking applications.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "CDW",
+        "connected_name": "CDW Corporation Common Stock",
+        "relationship_type": "distributor",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.482,
+        "connected_direct_signal": 0.071,
+        "contribution": 0.034,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "CSCO has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from MTSI remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "SAP-20260827-graph-signal-v1",
+    "ticker": "SAP",
+    "company_name": "SAP SE",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.55,
+    "score": 0.188,
+    "direct_signal": 0.099,
+    "network_signal": 0.089,
+    "starting_price": 215.68,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 3.4,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 13.75,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "IBM",
+        "connected_name": "International Business Machines Corporation",
+        "relationship_type": "Services - Migration services for business systems",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.572,
+        "connected_direct_signal": 0.058,
+        "contribution": 0.033,
+        "evidence": "Xerox asked IBM to migrate its business systems to IBM technology.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "XRX",
+        "connected_name": "Xerox Holdings Corporation Common Stock",
+        "relationship_type": "historical_manufacturing_equipment",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.295,
+        "connected_direct_signal": 0.098,
+        "contribution": 0.029,
+        "evidence": "When Xerox exited the computer hardware manufacturing industry in 1971...",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "ACN",
+        "connected_name": "Accenture PLC",
+        "relationship_type": "Enterprise Software",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.65,
+        "connected_direct_signal": 0.041,
+        "contribution": 0.026,
+        "evidence": "Accenture uses SAP ERP system for their operations.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "INFY",
+        "connected_name": "Infosys Limited American Depositary Shares",
+        "relationship_type": "Enterprise Software",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.597,
+        "connected_direct_signal": 0.001,
+        "contribution": 0.0,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "SAP has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from IBM remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "AZN-20260827-graph-signal-v1",
+    "ticker": "AZN",
+    "company_name": "AstraZeneca PLC",
+    "sector": "Healthcare",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.49,
+    "score": 0.187,
+    "direct_signal": 0.154,
+    "network_signal": 0.032,
+    "starting_price": 164.78,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -1.6,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 28.98,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "LLY",
+        "connected_name": "Eli Lilly & Co.",
+        "relationship_type": "Manufacturing Partner",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.574,
+        "connected_direct_signal": 0.056,
+        "contribution": 0.032,
+        "evidence": "ramucirumab (Cyramza), a fully human monoclonal antibody used for the treatment of cancer",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "AZN has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from LLY remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "SKHY-20260827-graph-signal-v1",
+    "ticker": "SKHY",
+    "company_name": "SK hynix Inc. American Depositary Shares",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.46,
+    "score": 0.184,
+    "direct_signal": 0.184,
+    "network_signal": 0.0,
+    "starting_price": 164.355,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.23,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 35.0,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "SKHY has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "BABA-20260827-graph-signal-v1",
+    "ticker": "BABA",
+    "company_name": "Alibaba Group Holding Limited American Depositary Shares, each represents eight Ordinary Shares",
+    "sector": "Consumer Cyclical",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.46,
+    "score": 0.176,
+    "direct_signal": 0.176,
+    "network_signal": 0.0,
+    "starting_price": 117.515,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -1.53,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 35.0,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "BABA has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "ORCL-20260827-graph-signal-v1",
+    "ticker": "ORCL",
+    "company_name": "Oracle Corp",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.45,
+    "score": 0.172,
+    "direct_signal": 0.172,
+    "network_signal": 0.0,
+    "starting_price": 151.5425,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 3.09,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 35.0,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "ORCL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "SPCX-20260827-graph-signal-v1",
+    "ticker": "SPCX",
+    "company_name": "Space Exploration Technologies Corp. Class A Common Stock",
+    "sector": "Industrials",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.44,
+    "score": 0.157,
+    "direct_signal": 0.157,
+    "network_signal": 0.0,
+    "starting_price": 139.67,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.26,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 35.0,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "SPCX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "GEV-20260827-graph-signal-v1",
+    "ticker": "GEV",
+    "company_name": "GE Vernova Inc.",
+    "sector": "Industrials",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.44,
+    "score": 0.154,
+    "direct_signal": 0.154,
+    "network_signal": 0.0,
+    "starting_price": 968.08,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 4.67,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 27.72,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "GEV has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "CAT-20260827-graph-signal-v1",
+    "ticker": "CAT",
+    "company_name": "Caterpillar Inc.",
+    "sector": "Industrials",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.47,
+    "score": 0.151,
+    "direct_signal": 0.106,
+    "network_signal": 0.045,
+    "starting_price": 828.735,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 1.54,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 18.16,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "ROAD",
+        "connected_name": "Construction Partners, Inc. Class A Common Stock",
+        "relationship_type": "equipment supplier",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.527,
+        "connected_direct_signal": 0.084,
+        "contribution": 0.045,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "CAT is expected to rise over the next 30 days, with a direct signal of 0.106 and a network signal of 0.045. Recent price changes indicate a positive trend, while analyst recommendations are bullish. A connection path with Construction Partners, Inc. (ROAD) as an equipment supplier also supports this outlook.",
+    "bull_case": "CAT's strong recent performance, coupled with robust analyst support and a favorable relationship with downstream suppliers like ROAD, suggests that the company is well-positioned for growth in the construction sector. This could lead to significant gains over the next month.",
+    "bear_case": "While CAT shows positive signals, there are historical instances where similar conditions did not result in upward movements (e.g., GEV). Additionally, any negative shifts in the broader market or specific industry challenges could dampen expectations for CAT's performance.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true,
+    "scenario_model": "qwen2.5:7b-instruct"
+  },
+  {
+    "prediction_id": "GOOGL-20260827-graph-signal-v1",
+    "ticker": "GOOGL",
+    "company_name": "Alphabet Inc. Class A Common Stock",
+    "sector": "Communication Services",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.44,
+    "score": 0.151,
+    "direct_signal": 0.151,
+    "network_signal": 0.0,
+    "starting_price": 339.4,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.09,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 26.12,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Strong Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "GOOGL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "LLY-20260827-graph-signal-v1",
+    "ticker": "LLY",
+    "company_name": "Eli Lilly & Co.",
+    "sector": "Healthcare",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.53,
+    "score": 0.149,
+    "direct_signal": 0.056,
+    "network_signal": 0.093,
+    "starting_price": 1180.6975,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -4.32,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 11.38,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "AZN",
+        "connected_name": "AstraZeneca PLC",
+        "relationship_type": "Manufacturing Partner",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.296,
+        "connected_direct_signal": 0.154,
+        "contribution": 0.046,
+        "evidence": "ramucirumab (Cyramza), a fully human monoclonal antibody used for the treatment of cancer",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VEEV",
+        "connected_name": "Veeva Systems Inc.",
+        "relationship_type": "Software Subscription",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.527,
+        "connected_direct_signal": 0.046,
+        "contribution": 0.024,
+        "evidence": "The company has 1,552 customers including Eli Lilly and Company.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VEEV",
+        "connected_name": "Veeva Systems Inc.",
+        "relationship_type": "Cloud Computing Software",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.33,
+        "connected_direct_signal": 0.046,
+        "contribution": 0.015,
+        "evidence": "Veeva provides cloud computing software for Eli Lilly and Company.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "BMY",
+        "connected_name": "Bristol-Myers Squibb Co.",
+        "relationship_type": "Raw Materials",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.288,
+        "connected_direct_signal": 0.026,
+        "contribution": 0.008,
+        "evidence": "Eli Lilly and Company, in Indianapolis.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "AMGN",
+        "connected_name": "Amgen Inc. Common Stock",
+        "relationship_type": "Manufacturing Partner",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.296,
+        "connected_direct_signal": 0.0,
+        "contribution": 0.0,
+        "evidence": "baricitinib (Olumiant), an immunomodulatory medication used for the treatment of rheumatoid arthritis, alopecia areata, and COVID-19",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "LLY has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from AZN remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "WMT-20260827-graph-signal-v1",
+    "ticker": "WMT",
+    "company_name": "Walmart Inc. Common Stock",
+    "sector": "Consumer Defensive",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.5,
+    "score": 0.149,
+    "direct_signal": 0.119,
+    "network_signal": 0.03,
+    "starting_price": 103.14,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.3,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 24.05,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "MUSA",
+        "connected_name": "MURPHY USA INC.",
+        "relationship_type": "Retail Space Leasing",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.249,
+        "connected_direct_signal": 0.089,
+        "contribution": 0.022,
+        "evidence": "Murphy USA operates a chain of retail gas stations that are primarily located in proximity to Walmart stores.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "PPC",
+        "connected_name": "Pilgrim's Pride Corporation Common Stock",
+        "relationship_type": "packaged foods supply",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.249,
+        "connected_direct_signal": 0.032,
+        "contribution": 0.008,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "WMT has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from MUSA remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "ABBV-20260827-graph-signal-v1",
+    "ticker": "ABBV",
+    "company_name": "ABBVIE INC.",
+    "sector": "Healthcare",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.5,
+    "score": 0.147,
+    "direct_signal": 0.05,
+    "network_signal": 0.096,
+    "starting_price": 259.44,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -1.95,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 6.61,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "GMAB",
+        "connected_name": "Genmab A/S ADS",
+        "relationship_type": "Manufacturing/Marketing",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.572,
+        "connected_direct_signal": 0.111,
+        "contribution": 0.064,
+        "evidence": "Proprietary, marketed with partners: Epkinly/Tepkinly (epcoritamab) for the treatment of Relapsed/refractory diffuse large B-cell lymphoma (DLBCL)",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "GMAB",
+        "connected_name": "Genmab A/S ADS",
+        "relationship_type": "Marketing and Distribution Agreement",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.295,
+        "connected_direct_signal": 0.111,
+        "contribution": 0.033,
+        "evidence": "Epkinly/Tepkinly is marketed with AbbVie.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "ABBV has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from GMAB remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "NFLX-20260827-graph-signal-v1",
+    "ticker": "NFLX",
+    "company_name": "Netflix, Inc. Common Stock",
+    "sector": "Communication Services",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.51,
+    "score": 0.118,
+    "direct_signal": 0.09,
+    "network_signal": 0.028,
+    "starting_price": 80.25,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -1.01,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 16.71,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "LION",
+        "connected_name": "Lionsgate Studios Corp.",
+        "relationship_type": "Content Provider",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.308,
+        "connected_direct_signal": 0.109,
+        "contribution": 0.033,
+        "evidence": "Epix films came to Netflix 90 days after premiering on Epix, including films from Lionsgate.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "PSKY",
+        "connected_name": "Paramount Skydance Corporation Class B Common Stock",
+        "relationship_type": "Content Provider",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.308,
+        "connected_direct_signal": -0.033,
+        "contribution": -0.01,
+        "evidence": "Epix films came to Netflix 90 days after premiering on Epix, including films from Paramount.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "ROKU",
+        "connected_name": "Roku, Inc. Class A Common Stock",
+        "relationship_type": "Content Distribution Platform",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.572,
+        "connected_direct_signal": 0.009,
+        "contribution": 0.005,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "Netflix (NFLX) is expected to see an upward trend over the next 30 days, supported by a direct signal of 0.09 and a network signal of 0.028. The recent price change indicates a -1.01% movement, but this is outweighed by strong analyst support with a target gap of 16.71%. Connections to content providers like Lionsgate Studios Corp. (LION) and Paramount Skydance Corporation Class B Common Stock (PSKY), as well as the downstream relationship with Roku, Inc. (ROKU), contribute positively to the outlook.",
+    "bull_case": "Netflix's strategic partnerships with content providers such as Lionsgate Studios Corp., which saw its films debut on Netflix shortly after premiering on Epix, indicate a robust content pipeline that could drive subscriber growth and engagement. Additionally, the positive relationship with Roku suggests an expanding ecosystem of streaming services, potentially boosting NFLX\u2019s market share.",
+    "bear_case": "Despite the positive signals from analysts and partnerships, the recent price decline of -1.01% might signal investor concerns about the sustainability of Netflix's business model or content acquisition costs. The mixed performance in related stocks like Paramount Skydance Corporation Class B Common Stock could also indicate potential challenges in securing exclusive content deals.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true,
+    "scenario_model": "qwen2.5:7b-instruct"
+  },
+  {
+    "prediction_id": "MRK-20260827-graph-signal-v1",
+    "ticker": "MRK",
+    "company_name": "Merck & Co., Inc.",
+    "sector": "Healthcare",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.51,
+    "score": 0.115,
+    "direct_signal": 0.021,
+    "network_signal": 0.094,
+    "starting_price": 151.035,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -2.15,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": -1.53,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "SNY",
+        "connected_name": "Sanofi ADS",
+        "relationship_type": "Raw Materials",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.296,
+        "connected_direct_signal": 0.105,
+        "contribution": 0.031,
+        "evidence": "Not directly stated but a vaccine against multiple serotypes of human papillomavirus (HPV) is provided by Sanofi to Merck & Co. under Gardasil brand name.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VEEV",
+        "connected_name": "Veeva Systems Inc.",
+        "relationship_type": "Regulatory Affairs Management Platform Subscription",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.572,
+        "connected_direct_signal": 0.046,
+        "contribution": 0.027,
+        "evidence": "The company has 1,552 customers including Merck & Co.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VEEV",
+        "connected_name": "Veeva Systems Inc.",
+        "relationship_type": "Cloud Computing Software",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.33,
+        "connected_direct_signal": 0.046,
+        "contribution": 0.015,
+        "evidence": "Veeva provides cloud computing software for Merck & Co.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "GSK",
+        "connected_name": "GSK plc American Depositary Shares (Each representing two Ordinary Shares)",
+        "relationship_type": "supply chain dependency",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.277,
+        "connected_direct_signal": 0.044,
+        "contribution": 0.012,
+        "evidence": "Not directly stated but Pneumovax 23 vaccine is provided by GSK to Merck & Co.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "PFE",
+        "connected_name": "Pfizer Inc.",
+        "relationship_type": "Manufacturing Partner",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.288,
+        "connected_direct_signal": 0.036,
+        "contribution": 0.01,
+        "evidence": "The U.S. government agreed to spend $1.2 billion to purchase 1.7 million doses of Molnupiravir, a Merck product, if it were to be approved by regulators to treat COVID-19.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "MRK has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from SNY remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "UNH-20260827-graph-signal-v1",
+    "ticker": "UNH",
+    "company_name": "UNITEDHEALTH GROUP INCORPORATED (Delaware)",
+    "sector": "Healthcare",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.41,
+    "score": 0.106,
+    "direct_signal": 0.106,
+    "network_signal": 0.0,
+    "starting_price": 398.23,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.48,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 19.34,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "UNH has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "SHEL-20260827-graph-signal-v1",
+    "ticker": "SHEL",
+    "company_name": "Shell plc American Depositary Shares (Each represents two Ordinary shares)",
+    "sector": "Energy",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.5,
+    "score": 0.104,
+    "direct_signal": 0.061,
+    "network_signal": 0.043,
+    "starting_price": 91.23,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.0,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 7.17,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "XOM",
+        "connected_name": "ExxonMobil Holdings Corporation",
+        "relationship_type": "Refinery Services",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.321,
+        "connected_direct_signal": 0.062,
+        "contribution": 0.02,
+        "evidence": "Shell uses ExxonMobil's refinery services for crude oil processing.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "NE",
+        "connected_name": "Noble Corporation plc",
+        "relationship_type": "Revenue Source",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.295,
+        "connected_direct_signal": 0.056,
+        "contribution": 0.017,
+        "evidence": "In 2020, 21.7% of revenues were from Shell.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "E",
+        "connected_name": "ENI S.p.A.",
+        "relationship_type": "Raw Materials",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.574,
+        "connected_direct_signal": 0.006,
+        "contribution": 0.004,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "DINO",
+        "connected_name": "HF Sinclair Corporation",
+        "relationship_type": "Refining facilities",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.65,
+        "connected_direct_signal": 0.003,
+        "contribution": 0.002,
+        "evidence": "In May 2021, HollyFrontier agreed to purchase the Shell Anacortes Refinery near Anacortes, Washington, with capacity of 149,000 bbl/d, for $350 million.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "DINO",
+        "connected_name": "HF Sinclair Corporation",
+        "relationship_type": "Refining Facilities",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.326,
+        "connected_direct_signal": 0.003,
+        "contribution": 0.001,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "SHEL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from XOM remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "COST-20260827-graph-signal-v1",
+    "ticker": "COST",
+    "company_name": "Costco Wholesale Corporation Common Stock",
+    "sector": "Consumer Defensive",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.47,
+    "score": 0.102,
+    "direct_signal": 0.084,
+    "network_signal": 0.018,
+    "starting_price": 947.97,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.03,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 13.64,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "KO",
+        "connected_name": "Coca-Cola Company",
+        "relationship_type": "Beverages - Non-Alcoholic",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.295,
+        "connected_direct_signal": 0.043,
+        "contribution": 0.013,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "CCEP",
+        "connected_name": "Coca-Cola Europacific Partners plc Ordinary Shares",
+        "relationship_type": "distribution",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.295,
+        "connected_direct_signal": 0.019,
+        "contribution": 0.006,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "COST has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from KO remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "XOM-20260827-graph-signal-v1",
+    "ticker": "XOM",
+    "company_name": "ExxonMobil Holdings Corporation",
+    "sector": "Energy",
+    "horizon_days": 30,
+    "direction": "up",
+    "confidence": 0.44,
+    "score": 0.1,
+    "direct_signal": 0.062,
+    "network_signal": 0.038,
+    "starting_price": 157.5174,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -0.31,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 7.72,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "SHEL",
+        "connected_name": "Shell plc American Depositary Shares (Each represents two Ordinary shares)",
+        "relationship_type": "Refinery Services",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.623,
+        "connected_direct_signal": 0.061,
+        "contribution": 0.038,
+        "evidence": "Shell uses ExxonMobil's refinery services for crude oil processing.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "XOM has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+    "bull_case": "Demand and execution improve while the signal from SHEL remains supportive.",
+    "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "RTX-20260827-graph-signal-v1",
+    "ticker": "RTX",
+    "company_name": "RTX Corporation",
+    "sector": "Industrials",
+    "horizon_days": 30,
+    "direction": "neutral",
+    "confidence": 0.4,
+    "score": 0.077,
+    "direct_signal": 0.077,
+    "network_signal": 0.0,
+    "starting_price": 211.01,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.29,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 11.28,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "RTX has no decisive research signal over the next 30 days.",
+    "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+    "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "HD-20260827-graph-signal-v1",
+    "ticker": "HD",
+    "company_name": "Home Depot, Inc.",
+    "sector": "Consumer Cyclical",
+    "horizon_days": 30,
+    "direction": "neutral",
+    "confidence": 0.39,
+    "score": 0.074,
+    "direct_signal": 0.074,
+    "network_signal": 0.0,
+    "starting_price": 329.09,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -3.05,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 14.71,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "HD has no decisive research signal over the next 30 days.",
+    "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+    "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "PG-20260827-graph-signal-v1",
+    "ticker": "PG",
+    "company_name": "Procter & Gamble Company",
+    "sector": "Consumer Defensive",
+    "horizon_days": 30,
+    "direction": "neutral",
+    "confidence": 0.39,
+    "score": 0.072,
+    "direct_signal": 0.072,
+    "network_signal": 0.0,
+    "starting_price": 143.32,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -1.35,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 12.06,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "PG has no decisive research signal over the next 30 days.",
+    "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+    "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "NVS-20260827-graph-signal-v1",
+    "ticker": "NVS",
+    "company_name": "Novartis AG",
+    "sector": "Healthcare",
+    "horizon_days": 30,
+    "direction": "neutral",
+    "confidence": 0.48,
+    "score": 0.07,
+    "direct_signal": -0.005,
+    "network_signal": 0.075,
+    "starting_price": 155.53,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -1.82,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 1.04,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Hold",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "GMAB",
+        "connected_name": "Genmab A/S ADS",
+        "relationship_type": "Product Co-development and Commercialization",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.313,
+        "connected_direct_signal": 0.111,
+        "contribution": 0.035,
+        "evidence": "Marketed by partners: Kesimpta (ofatumumab) for the treatment of relapsing remitting multiple sclerosis",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VEEV",
+        "connected_name": "Veeva Systems Inc.",
+        "relationship_type": "Regulatory Affairs Management Platform Subscription",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.572,
+        "connected_direct_signal": 0.046,
+        "contribution": 0.027,
+        "evidence": "The company has 1,552 customers including Novartis.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VEEV",
+        "connected_name": "Veeva Systems Inc.",
+        "relationship_type": "Cloud Computing Software",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.33,
+        "connected_direct_signal": 0.046,
+        "contribution": 0.015,
+        "evidence": "Veeva provides cloud computing software for Novartis.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VOD",
+        "connected_name": "Vodafone Group Plc American Depositary Shares",
+        "relationship_type": "Business Partner (healthcare services)",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.313,
+        "connected_direct_signal": -0.041,
+        "contribution": -0.013,
+        "evidence": "One of its early success stories is with the Novartis-led \\u201cSMS for Life\\u201d project in Tanzania, for which Vodafone developed and deployed a text-message based system that enables all the country\\u2019s 4,600 public health facilities to report their levels of anti-malarial medications so that stock level data can be viewed centrally in real-time, enabling timely re-supply of stock.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "MRK",
+        "connected_name": "Merck & Co., Inc.",
+        "relationship_type": "Raw Materials",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.537,
+        "connected_direct_signal": 0.021,
+        "contribution": 0.011,
+        "evidence": "Not directly stated but RotaTeq vaccine is provided by Novartis to Merck & Co.",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "Novartis (NVS) is experiencing a slight negative price movement, but the network signal suggests potential for growth. The company's relationships with Genmab A/S ADS and Veeva Systems Inc., particularly in product co-development and commercialization as well as regulatory affairs management platforms, contribute positively to its outlook.",
+    "bull_case": "Given Novartis' strong partnerships and positive network signals, the company could see a rebound. The collaboration with Genmab A/S ADS on ofatumumab for multiple sclerosis treatment and Veeva Systems Inc.'s cloud computing software support indicate robust business relationships that may drive future growth.",
+    "bear_case": "Despite the positive contributions from its partnerships, Novartis faces challenges such as potential negative impacts from its relationship with Vodafone Group Plc. The overall market sentiment is neutral, suggesting caution in expecting significant upward movement.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true,
+    "scenario_model": "qwen2.5:7b-instruct"
+  },
+  {
+    "prediction_id": "BHP-20260827-graph-signal-v1",
+    "ticker": "BHP",
+    "company_name": "BHP Group Limited American Depositary Shares (Each representing two Ordinary Shares)",
+    "sector": "Basic Materials",
+    "horizon_days": 30,
+    "direction": "neutral",
+    "confidence": 0.48,
+    "score": -0.069,
+    "direct_signal": -0.085,
+    "network_signal": 0.015,
+    "starting_price": 95.88,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -1.14,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": -22.75,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Hold",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [
+      {
+        "connected_ticker": "TECK",
+        "connected_name": "Teck Resources Limited",
+        "relationship_type": "Raw Materials Supplier",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.51,
+        "connected_direct_signal": -0.085,
+        "contribution": -0.044,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VALE",
+        "connected_name": "VALE S.A.",
+        "relationship_type": "Raw Materials",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.574,
+        "connected_direct_signal": 0.066,
+        "contribution": 0.038,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "VALE",
+        "connected_name": "VALE S.A.",
+        "relationship_type": "Raw Materials",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.293,
+        "connected_direct_signal": 0.066,
+        "contribution": 0.019,
+        "evidence": "The company's iron ore mines are primarily in Brazil.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "FCX",
+        "connected_name": "Freeport-McMoran Inc.",
+        "relationship_type": "Molybdenum Mining Operations",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.51,
+        "connected_direct_signal": 0.003,
+        "contribution": 0.002,
+        "evidence": "AI Multi-Source Research",
+        "source_url": "AI Multi-Source Research"
+      }
+    ],
+    "scenario_summary": "BHP's stock price has been experiencing a slight downward trend, with recent price changes indicating a negative movement of -1.14%. Analysts have set a target gap of -22.75% and recommend holding the stock. The company is connected to several raw materials suppliers and mining companies, which could influence its performance.",
+    "bull_case": "Despite the current neutral outlook, BHP's strong position in the iron ore market and potential for growth in other commodities like molybdenum could drive positive returns. Positive developments in commodity prices or operational efficiencies could also support a bullish scenario.",
+    "bear_case": "BHP faces challenges from its suppliers and competitors, with Teck Resources Limited showing a negative signal that could impact BHP's supply chain. Additionally, the overall market sentiment towards raw materials is cautious, which might limit upward movement.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true,
+    "scenario_model": "qwen2.5:7b-instruct"
+  },
+  {
+    "prediction_id": "PLTR-20260827-graph-signal-v1",
+    "ticker": "PLTR",
+    "company_name": "Palantir Technologies Inc. Class A Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "neutral",
+    "confidence": 0.39,
+    "score": 0.061,
+    "direct_signal": 0.061,
+    "network_signal": 0.0,
+    "starting_price": 179.165,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 0.13,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 6.99,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "PLTR has no decisive research signal over the next 30 days.",
+    "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+    "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "PANW-20260827-graph-signal-v1",
+    "ticker": "PANW",
+    "company_name": "Palo Alto Networks, Inc. Common Stock",
+    "sector": "Technology",
+    "horizon_days": 30,
+    "direction": "neutral",
+    "confidence": 0.38,
+    "score": 0.042,
+    "direct_signal": 0.042,
+    "network_signal": 0.0,
+    "starting_price": 367.215,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": 2.39,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": -1.23,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "PANW has no decisive research signal over the next 30 days.",
+    "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+    "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "JNJ-20260827-graph-signal-v1",
+    "ticker": "JNJ",
+    "company_name": "Johnson & Johnson",
+    "sector": "Healthcare",
+    "horizon_days": 30,
+    "direction": "neutral",
+    "confidence": 0.37,
+    "score": 0.035,
+    "direct_signal": 0.035,
+    "network_signal": 0.0,
+    "starting_price": 267.105,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -1.79,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 2.02,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "Buy",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "JNJ has no decisive research signal over the next 30 days.",
+    "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+    "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true
+  },
+  {
+    "prediction_id": "PM-20260827-graph-signal-v1",
+    "ticker": "PM",
+    "company_name": "Philip Morris International Inc.",
+    "sector": "Consumer Defensive",
+    "horizon_days": 30,
+    "direction": "neutral",
+    "confidence": 0.36,
+    "score": 0.014,
+    "direct_signal": 0.014,
+    "network_signal": 0.0,
+    "starting_price": 191.435,
+    "key_inputs": [
+      {
+        "name": "recent_price_change",
+        "value": -1.83,
+        "weight": 0.45
+      },
+      {
+        "name": "analyst_target_gap",
+        "value": 6.46,
+        "weight": 0.35
+      },
+      {
+        "name": "analyst_recommendation",
+        "value": "None",
+        "weight": 0.2
+      }
+    ],
+    "connection_paths": [],
+    "scenario_summary": "The recent price change for PM is negative, and the analyst target gap suggests a potential upside of 6.46%. However, there are no direct signals or network effects to support this view. The historical outcomes from similar market conditions do not provide clear direction.",
+    "bull_case": "Despite the current bearish sentiment, if PM can capitalize on recent negative price movements and analysts' optimistic target prices, it could see a rebound in value. Positive news or strategic moves by management might also drive investor confidence.",
+    "bear_case": "Given the recent price decline and lack of strong positive signals, there is a risk that PM may continue to underperform. If market conditions worsen or if competitors gain ground, this could lead to further declines in stock price.",
+    "model_name": "graph-signal-v1",
+    "generated_at": "2026-08-27T15:24:15+00:00",
+    "research_only": true,
+    "scenario_model": "qwen2.5:7b-instruct"
   }
 ]
