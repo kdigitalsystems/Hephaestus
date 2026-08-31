@@ -3,6 +3,8 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from evidence_quality import unsupported_ai_evidence
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATA_PATH = ROOT / "docs" / "dashboard_data.json"
@@ -137,6 +139,8 @@ def validate_dashboard_data(data):
                     connected_tickers.append(connected_ticker)
                 if relationship.get("review_status") == "rejected":
                     errors.append(f"{ticker}.{side} contains rejected edge {relationship.get('edge_id')}")
+                if unsupported_ai_evidence(relationship.get("source"), relationship.get("evidence_excerpt")):
+                    errors.append(f"{ticker}.{side} contains AI edge without usable source evidence")
 
             duplicate_relationships = [
                 rel_ticker

@@ -8,15 +8,23 @@ from audit_data_quality import (
     has_wrong_direction_review,
 )
 from database import SessionLocal
+from evidence_quality import unsupported_ai_evidence
 from models import Edge
 
 
 def cleanup_reviewed_edges():
     session = SessionLocal()
-    counts = {"rejected_non_supply": 0, "pending_role_labels": 0}
+    counts = {"rejected_non_supply": 0, "rejected_unsupported_ai": 0, "pending_role_labels": 0}
     try:
         approved_edges = session.query(Edge).filter(Edge.review_status == "approved").all()
         for edge in approved_edges:
+            if unsupported_ai_evidence(edge.source_url, edge.evidence_excerpt):
+                edge.review_status = "rejected"
+                edge.review_note = "Automated cleanup: AI-derived relationship has no usable source excerpt."
+                edge.reviewed_at = datetime.now(timezone.utc)
+                counts["rejected_unsupported_ai"] += 1
+                continue
+
             if has_non_supply_label(
                 edge.dependency_type,
                 edge.product,

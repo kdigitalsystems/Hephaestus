@@ -7,7 +7,7 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from review_edges_with_ollama import consensus_review, split_models
+from review_edges_with_ollama import consensus_review, deterministic_review, split_models
 
 
 def args():
@@ -22,6 +22,26 @@ def args():
 
 def edge():
     return SimpleNamespace(dependency_type="Foundry", product="Advanced node wafers")
+
+
+def test_ai_edge_without_source_excerpt_is_rejected_before_model_review():
+    candidate = SimpleNamespace(
+        source_id=1,
+        target_id=2,
+        source_url="AI Multi-Source Research",
+        source_node=SimpleNamespace(ticker="SUP", name="Supplier", sector="Technology"),
+        target_node=SimpleNamespace(ticker="CUS", name="Customer", sector="Technology"),
+        dependency_type="Foundry",
+        product="Advanced node wafers",
+        evidence_excerpt=None,
+        confidence_score=0.95,
+    )
+
+    result = deterministic_review(candidate)
+
+    assert result["action"] == "reject"
+    assert result["confidence"] == 1.0
+    assert "no usable excerpt" in result["reason"]
 
 
 def review(model, action, confidence=0.9, supplier_side="source", customer_side="target"):

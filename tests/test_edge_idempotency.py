@@ -34,6 +34,7 @@ def test_auto_discovery_upsert_keeps_one_edge_for_duplicate_dependency():
         "product": "Abemaciclib",
         "confidence_score": 0.8,
         "evidence_excerpt": "test evidence",
+        "evidence_source_url": "https://example.com/filing",
     }
 
     _, first_created = upsert_pending_edge(session, source, target, dependency)
@@ -43,6 +44,7 @@ def test_auto_discovery_upsert_keeps_one_edge_for_duplicate_dependency():
     assert first_created is True
     assert second_created is False
     assert session.query(Edge).count() == 1
+    assert session.query(Edge).one().source_url == "https://example.com/filing"
 
 
 def test_clean_company_name_removes_security_and_adr_noise():

@@ -1,4 +1,3 @@
-import os
 from database import SessionLocal
 from models import Node, Edge
 

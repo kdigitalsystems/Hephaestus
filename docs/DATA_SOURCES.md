@@ -91,6 +91,9 @@ Set `HEPHAESTUS_SOURCE_CONFIG=/path/to/source_urls.json` to use a different file
 
 All AI-discovered edges remain `pending` until reviewed. Keep these rules when adding sources:
 
+- AI-derived relationships must include a usable excerpt from the collected source text. Empty evidence and placeholders such as `Not found in source text` are rejected automatically; model knowledge alone is not accepted as evidence.
+- When a collected `SOURCE:` section includes an HTTP URL, extraction preserves that exact URL with the relationship so the dashboard can link back to the evidence.
+
 - Prefer official APIs, issuer documents, regulatory records, and curated source URLs.
 - Treat news, blogs, and inferred job-posting evidence as supporting context, not approval-grade evidence by itself.
 - Do not add sources that require scraping private pages, bypassing paywalls, or violating dataset terms.

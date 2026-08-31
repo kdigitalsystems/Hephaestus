@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
 from validate_predictions import validate_predictions
+from generate_predictions import load_prediction_history
 
 
 def test_published_prediction_export_is_bounded_and_research_only():
@@ -31,3 +32,15 @@ def test_prediction_workflow_is_separate_from_daily_graph_updates():
     assert "git pull --rebase origin main" in daily_workflow
     assert "docs/predictions.json docs/prediction_history.json" in workflow
     assert "generate_predictions.py" not in daily_workflow
+
+
+def test_invalid_prediction_history_is_not_silently_replaced(tmp_path):
+    history_path = tmp_path / "history.json"
+    history_path.write_text("{broken", encoding="utf-8")
+
+    try:
+        load_prediction_history(history_path)
+    except ValueError as exc:
+        assert "unreadable or invalid" in str(exc)
+    else:
+        raise AssertionError("invalid history must stop prediction generation")

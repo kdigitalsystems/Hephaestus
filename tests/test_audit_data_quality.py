@@ -65,6 +65,7 @@ def test_audit_flags_speculative_relationship_evidence():
     )
     assert audit_data_quality.has_speculative_supply_label("No evidence in text")
     assert audit_data_quality.has_speculative_supply_label("While not explicitly stated, the vendor would use this service.")
+    assert audit_data_quality.has_speculative_supply_label("Not found in source text")
 
 
 def test_audit_flags_wrong_direction_review_rationale():

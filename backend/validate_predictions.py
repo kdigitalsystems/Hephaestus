@@ -1,7 +1,9 @@
 import argparse
 import json
+import re
 from pathlib import Path
 
+from predictions import UNSAFE_SCENARIO_PATTERNS
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PATH = ROOT / "docs" / "predictions.json"
@@ -28,6 +30,13 @@ def validate_predictions(payload):
         assert prediction["research_only"] is True
         assert isinstance(prediction["key_inputs"], list)
         assert isinstance(prediction["connection_paths"], list)
+        scenario_text = " ".join(
+            str(prediction.get(field) or "")
+            for field in ("scenario_summary", "bull_case", "bear_case")
+        ).lower()
+        assert not any(re.search(pattern, scenario_text) for pattern in UNSAFE_SCENARIO_PATTERNS), (
+            f"{prediction['ticker']} contains recommendation-style scenario language"
+        )
 
 
 def main():

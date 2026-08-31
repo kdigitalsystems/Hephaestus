@@ -4,10 +4,12 @@ from collections import defaultdict
 import sys
 
 from sqlalchemy import inspect
+from sqlalchemy.exc import SQLAlchemyError
 
 from database import engine
 from database import SessionLocal
 from models import Edge, Node
+from evidence_quality import unsupported_ai_evidence
 
 REVERSED_ROLE_MARKERS = (
     "customer",
@@ -99,6 +101,7 @@ SPECULATIVE_SUPPLY_MARKERS = (
     "suggesting",
     "would be",
     "would use",
+    "not found in source text",
 )
 
 WRONG_DIRECTION_REVIEW_MARKERS = (
@@ -116,6 +119,10 @@ REQUIRED_TABLES = ("nodes", "edges")
 
 
 class DatabaseSchemaError(RuntimeError):
+    pass
+
+
+class DatabaseAccessError(RuntimeError):
     pass
 
 
@@ -185,8 +192,14 @@ def reciprocal_same_evidence_edges(edges):
 
 
 def validate_database_schema():
-    inspector = inspect(engine)
-    missing_tables = [table for table in REQUIRED_TABLES if table not in inspector.get_table_names()]
+    try:
+        inspector = inspect(engine)
+        missing_tables = [table for table in REQUIRED_TABLES if table not in inspector.get_table_names()]
+    except SQLAlchemyError as exc:
+        raise DatabaseAccessError(
+            "Unable to inspect the Hephaestus database. Stop concurrent database jobs "
+            "and run the audit from the repository's WSL shell."
+        ) from exc
     if missing_tables:
         missing = ", ".join(missing_tables)
         raise DatabaseSchemaError(
@@ -199,7 +212,7 @@ def audit_database(fail_on_warnings=False):
     validate_database_schema()
     session = SessionLocal()
     try:
-        tickers = [ticker for (ticker,) in session.query(Node.ticker).filter(Node.ticker != None).all()]
+        tickers = [ticker for (ticker,) in session.query(Node.ticker).filter(Node.ticker.is_not(None)).all()]
         duplicate_tickers = [ticker for ticker, count in Counter(tickers).items() if count > 1]
 
         edges = session.query(Edge).all()
@@ -238,6 +251,10 @@ def audit_database(fail_on_warnings=False):
         ]
         reciprocal_duplicate_edges = reciprocal_same_evidence_edges(published_edges)
         self_edges = [edge for edge in published_edges if edge.source_id == edge.target_id]
+        unsupported_ai_edges = [
+            edge for edge in published_edges
+            if unsupported_ai_evidence(edge.source_url, edge.evidence_excerpt)
+        ]
         ai_edges = [edge for edge in edges if "AI" in (edge.source_url or "")]
         manual_edges = [edge for edge in edges if "Manual" in (edge.source_url or "")]
         status_counts = Counter(edge.review_status or "pending" for edge in edges)
@@ -257,6 +274,7 @@ def audit_database(fail_on_warnings=False):
         print(f"Wrong-direction review warnings: {len(wrong_direction_edges)}")
         print(f"Reciprocal duplicate evidence warnings: {len(reciprocal_duplicate_edges)}")
         print(f"Self-edge warnings: {len(self_edges)}")
+        print(f"Unsupported AI evidence warnings: {len(unsupported_ai_edges)}")
 
         if duplicate_tickers:
             print("Duplicate ticker examples:", ", ".join(duplicate_tickers[:10]))
@@ -268,6 +286,7 @@ def audit_database(fail_on_warnings=False):
             ("Wrong-direction", wrong_direction_edges),
             ("Reciprocal duplicate evidence", reciprocal_duplicate_edges),
             ("Self-edge", self_edges),
+            ("Unsupported AI evidence", unsupported_ai_edges),
         ):
             for edge in flagged_edges[:10]:
                 source = edge.source_node.ticker if edge.source_node else edge.source_id
@@ -286,6 +305,7 @@ def audit_database(fail_on_warnings=False):
             + len(wrong_direction_edges)
             + len(reciprocal_duplicate_edges)
             + len(self_edges)
+            + len(unsupported_ai_edges)
         )
         if fail_on_warnings and warning_count:
             raise SystemExit(1)
@@ -299,6 +319,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     try:
         audit_database(fail_on_warnings=args.fail_on_warnings)
-    except DatabaseSchemaError as exc:
+    except (DatabaseSchemaError, DatabaseAccessError, SQLAlchemyError) as exc:
         print(exc, file=sys.stderr)
         raise SystemExit(1) from exc

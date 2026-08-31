@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import re
+import tempfile
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -25,8 +27,12 @@ TOP_COMPANY_LIMIT = 50
 HORIZON_DAYS = 30
 MODEL_VERSION = "graph-signal-v1"
 UNSAFE_SCENARIO_PATTERNS = (
-    r"\b(buy|sell|short|cover|accumulate|trade)\b",
+    r"\b(buy|sell|short|cover|accumulate|trade|hold|outperform|underperform)\b",
+    r"\b(bullish|bearish)\b",
     r"\bprice target\b",
+    r"\b(stock|share) price\b",
+    r"\binvest(ment|or)s? (advice|recommendation)\b",
+    r"\banalyst recommendations?\b",
     r"\bshould (buy|sell|trade)\b",
 )
 
@@ -240,7 +246,13 @@ def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str,
             continue
         if generated.tzinfo is None:
             generated = generated.replace(tzinfo=timezone.utc)
-        target_at = generated + timedelta(days=int(entry.get("horizon_days") or HORIZON_DAYS))
+        try:
+            horizon_days = int(entry.get("horizon_days") or HORIZON_DAYS)
+        except (TypeError, ValueError):
+            continue
+        if horizon_days <= 0:
+            continue
+        target_at = generated + timedelta(days=horizon_days)
         if now < target_at:
             continue
         company = company_by_ticker.get(str(entry.get("ticker") or "").upper())
@@ -254,7 +266,9 @@ def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str,
                 historical_close, historical_source = None, "historical_close_unavailable"
             end = as_number(historical_close)
             source = historical_source
-        if end <= 0:
+            if end <= 0:
+                continue
+        elif end <= 0:
             end = as_number(company.get("price")) if company else 0.0
             source = "latest_exported_price_fallback"
         if start <= 0 or end <= 0:
@@ -410,5 +424,23 @@ def enhance_scenarios_with_ollama(payload: dict[str, Any], model: str, history: 
 
 
 def write_outputs(payload: dict[str, Any], history: list[dict[str, Any]], predictions_path: Path = DEFAULT_PREDICTIONS_PATH, history_path: Path = DEFAULT_HISTORY_PATH) -> None:
-    predictions_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    history_path.write_text(json.dumps(history[-2000:], indent=2) + "\n", encoding="utf-8")
+    def atomic_write_json(path: Path, value: Any) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+        try:
+            with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+                json.dump(value, handle, indent=2)
+                handle.write("\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary_name, path)
+        except Exception:
+            try:
+                os.unlink(temporary_name)
+            except FileNotFoundError:
+                pass
+            raise
+
+    # History first: a retry can safely reconstruct the current payload from it.
+    atomic_write_json(history_path, history[-2000:])
+    atomic_write_json(predictions_path, payload)

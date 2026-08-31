@@ -454,6 +454,8 @@ python3 backend/validate_dashboard_data.py
 - `evidence_excerpt`
 - `review_status`: `pending`, `approved`, or `rejected`
 - `review_note`
+
+AI-discovered relationships require a substantive excerpt from the collected source text. The discovery, review, cleanup, repair, and published-data validation stages all reject missing or placeholder evidence; explicitly curated manual seeds remain supported.
 - `reviewed_at`
 
 Edges are unique by source, target, and dependency type.

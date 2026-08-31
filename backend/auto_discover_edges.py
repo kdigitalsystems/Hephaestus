@@ -4,7 +4,7 @@ import re
 import argparse
 import wikipedia
 import warnings
-from sqlalchemy import func, or_
+from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from thefuzz import fuzz
 
@@ -14,6 +14,7 @@ from parser import extract_dependencies
 from yahooquery import search as yq_search, Ticker
 from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_text
 from additional_sources import get_additional_supply_chain_text
+from evidence_quality import has_usable_evidence
 
 # --- CONFIGURATION ---
 wikipedia.set_user_agent("HephaestusTerminal/1.0 (research@saqibdesktop.local)")
@@ -140,6 +141,7 @@ def is_speculative_dependency(*labels):
         "suggesting",
         "would be",
         "would use",
+        "not found in source text",
     ]
     return any(marker in label_text for marker in speculative_markers)
 
@@ -156,9 +158,16 @@ def normalize_dependency(dep):
 
 def upsert_pending_edge(session, source_node, target_node, dep):
     dep_type = dep.get('dependency_type') or 'Supply Link'
-    conf = dep.get('confidence_score', 0.8)
+    try:
+        conf = float(dep.get('confidence_score', 0.8))
+    except (TypeError, ValueError):
+        conf = 0.0
     if conf > 1:
         conf = conf / 100.0 if conf > 10 else conf / 10.0
+    conf = max(0.0, min(1.0, conf))
+    evidence_source_url = str(dep.get('evidence_source_url') or '').strip()
+    if not evidence_source_url.startswith(('http://', 'https://')):
+        evidence_source_url = "AI Multi-Source Research"
 
     existing = session.query(Edge).filter(
         Edge.source_id == source_node.id,
@@ -174,8 +183,10 @@ def upsert_pending_edge(session, source_node, target_node, dep):
         existing.confidence_score = max(existing.confidence_score or 0, conf)
         if not existing.source_title:
             existing.source_title = "AI Multi-Source Research"
-        if not existing.source_url:
-            existing.source_url = "AI Multi-Source Research"
+        if not existing.source_url or (
+            existing.source_url == "AI Multi-Source Research" and evidence_source_url.startswith(('http://', 'https://'))
+        ):
+            existing.source_url = evidence_source_url
         return existing, False
 
     new_edge = Edge(
@@ -184,7 +195,7 @@ def upsert_pending_edge(session, source_node, target_node, dep):
         dependency_type=dep_type,
         product=dep.get('product'),
         confidence_score=conf,
-        source_url="AI Multi-Source Research",
+        source_url=evidence_source_url,
         source_title="AI Multi-Source Research",
         evidence_excerpt=dep.get('evidence_excerpt'),
         review_status="pending"
@@ -215,7 +226,8 @@ class EntityResolver:
         search_upper = search_val.upper()
 
         node = session.query(Node).filter(Node.ticker == search_upper).first()
-        if node: return node
+        if node:
+            return node
 
         search_lower = search_val.lower()
         potentials = session.query(Node).filter(
@@ -246,7 +258,8 @@ class EntityResolver:
                 discovered_ticker = quotes[0].get('symbol')
                 if discovered_ticker:
                     node = session.query(Node).filter(Node.ticker == discovered_ticker.upper()).first()
-                    if node: return node
+                    if node:
+                        return node
         except Exception as e:
             print(f"  [!] YahooQuery resolution failed for '{search_val}': {e}")
 
@@ -266,9 +279,11 @@ class IntelGatherer:
             wiki_results = []
             for query in search_queries:
                 wiki_results = wikipedia.search(query)
-                if wiki_results: break
+                if wiki_results:
+                    break
                     
-            if not wiki_results: return ""
+            if not wiki_results:
+                return ""
 
             try:
                 page = wikipedia.page(wiki_results[0], auto_suggest=False)
@@ -288,7 +303,7 @@ class IntelGatherer:
             if not relevant_text:
                 relevant_text = page.summary + "\n" + content[:3500]
 
-            return f"SOURCE: WIKIPEDIA (Page: {page.title})\nDATA:\n{relevant_text}\n"
+            return f"SOURCE: WIKIPEDIA (Page: {page.title}; {page.url})\nDATA:\n{relevant_text}\n"
         except Exception:
             return ""
 
@@ -297,9 +312,10 @@ class IntelGatherer:
         try:
             t = Ticker(ticker)
             news = t.news(count=5)
-            blob = "SOURCE: RECENT NEWS HEADLINES\n"
+            blob = ""
             for article in news:
-                blob += f"- {article.get('title')}: {article.get('summary')}\n"
+                article_url = article.get('link') or article.get('url') or ''
+                blob += f"SOURCE: RECENT NEWS ({article.get('title')}; {article_url})\nDATA:\n{article.get('summary')}\n"
             return blob
         except Exception as e:
             print(f"  [-] Yahoo news unavailable for {ticker}: {e}")
@@ -345,7 +361,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
     if target_sectors:
         print(f"--- Targeting Sectors: {', '.join(target_sectors)} ---")
     if deep_dive:
-        print(f"--- DEEP DIVE MODE: Researching heavily-connected nodes ---")
+        print("--- DEEP DIVE MODE: Researching heavily-connected nodes ---")
         
     session = SessionLocal()
 
@@ -355,7 +371,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
         ).filter(Node.market_cap > 1_000_000_000)
 
         if not deep_dive:
-            query = query.filter(Edge.id == None)
+            query = query.filter(Edge.id.is_(None))
 
         if target_sectors:
             query = query.filter(Node.sector.in_(target_sectors))
@@ -410,6 +426,9 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                 if is_speculative_dependency(dep.get('evidence_excerpt')):
                     print(f"  [!] Ignored speculative relationship: {dep.get('dependency_type')}")
                     continue
+                if not has_usable_evidence(dep.get('evidence_excerpt')):
+                    print(f"  [!] Ignored relationship without source-backed evidence: {dep.get('dependency_type')}")
+                    continue
 
                 s_node = EntityResolver.resolve(session, dep.get('source_ticker')) or \
                          EntityResolver.resolve(session, dep.get('source_company'))
@@ -438,7 +457,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             session.commit()
             time.sleep(1.5)
 
-        print(f"\n--- Titan Queue Complete. Refresh your dashboard to see new X-Ray data. ---")
+        print("\n--- Titan Queue Complete. Refresh your dashboard to see new X-Ray data. ---")
 
     except Exception as e:
         print(f"CRITICAL ERROR: {e}")

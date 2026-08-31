@@ -10,6 +10,7 @@ import ollama
 from sqlalchemy.exc import IntegrityError
 
 from database import SessionLocal
+from evidence_quality import unsupported_ai_evidence
 from models import Edge, Node
 
 
@@ -291,6 +292,17 @@ def deterministic_review(edge):
             "relationship_type": edge.dependency_type or "Invalid self-edge",
             "product": edge.product or "",
             "reason": "Self-edges are not valid supply-chain relationships.",
+        }
+
+    if unsupported_ai_evidence(edge.source_url, edge.evidence_excerpt):
+        return {
+            "action": "reject",
+            "supplier_side": "neither",
+            "customer_side": "neither",
+            "confidence": 1.0,
+            "relationship_type": edge.dependency_type or "Unsupported AI relationship",
+            "product": edge.product or "",
+            "reason": "AI-derived relationship has no usable excerpt from the collected source text.",
         }
 
     bad_nodes = [node for node in (edge.source_node, edge.target_node) if is_non_operating_vehicle(node)]

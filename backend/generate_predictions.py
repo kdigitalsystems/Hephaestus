@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from historical_prices import historical_close_on_or_after
@@ -16,6 +17,18 @@ from predictions import (
     load_json,
     write_outputs,
 )
+
+
+def load_prediction_history(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"Prediction history is unreadable or invalid: {path}") from exc
+    if not isinstance(payload, list):
+        raise ValueError(f"Prediction history must contain a JSON list: {path}")
+    return payload
 
 
 def main() -> None:
@@ -32,9 +45,10 @@ def main() -> None:
     dashboard = load_json(args.dashboard, {})
     if not dashboard.get("industries"):
         raise SystemExit(f"Dashboard data is missing or invalid: {args.dashboard}")
-    history = load_json(args.history, [])
-    if not isinstance(history, list):
-        history = []
+    try:
+        history = load_prediction_history(args.history)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
     payload, updated_history = generate_predictions(
         dashboard,
         history,

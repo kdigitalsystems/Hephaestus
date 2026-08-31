@@ -56,6 +56,7 @@ def test_repair_adds_approved_missing_endpoint_and_stable_relationship_key(tmp_p
                         "confidence_score": 0.95,
                         "source_url": "AI Multi-Source Research",
                         "source_title": "AI Multi-Source Research",
+                        "evidence_excerpt": "Dell supplies EPYC server systems to Advanced Micro Devices.",
                         "review_status": "approved",
                         "reviewed_at": "2026-05-24T09:00:00",
                     }
@@ -136,6 +137,7 @@ def test_repair_canonicalizes_tsm_foundry_direction(tmp_path):
                         "product": "semiconductor chips",
                         "confidence_score": 0.95,
                         "source_url": "AI Multi-Source Research",
+                        "evidence_excerpt": "TSMC manufactures advanced semiconductor chips used by NVIDIA.",
                         "review_status": "approved",
                     }
                 ]
@@ -152,3 +154,36 @@ def test_repair_canonicalizes_tsm_foundry_direction(tmp_path):
     assert any(edge["ticker"] == "TSM" for edge in by_ticker["NVDA"]["upstream"])
     assert not any(edge["ticker"] == "NVDA" for edge in by_ticker["TSM"]["upstream"])
     assert by_ticker["TSM"]["investor_metrics"]["downstream_count"] == 1
+
+
+def test_repair_excludes_ai_approval_without_source_evidence(tmp_path):
+    dashboard_path = tmp_path / "dashboard_data.json"
+    decisions_path = tmp_path / "edge_review_decisions.json"
+    dashboard_path.write_text(json.dumps({
+        "industries": {"Technology": [
+            {"id": 1, "name": "Supplier", "ticker": "SUP", "industry": "Hardware", "price": 1, "change": 0, "market_cap": 1, "upstream": [], "downstream": []},
+            {"id": 2, "name": "Customer", "ticker": "CUS", "industry": "Hardware", "price": 1, "change": 0, "market_cap": 1, "upstream": [], "downstream": []},
+        ]},
+        "quality": {"pending_count": 0, "approved_count": 1, "rejected_count": 0, "review_queue": []},
+    }), encoding="utf-8")
+    decisions_path.write_text(json.dumps({"decisions": [{
+        "edge_id": 9,
+        "source_ticker": "SUP",
+        "target_ticker": "CUS",
+        "source_name": "Supplier",
+        "target_name": "Customer",
+        "dependency_type": "Components",
+        "product": "Parts",
+        "confidence_score": 0.99,
+        "source_url": "AI Multi-Source Research",
+        "evidence_excerpt": "Not found in source text",
+        "review_status": "approved",
+    }]}), encoding="utf-8")
+
+    repaired = repair_dashboard_from_decisions(dashboard_path, decisions_path)
+    companies = [company for rows in repaired["industries"].values() for company in rows]
+
+    assert all(not company["upstream"] and not company["downstream"] for company in companies)
+    assert repaired["investor_metrics"]["unique_links"] == 0
+    assert repaired["quality"]["approved_count"] == 0
+    assert repaired["quality"]["rejected_count"] == 1

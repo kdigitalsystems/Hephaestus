@@ -41,6 +41,10 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
           python -m pip install pytest
+          python -m pip install ruff
+
+      - name: Run Python static analysis
+        run: python -m ruff check backend --select E,F --ignore E501
 
       - name: Check backend Python syntax
         run: python -m compileall backend tests
@@ -71,6 +75,7 @@ jobs:
           node --check docs/app.js
           node tests/check_app_link_count.js
           node tests/check_app_behaviors.js
+          node tests/check_sanitize_review_decisions.js
 
       - name: Validate published dashboard data
         run: python backend/validate_dashboard_data.py

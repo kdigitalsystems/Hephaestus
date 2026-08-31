@@ -1,4 +1,3 @@
-import os
 import time
 import argparse
 from database import SessionLocal
@@ -10,7 +9,7 @@ def update_financial_metrics(limit=None):
     session = SessionLocal()
     
     try:
-        query = session.query(Node).filter(Node.ticker != None)
+        query = session.query(Node).filter(Node.ticker.is_not(None))
         
         # Apply the development limit if provided
         if limit:

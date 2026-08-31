@@ -4,14 +4,19 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 
 class Dependency(BaseModel):
-    source_company: str = Field(description="The name of the supplier or provider.")
-    target_company: str = Field(description="The name of the customer or receiver.")
+    source_company: str = Field(min_length=2, description="The name of the supplier or provider.")
+    target_company: str = Field(min_length=2, description="The name of the customer or receiver.")
     source_ticker: Optional[str] = Field(default=None, description="The supplier ticker if explicitly known.")
     target_ticker: Optional[str] = Field(default=None, description="The customer ticker if explicitly known.")
-    dependency_type: str = Field(description="E.g., Semiconductors, Raw Materials, Logistics, Cloud Services.")
-    product: str = Field(description="The specific product, service, or material provided.")
-    evidence_excerpt: str = Field(default="", description="A short supporting excerpt from the source text.")
-    confidence_score: float = Field(description="Confidence from 0.0 to 1.0.")
+    dependency_type: str = Field(min_length=2, description="E.g., Semiconductors, Raw Materials, Logistics, Cloud Services.")
+    product: str = Field(min_length=2, description="The specific product, service, or material provided.")
+    evidence_excerpt: str = Field(min_length=20, description="A short verbatim supporting excerpt from the source text.")
+    evidence_source_url: Optional[str] = Field(
+        default=None,
+        pattern=r"^https?://",
+        description="The exact URL from the SOURCE header supporting the excerpt, or null when unavailable.",
+    )
+    confidence_score: float = Field(ge=0.0, le=1.0, description="Confidence from 0.0 to 1.0.")
 
 class ExtractionResult(BaseModel):
     dependencies: List[Dependency]
@@ -45,9 +50,10 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
     6. The source_company MUST be the supplier/provider. The target_company MUST be the customer/receiver.
     7. dependency_type must describe what is supplied, not a role label. Use "Advanced Silicon Fabrication" instead of "Customer".
     8. If the supplier is a private company, still extract it only when the relationship is explicit.
+    9. evidence_excerpt must quote the provided source text. evidence_source_url must copy the exact HTTP URL from that SOURCE header, or be null if the header has no URL.
 
     Output JSON:
-    {{"dependencies": [{{"source_company": "Supplier Name", "source_ticker": "SUP", "target_company": "Customer Name", "target_ticker": "CUS", "dependency_type": "Raw Materials", "product": "Lithium", "evidence_excerpt": "Supplier Name provides lithium to Customer Name.", "confidence_score": 0.9}}]}}
+    {{"dependencies": [{{"source_company": "Supplier Name", "source_ticker": "SUP", "target_company": "Customer Name", "target_ticker": "CUS", "dependency_type": "Raw Materials", "product": "Lithium", "evidence_excerpt": "Supplier Name provides lithium to Customer Name.", "evidence_source_url": "https://example.com/source", "confidence_score": 0.9}}]}}
     """
 
     user_prompt = f"""
@@ -69,7 +75,7 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
         
         raw_json = response['message']['content']
         parsed_data = json.loads(raw_json)
-        return parsed_data
+        return ExtractionResult.model_validate(parsed_data).model_dump()
         
     except Exception as e:
         print(f"Error during LLM extraction: {e}")

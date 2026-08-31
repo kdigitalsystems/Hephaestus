@@ -9,6 +9,7 @@ from export import (
     persist_link_history,
     strip_transient_dashboard_fields,
 )
+from evidence_quality import unsupported_ai_evidence
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,7 +30,6 @@ def looks_like_tsm_foundry_decision(decision):
 
 
 def canonical_decision_direction(decision):
-    source_ticker = decision.get("source_ticker") or ""
     target_ticker = decision.get("target_ticker") or ""
     if target_ticker == "TSM" and looks_like_tsm_foundry_decision(decision):
         decision = dict(decision)
@@ -112,6 +112,22 @@ def repair_dashboard_from_decisions(dashboard_path=DASHBOARD_PATH, decisions_pat
     dashboard = json.loads(Path(dashboard_path).read_text(encoding="utf-8"))
     decisions_payload = json.loads(Path(decisions_path).read_text(encoding="utf-8"))
     decisions = decisions_payload.get("decisions", decisions_payload if isinstance(decisions_payload, list) else [])
+    unsupported_approvals = {
+        id(decision)
+        for decision in decisions
+        if decision.get("review_status") == "approved"
+        and unsupported_ai_evidence(decision.get("source_url"), decision.get("evidence_excerpt"))
+    }
+
+    quality = dashboard.setdefault("quality", {})
+    quality["approved_count"] = sum(
+        decision.get("review_status") == "approved" and id(decision) not in unsupported_approvals
+        for decision in decisions
+    )
+    quality["rejected_count"] = sum(
+        decision.get("review_status") == "rejected" or id(decision) in unsupported_approvals
+        for decision in decisions
+    )
 
     industries = dashboard.setdefault("industries", {})
     industries.setdefault(FALLBACK_LINKED_SECTOR, [])
@@ -136,6 +152,8 @@ def repair_dashboard_from_decisions(dashboard_path=DASHBOARD_PATH, decisions_pat
 
     for raw_decision in decisions:
         if raw_decision.get("review_status") != "approved":
+            continue
+        if id(raw_decision) in unsupported_approvals:
             continue
         decision = canonical_decision_direction(raw_decision)
         source = ensure_company(decision.get("source_ticker"), decision.get("source_name"))
