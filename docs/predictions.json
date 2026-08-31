@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T16:50:07+00:00",
+  "generated_at": "2026-08-31T11:03:10+00:00",
   "model_name": "graph-signal-v1",
   "universe_size": 50,
   "horizon_days": 30,
@@ -113,21 +113,21 @@
   "disclaimer": "Research signals only. They are not investment advice, price targets, or a recommendation to buy or sell any security.",
   "predictions": [
     {
-      "prediction_id": "SOUN-20260828-graph-signal-v1",
-      "ticker": "SOUN",
-      "company_name": "SoundHound AI, Inc Class A Common Stock",
+      "prediction_id": "PAYP-20260831-graph-signal-v1",
+      "ticker": "PAYP",
+      "company_name": "PayPay Corporation American Depository Shares",
       "sector": "Technology",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.46,
-      "score": 0.183,
-      "direct_signal": 0.183,
+      "score": 0.187,
+      "direct_signal": 0.187,
       "network_signal": 0.0,
-      "starting_price": 7.175,
+      "starting_price": 15.28,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": 0.07,
+          "value": 1.06,
           "weight": 0.45
         },
         {
@@ -142,29 +142,29 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "SOUN has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "PAYP has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "VEON-20260828-graph-signal-v1",
-      "ticker": "VEON",
-      "company_name": "VEON Ltd. ADS",
-      "sector": "Communication Services",
+      "prediction_id": "PONY-20260831-graph-signal-v1",
+      "ticker": "PONY",
+      "company_name": "Pony AI Inc. American Depositary Shares",
+      "sector": "Technology",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.46,
-      "score": 0.183,
-      "direct_signal": 0.183,
+      "score": 0.184,
+      "direct_signal": 0.184,
       "network_signal": 0.0,
-      "starting_price": 60.14,
+      "starting_price": 7.58,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": 0.22,
+          "value": 0.4,
           "weight": 0.45
         },
         {
@@ -179,89 +179,29 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "VEON has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "PONY has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "ALK-20260828-graph-signal-v1",
-      "ticker": "ALK",
-      "company_name": "Alaska Air Group, Inc.",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.52,
-      "score": 0.182,
-      "direct_signal": 0.182,
-      "network_signal": 0.0,
-      "starting_price": 42.67,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -0.12,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 35.0,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Strong Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [
-        {
-          "connected_ticker": "BA",
-          "connected_name": "Boeing Company",
-          "relationship_type": "Aircraft Supplier",
-          "relationship_side": "upstream",
-          "relationship_strength": 0.272,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "AI Multi-Source Research",
-          "source_url": "AI Multi-Source Research"
-        },
-        {
-          "connected_ticker": "TECK",
-          "connected_name": "Teck Resources Limited",
-          "relationship_type": "Raw Materials",
-          "relationship_side": "downstream",
-          "relationship_strength": 0.569,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "Almost all of its mined zinc comes from the Red Dog mine in Alaska, one of the largest zinc mines in the world.",
-          "source_url": "AI Multi-Source Research"
-        }
-      ],
-      "scenario_summary": "ALK has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from BA remains supportive.",
-      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "KC-20260828-graph-signal-v1",
+      "prediction_id": "KC-20260831-graph-signal-v1",
       "ticker": "KC",
       "company_name": "Kingsoft Cloud Holdings Limited American Depositary Shares",
       "sector": "Technology",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.46,
-      "score": 0.181,
-      "direct_signal": 0.181,
+      "score": 0.182,
+      "direct_signal": 0.182,
       "network_signal": 0.0,
-      "starting_price": 10.625,
+      "starting_price": 10.64,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -0.33,
+          "value": -0.19,
           "weight": 0.45
         },
         {
@@ -280,25 +220,25 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "KGS-20260828-graph-signal-v1",
-      "ticker": "KGS",
-      "company_name": "Kodiak Gas Services, Inc.",
-      "sector": "Energy",
+      "prediction_id": "PRVA-20260831-graph-signal-v1",
+      "ticker": "PRVA",
+      "company_name": "Privia Health Group, Inc. Common Stock",
+      "sector": "Healthcare",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.46,
-      "score": 0.176,
-      "direct_signal": 0.176,
+      "score": 0.18,
+      "direct_signal": 0.18,
       "network_signal": 0.0,
-      "starting_price": 59.16,
+      "starting_price": 20.79,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -1.43,
+          "value": -0.53,
           "weight": 0.45
         },
         {
@@ -313,29 +253,29 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "KGS has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "PRVA has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "VFS-20260828-graph-signal-v1",
-      "ticker": "VFS",
-      "company_name": "VinFast Auto Ltd. Ordinary Shares",
-      "sector": "Consumer Cyclical",
+      "prediction_id": "TLX-20260831-graph-signal-v1",
+      "ticker": "TLX",
+      "company_name": "Telix Pharmaceuticals Limited American Depositary Shares",
+      "sector": "Healthcare",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.46,
-      "score": 0.176,
-      "direct_signal": 0.176,
+      "score": 0.175,
+      "direct_signal": 0.175,
       "network_signal": 0.0,
-      "starting_price": 3.105,
+      "starting_price": 11.29,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -1.43,
+          "value": -1.57,
           "weight": 0.45
         },
         {
@@ -350,29 +290,237 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "VFS has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "TLX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "ONDS-20260828-graph-signal-v1",
+      "prediction_id": "QBTS-20260831-graph-signal-v1",
+      "ticker": "QBTS",
+      "company_name": "D-Wave Quantum Inc. Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.45,
+      "score": 0.168,
+      "direct_signal": 0.168,
+      "network_signal": 0.0,
+      "starting_price": 16.99,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -3.19,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "QBTS has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PPTA-20260831-graph-signal-v1",
+      "ticker": "PPTA",
+      "company_name": "Perpetua Resources Corp. Common Shares",
+      "sector": "Basic Materials",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.45,
+      "score": 0.164,
+      "direct_signal": 0.164,
+      "network_signal": 0.0,
+      "starting_price": 25.11,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -4.16,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PPTA has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "Q-20260831-graph-signal-v1",
+      "ticker": "Q",
+      "company_name": "Qnity Electronics, Inc.",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.51,
+      "score": 0.163,
+      "direct_signal": 0.163,
+      "network_signal": 0.0,
+      "starting_price": 120.26,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -4.31,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "AAPL",
+          "connected_name": "Apple Inc. Common Stock",
+          "relationship_type": "Supply Chain",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.323,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "Also in March 2026, the company was added to the domestic supply chain of Apple Inc.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "DD",
+          "connected_name": "DuPont de Nemours, Inc. Common Stock",
+          "relationship_type": "formation of a new company",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.32,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "The company was formed in December 2024 to own the electronics division of DuPont.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "Q has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from AAPL remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "LFTO-20260831-graph-signal-v1",
+      "ticker": "LFTO",
+      "company_name": "Liftoff Mobile, Inc. Common Stock",
+      "sector": "Communication Services",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.45,
+      "score": 0.162,
+      "direct_signal": 0.162,
+      "network_signal": 0.0,
+      "starting_price": 18.91,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.69,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "LFTO has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PRAX-20260831-graph-signal-v1",
+      "ticker": "PRAX",
+      "company_name": "Praxis Precision Medicines, Inc. Common Stock",
+      "sector": "Healthcare",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.45,
+      "score": 0.159,
+      "direct_signal": 0.159,
+      "network_signal": 0.0,
+      "starting_price": 344.75,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -5.13,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PRAX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "ONDS-20260831-graph-signal-v1",
       "ticker": "ONDS",
       "company_name": "Ondas Inc. Common Stock",
       "sector": "Technology",
       "horizon_days": 30,
       "direction": "up",
-      "confidence": 0.45,
-      "score": 0.17,
-      "direct_signal": 0.17,
+      "confidence": 0.44,
+      "score": 0.148,
+      "direct_signal": 0.148,
       "network_signal": 0.0,
-      "starting_price": 8.3316,
+      "starting_price": 7.9,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -2.67,
+          "value": -7.71,
           "weight": 0.45
         },
         {
@@ -391,127 +539,30 @@
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "AMTM-20260828-graph-signal-v1",
-      "ticker": "AMTM",
-      "company_name": "Amentum Holdings, Inc.",
-      "sector": "Industrials",
+      "prediction_id": "SLS-20260831-graph-signal-v1",
+      "ticker": "SLS",
+      "company_name": "SELLAS Life Sciences Group, Inc. Common Stock",
+      "sector": "Healthcare",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.44,
-      "score": 0.157,
-      "direct_signal": 0.157,
+      "score": 0.146,
+      "direct_signal": 0.146,
       "network_signal": 0.0,
-      "starting_price": 20.39,
+      "starting_price": 13.21,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -0.29,
+          "value": -8.0,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
           "value": 35.0,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "AMTM has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
-      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "NRG-20260828-graph-signal-v1",
-      "ticker": "NRG",
-      "company_name": "NRG Energy, Inc.",
-      "sector": "Utilities",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.5,
-      "score": 0.155,
-      "direct_signal": 0.155,
-      "network_signal": 0.0,
-      "starting_price": 113.725,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -0.85,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 35.0,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [
-        {
-          "connected_ticker": "CNP",
-          "connected_name": "CenterPoint Energy, Inc.",
-          "relationship_type": "Electricity Generation",
-          "relationship_side": "downstream",
-          "relationship_strength": 0.527,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "AI Multi-Source Research",
-          "source_url": "AI Multi-Source Research"
-        },
-        {
-          "connected_ticker": "SYY",
-          "connected_name": "Sysco Corporation",
-          "relationship_type": "electricity_supply",
-          "relationship_side": "downstream",
-          "relationship_strength": 0.527,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "The first customer of the project is Sysco,",
-          "source_url": "AI Multi-Source Research"
-        }
-      ],
-      "scenario_summary": "NRG has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from CNP remains supportive.",
-      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "GFF-20260828-graph-signal-v1",
-      "ticker": "GFF",
-      "company_name": "Griffon Corp",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.44,
-      "score": 0.15,
-      "direct_signal": 0.15,
-      "network_signal": 0.0,
-      "starting_price": 98.5,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -1.28,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 27.48,
           "weight": 0.35
         },
         {
@@ -521,52 +572,15 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "GFF has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "SLS has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "POWL-20260828-graph-signal-v1",
-      "ticker": "POWL",
-      "company_name": "Powell Industries, Inc. Common Stock",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.44,
-      "score": 0.146,
-      "direct_signal": 0.146,
-      "network_signal": 0.0,
-      "starting_price": 187.12,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -2.76,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 35.0,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "POWL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
-      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "PWR-20260828-graph-signal-v1",
+      "prediction_id": "PWR-20260831-graph-signal-v1",
       "ticker": "PWR",
       "company_name": "Quanta Services, Inc.",
       "sector": "Industrials",
@@ -576,16 +590,16 @@
       "score": 0.145,
       "direct_signal": 0.145,
       "network_signal": 0.0,
-      "starting_price": 616.68,
+      "starting_price": 602.7,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -0.45,
+          "value": -2.7,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 24.87,
+          "value": 27.77,
           "weight": 0.35
         },
         {
@@ -655,67 +669,90 @@
       "bull_case": "Demand and execution improve while the signal from EQT remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "GLNG-20260828-graph-signal-v1",
-      "ticker": "GLNG",
-      "company_name": "Golar Lng Ltd",
-      "sector": "Energy",
+      "prediction_id": "STM-20260831-graph-signal-v1",
+      "ticker": "STM",
+      "company_name": "STMicroelectronics N.V.",
+      "sector": "Technology",
       "horizon_days": 30,
       "direction": "up",
-      "confidence": 0.44,
-      "score": 0.144,
-      "direct_signal": 0.144,
+      "confidence": 0.5,
+      "score": 0.145,
+      "direct_signal": 0.145,
       "network_signal": 0.0,
-      "starting_price": 50.73,
+      "starting_price": 49.38,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -1.5,
+          "value": -3.08,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 26.05,
+          "value": 35.0,
           "weight": 0.35
         },
         {
           "name": "analyst_recommendation",
-          "value": "Strong Buy",
+          "value": "Buy",
           "weight": 0.2
         }
       ],
-      "connection_paths": [],
-      "scenario_summary": "GLNG has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "connection_paths": [
+        {
+          "connected_ticker": "TSEM",
+          "connected_name": "Tower Semiconductor Ltd. Ordinary Shares",
+          "relationship_type": "outsourcing/contract manufacturing",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.272,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "ST welcomes Tower to its Agrate R3 300mm fab on its Agrate Brianza site in Italy.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "TSM",
+          "connected_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+          "relationship_type": "outsourced production / contract manufacturing",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.338,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "Some integrated device manufacturers that have their own fabrication facilities, such as Intel, NXP, STMicroelectronics, and Texas Instruments, outsource some of their production to TSMC.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "STM has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from TSEM remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "ITRI-20260828-graph-signal-v1",
-      "ticker": "ITRI",
-      "company_name": "Itron, Inc. Common Stock",
-      "sector": "Technology",
+      "prediction_id": "DPC-20260831-graph-signal-v1",
+      "ticker": "DPC",
+      "company_name": "DPC Holdings PLC",
+      "sector": "Industrials",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.44,
       "score": 0.143,
       "direct_signal": 0.143,
       "network_signal": 0.0,
-      "starting_price": 97.7475,
+      "starting_price": 44.08,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -1.53,
+          "value": -3.35,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 32.59,
+          "value": 35.0,
           "weight": 0.35
         },
         {
@@ -725,34 +762,233 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "ITRI has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "DPC has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "KLAC-20260828-graph-signal-v1",
-      "ticker": "KLAC",
-      "company_name": "KLA Corporation Common Stock",
-      "sector": "Technology",
+      "prediction_id": "PRM-20260831-graph-signal-v1",
+      "ticker": "PRM",
+      "company_name": "Perimeter Solutions, Inc.",
+      "sector": "Basic Materials",
       "horizon_days": 30,
       "direction": "up",
-      "confidence": 0.46,
+      "confidence": 0.43,
       "score": 0.137,
       "direct_signal": 0.137,
       "network_signal": 0.0,
-      "starting_price": 180.62,
+      "starting_price": 30.62,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -0.78,
+          "value": -4.88,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 29.75,
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PRM is expected to move upwards over the next 30 days, based on a direct signal of 0.137 and positive key inputs such as recent price change and analyst target gap.",
+      "bull_case": "If PRM continues its upward trend, it could see significant gains due to strong analyst support and favorable market conditions. The recent price dip might be seen as an opportunity for investors looking to enter the stock at a lower price point before potential further increases.",
+      "bear_case": "Despite the positive signals, there are historical precedents where similar stocks did not perform as expected. PRM could face challenges if broader market trends turn negative or if specific industry factors impact its performance negatively.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true,
+      "scenario_model": "qwen2.5:7b-instruct"
+    },
+    {
+      "prediction_id": "EMBJ-20260831-graph-signal-v1",
+      "ticker": "EMBJ",
+      "company_name": "Embraer S.A. American Depositary Shares (Each representing Four Common Shares)",
+      "sector": "Industrials",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.46,
+      "score": 0.129,
+      "direct_signal": 0.129,
+      "network_signal": 0.0,
+      "starting_price": 72.54,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -3.58,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 24.44,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "RYAAY",
+          "connected_name": "Ryanair Holdings plc American Depositary Shares",
+          "relationship_type": "Aircraft Manufacturing",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.568,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "The airline was launched its first flight on 8 July 1985, between Waterford and Gatwick Airport, with a 15-seat Embraer EMB 110 Bandeirante turboprop aircraft.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "EMBJ has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from RYAAY remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PHIN-20260831-graph-signal-v1",
+      "ticker": "PHIN",
+      "company_name": "PHINIA Inc.",
+      "sector": "Consumer Cyclical",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.42,
+      "score": 0.121,
+      "direct_signal": 0.121,
+      "network_signal": 0.0,
+      "starting_price": 68.65,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.3,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "None",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PHIN is expected to move upwards over the next 30 days, with a direct signal of 0.121 and historical outcomes from similar stocks indicating positive performance.",
+      "bull_case": "Given PHIN's recent price decline (-0.3) and strong analyst target gap (35.0), there could be significant buying interest as investors seek to capitalize on the undervaluation, potentially leading to a rapid upward correction in stock price.",
+      "bear_case": "Despite positive historical outcomes, the lack of an analyst recommendation suggests caution; if market sentiment shifts or if PHIN fails to meet earnings expectations, the stock may face downward pressure, possibly reversing recent gains.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true,
+      "scenario_model": "qwen2.5:7b-instruct"
+    },
+    {
+      "prediction_id": "PRMB-20260831-graph-signal-v1",
+      "ticker": "PRMB",
+      "company_name": "Primo Brands Corporation",
+      "sector": "Consumer Defensive",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.42,
+      "score": 0.118,
+      "direct_signal": 0.118,
+      "network_signal": 0.0,
+      "starting_price": 23.0,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 1.32,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 32.02,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "None",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PRMB has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PTCT-20260831-graph-signal-v1",
+      "ticker": "PTCT",
+      "company_name": "PTC Therapeutics, Inc. Common Stock",
+      "sector": "Healthcare",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.42,
+      "score": 0.116,
+      "direct_signal": 0.116,
+      "network_signal": 0.0,
+      "starting_price": 70.09,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.39,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 35.0,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "None",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PTCT has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PNR-20260831-graph-signal-v1",
+      "ticker": "PNR",
+      "company_name": "Pentair plc",
+      "sector": "Industrials",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.45,
+      "score": 0.114,
+      "direct_signal": 0.114,
+      "network_signal": 0.0,
+      "starting_price": 61.67,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.14,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 23.74,
           "weight": 0.35
         },
         {
@@ -763,158 +999,45 @@
       ],
       "connection_paths": [
         {
-          "connected_ticker": "MU",
-          "connected_name": "Micron Technology, Inc. Common Stock",
-          "relationship_type": "Process Control and Yield Management Services",
+          "connected_ticker": "EMR",
+          "connected_name": "Emerson Electric Co.",
+          "relationship_type": "Supply Relationship",
           "relationship_side": "downstream",
-          "relationship_strength": 0.467,
+          "relationship_strength": 0.589,
           "connected_direct_signal": 0.0,
           "contribution": 0.0,
-          "evidence": "AI Multi-Source Research",
+          "evidence": "In August 2016, Pentair announced that it has entered into an agreement to sell the Valves & Controls business to Emerson",
           "source_url": "AI Multi-Source Research"
         }
       ],
-      "scenario_summary": "KLAC has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from MU remains supportive.",
+      "scenario_summary": "PNR has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from EMR remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "DLB-20260828-graph-signal-v1",
-      "ticker": "DLB",
-      "company_name": "Dolby Laboratories, Inc.Class A",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.43,
-      "score": 0.131,
-      "direct_signal": 0.131,
-      "network_signal": 0.0,
-      "starting_price": 61.26,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -1.34,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 28.96,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "DLB has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
-      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "BCO-20260828-graph-signal-v1",
-      "ticker": "BCO",
-      "company_name": "The Brink's Company",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.42,
-      "score": 0.119,
-      "direct_signal": 0.119,
-      "network_signal": 0.0,
-      "starting_price": 109.26,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -0.76,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 35.0,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "None",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "BCO is expected to move upwards over the next 30 days, with a direct signal of 0.119 and no network signal. Recent price changes indicate a decline, but analyst targets suggest significant upside potential.",
-      "bull_case": "If BCO meets or exceeds the analyst target gap of 35%, it could see substantial gains, potentially outperforming market expectations. Positive news or strong earnings reports might further boost investor confidence and drive the stock higher.",
-      "bear_case": "Despite the positive direct signal, recent price declines suggest caution. If market conditions deteriorate or if BCO fails to meet analyst targets, the stock may face downward pressure. Additionally, any negative developments in related sectors could impact investor sentiment negatively.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true,
-      "scenario_model": "qwen2.5:7b-instruct"
-    },
-    {
-      "prediction_id": "RGTI-20260828-graph-signal-v1",
-      "ticker": "RGTI",
-      "company_name": "Rigetti Computing, Inc. Common Stock",
-      "sector": "Technology",
+      "prediction_id": "PTGX-20260831-graph-signal-v1",
+      "ticker": "PTGX",
+      "company_name": "Protagonist Therapeutics, Inc. Common Stock",
+      "sector": "Healthcare",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.42,
       "score": 0.113,
       "direct_signal": 0.113,
       "network_signal": 0.0,
-      "starting_price": 15.905,
+      "starting_price": 144.33,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -2.0,
+          "value": -2.3,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 35.0,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "None",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "RGTI is expected to move upwards over the next 30 days, with a direct signal of 0.113 and historical correlation with positive outcomes for similar stocks like TSM, NVDA, and MSFT.",
-      "bull_case": "The recent price decline (-2.0%) may be seen as a buying opportunity by investors who believe in the stock's long-term potential. Analysts have set a significant target gap of 35.0% above current levels, indicating strong conviction in RGTI\u2019s future performance. Given its historical correlation with other tech stocks that have performed well recently, such as TSM and MSFT, there is a bullish outlook for RGTI.",
-      "bear_case": "Despite the positive direct signal and historical correlations, the lack of analyst recommendations could be a concern. Additionally, the recent price decline might indicate underlying issues or market skepticism about the stock's current valuation. If these factors persist, it could lead to a reversal in sentiment, potentially causing RGTI\u2019s performance to underperform expectations.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true,
-      "scenario_model": "qwen2.5:7b-instruct"
-    },
-    {
-      "prediction_id": "DNOW-20260828-graph-signal-v1",
-      "ticker": "DNOW",
-      "company_name": "DNOW Inc.",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.42,
-      "score": 0.111,
-      "direct_signal": 0.111,
-      "network_signal": 0.0,
-      "starting_price": 16.1,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -1.47,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 16.46,
+          "value": 18.05,
           "weight": 0.35
         },
         {
@@ -924,34 +1047,34 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "DNOW has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "PTGX has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "BIP-20260828-graph-signal-v1",
-      "ticker": "BIP",
-      "company_name": "Brookfield Infrastructure Partners L.P. Limited Partnership Units",
-      "sector": "Utilities",
+      "prediction_id": "PSN-20260831-graph-signal-v1",
+      "ticker": "PSN",
+      "company_name": "Parsons Corporation",
+      "sector": "Technology",
       "horizon_days": 30,
       "direction": "up",
-      "confidence": 0.42,
-      "score": 0.11,
-      "direct_signal": 0.11,
+      "confidence": 0.41,
+      "score": 0.105,
+      "direct_signal": 0.105,
       "network_signal": 0.0,
-      "starting_price": 38.675,
+      "starting_price": 49.0,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -0.53,
+          "value": -1.01,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 21.78,
+          "value": 21.15,
           "weight": 0.35
         },
         {
@@ -961,83 +1084,34 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "BIP has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "PSN has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "TDY-20260828-graph-signal-v1",
-      "ticker": "TDY",
-      "company_name": "Teledyne Technologies Incorporated",
-      "sector": "Technology",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.45,
-      "score": 0.108,
-      "direct_signal": 0.108,
-      "network_signal": 0.0,
-      "starting_price": 622.965,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -0.69,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 21.56,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [
-        {
-          "connected_ticker": "ASPI",
-          "connected_name": "ASP Isotopes Inc. Common Stock",
-          "relationship_type": "Radiological Isotopes",
-          "relationship_side": "upstream",
-          "relationship_strength": 0.272,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "AI Multi-Source Research",
-          "source_url": "AI Multi-Source Research"
-        }
-      ],
-      "scenario_summary": "TDY has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from ASPI remains supportive.",
-      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "POST-20260828-graph-signal-v1",
-      "ticker": "POST",
-      "company_name": "POST HOLDINGS, INC.",
-      "sector": "Consumer Defensive",
+      "prediction_id": "PRIM-20260831-graph-signal-v1",
+      "ticker": "PRIM",
+      "company_name": "Primoris Services Corporation",
+      "sector": "Industrials",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.41,
-      "score": 0.101,
-      "direct_signal": 0.101,
+      "score": 0.103,
+      "direct_signal": 0.103,
       "network_signal": 0.0,
-      "starting_price": 84.605,
+      "starting_price": 73.12,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": 3.52,
+          "value": -4.28,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 24.3,
+          "value": 35.0,
           "weight": 0.35
         },
         {
@@ -1047,158 +1121,195 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "POST has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "PRIM has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "SNN-20260828-graph-signal-v1",
-      "ticker": "SNN",
-      "company_name": "Smith & Nephew plc",
-      "sector": "Healthcare",
+      "prediction_id": "PR-20260831-graph-signal-v1",
+      "ticker": "PR",
+      "company_name": "Permian Resources Corporation",
+      "sector": "Energy",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.44,
+      "score": 0.102,
+      "direct_signal": 0.102,
+      "network_signal": 0.0,
+      "starting_price": 22.7,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -2.78,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 15.46,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Strong Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "OXY",
+          "connected_name": "Occidental Petroleum Corporation",
+          "relationship_type": "Unconventional Oil Production Services",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "The company produced 435 thousand barrels of oil equivalent (2,660,000 GJ) per day from unconventional oil directional drilling via Permian Resources.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "PR has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from OXY remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PTRN-20260831-graph-signal-v1",
+      "ticker": "PTRN",
+      "company_name": "Pattern Group Inc. Series A Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.41,
+      "score": 0.102,
+      "direct_signal": 0.102,
+      "network_signal": 0.0,
+      "starting_price": 21.17,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -2.98,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 32.85,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "None",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PTRN is expected to move upwards over the next 30 days, based on historical performance of similar stocks and current market signals.",
+      "bull_case": "If technological advancements in semiconductor manufacturing continue at their current pace, PTRN could see a significant increase in demand for its products. Analysts predict a substantial target gap that could be filled if market conditions align positively with these expectations.",
+      "bear_case": "However, any slowdown in global economic growth or a decrease in consumer spending on technology could negatively impact PTRN's stock price. The recent price change indicates some downward pressure, which might continue unless there is strong positive news to support the stock.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true,
+      "scenario_model": "qwen2.5:7b-instruct"
+    },
+    {
+      "prediction_id": "POOL-20260831-graph-signal-v1",
+      "ticker": "POOL",
+      "company_name": "Pool Corporation Common Stock",
+      "sector": "Industrials",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.41,
+      "score": 0.1,
+      "direct_signal": 0.1,
+      "network_signal": 0.0,
+      "starting_price": 188.07,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 1.23,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 16.71,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "POOL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PPL-20260831-graph-signal-v1",
+      "ticker": "PPL",
+      "company_name": "PPL Corporation",
+      "sector": "Utilities",
+      "horizon_days": 30,
+      "direction": "up",
+      "confidence": 0.41,
+      "score": 0.099,
+      "direct_signal": 0.099,
+      "network_signal": 0.0,
+      "starting_price": 34.2,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.3,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 19.67,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PPL has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "POWI-20260831-graph-signal-v1",
+      "ticker": "POWI",
+      "company_name": "Power Integrations, Inc. Common Stock",
+      "sector": "Technology",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.41,
       "score": 0.094,
       "direct_signal": 0.094,
       "network_signal": 0.0,
-      "starting_price": 28.885,
+      "starting_price": 51.51,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -0.02,
+          "value": -6.35,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 16.54,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "SNN has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
-      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "ROAD-20260828-graph-signal-v1",
-      "ticker": "ROAD",
-      "company_name": "Construction Partners, Inc. Class A Common Stock",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.43,
-      "score": 0.085,
-      "direct_signal": 0.085,
-      "network_signal": 0.0,
-      "starting_price": 112.42,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -2.03,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 26.82,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "None",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [
-        {
-          "connected_ticker": "CAT",
-          "connected_name": "Caterpillar Inc.",
-          "relationship_type": "equipment supplier",
-          "relationship_side": "upstream",
-          "relationship_strength": 0.272,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "AI Multi-Source Research",
-          "source_url": "AI Multi-Source Research"
-        }
-      ],
-      "scenario_summary": "The market research suggests a positive outlook for ROAD over the next 30 days, with an 8.5% direct signal. However, recent price changes indicate a decline of 2.03%, which could be concerning. Analysts have not provided specific recommendations, but there is a significant analyst target gap of 26.82%. The connection to Caterpillar Inc., as an equipment supplier, has a weak positive influence with a strength of 27.2%. Past outcomes for similar market conditions are mixed, with both correct and incorrect predictions.",
-      "bull_case": "The recent decline in ROAD's price could be seen as a buying opportunity given the strong direct signal from market research. The significant analyst target gap suggests that there is potential upside if analysts' expectations are met or exceeded. Additionally, the connection to Caterpillar Inc., an equipment supplier, indicates positive upstream support which could drive demand and profitability for ROAD.",
-      "bear_case": "Despite the positive direct signal, recent price declines might indicate underlying issues that have not been fully addressed. The lack of specific analyst recommendations adds uncertainty. Furthermore, past outcomes show that similar market conditions did not always lead to correct predictions, raising concerns about the reliability of current signals.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true,
-      "scenario_model": "qwen2.5:7b-instruct"
-    },
-    {
-      "prediction_id": "BMI-20260828-graph-signal-v1",
-      "ticker": "BMI",
-      "company_name": "Badger Meter, Inc.",
-      "sector": "Technology",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.4,
-      "score": 0.084,
-      "direct_signal": 0.084,
-      "network_signal": 0.0,
-      "starting_price": 136.915,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -1.06,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 15.22,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "BMI has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
-      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "CXW-20260828-graph-signal-v1",
-      "ticker": "CXW",
-      "company_name": "CoreCivic, Inc.",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "up",
-      "confidence": 0.4,
-      "score": 0.083,
-      "direct_signal": 0.083,
-      "network_signal": 0.0,
-      "starting_price": 34.325,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": 1.4,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 21.78,
+          "value": 35.0,
           "weight": 0.35
         },
         {
@@ -1208,34 +1319,34 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "CXW has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "POWI has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "OVV-20260828-graph-signal-v1",
-      "ticker": "OVV",
-      "company_name": "Ovintiv Inc.",
+      "prediction_id": "PTEN-20260831-graph-signal-v1",
+      "ticker": "PTEN",
+      "company_name": "Patterson-UTI Energy, Inc. Common Stock",
       "sector": "Energy",
       "horizon_days": 30,
       "direction": "up",
       "confidence": 0.4,
-      "score": 0.082,
-      "direct_signal": 0.082,
+      "score": 0.087,
+      "direct_signal": 0.087,
       "network_signal": 0.0,
-      "starting_price": 64.26,
+      "starting_price": 12.43,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -1.82,
+          "value": 2.47,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 15.44,
+          "value": 11.48,
           "weight": 0.35
         },
         {
@@ -1245,53 +1356,52 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "OVV has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "scenario_summary": "PTEN has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
       "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
       "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "NESR-20260828-graph-signal-v1",
-      "ticker": "NESR",
-      "company_name": "National Energy Services Reunited Corp Ordinary Shares",
-      "sector": "Energy",
+      "prediction_id": "MMED-20260831-graph-signal-v1",
+      "ticker": "MMED",
+      "company_name": "MiniMed Group, Inc. Common Stock",
+      "sector": "Healthcare",
       "horizon_days": 30,
-      "direction": "neutral",
+      "direction": "up",
       "confidence": 0.4,
       "score": 0.08,
       "direct_signal": 0.08,
       "network_signal": 0.0,
-      "starting_price": 34.825,
+      "starting_price": 20.1,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -0.5,
+          "value": 1.67,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 23.47,
+          "value": 3.65,
           "weight": 0.35
         },
         {
           "name": "analyst_recommendation",
-          "value": "None",
+          "value": "Strong Buy",
           "weight": 0.2
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "NESR's recent price has decreased by -0.5%, and the analyst target gap is at 23.47, suggesting potential upside. However, there are no direct signals or network effects to support a bullish stance.",
-      "bull_case": "If NESR follows historical patterns seen in similar stocks like CVX and SHEL, which have shown positive outcomes despite initial price declines, the stock could rebound with a significant gain of up to 23.47%. This scenario assumes that market conditions remain stable and that investor sentiment improves.",
-      "bear_case": "Given NESR's recent price decline and the lack of strong bullish signals, there is a risk that the stock may continue its downward trend. If market conditions deteriorate or if analysts revise their recommendations negatively, NESR could experience further losses, potentially as low as -7.58% based on historical outcomes.",
+      "scenario_summary": "MMED has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
+      "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
+      "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true,
-      "scenario_model": "qwen2.5:7b-instruct"
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
     },
     {
-      "prediction_id": "OGS-20260828-graph-signal-v1",
+      "prediction_id": "OGS-20260831-graph-signal-v1",
       "ticker": "OGS",
       "company_name": "ONE GAS, INC.",
       "sector": "Utilities",
@@ -1301,16 +1411,16 @@
       "score": 0.077,
       "direct_signal": 0.077,
       "network_signal": 0.0,
-      "starting_price": 79.99,
+      "starting_price": 79.47,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -0.19,
+          "value": -0.84,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 11.97,
+          "value": 12.7,
           "weight": 0.35
         },
         {
@@ -1324,30 +1434,228 @@
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "KBR-20260828-graph-signal-v1",
-      "ticker": "KBR",
-      "company_name": "KBR, Inc.",
-      "sector": "Industrials",
+      "prediction_id": "PPG-20260831-graph-signal-v1",
+      "ticker": "PPG",
+      "company_name": "PPG Industries, Inc.",
+      "sector": "Basic Materials",
       "horizon_days": 30,
       "direction": "neutral",
-      "confidence": 0.45,
-      "score": 0.074,
-      "direct_signal": 0.074,
+      "confidence": 0.39,
+      "score": 0.071,
+      "direct_signal": 0.071,
       "network_signal": 0.0,
-      "starting_price": 37.82,
+      "starting_price": 114.22,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": 0.19,
+          "value": -0.39,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 20.87,
+          "value": 10.49,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PPG has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PTC-20260831-graph-signal-v1",
+      "ticker": "PTC",
+      "company_name": "PTC Inc. Common Stock",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.39,
+      "score": 0.07,
+      "direct_signal": 0.07,
+      "network_signal": 0.0,
+      "starting_price": 157.15,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.54,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 10.31,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PTC has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "BEP-20260831-graph-signal-v1",
+      "ticker": "BEP",
+      "company_name": "Brookfield Renewable Partners L.P.",
+      "sector": "Utilities",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.42,
+      "score": 0.068,
+      "direct_signal": 0.068,
+      "network_signal": 0.0,
+      "starting_price": 31.73,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -2.31,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 12.25,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "DUK",
+          "connected_name": "Duke Energy Corporation",
+          "relationship_type": "Renewable Power Generation Business",
+          "relationship_side": "upstream",
+          "relationship_strength": 0.304,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "In 2023, Duke Energy sold off their unregulated utility-scale renewable power generation business to Brookfield Renewable Partners.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "BEP has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PODD-20260831-graph-signal-v1",
+      "ticker": "PODD",
+      "company_name": "Insulet Corporation Common Stock",
+      "sector": "Healthcare",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.39,
+      "score": 0.068,
+      "direct_signal": 0.068,
+      "network_signal": 0.0,
+      "starting_price": 145.13,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 0.78,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 18.45,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "None",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PODD has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "FMS-20260831-graph-signal-v1",
+      "ticker": "FMS",
+      "company_name": "Fresenius Medical Care AG",
+      "sector": "Healthcare",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.37,
+      "score": 0.04,
+      "direct_signal": 0.04,
+      "network_signal": 0.0,
+      "starting_price": 23.1,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.26,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 11.66,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Hold",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "The recent price change for FMS is negative, and the analyst target gap suggests a potential upside of 11.66%. However, with an overall neutral direction from market signals, the current recommendation is to hold.",
+      "bull_case": "If FMS can capitalize on its strong underlying fundamentals and outperform expectations, it could see a significant rebound in price, potentially reaching the analyst target gap of 11.66% within the next 30 days.",
+      "bear_case": "Given the recent negative price movement and the neutral market signals, there is a risk that FMS may continue to underperform, possibly leading to further declines if broader market conditions deteriorate or if company-specific issues arise.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true,
+      "scenario_model": "qwen2.5:7b-instruct"
+    },
+    {
+      "prediction_id": "GIB-20260831-graph-signal-v1",
+      "ticker": "GIB",
+      "company_name": "CGI Inc.",
+      "sector": "Technology",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.4,
+      "score": 0.039,
+      "direct_signal": 0.039,
+      "network_signal": 0.0,
+      "starting_price": 74.77,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.11,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 11.29,
           "weight": 0.35
         },
         {
@@ -1358,461 +1666,63 @@
       ],
       "connection_paths": [
         {
-          "connected_ticker": "SO",
-          "connected_name": "The Southern Company",
-          "relationship_type": "Technology Development Partner",
-          "relationship_side": "upstream",
-          "relationship_strength": 0.272,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "Along with the DOE, Southern Company has been working with KBR, another technology partner, to perfect its TRIG advanced coal gasification technology.",
-          "source_url": "AI Multi-Source Research"
-        },
-        {
-          "connected_ticker": "HAL",
-          "connected_name": "Halliburton Company",
-          "relationship_type": "Services Provider",
-          "relationship_side": "downstream",
-          "relationship_strength": 0.558,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "In November 2002, KBR was tasked to plan oil well firefighting in Iraq, and in February 2003 was issued a contract to conduct the work.",
-          "source_url": "AI Multi-Source Research"
-        }
-      ],
-      "scenario_summary": "KBR's recent price change indicates a positive trend, with an analyst target gap suggesting potential upside. However, the lack of specific analyst recommendations and neutral network signals create uncertainty.",
-      "bull_case": "Given KBR\u2019s strong relationship with The Southern Company for technology development and its historical role in critical projects like oil well firefighting, there is potential for continued growth as these partnerships yield results. Analysts may revise their targets higher if the company continues to deliver on its promises.",
-      "bear_case": "Despite positive connections, the absence of specific analyst recommendations and neutral network signals suggest caution. If KBR fails to meet expectations or faces challenges in executing projects with partners like The Southern Company, it could lead to a downturn in stock performance.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true,
-      "scenario_model": "qwen2.5:7b-instruct"
-    },
-    {
-      "prediction_id": "NOW-20260828-graph-signal-v1",
-      "ticker": "NOW",
-      "company_name": "SERVICENOW, INC.",
-      "sector": "Technology",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.39,
-      "score": 0.073,
-      "direct_signal": 0.073,
-      "network_signal": 0.0,
-      "starting_price": 143.46,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": 3.6,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": -0.86,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Strong Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "NOW has no decisive research signal over the next 30 days.",
-      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
-      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "IOT-20260828-graph-signal-v1",
-      "ticker": "IOT",
-      "company_name": "Samsara Inc.",
-      "sector": "Technology",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.48,
-      "score": 0.069,
-      "direct_signal": 0.069,
-      "network_signal": 0.0,
-      "starting_price": 41.58,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -0.38,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 9.82,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [
-        {
-          "connected_ticker": "BSX",
-          "connected_name": "Boston Scientific Corp.",
-          "relationship_type": "Fleet telematics system provider",
-          "relationship_side": "upstream",
-          "relationship_strength": 0.288,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "the company also provides its fleet telematics system to public-sector organizations including the cities of Boston,",
-          "source_url": "AI Multi-Source Research"
-        },
-        {
-          "connected_ticker": "NJR",
-          "connected_name": "New Jersey Resources Corp",
-          "relationship_type": "fleet telematics system provider",
-          "relationship_side": "upstream",
-          "relationship_strength": 0.272,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "the company also provides its fleet telematics system to public-sector organizations including the states of New Jersey and Tennessee,",
-          "source_url": "AI Multi-Source Research"
-        },
-        {
-          "connected_ticker": "SYY",
-          "connected_name": "Sysco Corporation",
-          "relationship_type": "Logistics Partner",
-          "relationship_side": "upstream",
-          "relationship_strength": 0.304,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "Samsara also provides its fleet telematics system to commercial clients, including Sysco.",
-          "source_url": "AI Multi-Source Research"
-        },
-        {
-          "connected_ticker": "SYY",
-          "connected_name": "Sysco Corporation",
-          "relationship_type": "Supply Relationship",
-          "relationship_side": "downstream",
-          "relationship_strength": 0.558,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "In addition to its commercial clients, such as DHL and Sysco, Samsara also provides its fleet telematics system to numerous public sector organizations...",
-          "source_url": "AI Multi-Source Research"
-        }
-      ],
-      "scenario_summary": "IOT has no decisive research signal over the next 30 days.",
-      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
-      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "NET-20260828-graph-signal-v1",
-      "ticker": "NET",
-      "company_name": "Cloudflare, Inc. Class A common stock",
-      "sector": "Technology",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.48,
-      "score": 0.066,
-      "direct_signal": 0.066,
-      "network_signal": 0.0,
-      "starting_price": 301.39,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -1.57,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 10.67,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [
-        {
-          "connected_ticker": "VRSN",
-          "connected_name": "VeriSign, Inc. Common Stock",
-          "relationship_type": "Root Zone Maintenance Services",
-          "relationship_side": "upstream",
-          "relationship_strength": 0.293,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "Ultimately ICANN chose to continue VeriSign's role as the root zone maintainer and the two entered into a new contract in 2016.",
-          "source_url": "AI Multi-Source Research"
-        },
-        {
-          "connected_ticker": "DOCN",
-          "connected_name": "DigitalOcean Holdings, Inc.",
-          "relationship_type": "CDN and Load-Balancing Services",
-          "relationship_side": "downstream",
-          "relationship_strength": 0.558,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "Internally, the DigitalOcean Marketplace is run by DigitalOcean Kubernetes, OpenChannel for the catalog API and data warehouse and Cloudflare for CDN and load-balancing.",
-          "source_url": "AI Multi-Source Research"
-        },
-        {
           "connected_ticker": "MSFT",
           "connected_name": "Microsoft Corporation Common Stock",
-          "relationship_type": "Cloud Security Services",
-          "relationship_side": "downstream",
-          "relationship_strength": 0.527,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "Not Found",
-          "source_url": "AI Multi-Source Research"
-        },
-        {
-          "connected_ticker": "VRSN",
-          "connected_name": "VeriSign, Inc. Common Stock",
-          "relationship_type": "Registry Services",
-          "relationship_side": "downstream",
-          "relationship_strength": 0.568,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "CISA chose Cloudflare to replace Verisign as the .gov operator.",
-          "source_url": "AI Multi-Source Research"
-        }
-      ],
-      "scenario_summary": "NetEase (NET) is experiencing a slight negative price change, but analyst recommendations are positive with a target gap of 10.67%. The company's network signal remains neutral, and its direct signal indicates a modest upward bias. Connections to VeriSign for root zone maintenance services and DigitalOcean for CDN and load-balancing services suggest potential support from these upstream and downstream relationships.",
-      "bull_case": "Given the positive analyst recommendations and the strong connections with key players in the tech ecosystem such as VeriSign and DigitalOcean, NetEase could see a rebound. Analysts predict significant upside potential, and the company's role in critical internet infrastructure services could drive growth despite current market conditions.",
-      "bear_case": "Despite the positive analyst outlook, recent price declines suggest investor concerns. The lack of direct signal strength and the mixed relationship outcomes with Microsoft and VeriSign (with one losing a contract) indicate potential risks. If these relationships weaken further or if broader market trends turn negative, NetEase could face downward pressure.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true,
-      "scenario_model": "qwen2.5:7b-instruct"
-    },
-    {
-      "prediction_id": "ABT-20260828-graph-signal-v1",
-      "ticker": "ABT",
-      "company_name": "Abbott Laboratories",
-      "sector": "Healthcare",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.42,
-      "score": 0.063,
-      "direct_signal": 0.063,
-      "network_signal": 0.0,
-      "starting_price": 112.02,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": 0.38,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 7.3,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [
-        {
-          "connected_ticker": "NTRA",
-          "connected_name": "Natera, Inc. Common Stock",
-          "relationship_type": "Test development and validation services",
+          "relationship_type": "Cloud Infrastructure",
           "relationship_side": "upstream",
-          "relationship_strength": 0.272,
+          "relationship_strength": 0.32,
           "connected_direct_signal": 0.0,
           "contribution": 0.0,
-          "evidence": "...determine if there is a genetic cause for an individual's kidney disease...",
+          "evidence": "AI Multi-Source Research",
           "source_url": "AI Multi-Source Research"
         }
       ],
-      "scenario_summary": "ABT has no decisive research signal over the next 30 days.",
+      "scenario_summary": "GIB has no decisive research signal over the next 30 days.",
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "BSP-20260828-graph-signal-v1",
-      "ticker": "BSP",
-      "company_name": "Bending Spoons S.p.A. Ordinary Shares",
+      "prediction_id": "CHRN-20260831-graph-signal-v1",
+      "ticker": "CHRN",
+      "company_name": "ChronoScale Holdings Corporation Common Stock",
       "sector": "Technology",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.38,
-      "score": 0.05,
-      "direct_signal": 0.05,
-      "network_signal": 0.0,
-      "starting_price": 44.79,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -2.52,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 7.22,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "BSP has no decisive research signal over the next 30 days.",
-      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
-      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "WIT-20260828-graph-signal-v1",
-      "ticker": "WIT",
-      "company_name": "Wipro Limited",
-      "sector": "Technology",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.44,
-      "score": -0.049,
-      "direct_signal": -0.049,
-      "network_signal": 0.0,
-      "starting_price": 1.83,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -2.14,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": -4.43,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Underperform",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [
-        {
-          "connected_ticker": "IBM",
-          "connected_name": "International Business Machines Corporation",
-          "relationship_type": "Enterprise Software/ Infrastructure",
-          "relationship_side": "upstream",
-          "relationship_strength": 0.272,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "In 2021, Wipro reported that a third of its workforce was engaged in cloud professional services.",
-          "source_url": "AI Multi-Source Research"
-        },
-        {
-          "connected_ticker": "INTC",
-          "connected_name": "Intel Corporation Common Stock",
-          "relationship_type": "Advanced Silicon Fabrication",
-          "relationship_side": "upstream",
-          "relationship_strength": 0.272,
-          "connected_direct_signal": 0.0,
-          "contribution": 0.0,
-          "evidence": "In 1981, Wipro developed the first Indian minicomputer based on the Intel 8086 chip in an IISc lab.",
-          "source_url": "AI Multi-Source Research"
-        }
-      ],
-      "scenario_summary": "Wipro Technologies (WIT) is experiencing a neutral outlook over the next 30 days, with recent price changes and analyst recommendations pointing towards underperformance. However, positive signals from its upstream enterprise software and advanced silicon fabrication relationships suggest potential for improvement.",
-      "bull_case": "Despite current negative trends, Wipro's strong ties to key industry players like IBM and Intel could drive a turnaround. Recent developments in cloud services and historical performance of related stocks indicate that Wipro might benefit from these partnerships, leading to a positive outcome within the next month.",
-      "bear_case": "Wipro faces significant headwinds with recent price declines and analyst downgrades. The company's current position may struggle to recover without substantial changes or external market improvements. Given the neutral outlook, any further negative developments could lead to continued underperformance.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true,
-      "scenario_model": "qwen2.5:7b-instruct"
-    },
-    {
-      "prediction_id": "UGP-20260828-graph-signal-v1",
-      "ticker": "UGP",
-      "company_name": "Ultrapar Participacoes S.A.",
-      "sector": "Energy",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.38,
-      "score": 0.046,
-      "direct_signal": 0.046,
-      "network_signal": 0.0,
-      "starting_price": 6.42,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -0.31,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 3.16,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "UGP has no decisive research signal over the next 30 days.",
-      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
-      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "SOBO-20260828-graph-signal-v1",
-      "ticker": "SOBO",
-      "company_name": "South Bow Corporation",
-      "sector": "Energy",
       "horizon_days": 30,
       "direction": "neutral",
       "confidence": 0.37,
-      "score": 0.041,
-      "direct_signal": 0.041,
+      "score": -0.036,
+      "direct_signal": -0.036,
       "network_signal": 0.0,
-      "starting_price": 37.36,
+      "starting_price": 18.74,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -0.11,
+          "value": -8.0,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": -5.28,
+          "value": 0.0,
           "weight": 0.35
         },
         {
           "name": "analyst_recommendation",
-          "value": "Strong Buy",
+          "value": "None",
           "weight": 0.2
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "SOBO has no decisive research signal over the next 30 days.",
+      "scenario_summary": "CHRN has no decisive research signal over the next 30 days.",
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "ENLT-20260828-graph-signal-v1",
+      "prediction_id": "ENLT-20260831-graph-signal-v1",
       "ticker": "ENLT",
       "company_name": "Enlight Renewable Energy Ltd. Ordinary Shares",
       "sector": "Utilities",
@@ -1822,16 +1732,16 @@
       "score": 0.036,
       "direct_signal": 0.036,
       "network_signal": 0.0,
-      "starting_price": 78.125,
+      "starting_price": 77.54,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -1.61,
+          "value": -2.34,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 12.48,
+          "value": 13.33,
           "weight": 0.35
         },
         {
@@ -1853,185 +1763,35 @@
           "source_url": "AI Multi-Source Research"
         }
       ],
-      "scenario_summary": "ENLT's recent price has decreased by 1.61%, and while the analyst target gap is positive at 12.48, there are no specific recommendations from analysts. The company supplies green electricity to Amdocs Limited Ordinary Shares (DOX), which could indicate potential growth opportunities.",
-      "bull_case": "Given ENLT's supply relationship with Amdocs, a strong performance in DOX could positively impact ENLT's business. Additionally, the positive analyst target gap suggests that market expectations are favorable for future price appreciation.",
-      "bear_case": "Despite the positive connection to Amdocs and the analyst target gap, recent price declines indicate investor concerns. The lack of specific analyst recommendations also adds uncertainty, which could lead to further downward pressure on ENLT's stock.",
+      "scenario_summary": "ENLT's recent price change indicates a downward trend, but the analyst target gap suggests potential upside. The supply relationship with Amdocs Limited Ordinary Shares (DOX) is strong and could positively impact ENLT. However, given the neutral direction and lack of analyst recommendations, the market sentiment remains balanced.",
+      "bull_case": "ENLT's supply relationship with DOX strengthens its position in the green energy sector, potentially leading to increased demand for its services. The analyst target gap indicates that there is a significant upside potential if the company meets or exceeds these expectations. Positive news from Amdocs could boost ENLT\u2019s stock price.",
+      "bear_case": "Despite the strong supply relationship with DOX, ENLT's recent price decline suggests investor concerns about the current market conditions or operational challenges. The lack of analyst recommendations and the neutral direction indicate that there is no clear bullish sentiment driving the stock. If Amdocs faces any issues, it could negatively impact ENLT\u2019s performance.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true,
       "scenario_model": "qwen2.5:7b-instruct"
     },
     {
-      "prediction_id": "NEM-20260828-graph-signal-v1",
-      "ticker": "NEM",
-      "company_name": "Newmont Corporation",
-      "sector": "Basic Materials",
+      "prediction_id": "PSQL-20260831-graph-signal-v1",
+      "ticker": "PSQL",
+      "company_name": "Pasqal Holding SA Ordinary Share",
+      "sector": "Technology",
       "horizon_days": 30,
       "direction": "neutral",
       "confidence": 0.37,
       "score": 0.036,
       "direct_signal": 0.036,
       "network_signal": 0.0,
-      "starting_price": 130.5,
+      "starting_price": 19.11,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -1.4,
+          "value": 8.0,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 1.81,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Buy",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "NEM has no decisive research signal over the next 30 days.",
-      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
-      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "TAP-20260828-graph-signal-v1",
-      "ticker": "TAP",
-      "company_name": "Molson Coors Beverage Company Class B",
-      "sector": "Consumer Defensive",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.37,
-      "score": 0.034,
-      "direct_signal": 0.034,
-      "network_signal": 0.0,
-      "starting_price": 41.25,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -0.39,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 10.25,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Hold",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "TAP has no decisive research signal over the next 30 days.",
-      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
-      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
-    },
-    {
-      "prediction_id": "OGE-20260828-graph-signal-v1",
-      "ticker": "OGE",
-      "company_name": "OGE Energy Corp.",
-      "sector": "Utilities",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.37,
-      "score": 0.031,
-      "direct_signal": 0.031,
-      "network_signal": 0.0,
-      "starting_price": 46.095,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -0.4,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 9.46,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Hold",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "OGE's stock price has shown a recent decline, and the analyst target gap suggests there is potential for upward movement. However, with a neutral direction from Hephaestus, the overall sentiment remains balanced.",
-      "bull_case": "If OGE can capitalize on market trends and improve its operational efficiency, it could see a significant rebound in stock price, potentially closing the analyst target gap and leading to positive returns for investors.",
-      "bear_case": "Given the recent price decline and the neutral direction from Hephaestus, there is a risk that OGE might struggle to meet or exceed current analyst targets. This could result in further downward pressure on the stock price.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true,
-      "scenario_model": "qwen2.5:7b-instruct"
-    },
-    {
-      "prediction_id": "AGCO-20260828-graph-signal-v1",
-      "ticker": "AGCO",
-      "company_name": "AGCO Corporation",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.37,
-      "score": 0.03,
-      "direct_signal": 0.03,
-      "network_signal": 0.0,
-      "starting_price": 111.965,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -0.53,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 9.38,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Hold",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "AGCO's recent price has decreased by 0.53%, and the analyst target gap is 9.38% above current prices, suggesting potential upside. However, with a neutral direction from Hephaestus, the market sentiment is balanced.",
-      "bull_case": "If AGCO can capitalize on favorable agricultural technology trends and maintain strong partnerships, it could see its stock price rise significantly, potentially outperforming the broader market due to the positive analyst recommendations and target gaps.",
-      "bear_case": "Given the recent price decline and the neutral direction from Hephaestus, there is a risk that AGCO might struggle if macroeconomic factors or industry-specific challenges arise. The historical outcomes of similar signals suggest caution, as previous signals have not always been accurate.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true,
-      "scenario_model": "qwen2.5:7b-instruct"
-    },
-    {
-      "prediction_id": "IEX-20260828-graph-signal-v1",
-      "ticker": "IEX",
-      "company_name": "IDEX Corporation",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.37,
-      "score": 0.028,
-      "direct_signal": 0.028,
-      "network_signal": 0.0,
-      "starting_price": 230.85,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": -1.75,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": 10.24,
+          "value": 0.0,
           "weight": 0.35
         },
         {
@@ -2041,35 +1801,84 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "The market sentiment for IEX is neutral, with a slight positive direct signal of 0.028 and no network signal. Recent price changes indicate a decline of 1.75%, while analyst targets suggest a potential upside gap of 10.24%. Analysts have not provided specific recommendations.",
-      "bull_case": "If IEX's recent negative price movement reverses, driven by positive earnings reports or strategic partnerships, the stock could see a significant rebound. The analyst target gap suggests that there is room for upward movement if expectations are met or exceeded.",
-      "bear_case": "Given the recent decline in IEX\u2019s share price and the lack of strong analyst support, any negative news or market downturns could further depress its value. Additionally, without specific recommendations from analysts, investor sentiment might remain cautious.",
+      "scenario_summary": "PSQL has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "PSKY-20260831-graph-signal-v1",
+      "ticker": "PSKY",
+      "company_name": "Paramount Skydance Corporation Class B Common Stock",
+      "sector": "Communication Services",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.4,
+      "score": -0.033,
+      "direct_signal": -0.033,
+      "network_signal": 0.0,
+      "starting_price": 10.88,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 1.21,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": -10.91,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Hold",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "NFLX",
+          "connected_name": "Netflix, Inc. Common Stock",
+          "relationship_type": "Content Provider",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.613,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "Epix films came to Netflix 90 days after premiering on Epix, including films from Paramount.",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "PSKY's stock price has shown a recent increase of 1.21%, but the analyst target gap suggests a potential downside, with analysts recommending 'Hold'. The network signal is neutral, and the direct signal indicates a slight negative impact. Given the connection to Netflix as a content provider, there might be indirect positive influences from Netflix's partnerships and subscriber growth.",
+      "bull_case": "If PSKY can leverage its relationship with Netflix effectively, it could benefit from increased streaming traffic and content exposure. The historical correlation between Netflix's performance and PSKY's stock suggests that any positive developments in the streaming sector could positively impact PSKY's share price. Additionally, if PSKY manages to expand its own content library or improve user engagement, this could drive investor confidence.",
+      "bear_case": "Despite the recent price increase, the analyst target gap indicates a potential for downward pressure on PSKY's stock. The 'Hold' recommendation from analysts suggests that there might be concerns about the company's growth prospects or current valuation. Furthermore, if Netflix's partnerships with other content providers lead to reduced traffic or less exposure for PSKY's content, this could negatively impact its business and share price.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true,
       "scenario_model": "qwen2.5:7b-instruct"
     },
     {
-      "prediction_id": "PPC-20260828-graph-signal-v1",
+      "prediction_id": "PPC-20260831-graph-signal-v1",
       "ticker": "PPC",
       "company_name": "Pilgrim's Pride Corporation Common Stock",
       "sector": "Consumer Defensive",
       "horizon_days": 30,
       "direction": "neutral",
       "confidence": 0.4,
-      "score": 0.026,
-      "direct_signal": 0.026,
+      "score": 0.027,
+      "direct_signal": 0.027,
       "network_signal": 0.0,
-      "starting_price": 31.43,
+      "starting_price": 31.69,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": 0.32,
+          "value": 1.15,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 7.04,
+          "value": 6.16,
           "weight": 0.35
         },
         {
@@ -2091,72 +1900,34 @@
           "source_url": "AI Multi-Source Research"
         }
       ],
-      "scenario_summary": "The market for PPC is currently neutral with a slight positive bias, driven by recent price changes and analyst target gaps, but offset by the hold recommendation from analysts. The connection to Walmart Inc., which supplies packaged foods, has shown negative outcomes in past scenarios, suggesting caution.",
-      "bull_case": "If PPC can capitalize on its recent price momentum and align more closely with analyst expectations, it could see a positive performance. Additionally, if Walmart's supply chain stabilizes or improves, this could provide a supportive environment for PPC\u2019s operations.",
-      "bear_case": "Given the historical negative correlation between PPC and Walmart Inc., any further challenges faced by Walmart could negatively impact PPC. Analysts' hold recommendation also suggests that investors should be cautious, as there may not be strong catalysts driving significant upward movement in the near term.",
-      "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true,
-      "scenario_model": "qwen2.5:7b-instruct"
-    },
-    {
-      "prediction_id": "TNET-20260828-graph-signal-v1",
-      "ticker": "TNET",
-      "company_name": "TRINET GROUP, INC.",
-      "sector": "Industrials",
-      "horizon_days": 30,
-      "direction": "neutral",
-      "confidence": 0.36,
-      "score": -0.017,
-      "direct_signal": -0.017,
-      "network_signal": 0.0,
-      "starting_price": 70.33,
-      "key_inputs": [
-        {
-          "name": "recent_price_change",
-          "value": 0.82,
-          "weight": 0.45
-        },
-        {
-          "name": "analyst_target_gap",
-          "value": -5.87,
-          "weight": 0.35
-        },
-        {
-          "name": "analyst_recommendation",
-          "value": "Hold",
-          "weight": 0.2
-        }
-      ],
-      "connection_paths": [],
-      "scenario_summary": "TNET has no decisive research signal over the next 30 days.",
+      "scenario_summary": "PPC has no decisive research signal over the next 30 days.",
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "MO-20260828-graph-signal-v1",
-      "ticker": "MO",
-      "company_name": "Altria Group, Inc.",
-      "sector": "Consumer Defensive",
+      "prediction_id": "CIG-20260831-graph-signal-v1",
+      "ticker": "CIG",
+      "company_name": "Companhia Energetica De Minas Gerais-CEMIG",
+      "sector": "Utilities",
       "horizon_days": 30,
       "direction": "neutral",
-      "confidence": 0.36,
-      "score": 0.01,
-      "direct_signal": 0.01,
+      "confidence": 0.37,
+      "score": 0.026,
+      "direct_signal": 0.026,
       "network_signal": 0.0,
-      "starting_price": 68.305,
+      "starting_price": 1.99,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": 0.33,
+          "value": 0.0,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": 2.48,
+          "value": 7.37,
           "weight": 0.35
         },
         {
@@ -2166,35 +1937,109 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "The market sentiment for Molson Coors (MO) is neutral, with a slight positive bias from recent price changes and analyst target gaps. However, the lack of strong direct signals and mixed historical outcomes suggest caution.",
-      "bull_case": "If consumer preferences continue to favor craft beers and Molson Coors successfully expands its international presence, the stock could see gains similar to those seen in the beverage industry, as evidenced by the positive outcome for Coca-Cola (KO).",
-      "bear_case": "Given the lack of strong direct signals and considering the negative outcomes for Walmart (WMT) and Costco (COST), there is a risk that Molson Coors may face challenges such as increased competition or supply chain disruptions, leading to potential losses.",
+      "scenario_summary": "The stock CIG is currently experiencing no recent price change, with a slight positive direct signal of 2.6%. Analysts have an average target gap of 7.37% above the current price, but there are no specific recommendations given.",
+      "bull_case": "If market sentiment improves and analysts' targets are met, CIG could see a significant increase in value over the next 30 days, potentially reaching or exceeding the analyst's target prices.",
+      "bear_case": "Given the neutral direction and lack of strong positive signals, there is a risk that CIG might face downward pressure if market conditions deteriorate or if analysts' expectations are not met.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true,
       "scenario_model": "qwen2.5:7b-instruct"
     },
     {
-      "prediction_id": "OTTR-20260828-graph-signal-v1",
-      "ticker": "OTTR",
-      "company_name": "Otter Tail Corporation Common Stock",
+      "prediction_id": "PNW-20260831-graph-signal-v1",
+      "ticker": "PNW",
+      "company_name": "Pinnacle West Capital Corporation",
+      "sector": "Utilities",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.37,
+      "score": 0.026,
+      "direct_signal": 0.026,
+      "network_signal": 0.0,
+      "starting_price": 97.64,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -0.73,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 8.4,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Hold",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "PNW has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "LIME-20260831-graph-signal-v1",
+      "ticker": "LIME",
+      "company_name": "Neutron Holdings, Inc. Common Stock",
       "sector": "Industrials",
       "horizon_days": 30,
       "direction": "neutral",
-      "confidence": 0.35,
-      "score": -0.008,
-      "direct_signal": -0.008,
+      "confidence": 0.36,
+      "score": -0.024,
+      "direct_signal": -0.024,
       "network_signal": 0.0,
-      "starting_price": 91.59,
+      "starting_price": 42.34,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": -0.78,
+          "value": 0.07,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": -1.19,
+          "value": -6.88,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "None",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [],
+      "scenario_summary": "LIME has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "POR-20260831-graph-signal-v1",
+      "ticker": "POR",
+      "company_name": "Portland General Electric Company",
+      "sector": "Utilities",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.45,
+      "score": 0.024,
+      "direct_signal": 0.024,
+      "network_signal": 0.0,
+      "starting_price": 49.6,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": -1.14,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": 8.23,
           "weight": 0.35
         },
         {
@@ -2203,67 +2048,161 @@
           "weight": 0.2
         }
       ],
-      "connection_paths": [],
-      "scenario_summary": "OTTR has no decisive research signal over the next 30 days.",
+      "connection_paths": [
+        {
+          "connected_ticker": "FIX",
+          "connected_name": "Comfort Systems USA, Inc.",
+          "relationship_type": "HVAC Equipment",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "PH",
+          "connected_name": "Parker-Hannifin Corporation",
+          "relationship_type": "strategic goal",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.542,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "The company's executives set a goal to make Parker, as The New York Times put it, 'the General Electric of fluid power'.",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "SNPS",
+          "connected_name": "Synopsys, Inc. Common Stock",
+          "relationship_type": "operational supply-chain dependency",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.565,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "The company was initially established as Optimal Solutions with a charter to develop and market logic synthesis technology developed by the team at General Electric\u2019s Advanced Computer-Aided Engineering Group",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "POR has no decisive research signal over the next 30 days.",
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "KHC-20260828-graph-signal-v1",
-      "ticker": "KHC",
-      "company_name": "The Kraft Heinz Company Common Stock",
+      "prediction_id": "PSMT-20260831-graph-signal-v1",
+      "ticker": "PSMT",
+      "company_name": "PriceSmart, Inc. Common Stock",
       "sector": "Consumer Defensive",
       "horizon_days": 30,
       "direction": "neutral",
-      "confidence": 0.35,
-      "score": -0.002,
-      "direct_signal": -0.002,
+      "confidence": 0.36,
+      "score": -0.019,
+      "direct_signal": -0.019,
       "network_signal": 0.0,
-      "starting_price": 25.355,
+      "starting_price": 169.34,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": 0.42,
+          "value": -2.58,
           "weight": 0.45
         },
         {
           "name": "analyst_target_gap",
-          "value": -1.05,
+          "value": -1.97,
           "weight": 0.35
         },
         {
           "name": "analyst_recommendation",
-          "value": "Hold",
+          "value": "None",
           "weight": 0.2
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "KHC has no decisive research signal over the next 30 days.",
+      "scenario_summary": "PSMT has no decisive research signal over the next 30 days.",
       "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
       "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
+      "generated_at": "2026-08-31T11:03:10+00:00",
       "research_only": true
     },
     {
-      "prediction_id": "LBTYB-20260828-graph-signal-v1",
+      "prediction_id": "PSX-20260831-graph-signal-v1",
+      "ticker": "PSX",
+      "company_name": "PHILLIPS 66",
+      "sector": "Energy",
+      "horizon_days": 30,
+      "direction": "neutral",
+      "confidence": 0.42,
+      "score": 0.01,
+      "direct_signal": 0.01,
+      "network_signal": 0.0,
+      "starting_price": 244.01,
+      "key_inputs": [
+        {
+          "name": "recent_price_change",
+          "value": 1.16,
+          "weight": 0.45
+        },
+        {
+          "name": "analyst_target_gap",
+          "value": -9.02,
+          "weight": 0.35
+        },
+        {
+          "name": "analyst_recommendation",
+          "value": "Buy",
+          "weight": 0.2
+        }
+      ],
+      "connection_paths": [
+        {
+          "connected_ticker": "MPC",
+          "connected_name": "MARATHON PETROLEUM CORPORATION",
+          "relationship_type": "Refinery Operations",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.574,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        },
+        {
+          "connected_ticker": "VRT",
+          "connected_name": "Vertiv Holdings Co Class A Common Stock",
+          "relationship_type": "Natural Gas Processing",
+          "relationship_side": "downstream",
+          "relationship_strength": 0.527,
+          "connected_direct_signal": 0.0,
+          "contribution": 0.0,
+          "evidence": "AI Multi-Source Research",
+          "source_url": "AI Multi-Source Research"
+        }
+      ],
+      "scenario_summary": "PSX has no decisive research signal over the next 30 days.",
+      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
+      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "model_name": "graph-signal-v1",
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true
+    },
+    {
+      "prediction_id": "LBTYB-20260831-graph-signal-v1",
       "ticker": "LBTYB",
       "company_name": "Liberty Global Ltd. Class B Common Shares",
       "sector": "Communication Services",
       "horizon_days": 30,
       "direction": "neutral",
       "confidence": 0.35,
-      "score": 0.001,
-      "direct_signal": 0.001,
+      "score": 0.0,
+      "direct_signal": 0.0,
       "network_signal": 0.0,
-      "starting_price": 12.96,
+      "starting_price": 12.48,
       "key_inputs": [
         {
           "name": "recent_price_change",
-          "value": 0.23,
+          "value": 0.0,
           "weight": 0.45
         },
         {
@@ -2278,12 +2217,13 @@
         }
       ],
       "connection_paths": [],
-      "scenario_summary": "LBTYB has no decisive research signal over the next 30 days.",
-      "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
-      "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
+      "scenario_summary": "The market sentiment for LBTYB is neutral, with no direct or network signals influencing the direction. Recent price changes and analyst recommendations are also balanced, indicating a lack of clear momentum or consensus.",
+      "bull_case": "If Google (GOOG) continues its upward trend, which has historically been correct in the past, it could positively influence LBTYB's performance due to shared market dynamics. Additionally, if Meta Platforms (META)'s recent downturn is temporary and Netflix (NFLX)'s strong performance holds, LBTYB might benefit from a broader tech recovery.",
+      "bear_case": "However, given that META's recent performance was negative and has not been accurate in the past, it could suggest caution. Moreover, if GOOG's positive momentum reverses or NFLX's gains are unsustainable, this could negatively impact LBTYB as well.",
       "model_name": "graph-signal-v1",
-      "generated_at": "2026-08-28T16:50:07+00:00",
-      "research_only": true
+      "generated_at": "2026-08-31T11:03:10+00:00",
+      "research_only": true,
+      "scenario_model": "qwen2.5:7b-instruct"
     }
   ]
 }
