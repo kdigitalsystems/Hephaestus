@@ -14110,7 +14110,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 2.78,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 415.5,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "AMZN-20260803-graph-signal-v1",
@@ -14203,7 +14210,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -6.11,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 254.98,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "AVGO-20260803-graph-signal-v1",
@@ -14285,7 +14299,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -5.66,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 367.24,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "T-20260803-graph-signal-v1",
@@ -14378,7 +14399,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 11.61,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 25.95,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "TM-20260803-graph-signal-v1",
@@ -14449,7 +14477,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 4.93,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 198.3,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "STX-20260803-graph-signal-v1",
@@ -14520,7 +14555,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -5.56,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 808.54,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "KO-20260803-graph-signal-v1",
@@ -14602,7 +14644,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 0.74,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 88.24,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "VZ-20260803-graph-signal-v1",
@@ -14662,7 +14711,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 7.28,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 50.22,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "BABA-20260803-graph-signal-v1",
@@ -14699,7 +14755,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -8.54,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 111.81,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "UBER-20260803-graph-signal-v1",
@@ -14736,7 +14799,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 8.66,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 76.45,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "APP-20260803-graph-signal-v1",
@@ -14773,7 +14843,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -19.41,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 319.05,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "VRT-20260803-graph-signal-v1",
@@ -14855,7 +14932,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 6.26,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 256.7,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SNPS-20260803-graph-signal-v1",
@@ -14926,7 +15010,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 7.0,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 415.97,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "TMUS-20260803-graph-signal-v1",
@@ -14986,7 +15077,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 8.45,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 187.3,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SAP-20260803-graph-signal-v1",
@@ -15068,7 +15166,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 14.2,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 209.69,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "TSLA-20260803-graph-signal-v1",
@@ -15161,7 +15266,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 14.72,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 357.01,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "NEM-20260803-graph-signal-v1",
@@ -15198,7 +15310,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 33.56,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 125.16,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "CVNA-20260803-graph-signal-v1",
@@ -15235,7 +15354,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 18.92,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 74.16,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SONY-20260803-graph-signal-v1",
@@ -15284,7 +15410,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 5.98,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 24.65,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SPOT-20260803-graph-signal-v1",
@@ -15355,7 +15488,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 11.89,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 559.36,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SPCX-20260803-graph-signal-v1",
@@ -15392,7 +15532,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 29.84,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 140.71,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "TXN-20260803-graph-signal-v1",
@@ -15463,7 +15610,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -7.59,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 254.8,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "SNY-20260803-graph-signal-v1",
@@ -15523,7 +15677,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 3.23,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 44.47,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "WMB-20260803-graph-signal-v1",
@@ -15560,7 +15721,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 5.06,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 75.16,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "SNDK-20260803-graph-signal-v1",
@@ -15609,7 +15777,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 27.87,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 1553.4,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "WMT-20260803-graph-signal-v1",
@@ -15670,7 +15845,14 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": -4.6,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 106.09,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "AMAT-20260803-graph-signal-v1",
@@ -15719,7 +15901,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -13.63,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 438.46,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "KLAC-20260803-graph-signal-v1",
@@ -15768,7 +15957,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -5.78,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 172.26,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "GEV-20260803-graph-signal-v1",
@@ -15805,7 +16001,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -6.9,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 921.94,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "TJX-20260803-graph-signal-v1",
@@ -15842,7 +16045,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -16.54,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 131.31,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "SYK-20260803-graph-signal-v1",
@@ -15879,7 +16089,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -4.15,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 312.19,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "TT-20260803-graph-signal-v1",
@@ -15928,7 +16145,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -3.5,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 439.02,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "VRTX-20260803-graph-signal-v1",
@@ -15965,7 +16189,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 16.69,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 556.75,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "ANET-20260803-graph-signal-v1",
@@ -16025,7 +16256,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 3.19,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 186.1,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "WM-20260803-graph-signal-v1",
@@ -16062,7 +16300,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -3.31,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 219.04,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "AMX-20260803-graph-signal-v1",
@@ -16111,7 +16356,14 @@
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -9.74,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 22.88,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "UNP-20260803-graph-signal-v1",
@@ -16149,7 +16401,14 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": -0.82,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 289.73,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "UNH-20260803-graph-signal-v1",
@@ -16186,7 +16445,14 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": -3.56,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 399.66,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "EOG-20260803-graph-signal-v1",
@@ -16235,7 +16501,14 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 0.18,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 148.96,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "YPF-20260803-graph-signal-v1",
@@ -16272,7 +16545,14 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 2.61,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 53.91,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "UL-20260803-graph-signal-v1",
@@ -16321,7 +16601,14 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 1.83,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 64.57,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "correct"
   },
   {
     "prediction_id": "DE-20260803-graph-signal-v1",
@@ -16382,7 +16669,14 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": 17.83,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 698.37,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "SNOW-20260803-graph-signal-v1",
@@ -16442,7 +16736,14 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 4.28,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 305.84,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "RIO-20260803-graph-signal-v1",
@@ -16535,7 +16836,14 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 6.09,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 102.75,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "ADBE-20260803-graph-signal-v1",
@@ -16573,7 +16881,14 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": 11.73,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 279.79,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "ADP-20260803-graph-signal-v1",
@@ -16611,7 +16926,14 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": 5.52,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 281.16,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "SO-20260803-graph-signal-v1",
@@ -16661,7 +16983,14 @@
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
     "research_only": true,
-    "scenario_model": "qwen2.5:7b-instruct"
+    "scenario_model": "qwen2.5:7b-instruct",
+    "realized_return_pct": -6.59,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 88.31,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "VLO-20260803-graph-signal-v1",
@@ -16732,7 +17061,14 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 17.0,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 366.09,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "BHP-20260803-graph-signal-v1",
@@ -16814,7 +17150,14 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 10.58,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 93.43,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "AMGN-20260803-graph-signal-v1",
@@ -16863,7 +17206,14 @@
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
     "generated_at": "2026-08-03T07:57:12+00:00",
-    "research_only": true
+    "research_only": true,
+    "realized_return_pct": 14.98,
+    "evaluated_at": "2026-09-02T20:47:23+00:00",
+    "evaluation_target_date": "2026-09-02",
+    "outcome_price_date": "2026-09-02",
+    "outcome_price": 442.84,
+    "outcome_price_source": "yahoo_historical_close:2026-09-02",
+    "outcome": "incorrect"
   },
   {
     "prediction_id": "TSM-20260804-graph-signal-v1",
@@ -43159,7 +43509,7 @@
     "confidence": 0.47,
     "score": 0.2,
     "direct_signal": 0.2,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 83.07,
     "key_inputs": [
       {
@@ -43183,7 +43533,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43232,7 +43582,7 @@
     "bull_case": "Demand and execution improve while the signal from EME remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43270,10 +43620,21 @@
         "connected_name": "Arista Networks",
         "relationship_type": "AI-Driven Operations",
         "relationship_side": "upstream",
-        "relationship_strength": 0.32,
+        "relationship_strength": 0.326,
         "connected_direct_signal": 0.0,
         "contribution": 0.0,
         "evidence": "EOS operates as a single software base across Arista's entire hardware portfolio, while also supporting virtualized (vEOS) and containerized (cEOS) deployments in Cloud, AI environments.",
+        "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "CRWV",
+        "connected_name": "CoreWeave, Inc. Class A Common Stock",
+        "relationship_type": "Hardware Leasing",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.65,
+        "connected_direct_signal": 0.0,
+        "contribution": 0.0,
+        "evidence": "In August 2023, CoreWeave secured a $2.3 billion debt financing facility led by Magnetar Capital and Blackstone by using Nvidia's H100 GPUs as collateral.",
         "source_url": "AI Multi-Source Research"
       },
       {
@@ -43286,6 +43647,17 @@
         "contribution": 0.0,
         "evidence": "Manual System Jumpstart",
         "source_url": "Manual System Jumpstart"
+      },
+      {
+        "connected_ticker": "SMCI",
+        "connected_name": "Super Micro Computer, Inc. Common Stock",
+        "relationship_type": "AI Accelerator Chips / GPU Supplier",
+        "relationship_side": "downstream",
+        "relationship_strength": 0.65,
+        "connected_direct_signal": 0.0,
+        "contribution": 0.0,
+        "evidence": "In June 2023, Supermicro saw increased demand for its large language model optimized AI systems, featuring NVIDIA chips.",
+        "source_url": "Manual System Jumpstart / AI Multi-Source Research"
       },
       {
         "connected_ticker": "TSM",
@@ -43314,7 +43686,7 @@
         "connected_name": "Vertiv Holdings Co Class A Common Stock",
         "relationship_type": "Data Center Cooling",
         "relationship_side": "upstream",
-        "relationship_strength": 0.336,
+        "relationship_strength": 0.348,
         "connected_direct_signal": 0.0,
         "contribution": 0.0,
         "evidence": "Manual System Jumpstart",
@@ -43325,7 +43697,7 @@
     "bull_case": "Demand and execution improve while the signal from ANET remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43338,7 +43710,7 @@
     "confidence": 0.46,
     "score": 0.181,
     "direct_signal": 0.181,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 120.07,
     "key_inputs": [
       {
@@ -43362,7 +43734,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43375,7 +43747,7 @@
     "confidence": 0.46,
     "score": 0.176,
     "direct_signal": 0.176,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 147.3,
     "key_inputs": [
       {
@@ -43399,7 +43771,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43412,7 +43784,7 @@
     "confidence": 0.45,
     "score": 0.17,
     "direct_signal": 0.17,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 256.37,
     "key_inputs": [
       {
@@ -43436,7 +43808,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43449,7 +43821,7 @@
     "confidence": 0.45,
     "score": 0.165,
     "direct_signal": 0.165,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 93.78,
     "key_inputs": [
       {
@@ -43473,7 +43845,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43522,7 +43894,7 @@
     "bull_case": "Demand and execution improve while the signal from SYY remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43535,7 +43907,7 @@
     "confidence": 0.45,
     "score": 0.159,
     "direct_signal": 0.159,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 72.65,
     "key_inputs": [
       {
@@ -43559,7 +43931,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43572,7 +43944,7 @@
     "confidence": 0.44,
     "score": 0.153,
     "direct_signal": 0.153,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 97.0,
     "key_inputs": [
       {
@@ -43596,7 +43968,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43609,7 +43981,7 @@
     "confidence": 0.44,
     "score": 0.148,
     "direct_signal": 0.148,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 57.7,
     "key_inputs": [
       {
@@ -43633,7 +44005,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43646,7 +44018,7 @@
     "confidence": 0.44,
     "score": 0.147,
     "direct_signal": 0.147,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 50.0,
     "key_inputs": [
       {
@@ -43670,7 +44042,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43683,7 +44055,7 @@
     "confidence": 0.44,
     "score": 0.142,
     "direct_signal": 0.142,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 141.32,
     "key_inputs": [
       {
@@ -43707,7 +44079,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43720,7 +44092,7 @@
     "confidence": 0.43,
     "score": 0.141,
     "direct_signal": 0.141,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 358.655,
     "key_inputs": [
       {
@@ -43744,7 +44116,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43757,7 +44129,7 @@
     "confidence": 0.43,
     "score": 0.139,
     "direct_signal": 0.139,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 218.91,
     "key_inputs": [
       {
@@ -43781,7 +44153,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43830,7 +44202,7 @@
     "bull_case": "Demand and execution improve while the signal from EFX remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43843,7 +44215,7 @@
     "confidence": 0.42,
     "score": 0.124,
     "direct_signal": 0.124,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 30.63,
     "key_inputs": [
       {
@@ -43867,7 +44239,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43916,7 +44288,7 @@
     "bull_case": "The recent price change of 32% indicates strong investor interest in NXPI. Analysts project a significant upside potential of 35%, which could drive the stock higher. Despite the connection with ARM, whose performance has been negative recently, the relationship as an IP licensee is not expected to significantly impact NXPI's trajectory positively.",
     "bear_case": "While recent price changes and analyst targets are favorable, the historical outcomes for ARM suggest caution. The connection with ARM could pose risks if their performance continues to decline, potentially dragging down NXPI despite its positive signals.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true,
     "scenario_model": "qwen2.5:7b-instruct"
   },
@@ -43951,17 +44323,6 @@
     ],
     "connection_paths": [
       {
-        "connected_ticker": "R",
-        "connected_name": "Ryder System, Inc.",
-        "relationship_type": "Logistics and Transportation",
-        "relationship_side": "upstream",
-        "relationship_strength": 0.288,
-        "connected_direct_signal": 0.0,
-        "contribution": 0.0,
-        "evidence": "Bobby J. Griffin \u2013 Former President, International Operations of Ryder System, Inc.",
-        "source_url": "AI Multi-Source Research"
-      },
-      {
         "connected_ticker": "KR",
         "connected_name": "The Kroger Co.",
         "relationship_type": "Wholesale Distribution",
@@ -43971,13 +44332,24 @@
         "contribution": 0.0,
         "evidence": "Food distribution and buying takes place under various subsidiaries and divisions. These include: Kroger Group Cooperative, Inc., Kroger Group, Inc., Peytons, WESCO, Inter-American Products",
         "source_url": "AI Multi-Source Research"
+      },
+      {
+        "connected_ticker": "R",
+        "connected_name": "Ryder System, Inc.",
+        "relationship_type": "Logistics and Transportation",
+        "relationship_side": "upstream",
+        "relationship_strength": 0.288,
+        "connected_direct_signal": 0.0,
+        "contribution": 0.0,
+        "evidence": "Bobby J. Griffin \u2013 Former President, International Operations of Ryder System, Inc.",
+        "source_url": "AI Multi-Source Research"
       }
     ],
     "scenario_summary": "WCC has a positive research signal over the next 30 days, supported by direct inputs and tracked supply-chain exposure.",
-    "bull_case": "Demand and execution improve while the signal from R remains supportive.",
+    "bull_case": "Demand and execution improve while the signal from KR remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -43990,7 +44362,7 @@
     "confidence": 0.42,
     "score": 0.123,
     "direct_signal": 0.123,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 70.6,
     "key_inputs": [
       {
@@ -44014,7 +44386,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44027,7 +44399,7 @@
     "confidence": 0.42,
     "score": 0.119,
     "direct_signal": 0.119,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 40.83,
     "key_inputs": [
       {
@@ -44051,7 +44423,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44064,7 +44436,7 @@
     "confidence": 0.42,
     "score": 0.118,
     "direct_signal": 0.118,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 106.86,
     "key_inputs": [
       {
@@ -44088,7 +44460,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44101,7 +44473,7 @@
     "confidence": 0.42,
     "score": 0.109,
     "direct_signal": 0.109,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 87.95,
     "key_inputs": [
       {
@@ -44125,7 +44497,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44138,7 +44510,7 @@
     "confidence": 0.41,
     "score": 0.104,
     "direct_signal": 0.104,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 11.59,
     "key_inputs": [
       {
@@ -44162,7 +44534,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44175,7 +44547,7 @@
     "confidence": 0.41,
     "score": 0.094,
     "direct_signal": 0.094,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 86.09,
     "key_inputs": [
       {
@@ -44199,7 +44571,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44212,7 +44584,7 @@
     "confidence": 0.4,
     "score": 0.085,
     "direct_signal": 0.085,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 27.2,
     "key_inputs": [
       {
@@ -44236,7 +44608,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44274,7 +44646,7 @@
         "connected_name": "Waters Corp",
         "relationship_type": "Supply Relationship",
         "relationship_side": "upstream",
-        "relationship_strength": 0.263,
+        "relationship_strength": 0.268,
         "connected_direct_signal": 0.0,
         "contribution": 0.0,
         "evidence": "In 1963, Waters\u2019 produced its first five gel permeation chromatography instruments, selling three to Dow Chemical, one to BFGoodrich, and one to Esso.",
@@ -44285,7 +44657,7 @@
     "bull_case": "Demand and execution improve while the signal from WAT remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44298,7 +44670,7 @@
     "confidence": 0.4,
     "score": 0.081,
     "direct_signal": 0.081,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 245.08,
     "key_inputs": [
       {
@@ -44322,7 +44694,7 @@
     "bull_case": "Demand and execution improve while the signal from its tracked counterparties remains supportive.",
     "bear_case": "A market reversal, valuation reset, or a broken relationship assumption could overwhelm the current evidence.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44335,7 +44707,7 @@
     "confidence": 0.4,
     "score": 0.077,
     "direct_signal": 0.077,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 119.96,
     "key_inputs": [
       {
@@ -44359,7 +44731,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44408,10 +44780,10 @@
         "connected_name": "IDEXX Laboratories, Inc. Common Stock",
         "relationship_type": "operational supply-chain dependency",
         "relationship_side": "downstream",
-        "relationship_strength": 0.596,
+        "relationship_strength": 0.6,
         "connected_direct_signal": 0.0,
         "contribution": 0.0,
-        "evidence": "Natera offers a cloud-based bioinformatics platform called Constellation, allowing laboratories to access and use Natera\\u2019s technology in their own facilities.",
+        "evidence": "Natera offers a cloud-based bioinformatics platform called Constellation, allowing laboratories to access and use Natera\u2019s technology in their own facilities.",
         "source_url": "AI Multi-Source Research"
       }
     ],
@@ -44419,7 +44791,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44432,7 +44804,7 @@
     "confidence": 0.4,
     "score": 0.075,
     "direct_signal": 0.075,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 66.58,
     "key_inputs": [
       {
@@ -44456,7 +44828,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44469,7 +44841,7 @@
     "confidence": 0.39,
     "score": 0.073,
     "direct_signal": 0.073,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 255.42,
     "key_inputs": [
       {
@@ -44493,7 +44865,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44506,7 +44878,7 @@
     "confidence": 0.39,
     "score": 0.071,
     "direct_signal": 0.071,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 66.69,
     "key_inputs": [
       {
@@ -44530,7 +44902,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44579,7 +44951,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44592,7 +44964,7 @@
     "confidence": 0.39,
     "score": 0.059,
     "direct_signal": 0.059,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 34.23,
     "key_inputs": [
       {
@@ -44616,7 +44988,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44629,7 +45001,7 @@
     "confidence": 0.38,
     "score": 0.057,
     "direct_signal": 0.057,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 166.43,
     "key_inputs": [
       {
@@ -44653,7 +45025,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44666,7 +45038,7 @@
     "confidence": 0.38,
     "score": 0.056,
     "direct_signal": 0.056,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 187.01,
     "key_inputs": [
       {
@@ -44690,7 +45062,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44703,7 +45075,7 @@
     "confidence": 0.38,
     "score": 0.054,
     "direct_signal": 0.054,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 79.15,
     "key_inputs": [
       {
@@ -44727,7 +45099,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44765,7 +45137,7 @@
         "connected_name": "Chevron Corporation",
         "relationship_type": "Raw Materials",
         "relationship_side": "upstream",
-        "relationship_strength": 0.285,
+        "relationship_strength": 0.287,
         "connected_direct_signal": 0.0,
         "contribution": 0.0,
         "evidence": "TC Energy transports natural gas from production to end use markets.",
@@ -44798,7 +45170,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44811,7 +45183,7 @@
     "confidence": 0.37,
     "score": 0.04,
     "direct_signal": 0.04,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 183.16,
     "key_inputs": [
       {
@@ -44835,7 +45207,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44884,7 +45256,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44897,7 +45269,7 @@
     "confidence": 0.37,
     "score": 0.031,
     "direct_signal": 0.031,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 76.99,
     "key_inputs": [
       {
@@ -44921,7 +45293,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -44934,7 +45306,7 @@
     "confidence": 0.37,
     "score": 0.03,
     "direct_signal": 0.03,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 395.72,
     "key_inputs": [
       {
@@ -44958,7 +45330,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -45007,7 +45379,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -45020,7 +45392,7 @@
     "confidence": 0.37,
     "score": 0.026,
     "direct_signal": 0.026,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 25.86,
     "key_inputs": [
       {
@@ -45044,7 +45416,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -45057,7 +45429,7 @@
     "confidence": 0.37,
     "score": -0.026,
     "direct_signal": -0.026,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 37.76,
     "key_inputs": [
       {
@@ -45081,7 +45453,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -45094,7 +45466,7 @@
     "confidence": 0.36,
     "score": 0.022,
     "direct_signal": 0.022,
-    "network_signal": 0.0,
+    "network_signal": 0,
     "starting_price": 332.96,
     "key_inputs": [
       {
@@ -45118,7 +45490,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -45181,29 +45553,7 @@
         "relationship_strength": 0.277,
         "connected_direct_signal": 0.0,
         "contribution": 0.0,
-        "evidence": "One of its early success stories is with the Novartis-led \\u201cSMS for Life\\u201d project in Tanzania, for which Vodafone developed and deployed a text-message based system that enables all the country\\u2019s 4,600 public health facilities to report their levels of anti-malarial medications so that stock level data can be viewed centrally in real-time, enabling timely re-supply of stock.",
-        "source_url": "AI Multi-Source Research"
-      },
-      {
-        "connected_ticker": "MRK",
-        "connected_name": "Merck & Co., Inc.",
-        "relationship_type": "Raw Materials",
-        "relationship_side": "downstream",
-        "relationship_strength": 0.505,
-        "connected_direct_signal": 0.0,
-        "contribution": 0.0,
-        "evidence": "Not directly stated but RotaTeq vaccine is provided by Novartis to Merck & Co.",
-        "source_url": "AI Multi-Source Research"
-      },
-      {
-        "connected_ticker": "VEEV",
-        "connected_name": "Veeva Systems Inc.",
-        "relationship_type": "Regulatory Affairs Management Platform Subscription",
-        "relationship_side": "downstream",
-        "relationship_strength": 0.507,
-        "connected_direct_signal": 0.0,
-        "contribution": 0.0,
-        "evidence": "The company has 1,552 customers including Novartis.",
+        "evidence": "One of its early success stories is with the Novartis-led \u201cSMS for Life\u201d project in Tanzania, for which Vodafone developed and deployed a text-message based system that enables all the country\u2019s 4,600 public health facilities to report their levels of anti-malarial medications so that stock level data can be viewed centrally in real-time, enabling timely re-supply of stock.",
         "source_url": "AI Multi-Source Research"
       }
     ],
@@ -45211,7 +45561,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -45260,7 +45610,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   },
   {
@@ -45309,7 +45659,7 @@
     "bull_case": "Positive direct inputs or connected-company demand improve enough to create a clearer upside case.",
     "bear_case": "Negative market, valuation, or supply-chain developments create a clearer downside case.",
     "model_name": "graph-signal-v1",
-    "generated_at": "2026-09-02T08:57:50+00:00",
+    "generated_at": "2026-09-02T20:47:23+00:00",
     "research_only": true
   }
 ]
