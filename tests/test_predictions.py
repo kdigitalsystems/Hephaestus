@@ -111,6 +111,21 @@ def test_review_status_is_read_by_token_not_substring():
         assert relationship_weight({"confidence": 0.9, "review_status": wording, "type": "x"}, "downstream", calibration) == pending
 
 
+def test_disclosed_revenue_share_scales_transfer_strength():
+    from predictions import magnitude_weight
+
+    calibration = {"relationship_weights": {}}
+    base = {"confidence": 0.9, "review_status": "approved", "type": "x"}
+    undisclosed = relationship_weight(base, "downstream", calibration)
+    small = relationship_weight({**base, "revenue_share": 10}, "downstream", calibration)
+    large = relationship_weight({**base, "revenue_share": 40}, "downstream", calibration)
+
+    assert magnitude_weight({}) == 1.0
+    assert magnitude_weight({"revenue_share": 50}) == 1.0
+    assert small < large <= undisclosed
+    assert abs(magnitude_weight({"revenue_share": 10}) - 0.68) < 1e-9
+
+
 def test_calibration_counts_one_observation_per_type_per_prediction():
     single_path = [{"outcome": "correct", "connection_paths": [{"relationship_type": "Customer"}]}]
     many_paths = [{"outcome": "correct", "connection_paths": [{"relationship_type": "Customer"}] * 5}]

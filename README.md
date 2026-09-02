@@ -163,6 +163,8 @@ The current source mix includes:
 - FCC equipment authorization data for technology, electronics, telecom, wireless, and hardware companies.
 - NHTSA manufacturer records for vehicle-related companies.
 
+Annual reports are also mined deterministically for **customer-concentration disclosures** — the customers an issuer must name because they account for 10% or more of its revenue ("Apple accounted for approximately 24% of our net sales"). Each match becomes a pending `Revenue Concentration` edge from the filer to the named customer, cites the filing, and stores the disclosed share in `revenue_share`, which the dashboard shows as "24% of revenue" on the relationship card and the research signals use to scale how much of a customer's signal transfers to its supplier. Disable it with `HEPHAESTUS_USE_CUSTOMER_CONCENTRATION=0`.
+
 SEC annual filings and exhibits are primary-source evidence and are enabled by default; they can be disabled for faster local experiments:
 
 ```bash
@@ -323,7 +325,7 @@ Each signal combines a small set of explainable direct inputs with one-hop suppl
 - Direct inputs: recent published price change, analyst target gap, and the exported analyst recommendation.
 - Customer-to-supplier propagation: a positive customer signal can contribute a dampened positive demand signal to a tracked supplier.
 - Supplier-to-customer propagation: supplier-side signals use a smaller weight because their effect on the customer is more ambiguous.
-- Relationship confidence, approval state, and later measured relationship-type performance constrain every transfer.
+- Relationship confidence, approval state, the disclosed revenue share when the supplier reported one, and later measured relationship-type performance constrain every transfer.
 
 Every published prediction contains its direct and network scores, structured inputs, all contributing relationship paths with source evidence (each counterparty is counted once, and the network score is the sum of the published path contributions), confidence, bull/bear scenarios, model version, and generation time. Scores remain deterministic and auditable. A local Ollama model may generate concise scenario prose from this already-selected evidence, but it cannot choose a direction, change confidence, set a price target, or introduce new facts.
 
@@ -458,6 +460,7 @@ python3 backend/validate_dashboard_data.py
 - `source_title`
 - `evidence_excerpt`
 - `review_status`: `pending`, `approved`, or `rejected`
+- `revenue_share`: percentage of the supplier's revenue attributed to the customer when the supplier disclosed it (10% customers); otherwise null
 - `review_note`
 
 AI-discovered relationships require a substantive excerpt from the collected source text. The discovery, review, cleanup, repair, and published-data validation stages all reject missing or placeholder evidence; explicitly curated manual seeds remain supported. Discovery also checks that the excerpt actually appears in the text the collectors gathered (minor rewording is tolerated), trusts a model-supplied ticker only when it names the extracted company, and keeps `evidence_source_url` only when it is one of the URLs Hephaestus itself fetched.

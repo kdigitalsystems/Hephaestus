@@ -142,13 +142,29 @@ def review_weight(status_value: Any) -> float:
     return 0.35
 
 
+def magnitude_weight(relationship: dict[str, Any]) -> float:
+    """Scale by disclosed revenue share when the supplier reported it.
+
+    A customer worth 40% of a supplier's revenue moves that supplier far more than
+    one worth 10%; undisclosed relationships keep a neutral weight.
+    """
+    share = as_number(relationship.get("revenue_share"), 0.0)
+    if share <= 0:
+        return 1.0
+    return clamp(0.6 + 0.4 * min(share, 50.0) / 50.0, 0.6, 1.0)
+
+
 def relationship_weight(relationship: dict[str, Any], side: str, calibration: dict[str, Any]) -> float:
-    """Dampen graph transfer using review quality, confidence, direction, and experience."""
+    """Dampen graph transfer using review quality, confidence, direction, magnitude, and experience."""
     confidence = clamp(as_number(relationship.get("confidence"), 0.5), 0.0, 1.0)
     direction_weight = 0.62 if side == "downstream" else 0.32
     relationship_type = str(relationship.get("type") or "Supply Link").lower()
     learned_weight = as_number(calibration.get("relationship_weights", {}).get(relationship_type), 1.0)
-    return clamp(confidence * review_weight(relationship.get("review_status")) * direction_weight * learned_weight, 0.0, 0.65)
+    return clamp(
+        confidence * review_weight(relationship.get("review_status")) * direction_weight * magnitude_weight(relationship) * learned_weight,
+        0.0,
+        0.65,
+    )
 
 
 def relationship_index(companies: Iterable[dict[str, Any]]) -> dict[str, list[tuple[dict[str, Any], str]]]:
@@ -243,6 +259,7 @@ def build_prediction(company: dict[str, Any], company_by_ticker: dict[str, dict[
             "relationship_type": relationship.get("type") or "Supply Link",
             "relationship_side": side,
             "relationship_strength": round(weight, 3),
+            "revenue_share": relationship.get("revenue_share"),
             "connected_direct_signal": round(connected_score, 3),
             "contribution": round(contribution, 3),
             "evidence": relationship.get("evidence_excerpt") or relationship.get("source_title") or "Published relationship evidence",

@@ -75,6 +75,9 @@ class Edge(Base):
     source_title = Column(String, nullable=True)
     evidence_excerpt = Column(Text, nullable=True)
     review_status = Column(String, nullable=False, default="pending", index=True)
+    # Share of the supplier's revenue attributed to this customer, from the filer's own
+    # customer-concentration disclosure (10% customers). None when not disclosed.
+    revenue_share = Column(Float, nullable=True)
     review_note = Column(Text, nullable=True)
     reviewed_at = Column(DateTime, nullable=True)
     last_verified = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

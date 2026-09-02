@@ -65,6 +65,8 @@ def apply_lightweight_migrations():
             connection.execute(text("ALTER TABLE edges ADD COLUMN review_note TEXT"))
         if "reviewed_at" not in edge_columns:
             connection.execute(text("ALTER TABLE edges ADD COLUMN reviewed_at DATETIME"))
+        if "revenue_share" not in edge_columns:
+            connection.execute(text("ALTER TABLE edges ADD COLUMN revenue_share FLOAT"))
         # create_all() skips tables that already exist, so indexes added to the
         # models later must be created here for databases built before them.
         connection.execute(text("CREATE INDEX IF NOT EXISTS ix_edges_source_id ON edges (source_id)"))

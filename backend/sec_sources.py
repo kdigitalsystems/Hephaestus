@@ -253,8 +253,36 @@ def relevant_windows(text, terms=SUPPLY_CHAIN_TERMS, window=650, max_chars=5000,
     return "\n...\n".join(chunks)[:max_chars]
 
 
+# Filing bodies are large and several collectors read the same annual report in one
+# run; cache the extracted text per URL for the life of the process.
+_FILING_TEXT_CACHE = {}
+
+
 def fetch_filing_text(filing, timeout=30):
-    return html_to_text(fetch_document_text(filing["url"], sec_archive_headers(), timeout))
+    url = filing["url"]
+    if url not in _FILING_TEXT_CACHE:
+        _FILING_TEXT_CACHE[url] = html_to_text(fetch_document_text(url, sec_archive_headers(), timeout))
+    return _FILING_TEXT_CACHE[url]
+
+
+ANNUAL_FORMS = ("10-K", "20-F", "40-F")
+
+
+def latest_annual_filing(ticker):
+    """Return (filing, full text) for the issuer's most recent annual report, or (None, "")."""
+    cik = ticker_to_cik(ticker)
+    if not cik:
+        return None, ""
+    filings = recent_filings(cik, forms=ANNUAL_FORMS, limit=1)
+    if not filings:
+        return None, ""
+    filing = filings[0]
+    filing["cik"] = cik
+    try:
+        return filing, fetch_filing_text(filing)
+    except requests.RequestException as exc:
+        print(f"  [-] SEC annual filing unavailable for {ticker}: {exc}")
+        return filing, ""
 
 
 def fetch_filing_index(filing, timeout=20):
