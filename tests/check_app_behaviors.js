@@ -335,11 +335,39 @@ vm.runInContext(`
   openEvidenceModal({ ticker: "TSM", name: "Taiwan Semiconductor", type: "Foundry", product: "wafers", confidence: 0.95, source_type: "AI Research", last_verified: "2026-06-01" }, { ticker: "AMD" }, "upstream");
 `, context);
 const modalText = collectText(element("modal-body"));
-["95%", "AI Research", "2026-06-01", "No evidence excerpt was saved for this relationship."].forEach((expected) => {
+["95%", "AI Research", "2026-06-01", "No evidence excerpt was saved for this relationship.", "AI research · no direct citation", "Awaiting review", "How links are verified"].forEach((expected) => {
   if (!modalText.includes(expected)) {
     throw new Error(`details modal missing ${expected}; got ${modalText}`);
   }
 });
+
+vm.runInContext(`
+  openEvidenceModal({
+    ticker: "TSM", name: "Taiwan Semiconductor", type: "Foundry", product: "wafers", confidence: 0.9, review_status: "approved",
+    source: "https://www.sec.gov/Archives/edgar/data/1/10k.htm", source_title: "SEC EDGAR (10-K filed 2025-10-31)", source_type: "Web Source",
+    review_summary: { method: "consensus", label: "Consensus panel 3/3 models", votes_for: 3, votes_total: 3, rationale: "TSMC fabricates AMD's processors." },
+    evidence_excerpt: "TSMC fabricates the processors AMD sells.", last_verified: "2026-09-01",
+  }, { ticker: "AMD" }, "upstream");
+`, context);
+const citedModalText = collectText(element("modal-body"));
+["SEC EDGAR (10-K filed 2025-10-31)", "Consensus panel 3/3 models", "Reviewer rationale: TSMC fabricates AMD's processors.", "Open source"].forEach((expected) => {
+  if (!citedModalText.includes(expected)) {
+    throw new Error(`evidence modal missing provenance ${expected}; got ${citedModalText}`);
+  }
+});
+
+vm.runInContext(`
+  globalThis.__provenance = [
+    provenanceLabel({ source: "AI Multi-Source Research", source_type: "AI Research" }),
+    provenanceLabel({ source: "Manual System Jumpstart", source_type: "Manual" }),
+    provenanceLabel({ source: "https://www.sec.gov/x", source_title: "SEC EDGAR (10-K)" }),
+    reviewLabel({ review_status: "approved" }),
+    reviewLabel({ review_status: "pending" }),
+  ];
+`, context);
+if (JSON.stringify(context.__provenance) !== JSON.stringify(["AI research · no direct citation", "Curated seed", "SEC EDGAR (10-K)", "Reviewed", "Awaiting review"])) {
+  throw new Error(`provenance labels wrong: ${JSON.stringify(context.__provenance)}`);
+}
 
 element("search-input").value = "taiwan";
 element("sector-filter").value = "";

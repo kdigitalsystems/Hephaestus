@@ -32,6 +32,7 @@ docs/
   DATA_SOURCES.md         Source inventory and source-quality guidance
   TESTING.md              Local checks, CI jobs, and scheduled pipeline notes
   index.html              Static dashboard shell
+  methodology.html        Public explanation of sources, review rules, labels, and limits
   app.js                  Dashboard behavior
   styles.css              Dashboard styling
   dashboard_data.json     Exported dashboard data
@@ -298,7 +299,7 @@ HEPHAESTUS_EXPORT_AI_RESEARCH=1 python3 backend/export.py
 
 Use that mode only after reviewing the generated relationships; LLM extraction can create plausible but wrong links.
 
-The exported dashboard includes review metadata for CI and maintainer workflows, but the public UI intentionally keeps approval/rejection details out of the main experience.
+The exported dashboard includes review metadata for CI and maintainer workflows. Each published relationship also carries a compact `review_summary` (curated seed, consensus panel vote count, single-model review, or human review, plus a short rationale) and a `source_title` citation derived from the collector that supplied the evidence, so the dashboard can show how a link was verified and where it came from; `docs/methodology.html` documents the sources, review rules, and limitations for readers. The pending review queue itself is not part of the public experience.
 
 The dashboard payload also includes investor-facing derived metrics:
 

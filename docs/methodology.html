@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methodology - Hephaestus Supply Chain Intelligence</title>
+    <meta name="description" content="How Hephaestus finds, verifies, and publishes supplier and customer relationships between public companies, and what its confidence and review labels mean.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        try {
+            document.documentElement.dataset.theme = localStorage.getItem('hephaestus_theme') === 'light' ? 'light' : 'dark';
+        } catch (_error) {
+            document.documentElement.dataset.theme = 'dark';
+        }
+    </script>
+    <link rel="alternate" type="application/rss+xml" title="Hephaestus supply-chain changes" href="feed.xml">
+    <link rel="stylesheet" href="styles.css?v=20260902-methodology1">
+</head>
+<body>
+    <main class="methodology-page">
+        <a class="back-link" href="./">&larr; Back to the dashboard</a>
+        <p class="eyebrow">Methodology</p>
+        <h1>How Hephaestus builds and verifies its supply-chain graph</h1>
+        <p>Hephaestus publishes supplier and customer relationships between public companies. Every relationship on the site is backed by a text excerpt, carries a source and a verification label, and stays visible only while it is approved. This page explains where the data comes from, how it is checked, and what its limits are.</p>
+
+        <h2 id="sources">Where relationships come from</h2>
+        <p>Discovery reads public text about each company and looks for statements that one company supplies another. In order of quality:</p>
+        <ul>
+            <li><strong>Annual and quarterly reports</strong> filed with the SEC (10-K, 10-Q, 20-F, 40-F), including material-contract exhibits such as supply and manufacturing agreements.</li>
+            <li><strong>Customer-concentration disclosures.</strong> Issuers must name customers that account for 10% or more of revenue. These sentences are extracted deterministically, without a language model, and are the only relationships that carry a magnitude ("24% of revenue").</li>
+            <li><strong>Public datasets</strong>: USAspending awards, SAM.gov opportunities, openFDA device and drug records, FCC equipment authorizations, and NHTSA manufacturer records, each used only for the sectors they describe.</li>
+            <li><strong>Company investor-relations pages</strong> and a small set of curated source URLs.</li>
+            <li><strong>Wikipedia</strong> operations and product sections, used as context only and capped so it cannot crowd out filings.</li>
+        </ul>
+        <p>Press articles are off by default. Pages that require logins, bypass paywalls, or violate dataset terms are never used. Curated seed relationships (a handful of well-known hardware dependencies) are marked as such.</p>
+
+        <h2 id="extraction">How relationships are extracted</h2>
+        <p>A local language model reads the collected text and proposes relationships in a fixed schema: supplier, customer, what is supplied, a verbatim evidence excerpt, and the source it came from. The model's output is not trusted on its own:</p>
+        <ul>
+            <li>The excerpt must actually appear in the collected text; paraphrases beyond minor rewording are discarded.</li>
+            <li>A source URL is kept only if it is one Hephaestus itself fetched, so a scraped page cannot inject a fake citation.</li>
+            <li>A ticker supplied by the model is accepted only when it names the same company as the extracted name.</li>
+            <li>Labels that describe a role instead of a product ("Customer", "Supplier") and relationships that are really acquisitions, partnerships, licences, lawsuits, or investments are filtered out.</li>
+        </ul>
+        <p>Everything that survives enters the graph as <em>pending</em>. Pending relationships are never shown on the public dashboard.</p>
+
+        <h2 id="review">How relationships are verified</h2>
+        <p>Each pending relationship goes through two layers of review.</p>
+        <dl>
+            <dt>Deterministic checks</dt>
+            <dd>Self-links, missing or placeholder evidence, financial vehicles that are not operating companies, excerpts that do not name both companies, and relationships whose opposite direction is already approved are rejected or held for a person before any model votes.</dd>
+            <dt>Consensus panel</dt>
+            <dd>Three independent local models each decide whether the relationship is real, whether its direction is right, and how confident they are. A relationship is approved only when at least two models agree on the same decision <em>and</em> the same direction, with average confidence of at least 0.85. Split votes, low confidence, and direction disagreements stay pending.</dd>
+            <dt>Human review</dt>
+            <dd>Maintainers can approve, reject, reverse, or relabel any relationship. Human decisions are persisted and replayed on every run so an automated pass cannot undo them.</dd>
+        </dl>
+        <p>The verification label on each relationship card tells you which of these applied: <strong>Consensus panel 3/3 models</strong>, <strong>Single-model review</strong> (older relationships reviewed before the panel existed), <strong>Human review</strong>, or <strong>Curated seed relationship</strong>. The evidence dialog shows the lead reviewer's rationale where one was recorded.</p>
+
+        <h2 id="labels">What the labels mean</h2>
+        <dl>
+            <dt>Confidence</dt>
+            <dd>The reviewing models' average confidence that the relationship is real and correctly directed. It is a model score, not a measure of how important the relationship is.</dd>
+            <dt>Source</dt>
+            <dd>The document the evidence excerpt came from. "AI research, no direct citation" means the relationship was extracted from collected text before source tracking existed, or from a source without a stable URL. Relationships discovered after September 2026 cite their filing directly.</dd>
+            <dt>Share of revenue</dt>
+            <dd>The percentage of the supplier's revenue attributed to that customer, as disclosed by the supplier in its own annual report. Shown only when disclosed.</dd>
+            <dt>Verified date</dt>
+            <dd>When the relationship was last reviewed or re-confirmed, not when the underlying business relationship began.</dd>
+        </dl>
+
+        <h2 id="limits">Limits you should know about</h2>
+        <ul>
+            <li><strong>Coverage is partial.</strong> The graph contains only relationships that public text describes explicitly. A missing link does not mean no relationship exists.</li>
+            <li><strong>Direction can be wrong.</strong> Filing prose is ambiguous about who supplies whom. The panel checks direction, but errors reach the dashboard occasionally; reciprocal pairs are held for review when detected.</li>
+            <li><strong>Magnitude is mostly unknown.</strong> Except for disclosed revenue shares, the graph says that a relationship exists, not how much either company depends on it.</li>
+            <li><strong>Entity matching is imperfect.</strong> Company names in prose are matched against listed companies; a place name or a product line can occasionally be matched to the wrong company. Excerpts that do not name both companies are held rather than published.</li>
+            <li><strong>Timing.</strong> Sources are re-read on a daily schedule; a relationship that ended may remain until its evidence is re-evaluated.</li>
+        </ul>
+
+        <h2 id="signals">Research signals</h2>
+        <p>The Predictions view publishes bounded, deterministic research signals for the 50 largest companies in the graph. Each signal combines recent price change, analyst target gap, and analyst recommendation with a dampened one-hop transfer of connected companies' signals through approved relationships. A local model may narrate scenarios but cannot change a direction, a score, or add facts. Signals are evaluated against actual prices when their 30-day horizon matures, and the resulting hit rate is published as it accumulates. They are research tooling, not investment advice or a recommendation to trade.</p>
+
+        <h2 id="freshness">Freshness and feeds</h2>
+        <p>The graph is rebuilt and published daily. The overview shows what changed since the previous run, and the same changes are available as <a href="changes.json">JSON</a> and an <a href="feed.xml">RSS feed</a>. Market data comes from public quote services and may lag or be missing for some companies.</p>
+
+        <h2 id="reuse">Reuse</h2>
+        <p>The code is open source under the MIT licence at <a href="https://github.com/kdigitalsystems/Hephaestus">github.com/kdigitalsystems/Hephaestus</a>, where the review rules, thresholds, and source list described here can be read directly. The published data is provided as-is for research; verify anything you rely on against the cited source.</p>
+    </main>
+</body>
+</html>

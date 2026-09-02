@@ -185,6 +185,34 @@ def test_rejected_members_never_contribute_to_a_merged_row():
     assert merged["type"] == "Foundry"
 
 
+def test_review_notes_become_publishable_verification_records():
+    consensus = export.summarize_review(
+        "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.90; votes approve:2, reject:1). "
+        "Lead rationale from qwen2.5:7b-instruct: TSMC manufactures the wafers AMD sells, so TSM is upstream.",
+        "AI Multi-Source Research",
+        "approved",
+    )
+    assert consensus["method"] == "consensus"
+    assert consensus["label"] == "Consensus panel 2/3 models"
+    assert (consensus["votes_for"], consensus["votes_total"]) == (2, 3)
+    assert consensus["rationale"].startswith("TSMC manufactures the wafers")
+
+    single = export.summarize_review("Ollama review: Vulcan developed buildings that Amazon occupied.", "AI Multi-Source Research", "approved")
+    assert single["method"] == "model" and single["label"] == "Single-model review"
+    assert single["rationale"].startswith("Vulcan developed")
+
+    seed = export.summarize_review("Curated seed relationship", "Manual System Jumpstart", "approved")
+    assert seed["method"] == "curated"
+
+    human = export.summarize_review("Verified against the 2025 10-K, page 14.", "https://www.sec.gov/x", "approved")
+    assert human["method"] == "human" and human["rationale"] == "Verified against the 2025 10-K, page 14."
+
+    assert export.summarize_review("", "AI Multi-Source Research", "pending")["method"] == "unreviewed"
+    assert export.summarize_review(None, "AI Multi-Source Research", "approved")["label"] == "Review record unavailable"
+    long_note = "Ollama review: " + "word " * 100
+    assert len(export.summarize_review(long_note, "", "approved")["rationale"]) <= export.RATIONALE_MAX_CHARS + 1
+
+
 def test_placeholders_are_never_published_as_values():
     assert export.displayable("None") == "N/A"
     assert export.displayable("none") == "N/A"
