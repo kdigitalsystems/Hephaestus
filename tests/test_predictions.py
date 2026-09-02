@@ -111,6 +111,40 @@ def test_review_status_is_read_by_token_not_substring():
         assert relationship_weight({"confidence": 0.9, "review_status": wording, "type": "x"}, "downstream", calibration) == pending
 
 
+def test_track_record_reports_baseline_and_status():
+    from predictions import MIN_RESOLVED_FOR_TRACK_RECORD, track_record
+
+    now = datetime(2026, 9, 2, tzinfo=timezone.utc)
+    history = [
+        {"direction": "up", "outcome": "correct", "realized_return_pct": 5.0, "evaluated_at": "2026-09-01T04:30:00+00:00", "generated_at": "2026-07-27T12:00:00+00:00"},
+        {"direction": "up", "outcome": "incorrect", "realized_return_pct": -3.0, "evaluated_at": "2026-09-01T04:30:00+00:00", "generated_at": "2026-07-27T12:00:00+00:00"},
+        {"direction": "neutral", "outcome": "incorrect", "realized_return_pct": 4.0, "evaluated_at": "2026-09-02T04:30:00+00:00", "generated_at": "2026-07-27T12:00:00+00:00"},
+        {"direction": "up", "generated_at": "2026-07-01T12:00:00+00:00", "horizon_days": 30},  # matured, no price yet
+        {"direction": "up", "generated_at": "2026-09-01T12:00:00+00:00", "horizon_days": 30},  # not matured
+    ]
+
+    record = track_record(history, now)
+
+    assert record["status"] == "experimental" and record["minimum_resolved"] == MIN_RESOLVED_FOR_TRACK_RECORD
+    assert record["resolved"] == 3 and record["hits"] == 1
+    assert abs(record["hit_rate"] - 1 / 3) < 1e-3
+    assert abs(record["always_up_hit_rate"] - 2 / 3) < 1e-3
+    assert record["matured_unresolved"] == 1
+    assert record["by_direction"] == {"neutral": {"resolved": 1, "hit_rate": 0.0}, "up": {"resolved": 2, "hit_rate": 0.5}}
+    assert record["latest_evaluated_on"] == "2026-09-02"
+
+    established = track_record([dict(history[0]) for _ in range(MIN_RESOLVED_FOR_TRACK_RECORD)], now)
+    assert established["status"] == "established" and established["hit_rate"] == 1.0
+    assert track_record([], now)["hit_rate"] is None
+
+
+def test_generated_payload_includes_track_record():
+    payload, _ = generate_predictions(dashboard(company("BASE", 200)), [], now=datetime(2026, 1, 1, tzinfo=timezone.utc))
+
+    assert payload["track_record"]["status"] == "experimental"
+    assert payload["track_record"]["resolved"] == 0
+
+
 def test_disclosed_revenue_share_scales_transfer_strength():
     from predictions import magnitude_weight
 
