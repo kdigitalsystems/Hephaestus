@@ -390,6 +390,8 @@ def build_change_summary(history, current_snapshot, generated_on=None):
         ]
 
     return {
+        "previous_generated_on": history_entry_date(previous_entry) if previous_entry else None,
+        "current_generated_on": generated_on,
         "previous_unique_links": len(previous_keys),
         "current_unique_links": len(current_keys),
         "net_change": len(current_keys) - len(previous_keys),

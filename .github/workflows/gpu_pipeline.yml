@@ -157,13 +157,17 @@ jobs:
           echo "Validating published dashboard data..."
           venv/bin/python backend/validate_dashboard_data.py
 
+          echo "Publishing change feeds..."
+          venv/bin/python backend/generate_change_feed.py
+
       - name: Commit and Push Dashboard Data
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
           git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
-          
+          git add docs/changes.json docs/feed.xml
+
           if ! git diff --cached --quiet; then
             git commit -m "Automated AI extraction: Update Supply Chain X-Ray"
             # A conflicting rebase must not be left half-applied on the self-hosted

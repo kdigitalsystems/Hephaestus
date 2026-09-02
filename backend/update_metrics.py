@@ -2,7 +2,7 @@ import os
 import time
 import argparse
 from database import SessionLocal
-from models import Node
+from models import Edge, Node
 from yahooquery import Ticker
 
 
@@ -75,8 +75,11 @@ def ticker_updates(ticker_data):
 
 
 def apply_ticker_modules(node, ticker_data):
-    for field, value in ticker_updates(ticker_data).items():
+    """Apply the computed updates and return how many fields changed."""
+    updates = ticker_updates(ticker_data)
+    for field, value in updates.items():
         setattr(node, field, value)
+    return len(updates)
 
 
 MODULES = ['price', 'summaryDetail', 'assetProfile', 'financialData', 'defaultKeyStatistics']
@@ -97,6 +100,28 @@ def looks_throttled(dict_data, tickers):
     return missing / len(tickers) >= THROTTLE_RATIO
 
 
+def linked_node_ids(session):
+    """Ids of every company that appears on a supply-chain edge."""
+    ids = set()
+    for source_id, target_id in session.query(Edge.source_id, Edge.target_id).all():
+        ids.add(source_id)
+        ids.add(target_id)
+    return ids
+
+
+def prioritized_nodes(session, limit=None):
+    """Companies with supply-chain links come first.
+
+    Yahoo throttles long crawls, and the tail of the crawl is what goes without
+    data. The companies people actually open - the linked ones - must be at the
+    head so a throttled run degrades the long tail, not TSM and AMD.
+    """
+    linked = linked_node_ids(session)
+    nodes = session.query(Node).filter(Node.ticker.is_not(None)).order_by(Node.id.asc()).all()
+    nodes.sort(key=lambda node: (node.id not in linked, node.id))
+    return nodes[:limit] if limit else nodes
+
+
 def update_financial_metrics(limit=None):
     print("--- Starting Bulk Deep Financial Metrics Update ---")
     session = SessionLocal()
@@ -105,13 +130,7 @@ def update_financial_metrics(limit=None):
     sample_errors = {}
 
     try:
-        query = session.query(Node).filter(Node.ticker.is_not(None))
-
-        # Apply the development limit if provided
-        if limit:
-            query = query.limit(limit)
-
-        nodes = query.all()
+        nodes = prioritized_nodes(session, limit)
         total_nodes = len(nodes)
 
         print(f"Found {total_nodes} companies to update" + (" (DEV LIMIT ACTIVE)." if limit else "."))
@@ -141,8 +160,10 @@ def update_financial_metrics(limit=None):
                         sample_errors.setdefault(message, node.ticker)
                         continue
                     try:
-                        apply_ticker_modules(node, ticker_data)
-                        updated += 1
+                        if apply_ticker_modules(node, ticker_data):
+                            updated += 1
+                        else:
+                            no_data += 1
                     except Exception as e:
                         # One malformed symbol must not discard the rest of the batch.
                         print(f"  [-] Skipping {node.ticker}: {e}")

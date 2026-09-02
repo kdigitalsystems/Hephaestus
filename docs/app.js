@@ -481,6 +481,96 @@ function renderOverviewStats() {
         container.appendChild(item);
     });
     renderQuickActions();
+    renderChangeSummary();
+}
+
+const signedNumber = (value) => {
+    const number = Number(value || 0);
+    return `${number > 0 ? '+' : ''}${number.toLocaleString()}`;
+};
+
+function renderTickerChip(ticker) {
+    const chip = makeElement('button', 'changes-ticker', ticker || '?');
+    chip.type = 'button';
+    const company = getCompanyByTicker(ticker);
+    chip.title = company ? displayCompanyName(company.name) : `Search ${ticker}`;
+    chip.onclick = () => company ? navigateCompany(company.ticker) : navigateCompanies({ query: ticker });
+    return chip;
+}
+
+function renderChangeRow(link, kind) {
+    const row = makeElement('div', `changes-row ${kind}`);
+    row.appendChild(renderTickerChip(link.source_ticker));
+    row.appendChild(makeElement('span', 'changes-arrow', '→'));
+    row.appendChild(renderTickerChip(link.target_ticker));
+    const detail = link.product && link.product !== link.type ? `${link.type} · ${link.product}` : (link.type || 'Supply Link');
+    row.appendChild(makeElement('span', 'changes-detail', detail));
+    return row;
+}
+
+function renderChangeSummary() {
+    const container = document.getElementById('overview-changes');
+    if (!container) return;
+    clearElement(container);
+    const metrics = dashboardMeta.investor_metrics || {};
+    const summary = metrics.change_summary;
+    const history = Array.isArray(metrics.history) ? metrics.history : [];
+    if (!summary || typeof summary !== 'object') {
+        container.appendChild(makeElement('span', 'empty-state', 'Change tracking starts with the next published run.'));
+        return;
+    }
+
+    const newCount = Number(summary.new_count || 0);
+    const removedCount = Number(summary.removed_count || 0);
+    const changedCount = Number(summary.changed_count || 0);
+    const previousDate = summary.previous_generated_on || (history.length >= 2 ? history[history.length - 2].generated_on : null);
+    const headline = makeElement('div', 'changes-headline');
+    const anyChange = newCount || removedCount || changedCount;
+    headline.appendChild(makeElement('strong', '', anyChange ? `${signedNumber(summary.net_change)} net supply links` : 'No supply-link changes'));
+    headline.appendChild(makeElement('span', '', `${previousDate ? `since ${previousDate} · ` : ''}${newCount} new, ${removedCount} removed, ${changedCount} updated`));
+    container.appendChild(headline);
+
+    [
+        ['New', summary.new_links, newCount, 'new'],
+        ['Removed', summary.removed_links, removedCount, 'removed'],
+        ['Updated', summary.changed_links, changedCount, 'changed'],
+    ].forEach(([label, links, count, kind]) => {
+        if (!Array.isArray(links) || !links.length) return;
+        const block = makeElement('div', 'changes-block');
+        const shown = links.slice(0, 8);
+        block.appendChild(makeElement('div', 'changes-label', count > shown.length ? `${label} (${shown.length} of ${count})` : `${label} (${count})`));
+        const list = makeElement('div', 'changes-list');
+        shown.forEach(link => list.appendChild(renderChangeRow(link, kind)));
+        block.appendChild(list);
+        container.appendChild(block);
+    });
+
+    if (history.length >= 2) {
+        const trend = makeElement('div', 'changes-trend-wrap');
+        const counts = history.map(entry => Number(entry.unique_links || 0));
+        const peak = Math.max(...counts, 1);
+        const bars = makeElement('div', 'changes-trend');
+        history.forEach((entry, index) => {
+            const bar = makeElement('div', 'changes-bar');
+            bar.style.height = `${Math.max(6, Math.round((counts[index] / peak) * 44))}px`;
+            bar.title = `${entry.generated_on || ''}: ${counts[index].toLocaleString()} links`;
+            bars.appendChild(bar);
+        });
+        trend.appendChild(bars);
+        const first = history[0];
+        const last = history[history.length - 1];
+        trend.appendChild(makeElement('span', 'changes-trend-label', `${first.generated_on || ''} → ${last.generated_on || ''}: ${counts[0].toLocaleString()} → ${counts[counts.length - 1].toLocaleString()} links`));
+        container.appendChild(trend);
+    }
+
+    const feeds = makeElement('div', 'changes-feeds');
+    feeds.appendChild(makeElement('span', '', 'Follow changes:'));
+    [['RSS', 'feed.xml'], ['JSON', 'changes.json']].forEach(([label, href]) => {
+        const link = makeElement('a', 'mini-button', label);
+        link.href = href;
+        feeds.appendChild(link);
+    });
+    container.appendChild(feeds);
 }
 
 function renderQuickActions() {

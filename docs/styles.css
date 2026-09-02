@@ -2513,6 +2513,119 @@ td.muted {
     color: var(--text-muted);
 }
 
+.changes-panel #overview-changes {
+    display: grid;
+    gap: 14px;
+}
+
+.changes-headline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+}
+
+.changes-headline strong {
+    color: var(--accent);
+    font-size: 1.25rem;
+    font-weight: 950;
+}
+
+.changes-headline span,
+.changes-trend-label,
+.changes-feeds > span {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.changes-label {
+    margin-bottom: 8px;
+    color: var(--text-soft);
+    font-size: 0.74rem;
+    font-weight: 950;
+    text-transform: uppercase;
+}
+
+.changes-list {
+    display: grid;
+    gap: 6px;
+}
+
+.changes-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-left-width: 4px;
+    border-radius: 6px;
+    background: var(--surface-soft);
+}
+
+.changes-row.new { border-left-color: var(--green); }
+.changes-row.removed { border-left-color: var(--red); }
+.changes-row.changed { border-left-color: var(--accent-3); }
+
+.changes-ticker {
+    padding: 2px 8px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.changes-ticker:hover,
+.changes-ticker:focus-visible {
+    background: var(--surface-hover);
+}
+
+.changes-arrow {
+    color: var(--text-muted);
+    font-weight: 900;
+}
+
+.changes-detail {
+    color: var(--text-soft);
+    font-size: 0.82rem;
+}
+
+.changes-trend {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 48px;
+    padding: 2px 0;
+}
+
+.changes-bar {
+    flex: 1 1 0;
+    min-width: 6px;
+    border-radius: 2px 2px 0 0;
+    background: var(--accent);
+    opacity: 0.75;
+}
+
+.changes-bar:last-child {
+    opacity: 1;
+}
+
+.changes-trend-wrap {
+    display: grid;
+    gap: 6px;
+}
+
+.changes-feeds {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
 @media (max-width: 680px) {
     .prediction-calibration,
     .prediction-metrics {
