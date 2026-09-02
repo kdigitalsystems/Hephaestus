@@ -43,7 +43,7 @@ def main() -> None:
     args = parser.parse_args()
 
     dashboard = load_json(args.dashboard, {})
-    if not dashboard.get("industries"):
+    if not isinstance(dashboard, dict) or not isinstance(dashboard.get("industries"), dict) or not dashboard["industries"]:
         raise SystemExit(f"Dashboard data is missing or invalid: {args.dashboard}")
     try:
         history = load_prediction_history(args.history)
@@ -63,6 +63,9 @@ def main() -> None:
         updated_history = [generated_by_id.get(entry.get("prediction_id"), entry) for entry in updated_history]
         print(f"Ollama scenarios: {result['updated']} updated, {result['failed']} retained deterministic prose")
     write_outputs(payload, updated_history, args.output, args.history)
+    missing_caps = payload.get("universe_notes", {}).get("companies_without_market_cap", 0)
+    if missing_caps:
+        print(f"Warning: {missing_caps} exported companies have no market cap and could not be ranked for the universe.")
     print(f"Generated {payload['universe_size']} research signals at {args.output}")
 
 

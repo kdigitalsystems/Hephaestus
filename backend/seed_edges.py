@@ -40,12 +40,14 @@ def seed_manual_edges():
                 print(f"  [!] Skipping: Could not find target ticker '{edge_data['target']}' in database.")
                 continue
                 
-            # 2. Check if this edge already exists to prevent duplicates
-            existing_edges = session.query(Edge).filter(
+            # 2. Check if this exact edge already exists to prevent duplicates. Other
+            #    relationships between the same pair (e.g. a reviewed AI edge with a
+            #    different dependency type) are legitimate and must be left alone.
+            existing_edge = session.query(Edge).filter(
                 Edge.source_id == source_node.id,
-                Edge.target_id == target_node.id
-            ).all()
-            existing_edge = existing_edges[0] if existing_edges else None
+                Edge.target_id == target_node.id,
+                Edge.dependency_type == edge_data["type"],
+            ).first()
             
             # 3. Insert the connection
             if not existing_edge:
@@ -64,7 +66,6 @@ def seed_manual_edges():
                 edges_added += 1
                 print(f"  [+] Linked: {source_node.ticker} -> {target_node.ticker} ({edge_data['type']})")
             else:
-                existing_edge.dependency_type = edge_data["type"]
                 if edge_data.get("product"):
                     existing_edge.product = edge_data["product"]
                 existing_edge.confidence_score = 1.0
@@ -72,8 +73,6 @@ def seed_manual_edges():
                 existing_edge.source_title = "Manual System Jumpstart"
                 existing_edge.review_status = "approved"
                 existing_edge.review_note = "Curated seed relationship"
-                for duplicate_edge in existing_edges[1:]:
-                    session.delete(duplicate_edge)
                 print(f"  [=] Link already exists: {source_node.ticker} -> {target_node.ticker}")
                 
         session.commit()

@@ -18,6 +18,9 @@ env:
 jobs:
   run-ai-discovery:
     runs-on: [self-hosted, nvidia-gpu]
+    # Recent runs take 20 minutes to ~2h45m. A hung Ollama call must not pin the single
+    # GPU runner and the shared publisher concurrency group for the 6-hour default.
+    timeout-minutes: 240
     env:
       HEPHAESTUS_REVIEW_MODELS: qwen2.5:7b-instruct,llama3.1:8b,mistral:7b-instruct
       HEPHAESTUS_REVIEW_LIMIT: "200"

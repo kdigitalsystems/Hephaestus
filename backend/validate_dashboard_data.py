@@ -56,6 +56,15 @@ def load_dashboard_data(path):
         return json.load(handle)
 
 
+def status_tokens(value):
+    """Merged relationships carry combined statuses such as "approved / rejected"."""
+    return {
+        token.strip().lower()
+        for token in str(value or "pending").replace(",", "/").split("/")
+        if token.strip()
+    }
+
+
 def iter_companies(data):
     for sector, companies in data.get("industries", {}).items():
         if not isinstance(companies, list):
@@ -94,6 +103,7 @@ def validate_dashboard_data(data):
 
     companies = list(iter_companies(data))
     tickers = []
+    relationship_keys = set()
     for sector, company in companies:
         missing = REQUIRED_COMPANY_FIELDS - set(company)
         if missing:
@@ -137,7 +147,10 @@ def validate_dashboard_data(data):
                     errors.append(f"{ticker}.{side} contains a self-link")
                 if connected_ticker:
                     connected_tickers.append(connected_ticker)
-                if relationship.get("review_status") == "rejected":
+                key = relationship.get("relationship_key") or relationship.get("edge_id")
+                if key is not None:
+                    relationship_keys.add(str(key))
+                if "rejected" in status_tokens(relationship.get("review_status")):
                     errors.append(f"{ticker}.{side} contains rejected edge {relationship.get('edge_id')}")
                 if unsupported_ai_evidence(relationship.get("source"), relationship.get("evidence_excerpt")):
                     errors.append(f"{ticker}.{side} contains AI edge without usable source evidence")
@@ -153,6 +166,14 @@ def validate_dashboard_data(data):
     duplicate_tickers = [ticker for ticker, count in Counter(tickers).items() if count > 1]
     if duplicate_tickers:
         errors.append(f"Duplicate company tickers in export: {duplicate_tickers[:20]}")
+
+    if isinstance(investor_metrics, dict) and "unique_links" in investor_metrics:
+        published_unique_links = investor_metrics.get("unique_links")
+        if published_unique_links != len(relationship_keys):
+            errors.append(
+                "investor_metrics.unique_links does not match the distinct relationship keys in the export: "
+                f"metrics report {published_unique_links}, export contains {len(relationship_keys)}"
+            )
 
     if errors:
         raise AssertionError("\n".join(errors))

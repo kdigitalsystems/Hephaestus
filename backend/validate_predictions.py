@@ -1,9 +1,8 @@
 import argparse
 import json
-import re
 from pathlib import Path
 
-from predictions import UNSAFE_SCENARIO_PATTERNS
+from predictions import SCENARIO_FIELDS, contains_unsafe_language
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PATH = ROOT / "docs" / "predictions.json"
@@ -30,13 +29,12 @@ def validate_predictions(payload):
         assert prediction["research_only"] is True
         assert isinstance(prediction["key_inputs"], list)
         assert isinstance(prediction["connection_paths"], list)
-        scenario_text = " ".join(
-            str(prediction.get(field) or "")
-            for field in ("scenario_summary", "bull_case", "bear_case")
-        ).lower()
-        assert not any(re.search(pattern, scenario_text) for pattern in UNSAFE_SCENARIO_PATTERNS), (
-            f"{prediction['ticker']} contains recommendation-style scenario language"
-        )
+        # Screen each field separately, in the same fixed order the generator uses,
+        # so the validator can never disagree with the generator's own filter.
+        for field in SCENARIO_FIELDS:
+            assert not contains_unsafe_language(prediction.get(field)), (
+                f"{prediction['ticker']} contains recommendation-style scenario language in {field}"
+            )
 
 
 def main():

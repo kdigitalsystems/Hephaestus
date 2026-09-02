@@ -51,11 +51,38 @@ const formatNum = (num, type = 'currency') => {
     const value = Number(num);
     if (type === 'percent') return (value * 100).toFixed(2) + '%';
     if (type === 'ratio') return value.toFixed(2);
-    if (value >= 1e12) return '$' + (value / 1e12).toFixed(2) + 'T';
-    if (value >= 1e9) return '$' + (value / 1e9).toFixed(2) + 'B';
-    if (value >= 1e6) return '$' + (value / 1e6).toFixed(2) + 'M';
-    return '$' + value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const sign = value < 0 ? '-' : '';
+    const magnitude = Math.abs(value);
+    if (magnitude >= 1e12) return `${sign}$${(magnitude / 1e12).toFixed(2)}T`;
+    if (magnitude >= 1e9) return `${sign}$${(magnitude / 1e9).toFixed(2)}B`;
+    if (magnitude >= 1e6) return `${sign}$${(magnitude / 1e6).toFixed(2)}M`;
+    return `${sign}$${magnitude.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
+
+const hasPrice = (company) => company.price !== null && company.price !== undefined && !isNaN(company.price);
+const formatPrice = (company) => hasPrice(company) ? formatNum(company.price, 'currency') : 'N/A';
+const formatChange = (company) => {
+    if (!hasPrice(company) || company.change === null || company.change === undefined || isNaN(company.change)) return 'N/A';
+    const value = Number(company.change);
+    return `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
+};
+const changeClassName = (company) => {
+    if (!hasPrice(company)) return 'muted';
+    return Number(company.change || 0) < 0 ? 'negative' : 'positive';
+};
+
+// Synthetic buckets created by the repair step for approved counterparties that lack
+// market data. They are browsable, but they are not sectors for aggregate statistics.
+const SYNTHETIC_SECTORS = new Set(['Linked Companies']);
+const relationshipIdentity = (link) => String(link.relationship_key || link.edge_id || `${link.ticker || link.name || ''}:${link.type || ''}`);
+// Relationships are published from both endpoints, so counting rows double-counts
+// every link whose two companies sit in the same group.
+const distinctLinkCount = (companies) => new Set(
+    companies
+        .flatMap(company => [...(company.upstream || []), ...(company.downstream || [])])
+        .map(relationshipIdentity)
+        .filter(identity => identity && identity !== ':')
+).size;
 
 const displayCompanyName = (name) => {
     let value = String(name || '').replace(/\s+/g, ' ').trim();
@@ -185,7 +212,26 @@ fetch('dashboard_data.json')
     .catch(error => {
         console.error("Data load failed:", error);
         setText('last-updated', 'Failed to load data');
+        renderDataLoadError(error);
+        loadWatchlist();
+        applyTheme(currentTheme);
+        // Keep routing alive so the predictions and watchlist views still work, and so
+        // the empty screener is not mistaken for a genuine "no results" state.
+        applyRouteFromHash(false);
     });
+
+function renderDataLoadError(error) {
+    const view = document.getElementById('view-industries');
+    if (!view || view.querySelector('.data-load-error')) return;
+    const detail = error && error.message ? ` (${error.message})` : '';
+    const banner = makeElement(
+        'div',
+        'data-load-error',
+        `Dashboard data could not be loaded${detail}. Company data and supply-chain links are unavailable until dashboard_data.json is reachable.`
+    );
+    banner.setAttribute('role', 'alert');
+    view.insertBefore(banner, view.firstChild);
+}
 
 fetch('predictions.json')
     .then(response => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
@@ -308,6 +354,7 @@ function applyRouteFromHash(push = false) {
 }
 
 function applyRoute(route) {
+    lastRoutedHash = window.location.hash;
     currentRoute = route;
     updateActiveNav(route);
 
@@ -367,8 +414,15 @@ function updateActiveNav(route) {
     });
 }
 
-window.addEventListener('popstate', () => applyRouteFromHash(false));
-window.addEventListener('hashchange', () => applyRouteFromHash(false));
+// Back/forward on a hash-only URL fires both popstate and hashchange; routing twice
+// re-renders the whole view (and instantiates a second TradingView widget).
+let lastRoutedHash = null;
+function handleLocationChange() {
+    if (window.location.hash === lastRoutedHash) return;
+    applyRouteFromHash(false);
+}
+window.addEventListener('popstate', handleLocationChange);
+window.addEventListener('hashchange', handleLocationChange);
 
 function showCompanies() {
     document.getElementById('view-industries').classList.add('hidden');
@@ -393,10 +447,10 @@ function renderOverviewStats() {
     const supplyLinks = Number(dashboardMeta.investor_metrics?.unique_links || 0);
     const sectors = Object.keys(globalData).filter(key => Array.isArray(globalData[key])).length;
     const topSector = Object.entries(globalData)
-        .filter(([, companies]) => Array.isArray(companies))
+        .filter(([sector, companies]) => Array.isArray(companies) && !SYNTHETIC_SECTORS.has(sector))
         .map(([sector, companies]) => ({
             sector,
-            links: companies.reduce((sum, company) => sum + relationshipCount(company), 0)
+            links: distinctLinkCount(companies)
         }))
         .sort((a, b) => b.links - a.links)[0];
     [
@@ -480,7 +534,7 @@ function renderLevel1() {
             sector,
             connection_count: relationshipCount(company)
         }));
-        const links = companies.reduce((sum, company) => sum + company.connection_count, 0);
+        const links = distinctLinkCount(companies);
         const card = makeElement('button', 'card sector-card');
         card.onclick = () => {
             navigateSector(sector);
@@ -663,8 +717,6 @@ function renderCompanyTableRow(company) {
     const tr = document.createElement('tr');
     tr.onclick = () => navigateCompany(company.ticker);
 
-    const changeClass = company.change >= 0 ? 'positive' : 'negative';
-    const sign = company.change > 0 ? '+' : '';
     const nameCell = makeElement('td', 'company-cell');
     const nameWrap = makeElement('div', 'company-name-wrap');
     nameWrap.appendChild(makeElement('strong', '', displayCompanyName(company.name)));
@@ -676,8 +728,8 @@ function renderCompanyTableRow(company) {
     const tickerCell = makeElement('td', '');
     tickerCell.appendChild(makeElement('span', 'table-ticker', company.ticker || ''));
     tr.appendChild(tickerCell);
-    tr.appendChild(makeElement('td', '', `$${(company.price || 0).toFixed(2)}`));
-    tr.appendChild(makeElement('td', changeClass, `${sign}${(company.change || 0).toFixed(2)}%`));
+    tr.appendChild(makeElement('td', '', formatPrice(company)));
+    tr.appendChild(makeElement('td', changeClassName(company), formatChange(company)));
     tr.appendChild(makeElement('td', '', formatNum(company.market_cap)));
     const linkCell = makeElement('td', '');
     linkCell.appendChild(makeElement('span', company.connection_count ? 'link-count-pill active' : 'link-count-pill', String(company.connection_count || 0)));
@@ -864,10 +916,10 @@ function navigateCompareFromCurrent() {
 }
 
 function renderMetrics(company) {
-    setText('detail-price', `$${(company.price || 0).toFixed(2)}`);
+    setText('detail-price', formatPrice(company));
     const changeEl = document.getElementById('detail-change');
-    changeEl.textContent = `${company.change > 0 ? '+' : ''}${(company.change || 0).toFixed(2)}%`;
-    changeEl.className = `metric-value ${company.change >= 0 ? 'positive' : 'negative'}`;
+    changeEl.textContent = formatChange(company);
+    changeEl.className = `metric-value ${changeClassName(company)}`;
     setText('detail-high', formatNum(company.high_52w, 'currency'));
     setText('detail-low', formatNum(company.low_52w, 'currency'));
     setText('detail-mcap', formatNum(company.market_cap));
@@ -938,10 +990,8 @@ function renderXRay(company) {
         companyLine.appendChild(makeElement('span', 'xray-name', displayCompanyName(dep.name)));
         companyLine.appendChild(makeElement('span', 'xray-ticker', dep.ticker ? `(${dep.ticker})` : ''));
 
-        if (linkedCompany) {
-            const changeClass = linkedCompany.change >= 0 ? 'positive' : 'negative';
-            const sign = linkedCompany.change > 0 ? '+' : '';
-            companyLine.appendChild(makeElement('span', `mini-metric ${changeClass}`, `${sign}${(linkedCompany.change || 0).toFixed(2)}%`));
+        if (linkedCompany && hasPrice(linkedCompany)) {
+            companyLine.appendChild(makeElement('span', `mini-metric ${changeClassName(linkedCompany)}`, formatChange(linkedCompany)));
         }
 
         topLine.appendChild(companyLine);
@@ -1185,7 +1235,7 @@ function renderSectorView(sector) {
     setText('sector-count', `${companies.length.toLocaleString()} companies`);
     const summary = document.getElementById('sector-summary');
     clearElement(summary);
-    const sectorLinks = linked.reduce((sum, company) => sum + (companyMetrics(company).total_links || 0), 0);
+    const sectorLinks = distinctLinkCount(linked);
     [
         ['Companies', companies.length],
         ['Linked companies', linked.length],

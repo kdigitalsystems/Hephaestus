@@ -7,6 +7,14 @@ echo "======================================"
 echo "Starting Hephaestus API Pipeline: $(date)"
 echo "======================================"
 
+# This script commits and pushes main. Committing onto another branch would leave
+# the run's output unpublished while `git push origin main` reports up-to-date.
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"
+if [ "$CURRENT_BRANCH" != "main" ]; then
+  echo "Refusing to run the publishing pipeline on branch '$CURRENT_BRANCH'; check out main first."
+  exit 1
+fi
+
 LIMIT_ARG=()
 if [ "${1:-}" != "" ]; then
   LIMIT_ARG=(--limit "$1")
@@ -38,14 +46,26 @@ python3 backend/edge_review_decisions.py apply
 
 if [ "$RUN_OLLAMA_REVIEW" = "1" ]; then
   if command -v ollama >/dev/null 2>&1; then
+    # Probe the daemon once. Without this, an unreachable daemon looks identical to
+    # "every model is missing" and the run silently publishes unreviewed edges.
+    OLLAMA_LIST_FILE="$(mktemp)"
+    if ! ollama list >"$OLLAMA_LIST_FILE" 2>&1; then
+      echo "Ollama is installed but the local service is not responding:"
+      cat "$OLLAMA_LIST_FILE"
+      rm -f "$OLLAMA_LIST_FILE"
+      echo "Start it with 'ollama serve', or set HEPHAESTUS_RUN_OLLAMA_REVIEW=0 to skip review deliberately."
+      exit 1
+    fi
+
     MISSING_MODELS=()
     IFS=',' read -ra MODEL_LIST <<< "$REVIEW_MODELS"
     for MODEL in "${MODEL_LIST[@]}"; do
       MODEL="$(echo "$MODEL" | xargs)"
-      if [ -n "$MODEL" ] && ! ollama list | awk '{print $1}' | grep -Fx "$MODEL" >/dev/null; then
+      if [ -n "$MODEL" ] && ! awk '{print $1}' "$OLLAMA_LIST_FILE" | grep -Fx "$MODEL" >/dev/null; then
         MISSING_MODELS+=("$MODEL")
       fi
     done
+    rm -f "$OLLAMA_LIST_FILE"
 
     if [ "${#MISSING_MODELS[@]}" -gt 0 ]; then
       echo "Skipping Ollama review because required model(s) are missing: ${MISSING_MODELS[*]}"
@@ -91,6 +111,8 @@ echo "Checking for dashboard changes..."
 git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
 if ! git diff --cached --quiet; then
   git commit -m "Automated dashboard update: $(date +'%Y-%m-%d')"
+  # The scheduled workflow may have published since this run started.
+  git pull --rebase origin main
   git push origin main
 else
   echo "No changes to commit."

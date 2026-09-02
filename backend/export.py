@@ -1,6 +1,7 @@
 import os
 import json
 import math
+import tempfile
 from datetime import datetime, timezone
 from database import SessionLocal
 from models import Node, Edge
@@ -113,9 +114,12 @@ def merge_relationship_group(relationships):
     ranked = sorted(relationships, key=edge_rank, reverse=True)
     primary = dict(ranked[0])
     primary["edge_id"] = min(
-        relationship.get("edge_id")
-        for relationship in ranked
-        if relationship.get("edge_id") is not None
+        (
+            relationship.get("edge_id")
+            for relationship in ranked
+            if relationship.get("edge_id") is not None
+        ),
+        default=None,
     )
     primary["type"] = unique_join(relationship.get("type") for relationship in ranked)
     primary["product"] = unique_join(relationship.get("product") for relationship in ranked)
@@ -280,6 +284,23 @@ def summarize_company_relationships(company):
         "freshness_score": freshness_score,
     }
 
+def write_json_atomic(path, payload):
+    """Write JSON via a temp file and rename so a failure never leaves a truncated artifact."""
+    directory = os.path.dirname(os.path.abspath(path))
+    os.makedirs(directory, exist_ok=True)
+    descriptor, temporary_path = tempfile.mkstemp(prefix=f".{os.path.basename(path)}.", suffix=".tmp", dir=directory)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, indent=2, allow_nan=False)
+            handle.write("\n")
+        os.replace(temporary_path, path)
+    except Exception:
+        try:
+            os.unlink(temporary_path)
+        except FileNotFoundError:
+            pass
+        raise
+
 def load_link_history(history_path=HISTORY_PATH):
     if not os.path.exists(history_path):
         return []
@@ -289,6 +310,9 @@ def load_link_history(history_path=HISTORY_PATH):
     except (OSError, json.JSONDecodeError):
         return []
     return payload if isinstance(payload, list) else payload.get("history", [])
+
+def history_entry_date(entry):
+    return entry.get("generated_on") or str(entry.get("generated_at") or "")[:10]
 
 def relationship_identity(relationship):
     return str(relationship.get("relationship_key") or relationship.get("edge_id") or "")
@@ -314,8 +338,18 @@ def relationship_snapshot_entry(key, relationship):
         "last_verified": relationship.get("last_verified") or "N/A",
     }
 
-def build_change_summary(history, current_snapshot):
-    previous_snapshot = history[-1].get("links", {}) if history else {}
+def build_change_summary(history, current_snapshot, generated_on=None):
+    """Diff the current snapshot against the latest snapshot from an earlier date.
+
+    Export and repair both run within one pipeline invocation, so a same-day entry
+    is that run's own intermediate output, not the previous day's published state.
+    """
+    previous_entry = None
+    for entry in reversed(history):
+        if generated_on is None or history_entry_date(entry) != generated_on:
+            previous_entry = entry
+            break
+    previous_snapshot = previous_entry.get("links", {}) if previous_entry else {}
     previous_keys = set(previous_snapshot)
     current_keys = set(current_snapshot)
     new_keys = sorted(current_keys - previous_keys)
@@ -382,15 +416,26 @@ def persist_link_history(dashboard_data, history_path=HISTORY_PATH, limit=30):
         "links": snapshot,
     })
     filtered = filtered[-limit:]
-    os.makedirs(os.path.dirname(history_path), exist_ok=True)
-    with open(history_path, "w", encoding="utf-8") as handle:
-        json.dump(filtered, handle, indent=2, allow_nan=False)
-        handle.write("\n")
+    write_json_atomic(history_path, filtered)
     return filtered
 
 def strip_transient_dashboard_fields(dashboard_data):
     dashboard_data.get("investor_metrics", {}).pop("relationship_snapshot", None)
     return dashboard_data
+
+def publishable_dashboard(dashboard_data):
+    """Shallow copy without transient fields, so history can still be persisted from the original."""
+    metrics = dashboard_data.get("investor_metrics", {})
+    return {
+        **dashboard_data,
+        "investor_metrics": {key: value for key, value in metrics.items() if key != "relationship_snapshot"},
+    }
+
+def publish_dashboard(dashboard_data, dashboard_path=EXPORT_PATH, history_path=HISTORY_PATH):
+    """Write the dashboard first, then advance link history, so history never runs ahead of a failed export."""
+    write_json_atomic(dashboard_path, publishable_dashboard(dashboard_data))
+    persist_link_history(dashboard_data, history_path)
+    return strip_transient_dashboard_fields(dashboard_data)
 
 def annotate_dashboard_data(dashboard_data, history_path=HISTORY_PATH):
     companies = []
@@ -426,14 +471,34 @@ def annotate_dashboard_data(dashboard_data, history_path=HISTORY_PATH):
             if status is None or relationship_status(relationship) == status
         )
 
-    dashboard_data["generated_at"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    generated_on = generated_at[:10]
+    dashboard_data["generated_at"] = generated_at
     current_snapshot = {
         key: relationship_snapshot_entry(key, relationship)
         for key, relationship in sorted(unique_relationships.items())
         if key
     }
-    history = load_link_history(history_path)
-    change_summary = build_change_summary(history, current_snapshot)
+    # Same-day entries are this pipeline run's own intermediate output; the published
+    # trend must compare against, and continue from, the previous day's snapshot.
+    history = [
+        entry for entry in load_link_history(history_path)
+        if history_entry_date(entry) != generated_on
+    ]
+    change_summary = build_change_summary(history, current_snapshot, generated_on)
+    linked_companies = sum(
+        1
+        for company in companies
+        if company.get("investor_metrics", {}).get("total_links", 0) > 0
+    )
+    current_history_entry = {
+        "generated_at": generated_at,
+        "generated_on": generated_on,
+        "unique_links": len(unique_relationships),
+        "approved_links": unique_count("approved"),
+        "pending_links": unique_count("pending"),
+        "linked_companies": linked_companies,
+    }
     dashboard_data["investor_metrics"] = {
         "company_count": len(companies),
         "sector_count": len(dashboard_data.get("industries", {})),
@@ -445,11 +510,7 @@ def annotate_dashboard_data(dashboard_data, history_path=HISTORY_PATH):
         "approved_links": unique_count("approved"),
         "pending_links": unique_count("pending"),
         "rejected_links": unique_count("rejected"),
-        "linked_companies": sum(
-            1
-            for company in companies
-            if company.get("investor_metrics", {}).get("total_links", 0) > 0
-        ),
+        "linked_companies": linked_companies,
         "most_connected": sorted(
             (
                 {
@@ -486,14 +547,14 @@ def annotate_dashboard_data(dashboard_data, history_path=HISTORY_PATH):
         "history": [
             {
                 "generated_at": entry.get("generated_at"),
-                "generated_on": entry.get("generated_on", str(entry.get("generated_at") or "")[:10]),
+                "generated_on": history_entry_date(entry),
                 "unique_links": entry.get("unique_links", 0),
                 "approved_links": entry.get("approved_links", 0),
                 "pending_links": entry.get("pending_links", 0),
                 "linked_companies": entry.get("linked_companies", 0),
             }
-            for entry in history[-14:]
-        ],
+            for entry in history[-13:]
+        ] + [current_history_entry],
         "relationship_snapshot": current_snapshot,
     }
     return dashboard_data
@@ -625,6 +686,10 @@ def export_to_json():
                 seen_edges.add(edge.id)
 
                 supplier_node, customer_node = canonical_edge_nodes(edge)
+                if supplier_node is None or customer_node is None:
+                    # SQLite does not enforce foreign keys here, so an orphaned edge
+                    # must be skipped rather than crash the whole export.
+                    continue
                 supplier_exportable = should_export_node(supplier_node, require_market_data=False)
                 customer_exportable = should_export_node(customer_node, require_market_data=False)
                 if node.id == customer_node.id and supplier_exportable:
@@ -663,13 +728,10 @@ def export_to_json():
             })
             
         os.makedirs(DOCS_DIR, exist_ok=True)
-        annotate_dashboard_data(dashboard_data)
-        persist_link_history(dashboard_data)
-        strip_transient_dashboard_fields(dashboard_data)
-        
-        with open(EXPORT_PATH, "w") as f:
-            json.dump(dashboard_data, f, indent=2, allow_nan=False)
-            
+        annotate_dashboard_data(dashboard_data, HISTORY_PATH)
+        # Pass the module-level paths explicitly so they are read at call time.
+        publish_dashboard(dashboard_data, EXPORT_PATH, HISTORY_PATH)
+
         mode = "manual plus AI research" if EXPORT_AI_RESEARCH else "reviewed/manual only"
         print(f"Export Complete with Supply Chain X-Ray metrics included ({mode}).")
         

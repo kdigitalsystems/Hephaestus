@@ -26,15 +26,32 @@ DEFAULT_HISTORY_PATH = DOCS_DIR / "prediction_history.json"
 TOP_COMPANY_LIMIT = 50
 HORIZON_DAYS = 30
 MODEL_VERSION = "graph-signal-v1"
+# Resolved predictions are kept up to this many; unresolved predictions are always
+# retained until they can mature, so a larger --limit cannot starve calibration.
+HISTORY_RETENTION_LIMIT = 2000
+# Unresolved predictions older than this can no longer be evaluated meaningfully.
+UNRESOLVED_RETENTION_MULTIPLIER = 4
+RESOLVED_OUTCOMES = frozenset({"correct", "incorrect"})
+VALID_DIRECTIONS = frozenset({"up", "down", "neutral"})
+# Fixed field order: the generator and the validator must inspect exactly the same text.
+SCENARIO_FIELDS = ("scenario_summary", "bull_case", "bear_case")
 UNSAFE_SCENARIO_PATTERNS = (
-    r"\b(buy|sell|short|cover|accumulate|trade|hold|outperform|underperform)\b",
+    r"\b(buy|buys|buying|sell|sells|selling|short|shorting|cover|accumulate|accumulating|trade|trading|hold|outperform|underperform|overweight|underweight)\b",
     r"\b(bullish|bearish)\b",
-    r"\bprice target\b",
-    r"\b(stock|share) price\b",
-    r"\binvest(ment|or)s? (advice|recommendation)\b",
+    r"\b(price target|target price)s?\b",
+    r"\b(stock|share|equity) prices?\b",
+    r"\binvest(ment|or)s? (advice|recommendation)s?\b",
     r"\banalyst recommendations?\b",
+    r"\brecommend(s|ed|ing|ation|ations)?\b",
     r"\bshould (buy|sell|trade)\b",
+    r"\b(long|short) positions?\b",
+    r"\btake profits?\b",
 )
+
+
+def contains_unsafe_language(text: Any) -> bool:
+    lowered = str(text or "").lower()
+    return any(re.search(pattern, lowered) for pattern in UNSAFE_SCENARIO_PATTERNS)
 
 RECOMMENDATION_SCORES = {
     "strong buy": 0.30,
@@ -66,11 +83,14 @@ def clamp(value: float, low: float, high: float) -> float:
 
 
 def iter_companies(dashboard_data: dict[str, Any]) -> Iterable[dict[str, Any]]:
-    for sector, companies in dashboard_data.get("industries", {}).items():
+    industries = dashboard_data.get("industries", {}) if isinstance(dashboard_data, dict) else {}
+    if not isinstance(industries, dict):
+        return
+    for sector, companies in industries.items():
         if not isinstance(companies, list):
             continue
         for company in companies:
-            if company.get("ticker"):
+            if isinstance(company, dict) and company.get("ticker"):
                 yield {**company, "sector": company.get("sector") or sector}
 
 
@@ -102,15 +122,30 @@ def direct_signal(company: dict[str, Any]) -> tuple[float, list[dict[str, Any]]]
     ]
 
 
+def review_weight(status_value: Any) -> float:
+    """Token-based status reading: "unapproved" or "not approved" is not an approval.
+
+    Merged relationships publish combined statuses such as "approved / pending".
+    """
+    tokens = {
+        token.strip().lower()
+        for token in str(status_value or "pending").replace(",", "/").split("/")
+        if token.strip()
+    }
+    if "approved" in tokens:
+        return 1.0
+    if "rejected" in tokens:
+        return 0.0
+    return 0.35
+
+
 def relationship_weight(relationship: dict[str, Any], side: str, calibration: dict[str, Any]) -> float:
     """Dampen graph transfer using review quality, confidence, direction, and experience."""
     confidence = clamp(as_number(relationship.get("confidence"), 0.5), 0.0, 1.0)
-    status = str(relationship.get("review_status") or "pending").lower()
-    review_weight = 1.0 if "approved" in status else 0.35
     direction_weight = 0.62 if side == "downstream" else 0.32
     relationship_type = str(relationship.get("type") or "Supply Link").lower()
     learned_weight = as_number(calibration.get("relationship_weights", {}).get(relationship_type), 1.0)
-    return clamp(confidence * review_weight * direction_weight * learned_weight, 0.0, 0.65)
+    return clamp(confidence * review_weight(relationship.get("review_status")) * direction_weight * learned_weight, 0.0, 0.65)
 
 
 def relationship_index(companies: Iterable[dict[str, Any]]) -> dict[str, list[tuple[dict[str, Any], str]]]:
@@ -130,12 +165,18 @@ def calibration_from_history(history: list[dict[str, Any]]) -> dict[str, Any]:
     resolved = 0
     correct = 0
     for entry in history:
-        if entry.get("outcome") not in {"correct", "incorrect"}:
+        if entry.get("outcome") not in RESOLVED_OUTCOMES:
             continue
         resolved += 1
         correct += entry["outcome"] == "correct"
-        for path in entry.get("connection_paths", []) or []:
-            relationship_type = str(path.get("relationship_type") or "Supply Link").lower()
+        # One resolved prediction is one observation per relationship type. Counting
+        # every path separately would let a single outcome outweigh the shrinkage.
+        entry_types = {
+            str(path.get("relationship_type") or "Supply Link").lower()
+            for path in entry.get("connection_paths", []) or []
+            if isinstance(path, dict)
+        }
+        for relationship_type in entry_types:
             outcomes[relationship_type].append(1.0 if entry["outcome"] == "correct" else 0.0)
     weights = {}
     for relationship_type, values in outcomes.items():
@@ -181,18 +222,19 @@ def make_scenarios(company: dict[str, Any], direction: str, paths: list[dict[str
 
 def build_prediction(company: dict[str, Any], company_by_ticker: dict[str, dict[str, Any]], indexed: dict[str, list[tuple[dict[str, Any], str]]], calibration: dict[str, Any], generated_at: datetime) -> dict[str, Any]:
     direct_score, inputs = direct_signal(company)
-    network_score = 0.0
-    paths = []
+    # The same counterparty is often published on both sides (two edge ids describing
+    # one commercial relationship from each end). Keep its strongest path only, so
+    # its direct signal is transferred once rather than twice.
+    strongest_by_counterparty: dict[str, tuple[float, dict[str, Any]]] = {}
     for relationship, side in indexed.get(str(company["ticker"]).upper(), []):
         connected_ticker = str(relationship.get("ticker") or "").upper()
         connected = company_by_ticker.get(connected_ticker)
-        if not connected:
+        if not connected or connected_ticker == str(company["ticker"]).upper():
             continue
         connected_score, _ = direct_signal(connected)
         weight = relationship_weight(relationship, side, calibration)
         contribution = connected_score * weight
-        network_score += contribution
-        paths.append({
+        path = {
             "connected_ticker": connected_ticker,
             "connected_name": connected.get("name") or connected_ticker,
             "relationship_type": relationship.get("type") or "Supply Link",
@@ -202,8 +244,13 @@ def build_prediction(company: dict[str, Any], company_by_ticker: dict[str, dict[
             "contribution": round(contribution, 3),
             "evidence": relationship.get("evidence_excerpt") or relationship.get("source_title") or "Published relationship evidence",
             "source_url": relationship.get("source") or "",
-        })
-    paths.sort(key=lambda path: abs(path["contribution"]), reverse=True)
+        }
+        current = strongest_by_counterparty.get(connected_ticker)
+        if current is None or abs(contribution) > abs(current[0]):
+            strongest_by_counterparty[connected_ticker] = (contribution, path)
+    network_score = sum(contribution for contribution, _ in strongest_by_counterparty.values())
+    paths = [path for _, path in strongest_by_counterparty.values()]
+    paths.sort(key=lambda path: (-abs(path["contribution"]), path["connected_ticker"]))
     network_score = clamp(network_score, -0.30, 0.30)
     score = clamp(direct_score + network_score, -0.60, 0.60)
     direction = direction_from_score(score)
@@ -223,7 +270,9 @@ def build_prediction(company: dict[str, Any], company_by_ticker: dict[str, dict[
         "network_signal": round(network_score, 3),
         "starting_price": as_number(company.get("price")) or None,
         "key_inputs": inputs,
-        "connection_paths": paths[:5],
+        # Publish every contributing path so network_signal can be reproduced from
+        # the artifact; the exporter already caps relationships at five per side.
+        "connection_paths": paths,
         "scenario_summary": scenarios["summary"],
         "bull_case": scenarios["bull_case"],
         "bear_case": scenarios["bear_case"],
@@ -236,16 +285,28 @@ def build_prediction(company: dict[str, Any], company_by_ticker: dict[str, dict[
 PriceLookup = Callable[[str, datetime], tuple[float | None, str]]
 
 
+def parse_generated_at(entry: dict[str, Any]) -> datetime | None:
+    try:
+        generated = datetime.fromisoformat(str(entry["generated_at"]).replace("Z", "+00:00"))
+    except (KeyError, ValueError, TypeError):
+        return None
+    if generated.tzinfo is None:
+        generated = generated.replace(tzinfo=timezone.utc)
+    return generated
+
+
+def price_date_from_source(source: str, fallback: datetime) -> str:
+    match = re.search(r"(\d{4}-\d{2}-\d{2})", str(source or ""))
+    return match.group(1) if match else fallback.date().isoformat()
+
+
 def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str, dict[str, Any]], now: datetime, price_lookup: PriceLookup | None = None) -> list[dict[str, Any]]:
     for entry in history:
         if entry.get("outcome"):
             continue
-        try:
-            generated = datetime.fromisoformat(str(entry["generated_at"]).replace("Z", "+00:00"))
-        except (KeyError, ValueError):
+        generated = parse_generated_at(entry)
+        if generated is None:
             continue
-        if generated.tzinfo is None:
-            generated = generated.replace(tzinfo=timezone.utc)
         try:
             horizon_days = int(entry.get("horizon_days") or HORIZON_DAYS)
         except (TypeError, ValueError):
@@ -255,6 +316,11 @@ def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str,
         target_at = generated + timedelta(days=horizon_days)
         if now < target_at:
             continue
+        direction = entry.get("direction")
+        if direction not in VALID_DIRECTIONS:
+            # An unknown direction cannot be scored; recording "incorrect" would
+            # poison the hit rate and the relationship-type calibration.
+            continue
         company = company_by_ticker.get(str(entry.get("ticker") or "").upper())
         start = as_number(entry.get("starting_price"))
         end = 0.0
@@ -262,11 +328,15 @@ def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str,
         if price_lookup:
             try:
                 historical_close, historical_source = price_lookup(str(entry.get("ticker") or ""), target_at)
-            except Exception:
-                historical_close, historical_source = None, "historical_close_unavailable"
+            except Exception as exc:
+                historical_close, historical_source = None, f"historical_close_unavailable:{type(exc).__name__}"
             end = as_number(historical_close)
             source = historical_source
             if end <= 0:
+                # Leave the entry unresolved, but make repeated failures visible.
+                entry["evaluation_attempts"] = int(as_number(entry.get("evaluation_attempts"))) + 1
+                entry["last_evaluation_status"] = str(source)
+                entry["last_evaluation_at"] = now.isoformat()
                 continue
         elif end <= 0:
             end = as_number(company.get("price")) if company else 0.0
@@ -274,14 +344,45 @@ def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str,
         if start <= 0 or end <= 0:
             continue
         return_pct = round(((end - start) / start) * 100, 2)
-        direction = entry.get("direction")
         entry["realized_return_pct"] = return_pct
         entry["evaluated_at"] = now.isoformat()
         entry["evaluation_target_date"] = target_at.date().isoformat()
+        entry["outcome_price_date"] = price_date_from_source(source, target_at)
         entry["outcome_price"] = round(end, 4)
         entry["outcome_price_source"] = source
         entry["outcome"] = "correct" if (direction == "up" and return_pct > 0) or (direction == "down" and return_pct < 0) or (direction == "neutral" and abs(return_pct) <= 2) else "incorrect"
     return history
+
+
+def prune_history(history: list[dict[str, Any]], now: datetime) -> list[dict[str, Any]]:
+    """Bound the history file without ever dropping a prediction that can still mature."""
+    retained = []
+    for entry in history:
+        if entry.get("outcome") in RESOLVED_OUTCOMES:
+            retained.append(entry)
+            continue
+        generated = parse_generated_at(entry)
+        if generated is not None:
+            try:
+                horizon_days = max(1, int(entry.get("horizon_days") or HORIZON_DAYS))
+            except (TypeError, ValueError):
+                horizon_days = HORIZON_DAYS
+            if now - generated > timedelta(days=horizon_days * UNRESOLVED_RETENTION_MULTIPLIER):
+                continue
+        retained.append(entry)
+
+    overflow = len(retained) - HISTORY_RETENTION_LIMIT
+    if overflow <= 0:
+        return retained
+    # Drop the oldest resolved entries first; unresolved entries must survive.
+    bounded = []
+    dropped = 0
+    for entry in retained:
+        if dropped < overflow and entry.get("outcome") in RESOLVED_OUTCOMES:
+            dropped += 1
+            continue
+        bounded.append(entry)
+    return bounded
 
 
 def load_json(path: Path, fallback: Any) -> Any:
@@ -304,11 +405,21 @@ def generate_predictions(dashboard_data: dict[str, Any], history: list[dict[str,
     predictions.sort(key=lambda prediction: (prediction["direction"] == "neutral", -abs(prediction["score"]), prediction["ticker"]))
     prediction_ids = {prediction["prediction_id"] for prediction in predictions}
     history = [entry for entry in history if entry.get("prediction_id") not in prediction_ids]
+    # A missing market cap means "unknown", not "small"; make the omission auditable.
+    missing_market_cap = [
+        str(company["ticker"]).upper()
+        for company in all_companies
+        if as_number(company.get("market_cap")) <= 0
+    ]
     payload = {
         "generated_at": now.isoformat(),
         "model_name": MODEL_VERSION,
         "universe_size": len(predictions),
         "horizon_days": HORIZON_DAYS,
+        "universe_notes": {
+            "selection": "largest published market capitalizations",
+            "companies_without_market_cap": len(missing_market_cap),
+        },
         "calibration": calibration,
         "disclaimer": "Research signals only. They are not investment advice, price targets, or a recommendation to buy or sell any security.",
         "predictions": predictions,
@@ -316,23 +427,67 @@ def generate_predictions(dashboard_data: dict[str, Any], history: list[dict[str,
     return payload, history + predictions
 
 
+def iter_json_objects(text: str) -> Iterable[dict[str, Any]]:
+    """Yield each complete top-level JSON object embedded in model output, in order.
+
+    Models sometimes wrap their answer in a preamble or emit more than one object; a
+    greedy first-brace-to-last-brace scan would discard an otherwise valid answer.
+    """
+    text = str(text or "")
+    try:
+        whole = json.loads(text)
+        if isinstance(whole, dict):
+            yield whole
+            return
+    except json.JSONDecodeError:
+        pass
+    start = text.find("{")
+    while start != -1:
+        depth = 0
+        in_string = False
+        escaped = False
+        end = -1
+        for index in range(start, len(text)):
+            char = text[index]
+            if in_string:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == '"':
+                    in_string = False
+                continue
+            if char == '"':
+                in_string = True
+            elif char == "{":
+                depth += 1
+            elif char == "}":
+                depth -= 1
+                if depth == 0:
+                    end = index
+                    break
+        if end == -1:
+            return
+        try:
+            payload = json.loads(text[start:end + 1])
+            if isinstance(payload, dict):
+                yield payload
+        except json.JSONDecodeError:
+            pass
+        start = text.find("{", end + 1)
+
+
 def parse_ollama_scenario(response: str) -> dict[str, str] | None:
     """Accept only small JSON scenario updates; prose stays deterministic otherwise."""
-    match = re.search(r"\{.*\}", response or "", re.DOTALL)
-    if not match:
-        return None
-    try:
-        payload = json.loads(match.group(0))
-    except json.JSONDecodeError:
-        return None
-    required = {"scenario_summary", "bull_case", "bear_case"}
-    if not required <= set(payload) or any(not isinstance(payload[key], str) for key in required):
-        return None
-    scenario = {key: payload[key].strip()[:600] for key in required}
-    combined = " ".join(scenario.values()).lower()
-    if not all(scenario.values()) or any(re.search(pattern, combined) for pattern in UNSAFE_SCENARIO_PATTERNS):
-        return None
-    return scenario
+    for payload in iter_json_objects(response):
+        if any(not isinstance(payload.get(key), str) for key in SCENARIO_FIELDS):
+            continue
+        scenario = {key: payload[key].strip()[:600] for key in SCENARIO_FIELDS}
+        # Screen each field on its own, in a fixed order, exactly as the validator does.
+        if not all(scenario.values()) or any(contains_unsafe_language(value) for value in scenario.values()):
+            return None
+        return scenario
+    return None
 
 
 def retrieve_prior_outcomes(history: list[dict[str, Any]], prediction: dict[str, Any], limit: int = 3) -> list[dict[str, Any]]:
@@ -347,11 +502,12 @@ def retrieve_prior_outcomes(history: list[dict[str, Any]], prediction: dict[str,
     }
     candidates = []
     for entry in history:
-        if entry.get("outcome") not in {"correct", "incorrect"}:
+        if entry.get("outcome") not in RESOLVED_OUTCOMES:
             continue
         entry_types = {
             str(path.get("relationship_type") or "").lower()
-            for path in entry.get("connection_paths", [])
+            for path in entry.get("connection_paths", []) or []
+            if isinstance(path, dict)
         }
         relevance = 4 if entry.get("ticker") == prediction.get("ticker") else 0
         relevance += len(related_types & entry_types)
@@ -359,7 +515,8 @@ def retrieve_prior_outcomes(history: list[dict[str, Any]], prediction: dict[str,
             relevance += 1
         if relevance:
             candidates.append((relevance, entry))
-    candidates.sort(key=lambda item: (item[0], item[1].get("evaluated_at", "")), reverse=True)
+    # `evaluated_at` may be present but null; never compare None with str.
+    candidates.sort(key=lambda item: (item[0], str(item[1].get("evaluated_at") or "")), reverse=True)
     return [
         {
             "ticker": entry.get("ticker"),
@@ -386,24 +543,24 @@ def enhance_scenarios_with_ollama(payload: dict[str, Any], model: str, history: 
     updated = 0
     failed = 0
     for prediction in payload.get("predictions", []):
-        evidence = {
-            "ticker": prediction.get("ticker"),
-            "direction": prediction.get("direction"),
-            "horizon_days": prediction.get("horizon_days"),
-            "direct_signal": prediction.get("direct_signal"),
-            "network_signal": prediction.get("network_signal"),
-            "key_inputs": prediction.get("key_inputs"),
-            "connection_paths": prediction.get("connection_paths"),
-            "retrieved_prior_outcomes": retrieve_prior_outcomes(history or [], prediction),
-        }
-        prompt = (
-            "You are Hephaestus, an evidence-bound market research assistant. "
-            "Write short scenario prose using only this JSON evidence. Do not give investment advice, "
-            "do not make price targets, and do not change the supplied direction. Return JSON only with "
-            "scenario_summary, bull_case, and bear_case.\n"
-            f"Evidence: {json.dumps(evidence, ensure_ascii=True)}"
-        )
         try:
+            evidence = {
+                "ticker": prediction.get("ticker"),
+                "direction": prediction.get("direction"),
+                "horizon_days": prediction.get("horizon_days"),
+                "direct_signal": prediction.get("direct_signal"),
+                "network_signal": prediction.get("network_signal"),
+                "key_inputs": prediction.get("key_inputs"),
+                "connection_paths": prediction.get("connection_paths"),
+                "retrieved_prior_outcomes": retrieve_prior_outcomes(history or [], prediction),
+            }
+            prompt = (
+                "You are Hephaestus, an evidence-bound market research assistant. "
+                "Write short scenario prose using only this JSON evidence. Do not give investment advice, "
+                "do not make price targets, and do not change the supplied direction. Return JSON only with "
+                "scenario_summary, bull_case, and bear_case.\n"
+                f"Evidence: {json.dumps(evidence, ensure_ascii=True)}"
+            )
             response = ollama.chat(
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
@@ -423,7 +580,7 @@ def enhance_scenarios_with_ollama(payload: dict[str, Any], model: str, history: 
     return {"updated": updated, "failed": failed}
 
 
-def write_outputs(payload: dict[str, Any], history: list[dict[str, Any]], predictions_path: Path = DEFAULT_PREDICTIONS_PATH, history_path: Path = DEFAULT_HISTORY_PATH) -> None:
+def write_outputs(payload: dict[str, Any], history: list[dict[str, Any]], predictions_path: Path = DEFAULT_PREDICTIONS_PATH, history_path: Path = DEFAULT_HISTORY_PATH, now: datetime | None = None) -> None:
     def atomic_write_json(path: Path, value: Any) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
@@ -441,6 +598,13 @@ def write_outputs(payload: dict[str, Any], history: list[dict[str, Any]], predic
                 pass
             raise
 
+    if now is None:
+        try:
+            now = datetime.fromisoformat(str(payload.get("generated_at")).replace("Z", "+00:00"))
+        except (TypeError, ValueError):
+            now = utc_now()
+        if now.tzinfo is None:
+            now = now.replace(tzinfo=timezone.utc)
     # History first: a retry can safely reconstruct the current payload from it.
-    atomic_write_json(history_path, history[-2000:])
+    atomic_write_json(history_path, prune_history(history, now))
     atomic_write_json(predictions_path, payload)

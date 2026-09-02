@@ -93,6 +93,56 @@ def test_workflows_and_asset_versions_are_current():
     assert "investorMetrics" not in app
 
 
+def test_dashboard_validator_checks_unique_link_count_and_merged_rejections():
+    data = {
+        "industries": {
+            "Technology": [
+                {
+                    "id": 1,
+                    "name": "Advanced Micro Devices",
+                    "ticker": "AMD",
+                    "industry": "Semiconductors",
+                    "price": 100,
+                    "change": 0,
+                    "market_cap": 100000000,
+                    "upstream": [
+                        {
+                            "edge_id": 1,
+                            "relationship_key": "TSM->AMD:FOUNDRY",
+                            "name": "Taiwan Semiconductor",
+                            "ticker": "TSM",
+                            "type": "Foundry / Packaging",
+                            "product": "chips",
+                            "source_type": "Manual / AI Research",
+                            "review_status": "approved / rejected",
+                        }
+                    ],
+                    "downstream": [],
+                }
+            ]
+        },
+        "quality": {"pending_count": 0, "approved_count": 1, "rejected_count": 0, "review_queue": []},
+        "investor_metrics": {
+            "unique_links": 5,
+            "approved_links": 1,
+            "pending_links": 0,
+            "sector_exposure": [],
+            "change_summary": {},
+            "history": [],
+        },
+    }
+
+    try:
+        validate_dashboard_data(json.loads(json.dumps(data)))
+    except AssertionError as exc:
+        message = str(exc)
+        assert "unique_links does not match" in message
+        assert "metrics report 5, export contains 1" in message
+        assert "contains rejected edge 1" in message
+    else:
+        raise AssertionError("validator should reject a wrong unique link count and merged rejected statuses")
+
+
 def test_dashboard_validator_rejects_duplicate_relationship_tickers():
     data = {
         "industries": {

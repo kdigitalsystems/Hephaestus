@@ -7,7 +7,17 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from review_edges_with_ollama import consensus_review, deterministic_review, split_models
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from models import Base, Edge, Node
+from review_edges_with_ollama import (
+    apply_reverse,
+    consensus_review,
+    correct_review_for_reason,
+    deterministic_review,
+    split_models,
+)
 
 
 def args():
@@ -42,6 +52,59 @@ def test_ai_edge_without_source_excerpt_is_rejected_before_model_review():
     assert result["action"] == "reject"
     assert result["confidence"] == 1.0
     assert "no usable excerpt" in result["reason"]
+
+
+def test_manufacturing_partnership_in_filing_excerpt_is_not_hard_rejected():
+    candidate = SimpleNamespace(
+        source_id=1,
+        target_id=2,
+        source_url="https://www.sec.gov/Archives/edgar/data/1/10k.htm",
+        source_node=SimpleNamespace(ticker="TSM", name="Taiwan Semiconductor", sector="Technology", industry="Semiconductors"),
+        target_node=SimpleNamespace(ticker="NVDA", name="NVIDIA", sector="Technology", industry="Semiconductors"),
+        dependency_type="Foundry Services",
+        product="GPUs",
+        evidence_excerpt="Under a long-term manufacturing partnership, TSMC produces substantially all of NVIDIA GPUs at its fabs.",
+        confidence_score=0.9,
+    )
+
+    assert deterministic_review(candidate) is None
+
+
+def test_supplied_by_rationale_keeps_a_correct_reverse_vote():
+    candidate = SimpleNamespace(
+        source_node=SimpleNamespace(ticker="AMD", name="Advanced Micro Devices, Inc."),
+        target_node=SimpleNamespace(ticker="TSM", name="Taiwan Semiconductor Manufacturing"),
+    )
+    review = {
+        "action": "reverse",
+        "supplier_side": "target",
+        "customer_side": "source",
+        "reason": "AMD is supplied by TSM with advanced node wafers, so the edge direction is backwards.",
+    }
+
+    assert correct_review_for_reason(candidate, review)["action"] == "reverse"
+
+
+def test_reverse_does_not_resurrect_a_rejected_opposite_edge():
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    supplier = Node(name="Supplier", ticker="SUP")
+    customer = Node(name="Customer", ticker="CUS")
+    session.add_all([supplier, customer])
+    session.commit()
+    proposed = Edge(source_id=customer.id, target_id=supplier.id, dependency_type="Foundry", review_status="pending")
+    rejected = Edge(source_id=supplier.id, target_id=customer.id, dependency_type="Foundry", review_status="rejected")
+    session.add_all([proposed, rejected])
+    session.commit()
+
+    result = apply_reverse(session, proposed, {"relationship_type": "Foundry", "product": "", "confidence": 0.95, "reason": "direction is backwards"})
+    session.commit()
+
+    assert result is None
+    assert session.get(Edge, rejected.id).review_status == "rejected"
+    assert session.get(Edge, proposed.id).review_status == "pending"
+    assert "previously rejected" in session.get(Edge, proposed.id).review_note
 
 
 def review(model, action, confidence=0.9, supplier_side="source", customer_side="target"):

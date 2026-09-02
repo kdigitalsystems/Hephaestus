@@ -10,75 +10,13 @@ import ollama
 from sqlalchemy.exc import IntegrityError
 
 from database import SessionLocal
-from evidence_quality import unsupported_ai_evidence
+from evidence_quality import has_non_supply_relationship, unsupported_ai_evidence
 from models import Edge, Node
 
 
 DEFAULT_MODEL = os.environ.get("HEPHAESTUS_REVIEW_MODEL", "qwen2.5:7b-instruct")
 DEFAULT_MODELS = os.environ.get("HEPHAESTUS_REVIEW_MODELS")
 VALID_ACTIONS = {"approve", "reject", "reverse", "pending"}
-NON_SUPPLY_REVIEW_MARKERS = [
-    "acquisition",
-    "acquired",
-    "acquires",
-    "asset purchase",
-    "business unit purchase",
-    "collaboration",
-    "co-commercialization",
-    "competitor",
-    "competition",
-    "alleged liability",
-    "asset sale",
-    "banned",
-    "breach incident",
-    "data breach",
-    "equity stake",
-    "funding",
-    "generic substitutes",
-    "historical acquisition",
-    "intellectual property theft",
-    "investment",
-    "joint exploration agreement",
-    "joint vaccine",
-    "joint venture",
-    "legal dispute",
-    "license agreement",
-    "licensing agreement",
-    "lawsuit",
-    "merger",
-    "neither supply chain",
-    "neither supply-chain",
-    "news report",
-    "not a supply chain relationship",
-    "not a supply-chain relationship",
-    "not current supply chain",
-    "not an operational supply chain",
-    "not an operational supply-chain",
-    "not known to be a customer",
-    "not to purchase",
-    "option deal",
-    "ownership",
-    "partnership",
-    "patent",
-    "prohibited",
-    "royalty",
-    "rights to",
-    "sale_of_assets",
-    "settlement",
-    "shareholder",
-    "sold its subsidiary",
-    "spin-off",
-    "spinoff",
-    "spun off",
-    "spun-off",
-    "stolen",
-    "suing",
-    "transfer of rights",
-    "theft",
-    "trade secret",
-    "unknown operational supply chain",
-    "zero emission vehicle credit",
-]
 NON_OPERATING_SECTORS = {"financial services", "real estate", "shell companies"}
 NON_OPERATING_NAME_MARKERS = [
     " fund",
@@ -212,7 +150,8 @@ def correct_review_for_reason(edge, review):
     reason = review["reason"].lower()
     source_aliases = node_aliases(edge.source_node)
     target_aliases = node_aliases(edge.target_node)
-    supplier_terms = [" supplies ", " supplies", " provides ", " provides", " manufactures ", " produces ", " supplied by ", " supplier "]
+    # "X is supplied by Y" makes X the customer, so "supplied by" is a customer cue only.
+    supplier_terms = [" supplies ", " supplies", " provides ", " provides", " manufactures ", " produces ", " supplier "]
     customer_terms = [" uses ", " purchases ", " buys ", " customer of ", " supplied by "]
 
     if any(marker in reason for marker in ["do not have a direct", "does not have a direct", "not a direct", "no direct"]):
@@ -318,12 +257,7 @@ def deterministic_review(edge):
             "reason": f"Non-operating financial vehicle or fund is not a useful operating supply-chain node: {names}.",
         }
 
-    label_text = " ".join([
-        edge.dependency_type or "",
-        edge.product or "",
-        edge.evidence_excerpt or "",
-    ]).lower()
-    if any(marker in label_text for marker in NON_SUPPLY_REVIEW_MARKERS):
+    if has_non_supply_relationship(edge.dependency_type, edge.product, edge.evidence_excerpt):
         return {
             "action": "reject",
             "supplier_side": "neither",
@@ -370,8 +304,7 @@ def normalize_review(raw):
     reason_lower = reason.lower()
     relationship_type = str(raw.get("relationship_type") or "").strip()
     product = str(raw.get("product") or "").strip()
-    review_text = " ".join([relationship_type, product, reason]).lower()
-    if any(marker in review_text for marker in NON_SUPPLY_REVIEW_MARKERS):
+    if has_non_supply_relationship(relationship_type, product, note=reason):
         action = "reject"
         supplier_side = "neither"
         customer_side = "neither"
@@ -567,6 +500,17 @@ def apply_reverse(session, edge, review):
         .first()
     )
 
+    if existing and existing.review_status == "rejected":
+        # The reversed direction was already reviewed and rejected; a model vote must
+        # not silently resurrect that decision. Hold the edge for a human instead.
+        edge.review_status = "pending"
+        edge.review_note = (
+            f"Ollama consensus review held: reversed direction was previously rejected as edge #{existing.id}. "
+            f"{review['reason']}"
+        )[:1000]
+        edge.reviewed_at = None
+        return None
+
     if existing:
         apply_approval(existing, review)
         edge.review_status = "rejected"
@@ -590,6 +534,8 @@ def apply_review(session, edge, review):
         return "rejected"
     if action == "reverse":
         target_id = apply_reverse(session, edge, review)
+        if target_id is None:
+            return "held_reverse_previously_rejected"
         return f"reversed_to_edge_{target_id}"
 
     edge.review_status = "pending"

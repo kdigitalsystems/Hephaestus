@@ -9,6 +9,9 @@ from models import Node, Edge
 # Define the path for a text file containing URLs to scrape daily
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 URL_LIST_PATH = os.path.join(BASE_DIR, "target_urls.txt")
+# Keep the prompt within the model context window; an overlong article would push
+# the extraction rules out of the window and silently degrade the output.
+MAX_TEXT_CHARS = int(os.environ.get("HEPHAESTUS_CONTEXT_MAX_CHARS", "15000"))
 
 def process_source(url: str):
     """
@@ -24,7 +27,7 @@ def process_source(url: str):
 
     # 2. Extract dependencies using the local Ollama model
     print("Routing text to local LLM for extraction...")
-    extraction = extract_dependencies(text)
+    extraction = extract_dependencies(text[:MAX_TEXT_CHARS])
     
     # Check if the model returned data and if it contains the 'dependencies' key
     if not extraction or "dependencies" not in extraction:
@@ -41,6 +44,7 @@ def process_source(url: str):
 
     # 3. Save to database
     session = SessionLocal()
+    seen_keys = set()
     try:
         for dep in dependencies:
             # Safely handle potential missing keys from the LLM output
@@ -53,6 +57,15 @@ def process_source(url: str):
             if not source_name or not target_name:
                 print(f"Skipping malformed dependency entry: {dep}")
                 continue
+            if source_name.strip().lower() == target_name.strip().lower():
+                print(f"Skipping self-referential dependency: {source_name}")
+                continue
+            # The session does not autoflush, so duplicates within one article would
+            # only surface as an IntegrityError at commit and lose the whole batch.
+            dedupe_key = (source_name.strip().lower(), target_name.strip().lower(), (dep_type or "").strip().lower())
+            if dedupe_key in seen_keys:
+                continue
+            seen_keys.add(dedupe_key)
 
             # Get or create source node
             source_node = session.query(Node).filter_by(name=source_name).first()
@@ -67,6 +80,9 @@ def process_source(url: str):
                 target_node = Node(name=target_name, entity_type="Company")
                 session.add(target_node)
                 session.flush()
+
+            if source_node.id == target_node.id:
+                continue
 
             existing_edge = session.query(Edge).filter(
                 Edge.source_id == source_node.id,

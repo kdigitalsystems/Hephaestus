@@ -9,83 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from database import engine
 from database import SessionLocal
 from models import Edge, Node
-from evidence_quality import unsupported_ai_evidence
-
-REVERSED_ROLE_MARKERS = (
-    "customer",
-    "buyer",
-    "client",
-    "end-user",
-    "outsourcing partner",
-)
-
-NON_DIRECTIONAL_ROLE_LABELS = (
-    "customer relationship management",
-    "customer data",
-    "customer behavior",
-    "supplier/customer",
-    "customer/supplier",
-)
-
-NON_SUPPLY_MARKERS = (
-    "competitor",
-    "collaboration",
-    "co-commercialization",
-    "breach incident",
-    "data breach",
-    "equity stake",
-    "investor",
-    "acquisition",
-    "acquired",
-    "alleged liability",
-    "asset sale",
-    "banned",
-    "merger",
-    "license agreement",
-    "licensing agreement",
-    "option deal",
-    "funding",
-    "generic substitutes",
-    "historical acquisition",
-    "intellectual property theft",
-    "joint exploration agreement",
-    "joint vaccine",
-    "joint venture",
-    "legal dispute",
-    "lawsuit",
-    "neither supply chain",
-    "neither supply-chain",
-    "news report",
-    "not a supply chain relationship",
-    "not a supply-chain relationship",
-    "not current supply chain",
-    "not an operational supply chain",
-    "not an operational supply-chain",
-    "not known to be a customer",
-    "not to purchase",
-    "patent",
-    "prohibited",
-    "royalty",
-    "shareholder",
-    "spin-off",
-    "spinoff",
-    "stolen",
-    "parent company of",
-    "theft",
-    "trade secret",
-    "rights to",
-    "sale_of_assets",
-    "settlement",
-    "sold its subsidiary",
-    "spun off",
-    "spun-off",
-    "suing",
-    "unknown operational supply chain",
-    "zero emission vehicle credit",
-    "merged company",
-    "ownership",
-    "competition",
-)
+from evidence_quality import has_non_supply_relationship, is_role_label, unsupported_ai_evidence
 
 INVALID_DEPENDENCY_LABELS = {
     "news",
@@ -127,15 +51,12 @@ class DatabaseAccessError(RuntimeError):
 
 
 def has_reversed_role_label(dependency_type):
-    dep_type = (dependency_type or "").lower()
-    if any(label in dep_type for label in NON_DIRECTIONAL_ROLE_LABELS):
-        return False
-    return any(marker in dep_type for marker in REVERSED_ROLE_MARKERS)
+    return is_role_label(dependency_type)
 
 
-def has_non_supply_label(*labels):
-    label_text = " ".join(label or "" for label in labels).lower()
-    return any(marker in label_text for marker in NON_SUPPLY_MARKERS)
+def has_non_supply_label(dependency_type=None, product=None, evidence=None, note=None):
+    """Positional order is (dependency_type, product, evidence_excerpt, review_note)."""
+    return has_non_supply_relationship(dependency_type, product, evidence, note)
 
 
 def has_invalid_dependency_label(value):
@@ -216,9 +137,12 @@ def audit_database(fail_on_warnings=False):
         duplicate_tickers = [ticker for ticker, count in Counter(tickers).items() if count > 1]
 
         edges = session.query(Edge).all()
+        # Mirror export.should_export_edge: a rejected edge is never published, even
+        # when it came from a manual seed, so it must not fail the audit either.
         published_edges = [
             edge for edge in edges
-            if edge.review_status == "approved" or "Manual" in (edge.source_url or "")
+            if edge.review_status != "rejected"
+            and (edge.review_status == "approved" or "Manual" in (edge.source_url or ""))
         ]
         edge_keys = [
             (edge.source_id, edge.target_id, edge.dependency_type)

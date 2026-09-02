@@ -59,6 +59,23 @@ def test_audit_flags_ip_theft_as_non_supply_relationship():
     assert not audit_data_quality.has_invalid_dependency_label("News Content")
 
 
+def test_audit_does_not_flag_descriptive_labels_or_filing_prose():
+    assert not audit_data_quality.has_non_supply_label(
+        "Cloud Infrastructure",
+        "Collaboration and project management software",
+    )
+    assert not audit_data_quality.has_non_supply_label(
+        "Memory",
+        "NAND flash",
+        "We acquired substantially all of our NAND flash memory from Samsung under a long-term supply agreement.",
+    )
+    assert audit_data_quality.has_non_supply_label("Collaboration")
+    assert audit_data_quality.has_reversed_role_label("Customer")
+    assert audit_data_quality.has_reversed_role_label("Major Customer")
+    assert not audit_data_quality.has_reversed_role_label("Customer Support Outsourcing")
+    assert not audit_data_quality.has_reversed_role_label("Customer Relationship Management")
+
+
 def test_audit_flags_speculative_relationship_evidence():
     assert audit_data_quality.has_speculative_supply_label(
         "HP's supply chain likely involves Intel as a supplier of microprocessors.",

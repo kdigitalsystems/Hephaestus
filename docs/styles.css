@@ -2496,6 +2496,23 @@ tbody tr:hover {
 
 .prediction-card .relationship-actions { margin-top: auto; }
 
+.data-load-error {
+    margin: 0 0 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--red);
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--red) 14%, var(--surface));
+    color: var(--text-main);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.metric-value.muted,
+.mini-metric.muted,
+td.muted {
+    color: var(--text-muted);
+}
+
 @media (max-width: 680px) {
     .prediction-calibration,
     .prediction-metrics {

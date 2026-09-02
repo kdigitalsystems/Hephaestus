@@ -3,45 +3,16 @@ import csv
 from datetime import datetime, timezone
 
 from database import SessionLocal
+from evidence_quality import has_non_supply_relationship
 from models import Edge
-
-NON_SUPPLY_REVIEW_MARKERS = [
-    "acquisition",
-    "acquired",
-    "acquires",
-    "asset purchase",
-    "business unit purchase",
-    "collaboration",
-    "co-commercialization",
-    "competitor",
-    "competition",
-    "equity stake",
-    "funding",
-    "historical acquisition",
-    "investment",
-    "joint venture",
-    "license agreement",
-    "licensing agreement",
-    "merger",
-    "option deal",
-    "ownership",
-    "partnership",
-    "patent",
-    "royalty",
-    "shareholder",
-    "spin-off",
-    "spinoff",
-    "transfer of rights",
-]
 
 
 def has_non_supply_review_label(row):
-    text = " ".join([
-        row.get("relationship_type") or "",
-        row.get("product") or "",
-        row.get("reason") or "",
-    ]).lower()
-    return any(marker in text for marker in NON_SUPPLY_REVIEW_MARKERS)
+    return has_non_supply_relationship(
+        row.get("relationship_type"),
+        row.get("product"),
+        note=row.get("reason"),
+    )
 
 
 def allowed(row, args):
@@ -95,6 +66,13 @@ def apply_row(session, row):
             )
             .first()
         )
+        if existing and existing.review_status == "rejected":
+            # Never resurrect a direction that was already reviewed and rejected.
+            edge.review_note = (
+                f"Ollama report review held: reversed direction was previously rejected as edge #{existing.id}. "
+                f"{row.get('reason', '')}"
+            )[:1000]
+            return "held"
         if existing:
             update_metadata(existing, row)
             existing.review_status = "approved"
@@ -117,7 +95,7 @@ def main():
     parser.add_argument("--min-reverse", type=float, default=0.75)
     args = parser.parse_args()
 
-    counts = {"approved": 0, "rejected": 0, "reversed": 0, "skipped": 0}
+    counts = {"approved": 0, "rejected": 0, "reversed": 0, "held": 0, "skipped": 0}
     session = SessionLocal()
     try:
         with open(args.report, newline="") as handle:

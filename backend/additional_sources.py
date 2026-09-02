@@ -325,7 +325,9 @@ def sam_opportunities_text(ticker, company_name="", sector="", industry="", max_
     try:
         payload = fetch_json(url, params=sam_opportunities_params(company_name, api_key, limit=max_opportunities))
     except requests.RequestException as exc:
-        print(f"  [-] SAM.gov opportunities unavailable for {ticker}: {exc}")
+        # requests embeds the full request URL, including the api_key query
+        # parameter, in its error messages; never let the key reach the job log.
+        print(f"  [-] SAM.gov opportunities unavailable for {ticker}: {str(exc).replace(api_key, '***')}")
         return ""
 
     opportunities = payload.get("opportunitiesData") or payload.get("data") or []
@@ -501,18 +503,28 @@ def yahoo_news_article_text(ticker, company_name="", max_articles=2, max_chars=2
     return truncate_join(sections, max_chars)
 
 
+def collect_section(ticker, collector, *args, **kwargs):
+    """Isolate each collector so one unexpected error cannot discard every other source."""
+    try:
+        return collector(*args, **kwargs)
+    except Exception as exc:
+        name = getattr(collector, "__name__", "source collector")
+        print(f"  [-] {name} unavailable for {ticker}: {exc}")
+        return ""
+
+
 def get_additional_supply_chain_text(company_name, ticker, sector="", industry="", max_chars=8500):
     sections = []
     if bool_env("HEPHAESTUS_USE_CONFIGURED_SOURCE_URLS", default=True):
-        sections.append(configured_source_text(ticker, company_name=company_name))
+        sections.append(collect_section(ticker, configured_source_text, ticker, company_name=company_name))
     if bool_env("HEPHAESTUS_USE_IR_SOURCES", default=True):
-        sections.append(company_ir_text(ticker, company_name=company_name))
+        sections.append(collect_section(ticker, company_ir_text, ticker, company_name=company_name))
     if bool_env("HEPHAESTUS_USE_PROCUREMENT_SOURCE", default=True):
-        sections.append(usaspending_text(ticker, company_name=company_name))
-        sections.append(sam_opportunities_text(ticker, company_name=company_name, sector=sector, industry=industry))
+        sections.append(collect_section(ticker, usaspending_text, ticker, company_name=company_name))
+        sections.append(collect_section(ticker, sam_opportunities_text, ticker, company_name=company_name, sector=sector, industry=industry))
     if bool_env("HEPHAESTUS_USE_REGULATORY_SOURCE", default=True):
-        sections.append(openfda_regulatory_text(ticker, company_name=company_name, sector=sector, industry=industry))
-        sections.append(fcc_equipment_authorization_text(ticker, company_name=company_name, sector=sector, industry=industry))
-        sections.append(nhtsa_manufacturer_text(ticker, company_name=company_name, sector=sector, industry=industry))
-    sections.append(yahoo_news_article_text(ticker, company_name=company_name))
+        sections.append(collect_section(ticker, openfda_regulatory_text, ticker, company_name=company_name, sector=sector, industry=industry))
+        sections.append(collect_section(ticker, fcc_equipment_authorization_text, ticker, company_name=company_name, sector=sector, industry=industry))
+        sections.append(collect_section(ticker, nhtsa_manufacturer_text, ticker, company_name=company_name, sector=sector, industry=industry))
+    sections.append(collect_section(ticker, yahoo_news_article_text, ticker, company_name=company_name))
     return truncate_join(sections, max_chars)

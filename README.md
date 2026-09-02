@@ -322,7 +322,7 @@ Each signal combines a small set of explainable direct inputs with one-hop suppl
 - Supplier-to-customer propagation: supplier-side signals use a smaller weight because their effect on the customer is more ambiguous.
 - Relationship confidence, approval state, and later measured relationship-type performance constrain every transfer.
 
-Every published prediction contains its direct and network scores, structured inputs, contributing relationship paths with source evidence, confidence, bull/bear scenarios, model version, and generation time. Scores remain deterministic and auditable. A local Ollama model may generate concise scenario prose from this already-selected evidence, but it cannot choose a direction, change confidence, set a price target, or introduce new facts.
+Every published prediction contains its direct and network scores, structured inputs, all contributing relationship paths with source evidence (each counterparty is counted once, and the network score is the sum of the published path contributions), confidence, bull/bear scenarios, model version, and generation time. Scores remain deterministic and auditable. A local Ollama model may generate concise scenario prose from this already-selected evidence, but it cannot choose a direction, change confidence, set a price target, or introduce new facts.
 
 Run a local deterministic export:
 
@@ -337,7 +337,7 @@ Use local Ollama only for scenario narration:
 python3 backend/generate_predictions.py --limit 50 --use-ollama --require-ollama --ollama-model qwen2.5:7b-instruct
 ```
 
-`docs/prediction_history.json` retains prediction snapshots. On later runs, signals whose 30-day horizon has matured are evaluated against the first available Yahoo daily close on or after the target date, then recorded as correct or incorrect and used to conservatively recalibrate relationship-type transfer weights. If that history lookup is unavailable, the result falls back to the current exported price and labels the fallback in `outcome_price_source`. Early results are shrunk toward neutral weights so a few lucky predictions do not distort the model. The Ollama pass also retrieves a small, local set of resolved historical outcomes with matching tickers, sectors, or relationship types for scenario context. This retrieval layer is deliberately bounded and auditable; it can evolve to an embedding store later without changing the published prediction contract.
+`docs/prediction_history.json` retains prediction snapshots; unresolved predictions are always kept until their horizon can be evaluated, and only resolved entries are pruned to bound the file. On later runs, signals whose 30-day horizon has matured are evaluated against the first available Yahoo daily close on or after the target date, then recorded as correct or incorrect and used to conservatively recalibrate relationship-type transfer weights. If that history lookup is unavailable, the result falls back to the current exported price and labels the fallback in `outcome_price_source`. Early results are shrunk toward neutral weights so a few lucky predictions do not distort the model. The Ollama pass also retrieves a small, local set of resolved historical outcomes with matching tickers, sectors, or relationship types for scenario context. This retrieval layer is deliberately bounded and auditable; it can evolve to an embedding store later without changing the published prediction contract.
 
 The Watchlist is local to the browser via `localStorage`; it does not require accounts or a backend. The Compare view is routeable with hash parameters, for example `#compare?a=AMD&b=NVDA`.
 
@@ -393,7 +393,7 @@ Run a limited debug pipeline:
 ./run_pipeline.sh 25
 ```
 
-The pipeline checks local database readiness, initializes the SQLite schema if needed, reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with an Ollama consensus panel, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard, link-history, and review-decision changes.
+The pipeline checks local database readiness, initializes the SQLite schema if needed, reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with an Ollama consensus panel, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard, link-history, and review-decision changes. It refuses to run on any branch other than `main`, and it stops with an error when `ollama` is installed but the daemon is not responding, so an unreviewed batch can never be published as if it had been reviewed.
 
 Review behavior can be tuned with environment variables:
 
@@ -455,7 +455,9 @@ python3 backend/validate_dashboard_data.py
 - `review_status`: `pending`, `approved`, or `rejected`
 - `review_note`
 
-AI-discovered relationships require a substantive excerpt from the collected source text. The discovery, review, cleanup, repair, and published-data validation stages all reject missing or placeholder evidence; explicitly curated manual seeds remain supported.
+AI-discovered relationships require a substantive excerpt from the collected source text. The discovery, review, cleanup, repair, and published-data validation stages all reject missing or placeholder evidence; explicitly curated manual seeds remain supported. Discovery also checks that the excerpt actually appears in the text the collectors gathered (minor rewording is tolerated), trusts a model-supplied ticker only when it names the extracted company, and keeps `evidence_source_url` only when it is one of the URLs Hephaestus itself fetched.
+
+Non-supply keywords such as "acquisition", "partnership", or "collaboration" only disqualify a relationship when they appear in the relationship label itself; product names and verbatim filing excerpts are screened only for explicit non-supply phrases, so a "Collaboration software" product or "we acquired components from" excerpt is not rejected automatically.
 - `reviewed_at`
 
 Edges are unique by source, target, and dependency type.

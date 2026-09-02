@@ -192,7 +192,27 @@ vm.runInContext(`
       downstream: [],
     },
   ];
-  globalData = { Technology: [allCompanies[0], allCompanies[2], allCompanies[3]], Consumer: [allCompanies[1]] };
+  globalData = {
+    Technology: [allCompanies[0], allCompanies[2], allCompanies[3]],
+    Consumer: [allCompanies[1]],
+    // Synthetic repair bucket with more link rows than any real sector; it must never
+    // be reported as the top sector.
+    "Linked Companies": [{
+      name: "Novartis",
+      ticker: "NVS",
+      sector: "Linked Companies",
+      industry: "Reviewed relationship endpoint",
+      price: null,
+      change: 0,
+      connection_count: 3,
+      upstream: [
+        { ticker: "A", name: "A", type: "X", relationship_key: "A->NVS:X" },
+        { ticker: "B", name: "B", type: "Y", relationship_key: "B->NVS:Y" },
+        { ticker: "C", name: "C", type: "Z", relationship_key: "C->NVS:Z" },
+      ],
+      downstream: [],
+    }],
+  };
   dashboardMeta = { investor_metrics: { unique_links: 12 } };
 `, context);
 
@@ -216,6 +236,32 @@ if (context.__sentenceName !== "Super Micro Computer, Inc") {
 
 if (context.__formattedSmallCurrency !== "$527.20") {
   throw new Error(`small currency values should keep cents, got ${context.__formattedSmallCurrency}`);
+}
+
+vm.runInContext(`
+  globalThis.__formattedNegative = formatNum(-4355558);
+  globalThis.__missingPrice = formatPrice({ price: null, change: 0 });
+  globalThis.__missingChange = formatChange({ price: null, change: 0 });
+  globalThis.__presentChange = formatChange({ price: 10, change: 1.5 });
+`, context);
+
+if (context.__formattedNegative !== "-$4.36M") {
+  throw new Error(`negative currency values should use the compact format, got ${context.__formattedNegative}`);
+}
+
+if (context.__missingPrice !== "N/A" || context.__missingChange !== "N/A" || context.__presentChange !== "+1.50%") {
+  throw new Error(`missing prices must render as N/A, not $0.00: ${context.__missingPrice} ${context.__missingChange} ${context.__presentChange}`);
+}
+
+vm.runInContext(`
+  globalThis.__distinctLinks = distinctLinkCount([
+    { upstream: [{ relationship_key: "TSM->AMD:FOUNDRY" }], downstream: [] },
+    { upstream: [], downstream: [{ relationship_key: "TSM->AMD:FOUNDRY" }, { relationship_key: "ASML->TSM:EQUIPMENT" }] },
+  ]);
+`, context);
+
+if (context.__distinctLinks !== 2) {
+  throw new Error(`sector link counts must not double-count relationships published from both endpoints, got ${context.__distinctLinks}`);
 }
 
 vm.runInContext("renderOverviewStats();", context);

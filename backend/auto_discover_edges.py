@@ -14,7 +14,7 @@ from parser import extract_dependencies
 from yahooquery import search as yq_search, Ticker
 from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_text
 from additional_sources import get_additional_supply_chain_text
-from evidence_quality import has_usable_evidence
+from evidence_quality import has_non_supply_relationship, has_usable_evidence, is_role_label
 
 # --- CONFIGURATION ---
 wikipedia.set_user_agent("HephaestusTerminal/1.0 (research@saqibdesktop.local)")
@@ -23,6 +23,13 @@ USE_SEC_SOURCE = os.environ.get("HEPHAESTUS_USE_SEC_SOURCE", "1") != "0"
 USE_SEC_EXHIBITS = os.environ.get("HEPHAESTUS_USE_SEC_EXHIBITS", "1") != "0"
 USE_ADDITIONAL_SOURCES = os.environ.get("HEPHAESTUS_USE_ADDITIONAL_SOURCES", "1") != "0"
 CONTEXT_MAX_CHARS = int(os.environ.get("HEPHAESTUS_CONTEXT_MAX_CHARS", "15000"))
+# Wikipedia is the lowest-quality source; without its own budget it could consume the
+# whole context window and push the SEC filing text out entirely.
+WIKI_MAX_CHARS = int(os.environ.get("HEPHAESTUS_WIKI_MAX_CHARS", "4000"))
+# A ticker supplied by the model is only trusted when it names the same company.
+NAME_MATCH_MIN_SCORE = 60
+# An excerpt must quote the collected source text (allowing minor rewording).
+EXCERPT_MATCH_MIN_SCORE = 85
 
 def clean_company_name(name):
     """Aggressively strips Wall Street jargon, ADRs, and geographic tags."""
@@ -43,87 +50,54 @@ def clean_company_name(name):
     clean_name = name
     for word in stopwords:
         clean_name = re.sub(word, '', clean_name, flags=re.IGNORECASE)
-        
+
     clean_name = clean_name.replace(',', '')
     clean_name = re.sub(r'\s+', ' ', clean_name)
     return clean_name.strip()
 
 def is_reversed_role_dependency(dependency_type):
-    """Detect role labels that usually mean the LLM emitted customer -> supplier."""
-    dep_type = (dependency_type or "").strip().lower()
-    if not dep_type:
+    """Detect bare role labels ("Customer", "Major Buyer") that usually mean the LLM emitted customer -> supplier.
+
+    Descriptive labels that merely contain a role word, such as "Customer Support
+    Outsourcing" or "End-User Hardware", name a real service and keep their direction.
+    """
+    return is_role_label(dependency_type)
+
+def is_non_supply_dependency(dependency_type=None, product=None, evidence=None):
+    """Non-supply words are matched against the relationship label only.
+
+    Products and verbatim filing excerpts only trigger on explicit phrases, because
+    words like "acquired", "competition" or "partnership" are ordinary in 10-K prose
+    that describes genuine supply relationships.
+    """
+    return has_non_supply_relationship(dependency_type, product, evidence)
+
+
+def normalized_text(value):
+    return " ".join(str(value or "").lower().split())
+
+
+def excerpt_supported_by_source(excerpt, source_text):
+    """The published guarantee is that AI evidence quotes the collected source text."""
+    needle = normalized_text(excerpt)
+    haystack = normalized_text(source_text)
+    if not needle or not haystack:
         return False
+    if needle in haystack:
+        return True
+    return fuzz.partial_ratio(needle, haystack) >= EXCERPT_MATCH_MIN_SCORE
 
-    non_directional = [
-        "customer relationship management",
-        "customer data",
-        "customer behavior",
-        "supplier/customer",
-        "customer/supplier"
-    ]
-    if any(phrase in dep_type for phrase in non_directional):
-        return False
 
-    role_markers = [
-        "customer",
-        "buyer",
-        "client",
-        "end-user",
-        "outsourcing partner"
-    ]
-    return any(marker in dep_type for marker in role_markers)
+def verified_source_url(url, source_text):
+    """Only keep a provenance URL that one of our collectors actually emitted.
 
-def is_non_supply_dependency(*labels):
-    label_text = " ".join(str(label or "") for label in labels).strip().lower()
-    non_supply_markers = [
-        "competitor",
-        "investor",
-        "alleged liability",
-        "asset sale",
-        "banned",
-        "breach incident",
-        "acquisition",
-        "acquired",
-        "data breach",
-        "merger",
-        "option deal",
-        "funding",
-        "generic substitutes",
-        "intellectual property theft",
-        "joint exploration agreement",
-        "joint vaccine",
-        "legal dispute",
-        "lawsuit",
-        "neither supply chain",
-        "neither supply-chain",
-        "news report",
-        "not a supply chain relationship",
-        "not a supply-chain relationship",
-        "not current supply chain",
-        "not an operational supply chain",
-        "not an operational supply-chain",
-        "not known to be a customer",
-        "not to purchase",
-        "prohibited",
-        "shareholder",
-        "rights to",
-        "sale_of_assets",
-        "settlement",
-        "parent company of",
-        "merged company",
-        "ownership",
-        "sold its subsidiary",
-        "spun off",
-        "spun-off",
-        "suing",
-        "unknown operational supply chain",
-        "zero emission vehicle credit",
-        "competition",
-        "stolen",
-        "theft",
-        "trade secret"
-    ]
-    return any(marker in label_text for marker in non_supply_markers)
+    Scraped pages can contain text shaped like a SOURCE header; a URL the model did
+    not copy from our own headers would otherwise be published as trusted provenance.
+    """
+    url = str(url or "").strip()
+    if url.startswith(("http://", "https://")) and url in (source_text or ""):
+        return url
+    return None
 
 
 def has_invalid_dependency_label(value):
@@ -215,13 +189,52 @@ def upsert_pending_edge(session, source_node, target_node, dep):
             return existing, False
         raise
 
+def name_consistent(node, company_name):
+    """Reject a ticker match whose company name clearly names a different business.
+
+    Single-word names are often aliases the fuzzy score cannot verify (TSMC, Foxconn,
+    Google), so only multi-word names are checked.
+    """
+    if not node or not company_name:
+        return True
+    expected = clean_company_name(str(company_name)).lower().strip()
+    actual = clean_company_name(str(node.name or "")).lower().strip()
+    if not expected or not actual:
+        return True
+    if " " not in expected and len(expected) <= 8:
+        return True
+    return fuzz.token_set_ratio(expected, actual) >= NAME_MATCH_MIN_SCORE
+
+
+def resolve_counterparty(session, ticker, company_name):
+    """Resolve a model-supplied (ticker, name) pair without trusting a hallucinated ticker."""
+    if ticker:
+        node = EntityResolver.resolve_ticker(session, ticker)
+        if node and name_consistent(node, company_name):
+            return node
+        if node:
+            print(f"  [!] Ticker {ticker} names {node.name}, not '{company_name}'; resolving by name instead.")
+    if company_name:
+        node = EntityResolver.resolve(session, company_name)
+        if node and name_consistent(node, company_name):
+            return node
+    return None
+
+
 class EntityResolver:
     """Dynamic Resolution Engine with Yahoo Finance API Fallback."""
+    @staticmethod
+    def resolve_ticker(session, ticker):
+        ticker = str(ticker or "").strip().upper()
+        if len(ticker) < 1:
+            return None
+        return session.query(Node).filter(Node.ticker == ticker).first()
+
     @staticmethod
     def resolve(session, name_or_ticker):
         if not name_or_ticker or len(str(name_or_ticker)) < 2:
             return None
-        
+
         search_val = str(name_or_ticker).strip()
         search_upper = search_val.upper()
 
@@ -253,9 +266,11 @@ class EntityResolver:
 
         try:
             yq_results = yq_search(search_val)
-            quotes = yq_results.get('quotes', [])
-            if quotes:
-                discovered_ticker = quotes[0].get('symbol')
+            quotes = [quote for quote in (yq_results.get('quotes') or []) if isinstance(quote, dict)]
+            equities = [quote for quote in quotes if str(quote.get('quoteType') or '').upper() in ('', 'EQUITY')]
+            candidates = equities or quotes
+            if candidates:
+                discovered_ticker = candidates[0].get('symbol')
                 if discovered_ticker:
                     node = session.query(Node).filter(Node.ticker == discovered_ticker.upper()).first()
                     if node:
@@ -267,6 +282,17 @@ class EntityResolver:
 
 class IntelGatherer:
     @staticmethod
+    def wiki_section(content, section, max_chars=1500):
+        """Return the body of a Wikipedia section by heading, not by first word occurrence."""
+        heading = re.search(rf"^=+\s*{re.escape(section)}\s*=+\s*$", content, re.M | re.I)
+        if not heading:
+            return ""
+        start = heading.end()
+        next_heading = re.search(r"^==[^=].*?==\s*$", content[start:], re.M)
+        end = start + next_heading.start() if next_heading else len(content)
+        return content[start:min(end, start + max_chars)].strip()
+
+    @staticmethod
     def get_wiki_data(company_name, ticker):
         try:
             search_term = clean_company_name(company_name)
@@ -275,13 +301,13 @@ class IntelGatherer:
                 f"{search_term} company",
                 search_term
             ]
-            
+
             wiki_results = []
             for query in search_queries:
                 wiki_results = wikipedia.search(query)
                 if wiki_results:
                     break
-                    
+
             if not wiki_results:
                 return ""
 
@@ -291,17 +317,18 @@ class IntelGatherer:
                 page = wikipedia.page(e.options[0], auto_suggest=False)
             except wikipedia.PageError:
                 return ""
-            
+
             content = page.content
             target_sections = ["Operations", "Products", "Supply chain", "Partnerships", "Customers", "Infrastructure", "Manufacturing"]
-            relevant_text = ""
-            for section in target_sections:
-                if section in content:
-                    start = content.find(section)
-                    relevant_text += content[start:start+2500]
-            
+            relevant_text = "\n".join(
+                text
+                for text in (IntelGatherer.wiki_section(content, section) for section in target_sections)
+                if text
+            )
+
             if not relevant_text:
                 relevant_text = page.summary + "\n" + content[:3500]
+            relevant_text = relevant_text[:WIKI_MAX_CHARS]
 
             return f"SOURCE: WIKIPEDIA (Page: {page.title}; {page.url})\nDATA:\n{relevant_text}\n"
         except Exception:
@@ -362,7 +389,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
         print(f"--- Targeting Sectors: {', '.join(target_sectors)} ---")
     if deep_dive:
         print("--- DEEP DIVE MODE: Researching heavily-connected nodes ---")
-        
+
     session = SessionLocal()
 
     try:
@@ -379,7 +406,9 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             IGNORED_SECTORS = ["Financial Services", "Real Estate", "Financial", "Asset Management", "Insurance", "Banks", "Shell Companies"]
             query = query.filter(~Node.sector.in_(IGNORED_SECTORS))
 
-        lonely_nodes = query.order_by(Node.market_cap.desc()).limit(limit).all()
+        # The edge outer join yields one row per incident edge; without DISTINCT the
+        # limit is consumed by a few well-connected companies in --deep-dive mode.
+        lonely_nodes = query.distinct().order_by(Node.market_cap.desc()).limit(limit).all()
 
         if not lonely_nodes:
             print("No actionable companies found in queue!")
@@ -404,10 +433,10 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
 
             clean_target_name = clean_company_name(company.name)
             print(f"  [*] GPU is analyzing {len(intel_blob)} characters for {company.ticker}...")
-            
+
             extraction = extract_dependencies(intel_blob, target_name=clean_target_name, target_ticker=company.ticker)
             dependencies = extraction.get("dependencies", [])
-            
+
             if dependencies:
                 print(f"  [AI FOUND]: {len(dependencies)} potential relationships.")
             else:
@@ -429,12 +458,13 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                 if not has_usable_evidence(dep.get('evidence_excerpt')):
                     print(f"  [!] Ignored relationship without source-backed evidence: {dep.get('dependency_type')}")
                     continue
+                if not excerpt_supported_by_source(dep.get('evidence_excerpt'), intel_blob):
+                    print(f"  [!] Ignored relationship whose excerpt is not in the collected source text: {dep.get('dependency_type')}")
+                    continue
+                dep['evidence_source_url'] = verified_source_url(dep.get('evidence_source_url'), intel_blob)
 
-                s_node = EntityResolver.resolve(session, dep.get('source_ticker')) or \
-                         EntityResolver.resolve(session, dep.get('source_company'))
-                
-                t_node = EntityResolver.resolve(session, dep.get('target_ticker')) or \
-                         EntityResolver.resolve(session, dep.get('target_company'))
+                s_node = resolve_counterparty(session, dep.get('source_ticker'), dep.get('source_company'))
+                t_node = resolve_counterparty(session, dep.get('target_ticker'), dep.get('target_company'))
 
                 if s_node and t_node:
                     if s_node.id == t_node.id:
@@ -453,7 +483,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                     s_name = dep.get('source_company')
                     t_name = dep.get('target_company')
                     print(f"  [!] Filtered non-equity or private entity: '{s_name}' or '{t_name}'")
-            
+
             session.commit()
             time.sleep(1.5)
 
@@ -472,5 +502,5 @@ if __name__ == "__main__":
     parser.add_argument("--sectors", nargs='*', default=None, help="Optional: Specific sectors to target")
     parser.add_argument("--deep-dive", action="store_true", help="Research companies even if they already have connections")
     args = parser.parse_args()
-    
+
     auto_discover_supply_chain(limit=args.limit, target_sectors=args.sectors, deep_dive=args.deep_dive)

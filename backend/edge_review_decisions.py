@@ -64,7 +64,7 @@ def apply_decisions(path):
 
     decisions = payload.get("decisions", [])
     session = SessionLocal()
-    counts = {"applied": 0, "missing": 0, "merged": 0}
+    counts = {"applied": 0, "missing": 0}
     try:
         for decision in decisions:
             try:
@@ -99,30 +99,23 @@ def apply_decision(session, decision):
     )
 
     if not edge:
-        edge = (
+        # A rebuilt database re-discovers the relationship under its original label,
+        # while the decision carries the label chosen during review. Adopt that edge
+        # only when it is the single unreviewed candidate for the pair and source, so a
+        # different reviewed relationship between the same companies is never rewritten.
+        candidates = (
             session.query(Edge)
             .filter(
                 Edge.source_id == source.id,
                 Edge.target_id == target.id,
                 Edge.source_url == decision.get("source_url"),
             )
-            .first()
+            .order_by(Edge.id.asc())
+            .all()
         )
-
-    conflicting_edge = (
-        session.query(Edge)
-        .filter(
-            Edge.source_id == source.id,
-            Edge.target_id == target.id,
-            Edge.dependency_type == decision.get("dependency_type"),
-        )
-        .first()
-    )
-    merged = False
-    if edge and conflicting_edge and edge.id != conflicting_edge.id:
-        session.delete(edge)
-        edge = conflicting_edge
-        merged = True
+        unreviewed = [candidate for candidate in candidates if (candidate.review_status or "pending") == "pending"]
+        if len(unreviewed) == 1:
+            edge = unreviewed[0]
 
     if not edge:
         edge = Edge(source_id=source.id, target_id=target.id, dependency_type=decision["dependency_type"])
@@ -137,7 +130,19 @@ def apply_decision(session, decision):
     edge.review_status = decision["review_status"]
     edge.review_note = decision.get("review_note")
     edge.reviewed_at = datetime.now(timezone.utc)
-    return "merged" if merged else "applied"
+    return "applied"
+
+
+REVIEW_STATUS_RANK = {"approved": 2, "rejected": 1, "pending": 0}
+
+
+def duplicate_edge_rank(edge):
+    """A reviewed decision always outranks confidence; lower ids win ties."""
+    return (
+        REVIEW_STATUS_RANK.get(edge.review_status or "pending", 0),
+        edge.confidence_score or 0,
+        -(edge.id or 0),
+    )
 
 
 def dedupe_edges(session):
@@ -151,9 +156,7 @@ def dedupe_edges(session):
             by_key[key] = edge
             continue
 
-        if (edge.review_status == "approved" and existing.review_status != "approved") or (
-            (edge.confidence_score or 0) > (existing.confidence_score or 0)
-        ):
+        if duplicate_edge_rank(edge) > duplicate_edge_rank(existing):
             keep, remove = edge, existing
             by_key[key] = edge
         else:

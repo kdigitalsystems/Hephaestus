@@ -1,6 +1,6 @@
 import json
 import ollama
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from typing import List, Optional
 
 class Dependency(BaseModel):
@@ -13,7 +13,7 @@ class Dependency(BaseModel):
     evidence_excerpt: str = Field(min_length=20, description="A short verbatim supporting excerpt from the source text.")
     evidence_source_url: Optional[str] = Field(
         default=None,
-        pattern=r"^https?://",
+        pattern=r"^https?://\S+$",
         description="The exact URL from the SOURCE header supporting the excerpt, or null when unavailable.",
     )
     confidence_score: float = Field(ge=0.0, le=1.0, description="Confidence from 0.0 to 1.0.")
@@ -51,9 +51,10 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
     7. dependency_type must describe what is supplied, not a role label. Use "Advanced Silicon Fabrication" instead of "Customer".
     8. If the supplier is a private company, still extract it only when the relationship is explicit.
     9. evidence_excerpt must quote the provided source text. evidence_source_url must copy the exact HTTP URL from that SOURCE header, or be null if the header has no URL.
+    10. source_ticker and target_ticker must be null unless that exact ticker symbol appears in the source text. Never guess a ticker from a company name.
 
     Output JSON:
-    {{"dependencies": [{{"source_company": "Supplier Name", "source_ticker": "SUP", "target_company": "Customer Name", "target_ticker": "CUS", "dependency_type": "Raw Materials", "product": "Lithium", "evidence_excerpt": "Supplier Name provides lithium to Customer Name.", "evidence_source_url": "https://example.com/source", "confidence_score": 0.9}}]}}
+    {{"dependencies": [{{"source_company": "Supplier Name", "source_ticker": null, "target_company": "Customer Name", "target_ticker": null, "dependency_type": "Raw Materials", "product": "Lithium", "evidence_excerpt": "Supplier Name provides lithium to Customer Name.", "evidence_source_url": "https://example.com/source", "confidence_score": 0.9}}]}}
     """
 
     user_prompt = f"""
@@ -75,8 +76,23 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
         
         raw_json = response['message']['content']
         parsed_data = json.loads(raw_json)
-        return ExtractionResult.model_validate(parsed_data).model_dump()
-        
     except Exception as e:
         print(f"Error during LLM extraction: {e}")
         return {"dependencies": []}
+
+    items = parsed_data.get("dependencies") if isinstance(parsed_data, dict) else None
+    if not isinstance(items, list):
+        print("Error during LLM extraction: model output did not contain a dependencies list.")
+        return {"dependencies": []}
+
+    # Validate item by item so one malformed relationship does not discard the rest.
+    dependencies = []
+    rejected = 0
+    for item in items:
+        try:
+            dependencies.append(Dependency.model_validate(item).model_dump())
+        except ValidationError:
+            rejected += 1
+    if rejected:
+        print(f"  [!] Dropped {rejected} malformed dependenc{'y' if rejected == 1 else 'ies'} from model output.")
+    return {"dependencies": dependencies}

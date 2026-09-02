@@ -96,7 +96,11 @@ def seed_database_from_alpaca(limit=None):
             print("--- Database already contains all active Alpaca assets. ---")
             
     except Exception as e:
+        if 'session' in locals():
+            session.rollback()
         print(f"Error during seeding: {e}")
+        # Exit non-zero so `set -e` pipelines stop instead of exporting an unseeded graph.
+        raise
     finally:
         if 'session' in locals():
             session.close()
