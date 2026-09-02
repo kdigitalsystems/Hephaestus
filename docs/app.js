@@ -1449,6 +1449,56 @@ function renderWatchlistView() {
         .forEach(company => grid.appendChild(renderCompanySignalCard(company)));
 }
 
+const percent = (value) => `${Math.round(Number(value) * 100)}%`;
+
+// The track record is published as-is, including the naive baseline the signals
+// have to beat; a hit rate without that comparison would flatter a rising market.
+function renderTrackRecord(predictionPayload) {
+    const container = document.getElementById('prediction-track-record');
+    if (!container) return;
+    clearElement(container);
+    const calibration = predictionPayload.calibration || {};
+    const record = predictionPayload.track_record || {
+        status: Number(calibration.resolved_predictions || 0) >= 30 ? 'established' : 'experimental',
+        minimum_resolved: 30,
+        resolved: Number(calibration.resolved_predictions || 0),
+        hit_rate: calibration.hit_rate === undefined ? null : calibration.hit_rate,
+        always_up_hit_rate: null,
+        matured_unresolved: 0,
+        by_direction: {},
+    };
+    const resolved = Number(record.resolved || 0);
+    const beatsBaseline = record.hit_rate !== null && record.always_up_hit_rate !== null && record.hit_rate > record.always_up_hit_rate;
+    let tone = 'experimental';
+    let headline = `Experimental: ${resolved} of ${record.minimum_resolved || 30} signals resolved`;
+    let detail = 'There is no meaningful track record yet. Treat these as research prompts, not forecasts.';
+    if (record.status === 'established' && record.hit_rate !== null) {
+        tone = beatsBaseline ? 'positive' : 'underperforming';
+        headline = `Track record: ${percent(record.hit_rate)} of ${resolved.toLocaleString()} resolved 30-day signals called the direction correctly`;
+        detail = record.always_up_hit_rate === null
+            ? 'The naive baseline will be published with the next run.'
+            : beatsBaseline
+                ? `Simply saying "up" every time would have scored ${percent(record.always_up_hit_rate)}, so the signals have carried some information so far.`
+                : `Simply saying "up" every time would have scored ${percent(record.always_up_hit_rate)}, so the signals have not beaten a naive baseline yet. Read them as structured research prompts, not forecasts.`;
+    }
+    container.className = `prediction-track-record ${tone}`;
+    container.appendChild(makeElement('strong', '', headline));
+    container.appendChild(makeElement('span', '', detail));
+    const directions = record.by_direction || {};
+    const chips = makeElement('div', 'track-record-chips');
+    Object.keys(directions).sort().forEach(direction => {
+        const item = directions[direction];
+        chips.appendChild(makeElement('span', `source-badge ${direction}`, `${direction}: ${percent(item.hit_rate)} of ${item.resolved}`));
+    });
+    if (Number(record.matured_unresolved || 0) > 0) {
+        chips.appendChild(makeElement('span', 'source-badge', `${record.matured_unresolved} matured, awaiting price data`));
+    }
+    if (record.latest_evaluated_on) {
+        chips.appendChild(makeElement('span', 'source-badge', `Last scored ${record.latest_evaluated_on}`));
+    }
+    if (chips.children.length) container.appendChild(chips);
+}
+
 function renderPredictionsView() {
     currentRoute = { view: 'predictions' };
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1456,6 +1506,7 @@ function renderPredictionsView() {
     document.getElementById('view-predictions').classList.remove('hidden');
     const predictions = Array.isArray(predictionData.predictions) ? predictionData.predictions : [];
     const calibration = predictionData.calibration || {};
+    renderTrackRecord(predictionData);
     const generatedAt = predictionData.generated_at ? new Date(predictionData.generated_at) : null;
     setText('prediction-updated', generatedAt && !Number.isNaN(generatedAt.valueOf()) ? `Updated ${generatedAt.toLocaleDateString()}` : 'Awaiting signal run');
     setText('prediction-disclaimer', predictionData.disclaimer || 'Research signals only. They are not investment advice or trading instructions.');

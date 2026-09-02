@@ -526,6 +526,33 @@ if (context.__exposureRoute.view !== "exposure" || context.__exposureRoute.ticke
   throw new Error(`exposure route should carry the ticker: ${JSON.stringify(context.__exposureRoute)}`);
 }
 
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 250, hit_rate: 0.476 }, track_record: {
+    status: "established", minimum_resolved: 30, resolved: 250, hits: 119, hit_rate: 0.476, always_up_hit_rate: 0.584,
+    matured_unresolved: 3, by_direction: { up: { resolved: 196, hit_rate: 0.5 }, neutral: { resolved: 54, hit_rate: 0.39 } }, latest_evaluated_on: "2026-09-02",
+  } };
+  renderPredictionsView();
+  globalThis.__trackRecordClass = document.getElementById('prediction-track-record').className;
+`, context);
+const trackRecordText = collectText(element("prediction-track-record"));
+["48% of 250 resolved 30-day signals", "would have scored 58%", "not beaten a naive baseline", "up: 50% of 196", "3 matured, awaiting price data", "Last scored 2026-09-02"].forEach((expected) => {
+  if (!trackRecordText.includes(expected)) {
+    throw new Error(`track record banner missing ${expected}; got ${trackRecordText}`);
+  }
+});
+if (!String(context.__trackRecordClass).includes("underperforming")) {
+  throw new Error(`track record should be flagged as underperforming, got ${context.__trackRecordClass}`);
+}
+
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 4, hit_rate: 0.5 } };
+  renderPredictionsView();
+`, context);
+const experimentalText = collectText(element("prediction-track-record"));
+if (!experimentalText.includes("Experimental: 4 of 30 signals resolved")) {
+  throw new Error(`experimental banner missing; got ${experimentalText}`);
+}
+
 element("compare-a").value = "AMD";
 element("compare-b").value = "IBM";
 vm.runInContext(`

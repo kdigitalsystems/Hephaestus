@@ -36,6 +36,8 @@ MIN_RESOLVED_HISTORY = 500
 UNRESOLVED_RETENTION_MULTIPLIER = 4
 RESOLVED_OUTCOMES = frozenset({"correct", "incorrect"})
 VALID_DIRECTIONS = frozenset({"up", "down", "neutral"})
+# Below this many resolved signals the track record is too small to mean anything.
+MIN_RESOLVED_FOR_TRACK_RECORD = 30
 # Fixed field order: the generator and the validator must inspect exactly the same text.
 SCENARIO_FIELDS = ("scenario_summary", "bull_case", "bear_case")
 UNSAFE_SCENARIO_PATTERNS = (
@@ -374,6 +376,52 @@ def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str,
     return history
 
 
+def entry_has_matured(entry: dict[str, Any], now: datetime) -> bool:
+    generated = parse_generated_at(entry)
+    if generated is None:
+        return False
+    try:
+        horizon_days = max(1, int(entry.get("horizon_days") or HORIZON_DAYS))
+    except (TypeError, ValueError):
+        horizon_days = HORIZON_DAYS
+    return now >= generated + timedelta(days=horizon_days)
+
+
+def track_record(history: list[dict[str, Any]], now: datetime) -> dict[str, Any]:
+    """Publish how the signals have actually performed, with the baseline they must beat.
+
+    A hit rate on its own flatters a model in a rising market; "always say up" is
+    the comparison a reader needs to judge whether the signals carry information.
+    """
+    resolved = [entry for entry in history if entry.get("outcome") in RESOLVED_OUTCOMES]
+    matured_unresolved = sum(
+        1 for entry in history
+        if entry.get("outcome") not in RESOLVED_OUTCOMES and entry_has_matured(entry, now)
+    )
+    hits = sum(1 for entry in resolved if entry.get("outcome") == "correct")
+    always_up_hits = sum(1 for entry in resolved if as_number(entry.get("realized_return_pct")) > 0)
+    by_direction = {}
+    for direction in sorted(VALID_DIRECTIONS):
+        subset = [entry for entry in resolved if entry.get("direction") == direction]
+        if subset:
+            by_direction[direction] = {
+                "resolved": len(subset),
+                "hit_rate": round(sum(1 for entry in subset if entry.get("outcome") == "correct") / len(subset), 3),
+            }
+    evaluated_dates = sorted(str(entry.get("evaluated_at") or "")[:10] for entry in resolved if entry.get("evaluated_at"))
+    return {
+        "status": "established" if len(resolved) >= MIN_RESOLVED_FOR_TRACK_RECORD else "experimental",
+        "minimum_resolved": MIN_RESOLVED_FOR_TRACK_RECORD,
+        "resolved": len(resolved),
+        "hits": hits,
+        "hit_rate": round(hits / len(resolved), 3) if resolved else None,
+        "always_up_hit_rate": round(always_up_hits / len(resolved), 3) if resolved else None,
+        "matured_unresolved": matured_unresolved,
+        "by_direction": by_direction,
+        "latest_evaluated_on": evaluated_dates[-1] if evaluated_dates else None,
+    }
+
+
 def prune_history(history: list[dict[str, Any]], now: datetime) -> list[dict[str, Any]]:
     """Bound the history file without ever dropping a prediction that can still mature."""
     retained = []
@@ -423,6 +471,7 @@ def generate_predictions(dashboard_data: dict[str, Any], history: list[dict[str,
     company_by_ticker = {str(company["ticker"]).upper(): company for company in all_companies}
     history = evaluate_history(list(history or []), company_by_ticker, now, price_lookup)
     calibration = calibration_from_history(history)
+    performance = track_record(history, now)
     universe = select_top_companies(all_companies, limit)
     indexed = relationship_index(all_companies)
     predictions = [build_prediction(company, company_by_ticker, indexed, calibration, now) for company in universe]
@@ -445,6 +494,7 @@ def generate_predictions(dashboard_data: dict[str, Any], history: list[dict[str,
             "companies_without_market_cap": len(missing_market_cap),
         },
         "calibration": calibration,
+        "track_record": performance,
         "disclaimer": "Research signals only. They are not investment advice, price targets, or a recommendation to buy or sell any security.",
         "predictions": predictions,
     }

@@ -2804,6 +2804,40 @@ td.muted {
     }
 }
 
+.prediction-track-record {
+    display: grid;
+    gap: 6px;
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-left-width: 4px;
+    border-radius: 8px;
+    background: var(--surface-soft);
+}
+
+.prediction-track-record strong {
+    color: var(--text-main);
+    font-size: 0.98rem;
+    font-weight: 900;
+}
+
+.prediction-track-record > span {
+    color: var(--text-soft);
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+.prediction-track-record.experimental { border-left-color: var(--accent-3); }
+.prediction-track-record.underperforming { border-left-color: var(--red); }
+.prediction-track-record.positive { border-left-color: var(--green); }
+
+.track-record-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
 @media (max-width: 680px) {
     .prediction-calibration,
     .prediction-metrics {
