@@ -6,7 +6,15 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from update_metrics import apply_ticker_modules, ticker_updates
+from update_metrics import apply_ticker_modules, looks_throttled, ticker_updates
+
+
+def test_batch_with_mostly_error_strings_is_recognised_as_throttling():
+    tickers = ["A", "B", "C", "D"]
+
+    assert looks_throttled({"A": {"price": {}}, "B": "Too Many Requests", "C": "Too Many Requests", "D": "Quote not found"}, tickers)
+    assert not looks_throttled({"A": {"price": {}}, "B": {"price": {}}, "C": {"price": {}}, "D": "Quote not found"}, tickers)
+    assert not looks_throttled({}, [])
 
 
 def test_missing_modules_leave_stored_values_alone():

@@ -1,3 +1,4 @@
+import os
 import time
 import argparse
 from database import SessionLocal
@@ -78,54 +79,86 @@ def apply_ticker_modules(node, ticker_data):
         setattr(node, field, value)
 
 
+MODULES = ['price', 'summaryDetail', 'assetProfile', 'financialData', 'defaultKeyStatistics']
+# When most of a batch comes back as error strings Yahoo is throttling us; one bad
+# batch is normal, a run full of them silently empties the dashboard.
+THROTTLE_RATIO = 0.5
+THROTTLE_PAUSE_SECONDS = float(os.environ.get("HEPHAESTUS_YAHOO_THROTTLE_PAUSE", "20"))
+
+
+def fetch_batch(tickers):
+    return Ticker(tickers, asynchronous=True).get_modules(MODULES)
+
+
+def looks_throttled(dict_data, tickers):
+    if not tickers:
+        return False
+    missing = sum(1 for ticker in tickers if not isinstance(dict_data.get(ticker), dict))
+    return missing / len(tickers) >= THROTTLE_RATIO
+
+
 def update_financial_metrics(limit=None):
     print("--- Starting Bulk Deep Financial Metrics Update ---")
     session = SessionLocal()
-    
+    updated = 0
+    no_data = 0
+    sample_errors = {}
+
     try:
         query = session.query(Node).filter(Node.ticker.is_not(None))
-        
+
         # Apply the development limit if provided
         if limit:
             query = query.limit(limit)
-            
+
         nodes = query.all()
         total_nodes = len(nodes)
-        
+
         print(f"Found {total_nodes} companies to update" + (" (DEV LIMIT ACTIVE)." if limit else "."))
-        
-        chunk_size = 100 
-        
+
+        chunk_size = 100
+
         for i in range(0, total_nodes, chunk_size):
             batch = nodes[i:i + chunk_size]
             tickers = [node.ticker for node in batch]
-            
+
             print(f"Processing batch {i} to {i + len(batch)}...")
-            
+
             try:
-                t = Ticker(tickers, asynchronous=True)
-                
-                modules = ['price', 'summaryDetail', 'assetProfile', 'financialData', 'defaultKeyStatistics']
-                dict_data = t.get_modules(modules)
-                
+                dict_data = fetch_batch(tickers)
+                if looks_throttled(dict_data, tickers):
+                    print(f"  [!] Most of this batch returned no data; pausing {THROTTLE_PAUSE_SECONDS:.0f}s and retrying once.")
+                    time.sleep(THROTTLE_PAUSE_SECONDS)
+                    dict_data = fetch_batch(tickers)
+
                 for node in batch:
                     ticker_data = dict_data.get(node.ticker, {})
                     if not isinstance(ticker_data, dict):
+                        # Yahoo returns an error string ("Quote not found", a throttling
+                        # message) instead of a dict; count it instead of hiding it.
+                        no_data += 1
+                        message = str(ticker_data)[:80]
+                        sample_errors.setdefault(message, node.ticker)
                         continue
                     try:
                         apply_ticker_modules(node, ticker_data)
+                        updated += 1
                     except Exception as e:
                         # One malformed symbol must not discard the rest of the batch.
                         print(f"  [-] Skipping {node.ticker}: {e}")
 
                 session.commit()
-                time.sleep(1) 
-                
+                time.sleep(1)
+
             except Exception as e:
                 print(f"  [-] Error processing batch: {e}")
                 session.rollback()
 
-        print("\n--- Bulk Financial Metrics Update Complete ---")
+        print(f"\n--- Bulk Financial Metrics Update Complete: {updated} updated, {no_data} returned no data ---")
+        for message, ticker in list(sample_errors.items())[:5]:
+            print(f"  [-] e.g. {ticker}: {message}")
+        if total_nodes and no_data / total_nodes >= THROTTLE_RATIO:
+            print("  [!] Most companies received no market data; the export will shrink until the provider recovers.")
         
     except Exception as e:
         session.rollback()
