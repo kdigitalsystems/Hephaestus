@@ -305,8 +305,16 @@ function navigateCompany(ticker) {
     setRoute({ view: 'company', ticker, previous: currentRoute });
 }
 
+function navigateExposure(ticker = '') {
+    setRoute(ticker ? { view: 'exposure', ticker } : { view: 'exposure' });
+}
+
+function navigateExposureFromCurrent() {
+    navigateExposure(currentRoute.ticker || '');
+}
+
 function navigateBackToCompanies() {
-    if (currentRoute.previous && ['companies', 'sector', 'compare', 'watchlist', 'predictions'].includes(currentRoute.previous.view)) {
+    if (currentRoute.previous && ['companies', 'sector', 'compare', 'watchlist', 'predictions', 'exposure'].includes(currentRoute.previous.view)) {
         setRoute(currentRoute.previous);
         return;
     }
@@ -415,6 +423,12 @@ function applyRoute(route) {
         return;
     }
 
+    if (route.view === 'exposure') {
+        document.getElementById('exposure-input').value = route.ticker || '';
+        renderExposureView(false);
+        return;
+    }
+
     if (route.view === 'sector') {
         renderSectorView(route.sector || '');
         return;
@@ -425,6 +439,7 @@ function applyRoute(route) {
 
 function updateActiveNav(route) {
     const activeView = route.view === 'company' || route.view === 'sector' ? 'companies' : route.view;
+    // 'exposure' maps to its own nav button.
     document.querySelectorAll('[data-nav]').forEach(button => {
         button.classList.toggle('active', button.dataset.nav === activeView);
     });
@@ -441,14 +456,8 @@ window.addEventListener('popstate', handleLocationChange);
 window.addEventListener('hashchange', handleLocationChange);
 
 function showCompanies() {
-    document.getElementById('view-industries').classList.add('hidden');
-    document.getElementById('view-quality').classList.add('hidden');
-    document.getElementById('view-watchlist').classList.add('hidden');
-    document.getElementById('view-predictions').classList.add('hidden');
-    document.getElementById('view-compare').classList.add('hidden');
-    document.getElementById('view-sector').classList.add('hidden');
+    hideAllViews();
     document.getElementById('view-companies').classList.remove('hidden');
-    document.getElementById('view-details').classList.add('hidden');
 }
 
 function renderOverview() {
@@ -621,14 +630,8 @@ function populateFilters() {
 
 function renderLevel1() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    hideAllViews();
     document.getElementById('view-industries').classList.remove('hidden');
-    document.getElementById('view-quality').classList.add('hidden');
-    document.getElementById('view-watchlist').classList.add('hidden');
-    document.getElementById('view-predictions').classList.add('hidden');
-    document.getElementById('view-compare').classList.add('hidden');
-    document.getElementById('view-sector').classList.add('hidden');
-    document.getElementById('view-companies').classList.add('hidden');
-    document.getElementById('view-details').classList.add('hidden');
 
     renderOverviewStats();
     const grid = document.getElementById('industry-grid');
@@ -856,14 +859,8 @@ function renderLevel3(company, previousRoute = null) {
         previous: previousRoute || { view: 'companies' }
     };
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.getElementById('view-industries').classList.add('hidden');
-    document.getElementById('view-quality').classList.add('hidden');
-    document.getElementById('view-companies').classList.add('hidden');
+    hideAllViews();
     document.getElementById('view-details').classList.remove('hidden');
-    document.getElementById('view-watchlist').classList.add('hidden');
-    document.getElementById('view-predictions').classList.add('hidden');
-    document.getElementById('view-compare').classList.add('hidden');
-    document.getElementById('view-sector').classList.add('hidden');
 
     setText('detail-name', displayCompanyName(company.name));
     setText('detail-ticker', company.ticker || 'N/A');
@@ -886,6 +883,7 @@ function updateDetailBackLabel(previousRoute) {
         sector: 'Back to sector',
         compare: 'Back to compare',
         watchlist: 'Back to watchlist',
+        exposure: 'Back to exposure',
     };
     button.textContent = labels[previousRoute?.view] || 'Back to screener';
 }
@@ -1259,8 +1257,177 @@ function closeEvidenceModal() {
 }
 
 function hideAllViews() {
-    ['view-industries', 'view-quality', 'view-companies', 'view-details', 'view-watchlist', 'view-predictions', 'view-compare', 'view-sector'].forEach(id => {
+    ['view-industries', 'view-quality', 'view-companies', 'view-details', 'view-watchlist', 'view-predictions', 'view-compare', 'view-sector', 'view-exposure'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
+    });
+}
+
+// --- Exposure: who depends on a company, directly and through their own suppliers ---
+
+const SINGLE_SOURCE_PATTERN = /\b(sole[- ]source|single[- ]source|sole supplier|only supplier|exclusive supplier|substantially all|primary supplier)\b/i;
+const isSingleSource = (link) => SINGLE_SOURCE_PATTERN.test(`${link.type || ''} ${link.product || ''} ${link.evidence_excerpt || ''}`);
+
+// Every published relationship appears in the customer's upstream list, so that list
+// alone indexes both directions: who depends on a supplier, and what a company depends on.
+function buildDependencyIndex() {
+    const dependents = new Map();
+    const suppliers = new Map();
+    allCompanies.forEach(company => {
+        const customer = String(company.ticker || '').toUpperCase();
+        if (!customer) return;
+        (company.upstream || []).forEach(link => {
+            const supplier = String(link.ticker || '').toUpperCase();
+            if (!supplier || supplier === customer) return;
+            if (!dependents.has(supplier)) dependents.set(supplier, []);
+            dependents.get(supplier).push({ company, link });
+            if (!suppliers.has(customer)) suppliers.set(customer, []);
+            suppliers.get(customer).push({ company: getCompanyByTicker(supplier), link });
+        });
+    });
+    return { dependents, suppliers };
+}
+
+function exposureFrom(ticker, direction = 'downstream', maxHops = 2, index = null) {
+    const origin = String(ticker || '').trim().toUpperCase();
+    if (!origin) return [];
+    const edges = (index || buildDependencyIndex())[direction === 'downstream' ? 'dependents' : 'suppliers'];
+    const results = [];
+    const seen = new Set([origin]);
+    let frontier = [{ ticker: origin, path: [origin] }];
+    for (let hop = 1; hop <= maxHops && frontier.length; hop += 1) {
+        const next = [];
+        frontier.forEach(node => {
+            (edges.get(node.ticker) || []).forEach(({ company, link }) => {
+                const nextTicker = String((direction === 'downstream' ? company.ticker : link.ticker) || '').toUpperCase();
+                if (!nextTicker || seen.has(nextTicker)) return;
+                seen.add(nextTicker);
+                const path = direction === 'downstream' ? [...node.path, nextTicker] : [nextTicker, ...node.path];
+                results.push({
+                    ticker: nextTicker,
+                    company: direction === 'downstream' ? company : (company || getCompanyByTicker(nextTicker)),
+                    hop,
+                    path,
+                    link,
+                    singleSource: isSingleSource(link),
+                });
+                next.push({ ticker: nextTicker, path });
+            });
+        });
+        frontier = next;
+    }
+    return results.sort((a, b) =>
+        a.hop - b.hop
+        || Number(b.singleSource) - Number(a.singleSource)
+        || Number(b.link.revenue_share || 0) - Number(a.link.revenue_share || 0)
+        || a.ticker.localeCompare(b.ticker));
+}
+
+function handleExposureKeydown(event) {
+    if (event.key !== 'Enter') return;
+    if (event.preventDefault) event.preventDefault();
+    renderExposureView(true);
+}
+
+function renderExposureRow(entry, direction) {
+    const row = makeElement('div', `exposure-row hop-${entry.hop}${entry.singleSource ? ' single-source' : ''}`);
+    const path = makeElement('div', 'exposure-path');
+    entry.path.forEach((ticker, index) => {
+        if (index) path.appendChild(makeElement('span', 'changes-arrow', '→'));
+        path.appendChild(renderTickerChip(ticker));
+    });
+    row.appendChild(path);
+    const meta = makeElement('div', 'exposure-meta');
+    meta.appendChild(makeElement('span', 'exposure-hop', entry.hop === 1 ? (direction === 'downstream' ? 'direct dependent' : 'direct supplier') : 'second order'));
+    const detail = entry.link.product && entry.link.product !== entry.link.type ? `${entry.link.type} · ${entry.link.product}` : (entry.link.type || 'Supply Link');
+    meta.appendChild(makeElement('span', 'changes-detail', detail));
+    if (entry.singleSource) meta.appendChild(makeElement('span', 'exposure-flag', 'single-source language'));
+    const share = revenueShareLabel(entry.link, 'upstream');
+    if (share) meta.appendChild(makeElement('span', 'source-badge revenue-share', share));
+    if (entry.company && entry.company.sector) meta.appendChild(makeElement('span', 'exposure-sector', entry.company.sector));
+    row.appendChild(meta);
+    return row;
+}
+
+function renderExposureView(updateRoute = true) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    hideAllViews();
+    document.getElementById('view-exposure').classList.remove('hidden');
+    const ticker = document.getElementById('exposure-input').value.trim().toUpperCase();
+    const route = ticker ? { view: 'exposure', ticker } : { view: 'exposure' };
+    currentRoute = route;
+    if (updateRoute) updateRouteHash(route, false);
+
+    const summary = document.getElementById('exposure-summary');
+    const sectors = document.getElementById('exposure-sectors');
+    const results = document.getElementById('exposure-results');
+    [summary, sectors, results].forEach(clearElement);
+
+    const company = getCompanyByTicker(ticker);
+    const index = buildDependencyIndex();
+    // A supplier can appear in the graph only as a link endpoint; the index still
+    // answers for it, so require the ticker to be known to either, not to both.
+    const known = Boolean(company) || index.dependents.has(ticker) || index.suppliers.has(ticker);
+    if (!ticker || !known) {
+        setText('exposure-title', 'Who is exposed to a company');
+        setText('exposure-count', ticker ? `No tracked company for ${ticker}` : 'Enter a ticker');
+        results.appendChild(makeElement('span', 'empty-state', ticker
+            ? `${ticker} is not in the tracked universe. Try a ticker from the screener.`
+            : 'Enter a ticker to see which companies depend on it, directly and through their own suppliers.'));
+        return;
+    }
+
+    const downstream = exposureFrom(ticker, 'downstream', 2, index);
+    const upstream = exposureFrom(ticker, 'upstream', 2, index);
+    const direct = downstream.filter(entry => entry.hop === 1);
+    const secondOrder = downstream.filter(entry => entry.hop === 2);
+    const singleSource = downstream.filter(entry => entry.singleSource);
+    setText('exposure-title', `Who is exposed to ${company ? displayCompanyName(company.name) : ticker}`);
+    setText('exposure-count', `${downstream.length} exposed · ${upstream.length} upstream`);
+
+    [
+        ['Direct dependents', direct.length],
+        ['Second-order', secondOrder.length],
+        ['Single-source flags', singleSource.length],
+        ['Tracked suppliers', upstream.filter(entry => entry.hop === 1).length],
+    ].forEach(([label, value]) => {
+        const item = makeElement('div', 'overview-stat');
+        item.appendChild(makeElement('strong', '', value.toLocaleString()));
+        item.appendChild(makeElement('span', '', label));
+        summary.appendChild(item);
+    });
+
+    const sectorCounts = new Map();
+    downstream.forEach(entry => {
+        const sector = entry.company && entry.company.sector ? entry.company.sector : 'Unknown';
+        sectorCounts.set(sector, (sectorCounts.get(sector) || 0) + 1);
+    });
+    if (sectorCounts.size) {
+        sectors.appendChild(makeElement('span', 'changes-label', 'Exposed companies by sector'));
+        [...sectorCounts.entries()]
+            .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+            .slice(0, 8)
+            .forEach(([sector, count]) => {
+                const chip = makeElement('button', 'exposure-sector-chip', `${sector} · ${count}`);
+                chip.type = 'button';
+                chip.onclick = () => navigateSector(sector);
+                sectors.appendChild(chip);
+            });
+    }
+
+    [
+        [`Exposed to ${ticker}`, downstream, 'downstream', `No tracked company lists ${ticker} as a supplier.`],
+        [`What ${ticker} depends on`, upstream, 'upstream', `No tracked suppliers for ${ticker}.`],
+    ].forEach(([title, entries, direction, empty]) => {
+        const block = makeElement('div', 'exposure-block');
+        block.appendChild(makeElement('div', 'changes-label', `${title} (${entries.length})`));
+        if (!entries.length) {
+            block.appendChild(makeElement('span', 'empty-state', empty));
+        } else {
+            const list = makeElement('div', 'changes-list');
+            entries.forEach(entry => list.appendChild(renderExposureRow(entry, direction)));
+            block.appendChild(list);
+        }
+        results.appendChild(block);
     });
 }
 

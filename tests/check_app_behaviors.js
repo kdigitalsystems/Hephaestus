@@ -496,6 +496,36 @@ if (context.__sectorBackLabel !== "Back to sector") {
   throw new Error(`expected sector detail back button label to match destination, got ${context.__sectorBackLabel}`);
 }
 
+vm.runInContext(`
+  const __down = exposureFrom("TSM", "downstream");
+  const __up = exposureFrom("ACME", "upstream");
+  globalThis.__exposureDown = __down.map(entry => [entry.ticker, entry.hop, entry.path.join(">")]);
+  globalThis.__exposureUp = __up.map(entry => [entry.ticker, entry.hop, entry.path.join(">")]);
+  globalThis.__singleSource = isSingleSource({ evidence_excerpt: "TSMC is the sole source of our advanced wafers." });
+  globalThis.__notSingleSource = isSingleSource({ evidence_excerpt: "TSMC supplies some wafers." });
+`, context);
+if (JSON.stringify(context.__exposureDown) !== JSON.stringify([["AMD", 1, "TSM>AMD"], ["ACME", 2, "TSM>AMD>ACME"]])) {
+  throw new Error(`downstream exposure should walk two hops: ${JSON.stringify(context.__exposureDown)}`);
+}
+if (JSON.stringify(context.__exposureUp) !== JSON.stringify([["AMD", 1, "AMD>ACME"], ["TSM", 2, "TSM>AMD>ACME"]])) {
+  throw new Error(`upstream exposure should walk two hops: ${JSON.stringify(context.__exposureUp)}`);
+}
+if (context.__singleSource !== true || context.__notSingleSource !== false) {
+  throw new Error("single-source detection should key off evidence language");
+}
+
+element("exposure-input").value = "TSM";
+vm.runInContext("renderExposureView(false); globalThis.__exposureRoute = currentRoute;", context);
+const exposureText = [collectText(element("exposure-summary")), collectText(element("exposure-results")), element("exposure-count").textContent, element("exposure-title").textContent].join(" | ");
+["1Direct dependents", "1Second-order", "Exposed to TSM (2)", "What TSM depends on (0)", "2 exposed · 0 upstream", "Who is exposed to TSM"].forEach((expected) => {
+  if (!exposureText.includes(expected)) {
+    throw new Error(`exposure view missing ${expected}; got ${exposureText}`);
+  }
+});
+if (context.__exposureRoute.view !== "exposure" || context.__exposureRoute.ticker !== "TSM") {
+  throw new Error(`exposure route should carry the ticker: ${JSON.stringify(context.__exposureRoute)}`);
+}
+
 element("compare-a").value = "AMD";
 element("compare-b").value = "IBM";
 vm.runInContext(`

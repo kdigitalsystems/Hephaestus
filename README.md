@@ -347,6 +347,8 @@ python3 backend/generate_predictions.py --limit 50 --use-ollama --require-ollama
 
 The Watchlist is local to the browser via `localStorage`; it does not require accounts or a backend. The Compare view is routeable with hash parameters, for example `#compare?a=AMD&b=NVDA`.
 
+The Exposure view (`#exposure?ticker=TSM`, or the Exposure button on any company brief) answers "who is affected if this company is disrupted": it walks the published graph two hops in each direction, listing direct dependents, second-order dependents (companies whose suppliers depend on the target), and the target's own suppliers, with the path shown for every hit. Rows are flagged when the evidence uses single-source language ("sole source", "substantially all") and show disclosed revenue shares; the sector breakdown of exposed companies links to each sector page. Everything is computed in the browser from `dashboard_data.json`.
+
 The dashboard reads:
 
 ```text

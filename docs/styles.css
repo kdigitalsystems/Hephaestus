@@ -2703,6 +2703,107 @@ td.muted {
     font-weight: 800;
 }
 
+.exposure-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin: 14px 0;
+}
+
+.exposure-sectors {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.exposure-sectors .changes-label {
+    margin: 0 4px 0 0;
+}
+
+.exposure-sector-chip {
+    padding: 4px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    color: var(--text-soft);
+    font-size: 0.78rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.exposure-sector-chip:hover,
+.exposure-sector-chip:focus-visible {
+    background: var(--surface-hover);
+}
+
+.exposure-results {
+    display: grid;
+    gap: 20px;
+}
+
+.exposure-row {
+    display: grid;
+    gap: 6px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-left-width: 4px;
+    border-left-color: var(--accent);
+    border-radius: 6px;
+    background: var(--surface-soft);
+}
+
+.exposure-row.hop-2 {
+    border-left-color: var(--border-strong);
+    opacity: 0.92;
+}
+
+.exposure-row.single-source {
+    border-left-color: var(--accent-3);
+}
+
+.exposure-path {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.exposure-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+}
+
+.exposure-hop {
+    color: var(--text-muted);
+    font-size: 0.74rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.exposure-flag {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent-3) 22%, transparent);
+    color: var(--accent-3);
+    font-size: 0.74rem;
+    font-weight: 900;
+}
+
+.exposure-sector {
+    color: var(--text-muted);
+    font-size: 0.76rem;
+}
+
+@media (max-width: 680px) {
+    .exposure-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 680px) {
     .prediction-calibration,
     .prediction-metrics {
