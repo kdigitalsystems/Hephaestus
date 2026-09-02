@@ -2838,6 +2838,36 @@ td.muted {
     margin-top: 4px;
 }
 
+.static-company .static-links {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.static-company .static-links li {
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--surface-soft);
+}
+
+.static-company .static-links p {
+    margin: 0;
+}
+
+.static-company .static-links small {
+    color: var(--text-muted);
+}
+
+.static-company blockquote {
+    margin: 8px 0 0;
+    padding: 6px 10px;
+    border-left: 3px solid var(--border-strong);
+    color: var(--text-soft);
+    font-size: 0.86rem;
+}
+
 @media (max-width: 680px) {
     .prediction-calibration,
     .prediction-metrics {

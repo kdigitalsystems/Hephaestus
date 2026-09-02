@@ -33,5 +33,6 @@ python3 backend/export.py
 python3 backend/repair_dashboard_from_decisions.py
 python3 backend/validate_dashboard_data.py
 python3 backend/generate_change_feed.py
+python3 backend/generate_static_pages.py
 
 echo "Rebuild complete. Dashboard data refreshed at docs/dashboard_data.json"
