@@ -67,21 +67,26 @@ const formatChange = (company) => {
     return `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
 };
 const changeClassName = (company) => {
-    if (!hasPrice(company)) return 'muted';
+    if (formatChange(company) === 'N/A') return 'muted';
     return Number(company.change || 0) < 0 ? 'negative' : 'positive';
 };
 
 // Synthetic buckets created by the repair step for approved counterparties that lack
 // market data. They are browsable, but they are not sectors for aggregate statistics.
 const SYNTHETIC_SECTORS = new Set(['Linked Companies']);
-const relationshipIdentity = (link) => String(link.relationship_key || link.edge_id || `${link.ticker || link.name || ''}:${link.type || ''}`);
+// Without a relationship_key the identity must be the same from both endpoints, so
+// the pair of tickers is sorted before it is combined with the type.
+const relationshipIdentity = (company, link) => {
+    if (link.relationship_key || link.edge_id) return String(link.relationship_key || link.edge_id);
+    const endpoints = [String(company.ticker || company.name || ''), String(link.ticker || link.name || '')].sort();
+    return `${endpoints.join('|')}:${link.type || ''}`;
+};
 // Relationships are published from both endpoints, so counting rows double-counts
 // every link whose two companies sit in the same group.
 const distinctLinkCount = (companies) => new Set(
     companies
-        .flatMap(company => [...(company.upstream || []), ...(company.downstream || [])])
-        .map(relationshipIdentity)
-        .filter(identity => identity && identity !== ':')
+        .flatMap(company => [...(company.upstream || []), ...(company.downstream || [])].map(link => relationshipIdentity(company, link)))
+        .filter(identity => identity && identity !== '|:')
 ).size;
 
 const displayCompanyName = (name) => {
@@ -154,7 +159,8 @@ function saveWatchlist() {
 
 function applyTheme(theme) {
     currentTheme = theme === 'light' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = currentTheme;
+    const root = document.documentElement;
+    if (root && root.dataset) root.dataset.theme = currentTheme;
     writeStoredValue('hephaestus_theme', currentTheme);
 
     const label = document.getElementById('theme-toggle-label');
@@ -170,6 +176,10 @@ function applyTheme(theme) {
 function toggleTheme() {
     applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
 }
+
+// Sync the toggle's label and aria-label with the stored theme immediately, not
+// only once the dashboard data has finished loading.
+applyTheme(currentTheme);
 
 if (document.addEventListener) {
     document.addEventListener('keydown', event => {
@@ -212,17 +222,20 @@ fetch('dashboard_data.json')
     .catch(error => {
         console.error("Data load failed:", error);
         setText('last-updated', 'Failed to load data');
-        renderDataLoadError(error);
         loadWatchlist();
         applyTheme(currentTheme);
         // Keep routing alive so the predictions and watchlist views still work, and so
         // the empty screener is not mistaken for a genuine "no results" state.
         applyRouteFromHash(false);
+        renderDataLoadError(error);
     });
 
 function renderDataLoadError(error) {
+    // The banner sits above every view, so a route that hides #view-industries
+    // (screener, company brief) cannot hide the explanation with it.
     const view = document.getElementById('view-industries');
-    if (!view || view.querySelector('.data-load-error')) return;
+    const host = view && view.parentNode;
+    if (!host || host.querySelector('.data-load-error')) return;
     const detail = error && error.message ? ` (${error.message})` : '';
     const banner = makeElement(
         'div',
@@ -230,7 +243,7 @@ function renderDataLoadError(error) {
         `Dashboard data could not be loaded${detail}. Company data and supply-chain links are unavailable until dashboard_data.json is reachable.`
     );
     banner.setAttribute('role', 'alert');
-    view.insertBefore(banner, view.firstChild);
+    host.insertBefore(banner, view);
 }
 
 fetch('predictions.json')
@@ -340,6 +353,9 @@ function updateRouteHash(route, push = true) {
     } else if (!push && window.location.hash !== hash) {
         history.replaceState(null, '', hash);
     }
+    // Filter routes change the hash without applyRoute; the location-change guard
+    // must learn the new hash here or the next Back press is swallowed.
+    lastRoutedHash = window.location.hash;
     currentRoute = route;
     updateActiveNav(route);
 }

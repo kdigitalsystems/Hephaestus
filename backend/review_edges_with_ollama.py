@@ -7,10 +7,16 @@ import time
 from datetime import datetime, timezone
 
 import ollama
+from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 
 from database import SessionLocal
-from evidence_quality import has_non_supply_relationship, unsupported_ai_evidence
+from evidence_quality import (
+    has_non_supply_relationship,
+    is_role_label,
+    requires_source_evidence,
+    unsupported_ai_evidence,
+)
 from models import Edge, Node
 
 
@@ -137,6 +143,81 @@ def has_alias(text, aliases):
     return any(alias in text for alias in aliases)
 
 
+# Trade names that never appear in the listed company name.
+KNOWN_ALIASES = {
+    "TSM": ("tsmc",),
+    "GOOG": ("google",),
+    "GOOGL": ("google",),
+    "META": ("facebook",),
+    "MMM": ("3m",),
+    "HNHPF": ("foxconn",),
+}
+HELD_NOTE_PREFIX = "Ollama consensus review"
+
+
+def strong_aliases(node):
+    """Aliases that identify a company unambiguously in prose.
+
+    A ticker of three or more letters, the cleaned full name, its first two words,
+    and known trade names. Single first words ("Boston", "Taiwan", "Alaska") are
+    deliberately excluded: they are how place names get matched to companies.
+    """
+    if not node:
+        return []
+    aliases = []
+    ticker = str(node.ticker or "").strip().lower()
+    if len(ticker) >= 3:
+        aliases.append(ticker)
+    cleaned = re.sub(
+        r"\b(common stock|ordinary shares|american depositary shares|class a|class b|incorporated|inc\.?|corporation|corp\.?|company|co\.?|limited|ltd\.?|plc|holdings?|group|n\.?v\.?|s\.?a\.?|a\.?g\.?|s\.?e\.?|the)\b",
+        "",
+        node.name or "",
+        flags=re.I,
+    )
+    cleaned = re.sub(r"[^a-z0-9& ]+", " ", cleaned.lower())
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    if cleaned:
+        aliases.append(cleaned)
+        words = cleaned.split()
+        if len(words) >= 2:
+            aliases.append(" ".join(words[:2]))
+    aliases.extend(KNOWN_ALIASES.get(str(node.ticker or "").upper(), ()))
+    return [alias for alias in dict.fromkeys(aliases) if len(alias) >= 2]
+
+
+def mentions_company(text, node):
+    lowered = " ".join(str(text or "").lower().split())
+    return any(
+        re.search(r"(?<![a-z0-9])" + re.escape(alias) + r"(?![a-z0-9])", lowered)
+        for alias in strong_aliases(node)
+    )
+
+
+def approved_mirror_edge(edge):
+    """An approved edge in the opposite direction between the same two companies."""
+    target = getattr(edge, "target_node", None)
+    for candidate in getattr(target, "supplies_to", None) or []:
+        if (
+            getattr(candidate, "id", None) != getattr(edge, "id", None)
+            and getattr(candidate, "target_id", None) == edge.source_id
+            and getattr(candidate, "review_status", None) == "approved"
+        ):
+            return candidate
+    return None
+
+
+def held_review(edge, reason):
+    return {
+        "action": "pending",
+        "supplier_side": "unknown",
+        "customer_side": "unknown",
+        "confidence": 0.0,
+        "relationship_type": edge.dependency_type or "",
+        "product": edge.product or "",
+        "reason": reason,
+    }
+
+
 def alias_before_terms(text, aliases, terms):
     positions = [text.find(alias) for alias in aliases if alias in text]
     if not positions:
@@ -243,6 +324,23 @@ def deterministic_review(edge):
             "product": edge.product or "",
             "reason": "AI-derived relationship has no usable excerpt from the collected source text.",
         }
+
+    mirror = approved_mirror_edge(edge)
+    if mirror:
+        # Publishing both directions of one fact is always wrong, and a model vote
+        # cannot tell which of the two directions a human already approved is right.
+        return held_review(
+            edge,
+            f"The opposite direction is already approved as edge #{mirror.id}; a human must decide which direction is correct.",
+        )
+
+    if requires_source_evidence(edge.source_url) and not (
+        mentions_company(edge.evidence_excerpt, edge.source_node)
+        and mentions_company(edge.evidence_excerpt, edge.target_node)
+    ):
+        # Entity resolution can bind "Boston" to Boston Scientific or "MSA" storage to
+        # Mine Safety; an excerpt that does not name both companies cannot support the edge.
+        return held_review(edge, "Evidence excerpt does not name both companies; held for human review.")
 
     bad_nodes = [node for node in (edge.source_node, edge.target_node) if is_non_operating_vehicle(node)]
     if bad_nodes:
@@ -447,6 +545,10 @@ def review_edge(edge, models, args):
 
 def selected_edges(session, args):
     query = session.query(Edge).filter(Edge.review_status == args.status)
+    if args.status == "pending" and not getattr(args, "include_held", False):
+        # Edges the panel already held keep their confidence, so without this they
+        # sit at the head of the queue and consume the nightly budget forever.
+        query = query.filter(or_(Edge.review_note.is_(None), ~Edge.review_note.like(f"{HELD_NOTE_PREFIX}%")))
     if args.source:
         query = query.filter(Edge.source_node.has(Node.ticker == args.source.upper()))
     if args.target:
@@ -469,8 +571,13 @@ def decision_allowed(review, args):
 
 
 def update_metadata(edge, review):
-    if review["relationship_type"]:
-        edge.dependency_type = review["relationship_type"][:255]
+    relationship_type = review["relationship_type"]
+    if relationship_type and not is_role_label(relationship_type):
+        edge.dependency_type = relationship_type[:255]
+    elif is_role_label(edge.dependency_type):
+        # Never leave a bare role label ("Supplier") as the published dependency
+        # type, or the next cleanup demotes the edge and the panel re-reviews it.
+        edge.dependency_type = "Supply Relationship"
     if review["product"]:
         edge.product = review["product"][:255]
     edge.confidence_score = review["confidence"]
@@ -588,6 +695,7 @@ def main():
     parser.add_argument("--consensus-min-ratio", type=float, default=0.66)
     parser.add_argument("--sleep", type=float, default=0.0)
     parser.add_argument("--max-seconds", type=float, default=0.0, help="Stop gracefully after this many seconds.")
+    parser.add_argument("--include-held", action="store_true", help="Re-review pending edges the panel previously held.")
     parser.add_argument("--report", default="reports/ollama_edge_review.csv")
     args = parser.parse_args()
     models = split_models(args.models) if args.models else [args.model]
@@ -627,9 +735,17 @@ def main():
                         session.rollback()
                         review["action"] = "pending"
                         result = "held_integrity_conflict"
-                    counts["applied"] += 1 if not result.startswith("held") else 0
+                    if result.startswith("held"):
+                        counts["held"] += 1
+                    else:
+                        counts["applied"] += 1
                 else:
                     counts["held"] += 1
+                    if args.apply and (edge.review_status or "pending") == "pending":
+                        # Record why the panel held the edge so it leaves the nightly
+                        # queue instead of being re-reviewed every run.
+                        edge.review_note = f"{HELD_NOTE_PREFIX} left pending: {review['reason']}"[:1000]
+                        session.commit()
 
                 print(
                     f"[{index}/{len(edges)}] #{edge.id} {source}->{target} "

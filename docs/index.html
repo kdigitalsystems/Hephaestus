@@ -9,13 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         try {
-            document.documentElement.dataset.theme = localStorage.getItem('hephaestus_theme') || 'dark';
+            // Only the two known values are honoured: GitHub Pages project sites share an
+            // origin, so a stray value from another site must not reach data-theme.
+            document.documentElement.dataset.theme = localStorage.getItem('hephaestus_theme') === 'light' ? 'light' : 'dark';
         } catch (_error) {
             document.documentElement.dataset.theme = 'dark';
         }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260726-predictions1">
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <link rel="stylesheet" href="styles.css?v=20260902-fixes1">
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js" defer></script>
 </head>
 <body>
     <header class="topbar">

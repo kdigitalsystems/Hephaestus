@@ -1,13 +1,15 @@
 import json
 import os
 import re
+import socket
+from ipaddress import ip_address
 from pathlib import Path
 from datetime import date, timedelta
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse, urlunparse
 
 import requests
 
-from sec_sources import html_to_text, relevant_windows
+from sec_sources import MAX_DOCUMENT_BYTES, decode_body, html_to_text, relevant_windows
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -145,7 +147,9 @@ def truncate_join(sections, max_chars):
 
 
 def source_section(label, company_name, ticker, text, url="", title="", max_chars=1800):
-    relevant = relevant_windows(text, terms=SUPPLY_SOURCE_TERMS, max_chars=max_chars)
+    # A page with no supply-chain vocabulary at all (cookie banners, soft-404s) must
+    # not become an evidence section that crowds out real sources.
+    relevant = relevant_windows(text, terms=SUPPLY_SOURCE_TERMS, max_chars=max_chars, require_match=True)
     if not relevant:
         return ""
     citation = title or url or label
@@ -158,13 +162,61 @@ def source_section(label, company_name, ticker, text, url="", title="", max_char
     )
 
 
+def redacted_url(url):
+    """Log only scheme and host: configured URLs may carry API keys in their query."""
+    parsed = urlparse(str(url or ""))
+    return f"{parsed.scheme}://{parsed.netloc}" if parsed.netloc else "<invalid url>"
+
+
+def is_public_http_url(url):
+    """Refuse anything that is not a public http(s) origin.
+
+    Configured source files and redirects from third-party pages must not be able to
+    make the collector read localhost services, cloud metadata, or private hosts and
+    publish the response as evidence.
+    """
+    parsed = urlparse(str(url or ""))
+    if parsed.scheme not in ("http", "https") or not parsed.hostname:
+        return False
+    host = parsed.hostname.lower()
+    if host == "localhost" or host.endswith((".local", ".internal", ".localhost")):
+        return False
+    try:
+        addresses = {info[4][0] for info in socket.getaddrinfo(host, None)}
+    except (socket.gaierror, UnicodeError):
+        # Unresolvable now; the request itself will fail with a clear error.
+        return True
+    for address in addresses:
+        try:
+            candidate = ip_address(address)
+        except ValueError:
+            continue
+        if (
+            candidate.is_private
+            or candidate.is_loopback
+            or candidate.is_link_local
+            or candidate.is_reserved
+            or candidate.is_multicast
+            or candidate.is_unspecified
+        ):
+            return False
+    return True
+
+
 def fetch_url_text(url, timeout=15):
+    if not is_public_http_url(url):
+        raise requests.RequestException(f"refusing non-public source URL {redacted_url(url)}")
     response = requests.get(url, headers=source_headers(), timeout=timeout)
     response.raise_for_status()
+    final_url = getattr(response, "url", url) or url
+    if final_url != url and not is_public_http_url(final_url):
+        raise requests.RequestException(f"source redirected to a non-public URL {redacted_url(final_url)}")
     content_type = response.headers.get("content-type", "")
     if "json" in content_type:
         return json.dumps(response.json(), ensure_ascii=True)
-    return html_to_text(response.text)
+    # Decode from bytes: response.text assumes ISO-8859-1 when no charset is declared
+    # and garbles UTF-8 company names.
+    return html_to_text(decode_body(response.content[:MAX_DOCUMENT_BYTES], content_type))
 
 
 def fetch_json(url, params=None, timeout=20):
@@ -206,7 +258,7 @@ def configured_source_text(ticker, company_name="", max_urls=4, max_chars=3500, 
         try:
             text = fetch_url_text(url)
         except requests.RequestException as exc:
-            print(f"  [-] Configured source unavailable for {ticker}: {url} ({exc})")
+            print(f"  [-] Configured source unavailable for {ticker}: {redacted_url(url)} ({type(exc).__name__})")
             continue
         sections.append(source_section(label, company_name, ticker, text, url=url, title=title))
     return truncate_join(sections, max_chars)
@@ -230,8 +282,12 @@ def candidate_ir_urls(website):
         return []
     if not website.startswith(("http://", "https://")):
         website = f"https://{website}"
+    # Yahoo profile websites are often deep links; IR paths belong on the origin,
+    # not appended to /investors/index.html.
+    parsed = urlparse(website)
+    origin = urlunparse((parsed.scheme, parsed.netloc, "/", "", "", ""))
     urls = [website]
-    urls.extend(urljoin(website.rstrip("/") + "/", path.lstrip("/")) for path in IR_PATHS)
+    urls.extend(urljoin(origin, path.lstrip("/")) for path in IR_PATHS)
     return list(dict.fromkeys(urls))
 
 
@@ -263,6 +319,7 @@ def usaspending_payload(company_name, limit=5):
             "Award Amount",
             "Awarding Agency",
             "Award Description",
+            "generated_internal_id",
         ],
         "page": 1,
         "limit": limit,
@@ -288,18 +345,33 @@ def usaspending_text(ticker, company_name="", max_awards=5, max_chars=2600):
         print(f"  [-] USAspending unavailable for {ticker}: {exc}")
         return ""
 
+    # The API endpoint is POST-only and unusable as a citation; cite the public award
+    # pages instead so the dashboard's source link leads to the evidence.
     lines = []
     for row in rows[:max_awards]:
         description = row.get("Award Description") or row.get("Description") or ""
         agency = row.get("Awarding Agency") or ""
         amount = row.get("Award Amount") or ""
         award_id = row.get("Award ID") or ""
+        internal_id = row.get("generated_internal_id") or ""
+        link = f" ({usaspending_award_url(internal_id)})" if internal_id else ""
         lines.append(
-            f"Award {award_id}: {row.get('Recipient Name') or company_name} received "
+            f"Award {award_id}{link}: {row.get('Recipient Name') or company_name} received "
             f"{amount} from {agency} for {description}."
         )
     text = "\n".join(lines)
-    return source_section("Government Procurement - USAspending", company_name, ticker, text, url=url, max_chars=max_chars)
+    return source_section(
+        "Government Procurement - USAspending",
+        company_name,
+        ticker,
+        text,
+        url="https://www.usaspending.gov/",
+        max_chars=max_chars,
+    )
+
+
+def usaspending_award_url(internal_id):
+    return f"https://www.usaspending.gov/award/{internal_id}"
 
 
 def sam_opportunities_params(company_name, api_key, limit=5, days_back=365):
@@ -338,8 +410,18 @@ def sam_opportunities_text(ticker, company_name="", sector="", industry="", max_
         notice_type = opportunity.get("type") or opportunity.get("noticeType") or ""
         description = html_to_text(opportunity.get("description") or opportunity.get("synopsis") or "")
         posted = opportunity.get("postedDate") or ""
-        lines.append(f"{posted} {notice_type} opportunity from {agency}: {title}. {description}")
-    return source_section("Government Procurement - SAM.gov Opportunities", company_name, ticker, "\n".join(lines), url=url, max_chars=max_chars)
+        notice_id = opportunity.get("noticeId") or ""
+        link = f" (https://sam.gov/opp/{notice_id}/view)" if notice_id else ""
+        lines.append(f"{posted} {notice_type} contract opportunity from {agency}: {title}{link}. {description}")
+    # The API endpoint requires a key; cite the public search page and per-notice pages.
+    return source_section(
+        "Government Procurement - SAM.gov Opportunities",
+        company_name,
+        ticker,
+        "\n".join(lines),
+        url="https://sam.gov/search/",
+        max_chars=max_chars,
+    )
 
 
 def openfda_search(endpoint, search, limit=5):
@@ -360,12 +442,21 @@ def openfda_device_510k_text(ticker, company_name="", sector="", industry="", li
 
     lines = []
     for row in payload.get("results", [])[:limit]:
+        k_number = row.get("k_number") or ""
+        link = f" (https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfpmn/pmn.cfm?ID={k_number})" if k_number else ""
         lines.append(
-            f"FDA 510(k) {row.get('k_number') or ''}: {row.get('applicant') or company_name} "
-            f"received clearance for {row.get('device_name') or row.get('advisory_committee_description') or 'a medical device'} "
+            f"FDA 510(k) {k_number}{link}: {row.get('applicant') or company_name} "
+            f"received clearance for the {row.get('device_name') or row.get('advisory_committee_description') or 'unnamed'} medical device "
             f"on {row.get('decision_date') or 'unknown date'}."
         )
-    return source_section("Regulatory Dataset - openFDA Device 510(k)", company_name, ticker, "\n".join(lines), url="https://api.fda.gov/device/510k.json", max_chars=max_chars)
+    return source_section(
+        "Regulatory Dataset - openFDA Device 510(k)",
+        company_name,
+        ticker,
+        "\n".join(lines),
+        url="https://open.fda.gov/apis/device/510k/",
+        max_chars=max_chars,
+    )
 
 
 def openfda_device_recall_text(ticker, company_name="", sector="", industry="", limit=5, max_chars=2200):
@@ -382,11 +473,20 @@ def openfda_device_recall_text(ticker, company_name="", sector="", industry="", 
 
     lines = []
     for row in payload.get("results", [])[:limit]:
+        event_number = row.get("res_event_number") or ""
+        link = f" (https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfres/res.cfm?id={event_number})" if event_number else ""
         lines.append(
-            f"FDA device recall {row.get('res_event_number') or ''}: {row.get('firm_name') or company_name} "
+            f"FDA device recall {event_number}{link}: {row.get('firm_name') or company_name} "
             f"recalled {row.get('product_description') or 'a device'} because {row.get('reason_for_recall') or 'a recall reason was reported'}."
         )
-    return source_section("Regulatory Dataset - openFDA Device Recall", company_name, ticker, "\n".join(lines), url="https://api.fda.gov/device/recall.json", max_chars=max_chars)
+    return source_section(
+        "Regulatory Dataset - openFDA Device Recall",
+        company_name,
+        ticker,
+        "\n".join(lines),
+        url="https://open.fda.gov/apis/device/recall/",
+        max_chars=max_chars,
+    )
 
 
 def openfda_drug_enforcement_text(ticker, company_name="", sector="", industry="", limit=5, max_chars=2200):
@@ -407,7 +507,14 @@ def openfda_drug_enforcement_text(ticker, company_name="", sector="", industry="
             f"FDA drug enforcement {row.get('recall_number') or ''}: {row.get('recalling_firm') or company_name} "
             f"recalled {row.get('product_description') or 'a product'} because {row.get('reason_for_recall') or 'a recall reason was reported'}."
         )
-    return source_section("Regulatory Dataset - openFDA Drug Enforcement", company_name, ticker, "\n".join(lines), url="https://api.fda.gov/drug/enforcement.json", max_chars=max_chars)
+    return source_section(
+        "Regulatory Dataset - openFDA Drug Enforcement",
+        company_name,
+        ticker,
+        "\n".join(lines),
+        url="https://open.fda.gov/apis/drug/enforcement/",
+        max_chars=max_chars,
+    )
 
 
 def openfda_regulatory_text(ticker, company_name="", sector="", industry="", max_chars=5200):
@@ -440,7 +547,14 @@ def fcc_equipment_authorization_text(ticker, company_name="", sector="", industr
         equipment = row.get("equipment_class") or row.get("product_description") or row.get("description") or ""
         grant_date = row.get("grant_date") or row.get("date") or ""
         lines.append(f"FCC equipment authorization {fcc_id}: {grantee} received authorization for {equipment} on {grant_date}.")
-    return source_section("Regulatory Dataset - FCC Equipment Authorization", company_name, ticker, "\n".join(lines), url=url, max_chars=max_chars)
+    return source_section(
+        "Regulatory Dataset - FCC Equipment Authorization",
+        company_name,
+        ticker,
+        "\n".join(lines),
+        url="https://www.fcc.gov/oet/ea/fccid",
+        max_chars=max_chars,
+    )
 
 
 def nhtsa_manufacturer_text(ticker, company_name="", sector="", industry="", max_chars=1600):
@@ -462,9 +576,9 @@ def nhtsa_manufacturer_text(ticker, company_name="", sector="", industry="", max
     lines = []
     for row in rows[:4]:
         lines.append(
-            f"{row.get('Mfr_Name') or company_name}: {row.get('PrincipalFirstName') or ''} "
-            f"{row.get('VehicleTypes') or ''} {row.get('Mfr_CommonName') or ''} "
-            f"{row.get('Country') or ''} {row.get('StateProvince') or ''}"
+            f"{row.get('Mfr_Name') or company_name} is a registered vehicle manufacturer: "
+            f"{row.get('PrincipalFirstName') or ''} {row.get('VehicleTypes') or ''} "
+            f"{row.get('Mfr_CommonName') or ''} {row.get('Country') or ''} {row.get('StateProvince') or ''}"
         )
     return source_section("Regulatory Dataset - NHTSA", company_name, ticker, "\n".join(lines), url=url, max_chars=max_chars)
 

@@ -12,7 +12,7 @@
       "confidence_score": 1,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "After Nvidia, the largest technology company by profit, and Alphabet is the world\\'s second-largest technology company by revenue.",
+      "evidence_excerpt": "After Nvidia, the largest technology company by profit, and Alphabet is the world's second-largest technology company by revenue.",
       "review_status": "rejected",
       "review_note": "Ollama review: The provided excerpt does not describe a supply-chain relationship between NVIDIA and Alphabet. It only mentions their revenue rankings.",
       "reviewed_at": "2026-08-25T06:08:49.162576"
@@ -380,7 +380,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Palantir partners with Boeing in government contract business., ",
+      "evidence_excerpt": "Palantir partners with Boeing in government contract business.,",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:49.572960"
@@ -396,7 +396,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Palantir collaborates with Lockheed Martin in traditional defense \"primes\"., ",
+      "evidence_excerpt": "Palantir collaborates with Lockheed Martin in traditional defense \"primes\".,",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:49.595362"
@@ -412,7 +412,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Palantir partners with Northrop Grumman in traditional defense \"primes\"., ",
+      "evidence_excerpt": "Palantir partners with Northrop Grumman in traditional defense \"primes\".,",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:49.613765"
@@ -428,7 +428,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Palantir collaborates with General Dynamics in traditional defense \"primes\"., ",
+      "evidence_excerpt": "Palantir collaborates with General Dynamics in traditional defense \"primes\".,",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:49.633402"
@@ -444,7 +444,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Palantir collaborates with Booz Allen in traditional companies and government contract business., ",
+      "evidence_excerpt": "Palantir collaborates with Booz Allen in traditional companies and government contract business.,",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:49.647836"
@@ -460,7 +460,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Palantir partners with Accenture in traditional companies and government contract business., ",
+      "evidence_excerpt": "Palantir partners with Accenture in traditional companies and government contract business.,",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:49.669765"
@@ -764,7 +764,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "An estimated $11 billion has been spent on the Joslyn North oil sands project in which Total is the largest shareholder with 38.5%. Suncor Energy holds 36.75%.\n\nIn 2017, Total announced it would buy Maersk Oil from A.P. Moller-Maersk in a deal expected to close in the first quarter of 2018.",
+      "evidence_excerpt": "An estimated $11 billion has been spent on the Joslyn North oil sands project in which Total is the largest shareholder with 38.5%. Suncor Energy holds 36.75%. In 2017, Total announced it would buy Maersk Oil from A.P. Moller-Maersk in a deal expected to close in the first quarter of 2018.",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:50.063300"
@@ -1004,7 +1004,7 @@
       "confidence_score": 0.9,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In September 2007, Apple announced that customers would be able to browse the iTunes Store at Starbucks via Wi-Fi in the US—with no requirement to log into the Wi-Fi network—",
+      "evidence_excerpt": "In September 2007, Apple announced that customers would be able to browse the iTunes Store at Starbucks via Wi-Fi in the US\u2014with no requirement to log into the Wi-Fi network\u2014",
       "review_status": "rejected",
       "review_note": "Manual correction: speculative evidence is not enough to publish an operational supply-chain relationship.",
       "reviewed_at": "2026-08-25T06:08:50.365777"
@@ -1164,7 +1164,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In August 2022, Cenovus reached an agreement to purchase BP’s 50% interest in the BP-Husky Toledo Refinery in Toledo, Ohio.",
+      "evidence_excerpt": "In August 2022, Cenovus reached an agreement to purchase BP\u2019s 50% interest in the BP-Husky Toledo Refinery in Toledo, Ohio.",
       "review_status": "approved",
       "review_note": "Ollama review: Cenovus Energy Inc. is purchasing BP's interest in the Toledo refinery, indicating that Cenovus will be operating the refinery and thus consuming crude oil from BP or other suppliers.",
       "reviewed_at": "2026-08-25T06:08:50.572985"
@@ -1276,7 +1276,7 @@
       "confidence_score": 0.9167,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Constellation manages energy sales, dispatch, and delivery from Exelon\\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
+      "evidence_excerpt": "Constellation manages energy sales, dispatch, and delivery from Exelon\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.92; votes approve:3). Lead rationale from mistral:7b-instruct: Constellation manages energy sales, dispatch, and delivery from Exelon's power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide. This indicates that Exelon is a supplier of electricity to Constellation.",
       "reviewed_at": "2026-08-25T06:08:50.737825"
@@ -1356,9 +1356,9 @@
       "confidence_score": 0.925,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "The company was initially established as Optimal Solutions with a charter to develop and market logic synthesis technology developed by the team at General Electric’s Advanced Computer-Aided Engineering Group",
+      "evidence_excerpt": "The company was initially established as Optimal Solutions with a charter to develop and market logic synthesis technology developed by the team at General Electric\u2019s Advanced Computer-Aided Engineering Group",
       "review_status": "approved",
-      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reject:1). Lead rationale from mistral:7b-instruct: The company was initially established as Optimal Solutions with a charter to develop and market logic synthesis technology developed by the team at General Electric’s Advanced Computer-Aided Engineering Group. This indicates that Synopsys, Inc. is using the technology provided by Portland General Electric Company.",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reject:1). Lead rationale from mistral:7b-instruct: The company was initially established as Optimal Solutions with a charter to develop and market logic synthesis technology developed by the team at General Electric\u2019s Advanced Computer-Aided Engineering Group. This indicates that Synopsys, Inc. is using the technology provided by Portland General Electric Company.",
       "reviewed_at": "2026-08-25T06:08:50.857939"
     },
     {
@@ -1420,9 +1420,9 @@
       "confidence_score": 0.85,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 2006, América Móvil made a bid to acquire Verizon's Latin American and Caribbean operations.",
+      "evidence_excerpt": "In 2006, Am\u00e9rica M\u00f3vil made a bid to acquire Verizon's Latin American and Caribbean operations.",
       "review_status": "rejected",
-      "review_note": "Ollama consensus review: Consensus 3/3 for reject (avg confidence 0.85; votes reject:3). Lead rationale from mistral:7b-instruct: In 2006, América Móvil made a bid to acquire Verizon's Latin American and Caribbean operations. This indicates that Verizon Communications is the supplier/provider of the operations to America Movil S.A.B de C.V.",
+      "review_note": "Ollama consensus review: Consensus 3/3 for reject (avg confidence 0.85; votes reject:3). Lead rationale from mistral:7b-instruct: In 2006, Am\u00e9rica M\u00f3vil made a bid to acquire Verizon's Latin American and Caribbean operations. This indicates that Verizon Communications is the supplier/provider of the operations to America Movil S.A.B de C.V.",
       "reviewed_at": "2026-08-25T06:08:50.935917"
     },
     {
@@ -1852,7 +1852,7 @@
       "confidence_score": 0.925,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "On February 24, 2010, the Vermont Senate voted to prevent the Vermont Public Service Board from issuing the necessary certificate that would allow for the Vermont Yankee plant  to have its license renewed.",
+      "evidence_excerpt": "On February 24, 2010, the Vermont Senate voted to prevent the Vermont Public Service Board from issuing the necessary certificate that would allow for the Vermont Yankee plant to have its license renewed.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.93; votes reject:2, pending:1). Lead rationale from llama3.1:8b: The edge is about a regulatory or compliance issue, not an operational supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:51.598630"
@@ -1884,7 +1884,7 @@
       "confidence_score": 0.9167,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In August 2022, Cenovus reached an agreement to purchase BP\\u2019s 50% interest in the BP-Husky Toledo Refinery in Toledo, Ohio.",
+      "evidence_excerpt": "In August 2022, Cenovus reached an agreement to purchase BP\u2019s 50% interest in the BP-Husky Toledo Refinery in Toledo, Ohio.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 3/3 for reject (avg confidence 0.92; votes reject:3). Lead rationale from mistral:7b-instruct: Cenovus Energy Inc. is purchasing BP's 50% interest in the refinery, indicating a supply chain relationship where Cenovus is the customer and Phillips 66 (as the previous owner) is the supplier.",
       "reviewed_at": "2026-08-25T06:08:51.655349"
@@ -2060,7 +2060,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "CCEP manufactures and distributes a portfolio that includes global brands such as Coca‑Cola, Sprite, Fanta and Monster.",
+      "evidence_excerpt": "CCEP manufactures and distributes a portfolio that includes global brands such as Coca\u2011Cola, Sprite, Fanta and Monster.",
       "review_status": "rejected",
       "review_note": "Ollama review: CCEP (Coca-Cola Europacific Partners) is a bottling and distribution partner of Coca-Cola Company, not a direct customer in the supply chain for raw materials or manufacturing. CCEP handles the bottling, distribution, and sale of Coca-Cola products to retailers and consumers.",
       "reviewed_at": "2026-08-25T06:08:51.916739"
@@ -2316,7 +2316,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "As of the third quarter of 2014, Anglogold was the world’s third-largest producer of gold, behind Barrick Gold and Newmont Mining.",
+      "evidence_excerpt": "As of the third quarter of 2014, Anglogold was the world\u2019s third-largest producer of gold, behind Barrick Gold and Newmont Mining.",
       "review_status": "rejected",
       "review_note": "Ollama review: Newmont Corporation and AngloGold Ashanti are both gold mining companies, not in a supplier-customer relationship.",
       "reviewed_at": "2026-08-25T06:08:52.311184"
@@ -2533,7 +2533,7 @@
       "edge_id": 159,
       "source_ticker": "PHG",
       "target_ticker": "JBL",
-      "source_name": "KONINKLIJKE PHILIPS  N.V.",
+      "source_name": "KONINKLIJKE PHILIPS N.V.",
       "target_name": "Jabil Inc.",
       "dependency_type": "Manufacturing Services",
       "product": "Electronics Manufacturing",
@@ -3932,7 +3932,7 @@
       "confidence_score": 1,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 1978, the first Ralph Lauren fragrances, produced by Warner-Lauren, Ltd were launched at Bloomingdale\\u2019s.",
+      "evidence_excerpt": "In 1978, the first Ralph Lauren fragrances, produced by Warner-Lauren, Ltd were launched at Bloomingdale\u2019s.",
       "review_status": "approved",
       "review_note": "Ollama review: ZIM Integrated Shipping Services Ltd. is a shipping company, not a fragrance supplier. Ralph Lauren Corporation produces fragrances in-house or contracts with dedicated fragrance manufacturers.",
       "reviewed_at": "2026-08-25T06:08:54.719398"
@@ -4188,7 +4188,7 @@
       "confidence_score": 1,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 2013, Mosaic Company agreed to buy CF Industries\\u2019 phosphate business for $1.4 billion in cash.",
+      "evidence_excerpt": "In 2013, Mosaic Company agreed to buy CF Industries\u2019 phosphate business for $1.4 billion in cash.",
       "review_status": "rejected",
       "review_note": "Ollama review: The evidence indicates a historical acquisition rather than an ongoing operational supply chain dependency. Mosaic Company acquired CF Industries' phosphate business in 2013 and is now the supplier of phosphate to the market, not CF Industries.",
       "reviewed_at": "2026-08-25T06:08:55.059036"
@@ -4476,7 +4476,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In October 1996, Eli Lilly and Company agreed to pay Neurocrine $74 million over five years to develop drugs for obesity and Alzheimer\\u2019s disease based on its research of CRF-binding protein-ligand inhibitors.",
+      "evidence_excerpt": "In October 1996, Eli Lilly and Company agreed to pay Neurocrine $74 million over five years to develop drugs for obesity and Alzheimer\u2019s disease based on its research of CRF-binding protein-ligand inhibitors.",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:55.451518"
@@ -4748,7 +4748,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "James L. Singleton – Chairman & CEO of Cürex Group Holdings, LLC",
+      "evidence_excerpt": "James L. Singleton \u2013 Chairman & CEO of C\u00fcrex Group Holdings, LLC",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:55.852568"
@@ -5196,7 +5196,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In June 2015, AbbVie and Halozyme Therapeutics entered into a global collaboration and licensing agreement to develop and commercialize products that combine AbbVie\\u2019s treatments and Halozyme\\u2019s ENHANZE drug-delivery technology.",
+      "evidence_excerpt": "In June 2015, AbbVie and Halozyme Therapeutics entered into a global collaboration and licensing agreement to develop and commercialize products that combine AbbVie\u2019s treatments and Halozyme\u2019s ENHANZE drug-delivery technology.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:56.562079"
@@ -5308,7 +5308,7 @@
       "confidence_score": 1,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "With Walmart, PGP sponsored Family Movie Night on broadcast networks in 2010–2011 and Walden Family Theater on the Hallmark Channel in 2013.",
+      "evidence_excerpt": "With Walmart, PGP sponsored Family Movie Night on broadcast networks in 2010\u20132011 and Walden Family Theater on the Hallmark Channel in 2013.",
       "review_status": "rejected",
       "review_note": "Ollama review: The relationship described is an advertising partnership, not a supply-chain dependency. Walmart and Procter & Gamble are collaborating on marketing efforts rather than one being a supplier to the other.",
       "reviewed_at": "2026-08-25T06:08:56.728153"
@@ -5724,7 +5724,7 @@
       "confidence_score": 0.875,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "The company spun off unrelated operations including BJ\\u0027s Wholesale Club and Home Club.",
+      "evidence_excerpt": "The company spun off unrelated operations including BJ's Wholesale Club and Home Club.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.88; votes reject:2, approve:1). Lead rationale from llama3.1:8b: The text does not indicate a supply chain relationship, but rather a corporate spin-off.",
       "reviewed_at": "2026-08-25T06:08:57.290812"
@@ -5893,7 +5893,7 @@
       "edge_id": 369,
       "source_ticker": "PHG",
       "target_ticker": "SONY",
-      "source_name": "KONINKLIJKE PHILIPS  N.V.",
+      "source_name": "KONINKLIJKE PHILIPS N.V.",
       "target_name": "Sony Group Corporation American Depositary Shares (Each Representing One Share of Dollar Validated Common Stock)",
       "dependency_type": "unknown",
       "product": "Technology Partnership",
@@ -6252,7 +6252,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Valero and Darling Ingredients Inc. announced an investment decision on a Sustainable Aviation Fuel (“SAF”) project at the Diamond Green Diesel Port Arthur plant.",
+      "evidence_excerpt": "Valero and Darling Ingredients Inc. announced an investment decision on a Sustainable Aviation Fuel (\u201cSAF\u201d) project at the Diamond Green Diesel Port Arthur plant.",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:08:58.092741"
@@ -6748,7 +6748,7 @@
       "confidence_score": 0.875,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "The three lawsuits allege that the three companies provided “enough opioids to Bryan County that every adult resident there could have had 144 hydrocodone tablets.”",
+      "evidence_excerpt": "The three lawsuits allege that the three companies provided \u201cenough opioids to Bryan County that every adult resident there could have had 144 hydrocodone tablets.\u201d",
       "review_status": "rejected",
       "review_note": "Manual correction: legal, financial, ownership, competitive, breach, or asset-sale items are not operational supply-chain relationships.",
       "reviewed_at": "2026-08-25T06:08:58.866395"
@@ -7046,7 +7046,7 @@
       "source_ticker": "A",
       "target_ticker": "PHG",
       "source_name": "Agilent Technologies Inc.",
-      "target_name": "KONINKLIJKE PHILIPS  N.V.",
+      "target_name": "KONINKLIJKE PHILIPS N.V.",
       "dependency_type": "Manufacturing Equipment/Technology",
       "product": "Light-Emitting Diodes (LEDs)",
       "confidence_score": 0.9167,
@@ -7276,7 +7276,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In May 2026, Israel’s Ministry of Defense signed a $34 million contract with Elbit Systems’ Cyclone subsidiary to develop external fuel tanks for the F-35I “Adir,” manufactured by Lockheed Martin.",
+      "evidence_excerpt": "In May 2026, Israel\u2019s Ministry of Defense signed a $34 million contract with Elbit Systems\u2019 Cyclone subsidiary to develop external fuel tanks for the F-35I \u201cAdir,\u201d manufactured by Lockheed Martin.",
       "review_status": "approved",
       "review_note": "Ollama review: Elbit Systems is developing external fuel tanks for the F-35I 'Adir', which is manufactured by Lockheed Martin, indicating that Elbit Systems is a customer receiving components from Lockheed Martin.",
       "reviewed_at": "2026-08-25T06:08:59.614556"
@@ -7292,7 +7292,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Israel’s Ministry of Defense signed a $34 million contract with Elbit Systems’ Cyclone subsidiary to develop external fuel tanks for the F-35I “Adir,” manufactured by Lockheed Martin.",
+      "evidence_excerpt": "Israel\u2019s Ministry of Defense signed a $34 million contract with Elbit Systems\u2019 Cyclone subsidiary to develop external fuel tanks for the F-35I \u201cAdir,\u201d manufactured by Lockheed Martin.",
       "review_status": "approved",
       "review_note": "Ollama review: Elbit Systems is developing external fuel tanks for the F-35I aircraft, which is manufactured by Lockheed Martin. This indicates an operational supply-chain relationship where Elbit Systems supplies components to Lockheed Martin.",
       "reviewed_at": "2026-08-25T06:08:59.634501"
@@ -7868,7 +7868,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "ST welcomes Tower to its Agrate R3 300mm fab on its Agrate Brianza site in Italy. \\n\\nIn February 2026, Tower Semiconductor and the Canadian quantum computing firm Xanadu announced a partnership to accelerate the production of photonic quantum hardware. The partnership leverages Tower’s high-volume silicon photonics manufacturing platform to develop scalable, fault-tolerant quantum computers. The companies have co-engineered a unique production flow and custom material stack, including ultra-low loss silicon nitride (SiN), to transition quantum prototypes into high-volume manufacturing environments.",
+      "evidence_excerpt": "ST welcomes Tower to its Agrate R3 300mm fab on its Agrate Brianza site in Italy. In February 2026, Tower Semiconductor and the Canadian quantum computing firm Xanadu announced a partnership to accelerate the production of photonic quantum hardware. The partnership leverages Tower\u2019s high-volume silicon photonics manufacturing platform to develop scalable, fault-tolerant quantum computers. The companies have co-engineered a unique production flow and custom material stack, including ultra-low loss silicon nitride (SiN), to transition quantum prototypes into high-volume manufacturing environments.",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:00.416117"
@@ -7992,11 +7992,11 @@
       "source_name": "Novartis AG",
       "target_name": "Incyte Corp. Common Stock",
       "dependency_type": "Advanced Drug Manufacturing",
-      "product": "capmatinib (INC280,  INCB028060)",
+      "product": "capmatinib (INC280, INCB028060)",
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 2013, Novartis acquired Incyte's c-Met inhibitor capmatinib (INC280,  INCB028060), which is marketed under the brand name Tabrecta.",
+      "evidence_excerpt": "In 2013, Novartis acquired Incyte's c-Met inhibitor capmatinib (INC280, INCB028060), which is marketed under the brand name Tabrecta.",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:00.610646"
@@ -8284,7 +8284,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\\u2019s 2009 27-inch iMac, Apple\\u2019s Thunderbolt Display, and Dell\\u2019s U2711 LCD Monitor.",
+      "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\u2019s 2009 27-inch iMac, Apple\u2019s Thunderbolt Display, and Dell\u2019s U2711 LCD Monitor.",
       "review_status": "approved",
       "review_note": "Ollama review: The evidence excerpt clearly indicates that Apple uses LCD panels from LG Display for its products.",
       "reviewed_at": "2026-08-25T06:09:00.993512"
@@ -9004,9 +9004,9 @@
       "confidence_score": 0.925,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 2008, América Móvil launched the iPhone in Latin America.",
+      "evidence_excerpt": "In 2008, Am\u00e9rica M\u00f3vil launched the iPhone in Latin America.",
       "review_status": "approved",
-      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reverse:1). Lead rationale from mistral:7b-instruct: In 2008, América Móvil launched the iPhone in Latin America, indicating that Apple Inc. (source) is providing iPhones to America Movil S.A.B de C.V (target), making it a real operational supply-chain dependency.",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reverse:1). Lead rationale from mistral:7b-instruct: In 2008, Am\u00e9rica M\u00f3vil launched the iPhone in Latin America, indicating that Apple Inc. (source) is providing iPhones to America Movil S.A.B de C.V (target), making it a real operational supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:01.879060"
     },
     {
@@ -9308,7 +9308,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Nebius owns a data center in Mäntsälä, Finland, a GPU cluster at an Equinix data center in Paris, a GPU cluster at a data center in Kansas City, Missouri, under construction, and a 300MW data center in Vineland, New Jersey, under construction.",
+      "evidence_excerpt": "Nebius owns a data center in M\u00e4nts\u00e4l\u00e4, Finland, a GPU cluster at an Equinix data center in Paris, a GPU cluster at a data center in Kansas City, Missouri, under construction, and a 300MW data center in Vineland, New Jersey, under construction.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: EQIX Equinix, Inc. Common Stock REIT.",
       "reviewed_at": "2026-08-25T06:09:02.252580"
@@ -9436,7 +9436,7 @@
       "confidence_score": 0.85,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 2009, the company’s gold output dropped to 4.6 million ounces.",
+      "evidence_excerpt": "In 2009, the company\u2019s gold output dropped to 4.6 million ounces.",
       "review_status": "rejected",
       "review_note": "Ollama review: The evidence excerpt provided does not indicate a supply relationship between AngloGold Ashanti and Newmont Corporation. The statement about gold output dropping to 4.6 million ounces in 2009 is insufficient to establish an operational dependency or supply chain relationship.",
       "reviewed_at": "2026-08-25T06:09:02.407082"
@@ -9708,7 +9708,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "The first project was construction of the $350 million 345 kilovolt Bethel–Norwalk transmission line through the western part of the state, and was constructed entirely by the company when it was still known as Northeast Utilities.",
+      "evidence_excerpt": "The first project was construction of the $350 million 345 kilovolt Bethel\u2013Norwalk transmission line through the western part of the state, and was constructed entirely by the company when it was still known as Northeast Utilities.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: NU Nu Holdings Ltd..",
       "reviewed_at": "2026-08-25T06:09:02.722358"
@@ -10733,9 +10733,9 @@
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
       "evidence_excerpt": "Not directly stated but a vaccine against multiple serotypes of human papillomavirus (HPV) is provided by Sanofi to Merck & Co. under Gardasil brand name.",
-      "review_status": "approved",
-      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reject:1). Lead rationale from mistral:7b-instruct: The evidence excerpt indicates that Sanofi provides a HPV vaccine to Merck & Co. under the Gardasil brand name, which establishes an operational supply-chain relationship.",
-      "reviewed_at": "2026-08-25T06:09:03.965797"
+      "review_status": "rejected",
+      "review_note": "Automated evidence cleanup: AI-derived relationship has no usable source excerpt.",
+      "reviewed_at": "2026-09-02T20:20:27.338717+00:00"
     },
     {
       "edge_id": 672,
@@ -11020,7 +11020,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In March 2021, National Grid announced it intended to purchase Western Power Distribution from PPL Corporation for £7.8 billion,",
+      "evidence_excerpt": "In March 2021, National Grid announced it intended to purchase Western Power Distribution from PPL Corporation for \u00a37.8 billion,",
       "review_status": "rejected",
       "review_note": "Ollama review: The evidence excerpt indicates that National Grid PLC intends to purchase electric distribution assets from PPL Corporation, not the other way around.",
       "reviewed_at": "2026-08-25T06:09:04.963262"
@@ -11576,11 +11576,11 @@
       "source_name": "Occidental Petroleum Corporation",
       "target_name": "Ecopetrol S.A",
       "dependency_type": "Joint Venture Partner",
-      "product": "Caño Limón Field",
+      "product": "Ca\u00f1o Lim\u00f3n Field",
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In September 1983, the discovery of the giant Caño Limón Field was announced. Ecopetrol, in association with Oxy, reported a reservoir with reserves estimated at 1.1 billion barrels (170,000,000 m3).",
+      "evidence_excerpt": "In September 1983, the discovery of the giant Ca\u00f1o Lim\u00f3n Field was announced. Ecopetrol, in association with Oxy, reported a reservoir with reserves estimated at 1.1 billion barrels (170,000,000 m3).",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:05.718833"
@@ -11596,7 +11596,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Internally, Teledyne Systems was formed as the centerpiece of the firm’s aerospace systems business, diversifying the business base into government contracts with NASA and the U.S. Department of Defense (DoD).",
+      "evidence_excerpt": "Internally, Teledyne Systems was formed as the centerpiece of the firm\u2019s aerospace systems business, diversifying the business base into government contracts with NASA and the U.S. Department of Defense (DoD).",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: NASA Tema Space Innovators ETF.",
       "reviewed_at": "2026-08-25T06:09:05.735270"
@@ -11676,7 +11676,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "The remaining assets, consisting primarily of the Fox and MyNetworkTV networks, and 21CF\\u2019s local station, news and national sports assets, were spun out into a new company named Fox Corporation, which began trading on March 19, 2019. Disney\\u2019s acquisition of 21st Century Fox closed on March 20 of the same year.",
+      "evidence_excerpt": "The remaining assets, consisting primarily of the Fox and MyNetworkTV networks, and 21CF\u2019s local station, news and national sports assets, were spun out into a new company named Fox Corporation, which began trading on March 19, 2019. Disney\u2019s acquisition of 21st Century Fox closed on March 20 of the same year.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:05.827181"
@@ -12013,9 +12013,9 @@
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
       "evidence_excerpt": "Not directly stated but RotaTeq vaccine is provided by Novartis to Merck & Co.",
-      "review_status": "approved",
-      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.87; votes approve:3). Lead rationale from llama3.1:8b: The edge is correct and the relationship appears to be a real operational supply-chain dependency, as Novartis provides RotaTeq vaccine to Merck & Co.",
-      "reviewed_at": "2026-08-25T06:09:06.220917"
+      "review_status": "rejected",
+      "review_note": "Automated evidence cleanup: AI-derived relationship has no usable source excerpt.",
+      "reviewed_at": "2026-09-02T20:20:27.338717+00:00"
     },
     {
       "edge_id": 752,
@@ -12604,7 +12604,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 1987, it applied for a direct broadcast satellite (DBS) license with the Federal Communications Commission (FCC), and was granted access to orbital slot 119° west longitude in 1992.",
+      "evidence_excerpt": "In 1987, it applied for a direct broadcast satellite (DBS) license with the Federal Communications Commission (FCC), and was granted access to orbital slot 119\u00b0 west longitude in 1992.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: FCCO First Community Corporation Common Stock.",
       "reviewed_at": "2026-08-25T06:09:07.020399"
@@ -12661,7 +12661,7 @@
       "edge_id": 792,
       "source_ticker": "VPV",
       "target_ticker": "CW",
-      "source_name": "Invesco  Pennsylvania Value Municipal Income Trust",
+      "source_name": "Invesco Pennsylvania Value Municipal Income Trust",
       "target_name": "Curtiss-Wright Corp.",
       "dependency_type": "Location",
       "product": "Manufacturing Facilities",
@@ -12670,7 +12670,7 @@
       "source_title": "AI Multi-Source Research",
       "evidence_excerpt": "Engine and propeller production was conducted at plants in New Jersey, Pennsylvania, and Ohio.",
       "review_status": "rejected",
-      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: VPV Invesco  Pennsylvania Value Municipal Income Trust.",
+      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: VPV Invesco Pennsylvania Value Municipal Income Trust.",
       "reviewed_at": "2026-08-25T06:09:07.123027"
     },
     {
@@ -13148,7 +13148,7 @@
       "confidence_score": 0.925,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Its electricity supply business manages energy sales, dispatch, and delivery from Exelon\\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
+      "evidence_excerpt": "Its electricity supply business manages energy sales, dispatch, and delivery from Exelon\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, pending:1). Lead rationale from mistral:7b-instruct: The evidence excerpt indicates that Algonquin Power & Utilities Corp manages energy sales, dispatch, and delivery from Exelon's power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide. This suggests a supply chain relationship where Algonquin is the supplier of electricity retail services to Constellation Energy Corporation.",
       "reviewed_at": "2026-08-25T06:09:07.847395"
@@ -13836,7 +13836,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Before joining IonQ, he was an engineering director at Amazon, overseeing a 260-person team responsible for the “delivery experience” for Amazon Prime.",
+      "evidence_excerpt": "Before joining IonQ, he was an engineering director at Amazon, overseeing a 260-person team responsible for the \u201cdelivery experience\u201d for Amazon Prime.",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:08.746676"
@@ -13948,9 +13948,9 @@
       "confidence_score": 0.9,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Bobby J. Griffin – Former President, International Operations of Ryder System, Inc.",
+      "evidence_excerpt": "Bobby J. Griffin \u2013 Former President, International Operations of Ryder System, Inc.",
       "review_status": "approved",
-      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.90; votes approve:2, pending:1). Lead rationale from mistral:7b-instruct: Bobby J. Griffin – Former President, International Operations of Ryder System, Inc., suggests a supply-chain relationship between Ryder System, Inc. and Wesco International Inc. as they operate in the same sector (Industrials) and industry (Industrial Distribution). Ryder System, Inc. provides logistics services, which aligns with the current_dependency_type.",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.90; votes approve:2, pending:1). Lead rationale from mistral:7b-instruct: Bobby J. Griffin \u2013 Former President, International Operations of Ryder System, Inc., suggests a supply-chain relationship between Ryder System, Inc. and Wesco International Inc. as they operate in the same sector (Industrials) and industry (Industrial Distribution). Ryder System, Inc. provides logistics services, which aligns with the current_dependency_type.",
       "reviewed_at": "2026-08-25T06:09:08.879499"
     },
     {
@@ -14204,7 +14204,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "On February 25, 2025, it was announced that Thermo Fisher Scientific would acquire the company’s Purification & Filtration business unit for $4.1B.",
+      "evidence_excerpt": "On February 25, 2025, it was announced that Thermo Fisher Scientific would acquire the company\u2019s Purification & Filtration business unit for $4.1B.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:09.159753"
@@ -14444,9 +14444,9 @@
       "confidence_score": 0.925,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In June 2011, HP announced new business and consumer notebooks equipped with the latest versions of AMD APUs – accelerated processing units.",
+      "evidence_excerpt": "In June 2011, HP announced new business and consumer notebooks equipped with the latest versions of AMD APUs \u2013 accelerated processing units.",
       "review_status": "approved",
-      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reverse:1). Lead rationale from mistral:7b-instruct: In June 2011, HP announced new business and consumer notebooks equipped with the latest versions of AMD APUs – accelerated processing units. This indicates that HP is a customer of Advanced Micro Devices, Inc., as they are using their products.",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reverse:1). Lead rationale from mistral:7b-instruct: In June 2011, HP announced new business and consumer notebooks equipped with the latest versions of AMD APUs \u2013 accelerated processing units. This indicates that HP is a customer of Advanced Micro Devices, Inc., as they are using their products.",
       "reviewed_at": "2026-08-25T06:09:09.581097"
     },
     {
@@ -15045,7 +15045,7 @@
       "edge_id": 941,
       "source_ticker": "PHG",
       "target_ticker": "A",
-      "source_name": "KONINKLIJKE PHILIPS  N.V.",
+      "source_name": "KONINKLIJKE PHILIPS N.V.",
       "target_name": "Agilent Technologies Inc.",
       "dependency_type": "Joint Venture",
       "product": "Light-emitting diodes",
@@ -15484,7 +15484,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Easwaran Sundaram – Executive VP and Chief Digital & Technology Officer of JetBlue Airways Corporation",
+      "evidence_excerpt": "Easwaran Sundaram \u2013 Executive VP and Chief Digital & Technology Officer of JetBlue Airways Corporation",
       "review_status": "rejected",
       "review_note": "Ollama review: The relationship described does not indicate a supply chain dependency between JetBlue Airways and Wesco International based on the provided information. The evidence excerpt mentions an executive at JetBlue, but it does not establish that Wesco is receiving any product or service from JetBlue in a supply-chain context.",
       "reviewed_at": "2026-08-25T06:09:11.175086"
@@ -15708,7 +15708,7 @@
       "confidence_score": 0.925,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "The company continued focus on its core business, spinning off unrelated operations including BJ\\'s Wholesale Club",
+      "evidence_excerpt": "The company continued focus on its core business, spinning off unrelated operations including BJ's Wholesale Club",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.93; votes reject:2, reverse:1). Lead rationale from mistral:7b-instruct: The company continued focus on its core business, spinning off unrelated operations including BJ's Wholesale Club. This indicates that TJX Companies is downstream of BJs Wholesale Club Holdings, Inc., not upstream.",
       "reviewed_at": "2026-08-25T06:09:11.447485"
@@ -15852,7 +15852,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Merádico Libre launched Mercadopago, a secure payment system, to diversify payment options.",
+      "evidence_excerpt": "Mer\u00e1dico Libre launched Mercadopago, a secure payment system, to diversify payment options.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: MA Mastercard Incorporated.",
       "reviewed_at": "2026-08-25T06:09:11.642316"
@@ -15868,7 +15868,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Merádico Libre is the personal sponsor of Argentine Formula One driver Franco Colapinto.",
+      "evidence_excerpt": "Mer\u00e1dico Libre is the personal sponsor of Argentine Formula One driver Franco Colapinto.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 3/3 for reject (avg confidence 0.95; votes reject:3). Lead rationale from qwen2.5:7b-instruct: This relationship is a sponsorship and not an operational supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:11.662754"
@@ -15884,7 +15884,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Merádico Libre is the personal sponsor of Argentine Formula One driver Franco Colapinto.",
+      "evidence_excerpt": "Mer\u00e1dico Libre is the personal sponsor of Argentine Formula One driver Franco Colapinto.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: PINE Alpine Income Property Trust, Inc.",
       "reviewed_at": "2026-08-25T06:09:11.678381"
@@ -15909,7 +15909,7 @@
       "edge_id": 995,
       "source_ticker": "PHG",
       "target_ticker": "NXPI",
-      "source_name": "KONINKLIJKE PHILIPS  N.V.",
+      "source_name": "KONINKLIJKE PHILIPS N.V.",
       "target_name": "NXP Semiconductors N.V. Common Stock",
       "dependency_type": "Raw Materials",
       "product": "",
@@ -16493,9 +16493,9 @@
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
       "evidence_excerpt": "Not explicitly mentioned in the text but a well-known supplier of hard disk drives to HP.",
-      "review_status": "approved",
-      "review_note": "Ollama review: Seagate is a well-known supplier of hard disk drives, and HP uses these components in their products.",
-      "reviewed_at": "2026-08-25T06:09:12.458482"
+      "review_status": "rejected",
+      "review_note": "Automated evidence cleanup: AI-derived relationship has no usable source excerpt.",
+      "reviewed_at": "2026-09-02T20:20:27.338717+00:00"
     },
     {
       "edge_id": 1032,
@@ -16556,7 +16556,7 @@
       "confidence_score": 0.97,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 1997, Unilever sold its speciality chemicals division, including National Starch & Chemical, Quest, Unichema and Crosfield to Imperial Chemical Industries for £4.9 billion.",
+      "evidence_excerpt": "In 1997, Unilever sold its speciality chemicals division, including National Starch & Chemical, Quest, Unichema and Crosfield to Imperial Chemical Industries for \u00a34.9 billion.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.97; votes reject:2, approve:1). Lead rationale from llama3.1:8b: The edge is based on the historical sale of a division in 1997. This does not represent an operational supply chain dependency.",
       "reviewed_at": "2026-08-25T06:09:12.526673"
@@ -16572,7 +16572,7 @@
       "confidence_score": 0.98,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 1997, Unilever sold its speciality chemicals division, including National Starch & Chemical, Quest, Unichema and Crosfield to Imperial Chemical Industries for £4.9 billion.",
+      "evidence_excerpt": "In 1997, Unilever sold its speciality chemicals division, including National Starch & Chemical, Quest, Unichema and Crosfield to Imperial Chemical Industries for \u00a34.9 billion.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 3/3 for reject (avg confidence 0.98; votes reject:3). Lead rationale from mistral:7b-instruct: In 1997, Unilever sold its speciality chemicals division to Imperial Chemical Industries, which includes Quest Diagnostics as one of the acquired companies. This indicates a historical supply-chain relationship between Unilever and Quest Diagnostics.",
       "reviewed_at": "2026-08-25T06:09:12.545901"
@@ -16972,7 +16972,7 @@
       "confidence_score": 1,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Natera offers a cloud-based bioinformatics platform called Constellation, allowing laboratories to access and use Natera\\u2019s technology in their own facilities.",
+      "evidence_excerpt": "Natera offers a cloud-based bioinformatics platform called Constellation, allowing laboratories to access and use Natera\u2019s technology in their own facilities.",
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 1.00; votes approve:2, reject:1). Lead rationale from llama3.1:8b: Natera offers its technology to laboratories through Constellation, making IDEXX Laboratories a customer of Natera.",
       "reviewed_at": "2026-08-25T06:09:13.050209"
@@ -17397,7 +17397,7 @@
       "edge_id": 1088,
       "source_ticker": "VPV",
       "target_ticker": "TOL",
-      "source_name": "Invesco  Pennsylvania Value Municipal Income Trust",
+      "source_name": "Invesco Pennsylvania Value Municipal Income Trust",
       "target_name": "Toll Brothers, Inc.",
       "dependency_type": "Logistics Partner",
       "product": "Labor, Materials, Equipment",
@@ -17406,7 +17406,7 @@
       "source_title": "AI Multi-Source Research",
       "evidence_excerpt": null,
       "review_status": "rejected",
-      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: VPV Invesco  Pennsylvania Value Municipal Income Trust.",
+      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: VPV Invesco Pennsylvania Value Municipal Income Trust.",
       "reviewed_at": "2026-08-25T06:09:13.587464"
     },
     {
@@ -17420,7 +17420,7 @@
       "confidence_score": 0.875,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "David Sewell, formerly of WestRock and Sherwin-Williams, became the company\\u2019s president and CEO.",
+      "evidence_excerpt": "David Sewell, formerly of WestRock and Sherwin-Williams, became the company\u2019s president and CEO.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.88; votes reject:2, pending:1). Lead rationale from llama3.1:8b: This is not a supply-chain relationship, it's an employee history.",
       "reviewed_at": "2026-08-25T06:09:13.604865"
@@ -17884,7 +17884,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "On December 1, 2016, Platinum Equity acquired Emerson’s Network Power division for more than $4 billion, rebranding the business as Vertiv.",
+      "evidence_excerpt": "On December 1, 2016, Platinum Equity acquired Emerson\u2019s Network Power division for more than $4 billion, rebranding the business as Vertiv.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:14.205374"
@@ -19420,9 +19420,9 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In December 2021, MP Materials signed a long-term agreement with General Motors to provide neodymium-iron-boron magnets for use in GM’s electric vehicle motors.",
+      "evidence_excerpt": "In December 2021, MP Materials signed a long-term agreement with General Motors to provide neodymium-iron-boron magnets for use in GM\u2019s electric vehicle motors.",
       "review_status": "approved",
-      "review_note": "Ollama review: MP Materials Corp. supplies neodymium-iron-boron magnets to General Motors for use in GM’s electric vehicle motors, as per the signed long-term agreement.",
+      "review_note": "Ollama review: MP Materials Corp. supplies neodymium-iron-boron magnets to General Motors for use in GM\u2019s electric vehicle motors, as per the signed long-term agreement.",
       "reviewed_at": "2026-08-25T06:09:16.248579"
     },
     {
@@ -19596,7 +19596,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Abbott acquired the pharmaceuticals unit of Solvay S.A. for US$6.2 billion (€4.5 billion).",
+      "evidence_excerpt": "Abbott acquired the pharmaceuticals unit of Solvay S.A. for US$6.2 billion (\u20ac4.5 billion).",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:16.492429"
@@ -19926,7 +19926,7 @@
       "source_ticker": "JBL",
       "target_ticker": "PHG",
       "source_name": "Jabil Inc.",
-      "target_name": "KONINKLIJKE PHILIPS  N.V.",
+      "target_name": "KONINKLIJKE PHILIPS N.V.",
       "dependency_type": "Contract Manufacturing Services",
       "product": "",
       "confidence_score": 0.95,
@@ -20220,7 +20220,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 1997, Intel Corporation both a client and an investor for Nova Ltd. in May 1993 by Giora Dishon and Moshe Finarov. In 2002, Nova’s shares were also listed on the Tel Aviv Stock Exchange (TASE). In 2006 Nova acquired HyperNex Inc., a U.S.-based company specializing in microstructure analysis tools, expanding its technological base in materials characterization. On April 2, 2015, the company completed the acquisition of Revera Inc., a U.S. developer of X-ray metrology solutions for complex film stack measurements, for $46.5 million, thereby integrating standalone X-ray Photoelectron Spectroscopy (XPS) into its portfolio. At 2021 Nova rebranded as Nova Ltd. Continuing its expansion into the back-end and advanced packaging markets, Nova acquired ancosys GmbH, a German leading provider of chemical analysis solutions, in February 2022 in an all-cash transaction valued at approximately $100 million. In early 2025, the company further extended its dimensional metrology offerings for advanced packaging applications by finalizing the acquisition of Sentronics Metrology GmbH, a German developer of wafer metrology sensors, for approximately $60 million. For the full year 2024, Nova reported revenues of US$672.4 million, a 30% increase from FY 2023. Net income was US$183.8 million, up 35% year-over-year. The company achieved a profit margin of 27% and earnings per share of US$6.31. As of 2023, Nova's President and CEO is Gaby Waisman. Nova Ltd. delivers metrology and process control solutions for semiconductor manufacturing across process steps, for logic, memory, advanced packaging and specialty devices. Nova’s solutions combine integrated and standalone systems, implementing optical and materials technologies as well as chemical analysis, combined with software suites and utilizing AI and machine learning. In February 2019 Nova and GlobalFoundries Jointly awarded the 'Best Metrology Paper' at SPIE Advanced Lithography Conference, and in April 2022, Nova again awarded the \"Best Metrology Paper\" Jointly with IBM Research. In March 2025, Nova and Samsung Electronics were jointly awarded the Vladimir Ukraintsev Award for ‘Collaborations in Metrology’ at the SPIE Advanced Lithography Conference. }, {",
+      "evidence_excerpt": "In 1997, Intel Corporation both a client and an investor for Nova Ltd. in May 1993 by Giora Dishon and Moshe Finarov. In 2002, Nova\u2019s shares were also listed on the Tel Aviv Stock Exchange (TASE). In 2006 Nova acquired HyperNex Inc., a U.S.-based company specializing in microstructure analysis tools, expanding its technological base in materials characterization. On April 2, 2015, the company completed the acquisition of Revera Inc., a U.S. developer of X-ray metrology solutions for complex film stack measurements, for $46.5 million, thereby integrating standalone X-ray Photoelectron Spectroscopy (XPS) into its portfolio. At 2021 Nova rebranded as Nova Ltd. Continuing its expansion into the back-end and advanced packaging markets, Nova acquired ancosys GmbH, a German leading provider of chemical analysis solutions, in February 2022 in an all-cash transaction valued at approximately $100 million. In early 2025, the company further extended its dimensional metrology offerings for advanced packaging applications by finalizing the acquisition of Sentronics Metrology GmbH, a German developer of wafer metrology sensors, for approximately $60 million. For the full year 2024, Nova reported revenues of US$672.4 million, a 30% increase from FY 2023. Net income was US$183.8 million, up 35% year-over-year. The company achieved a profit margin of 27% and earnings per share of US$6.31. As of 2023, Nova's President and CEO is Gaby Waisman. Nova Ltd. delivers metrology and process control solutions for semiconductor manufacturing across process steps, for logic, memory, advanced packaging and specialty devices. Nova\u2019s solutions combine integrated and standalone systems, implementing optical and materials technologies as well as chemical analysis, combined with software suites and utilizing AI and machine learning. In February 2019 Nova and GlobalFoundries Jointly awarded the 'Best Metrology Paper' at SPIE Advanced Lithography Conference, and in April 2022, Nova again awarded the \"Best Metrology Paper\" Jointly with IBM Research. In March 2025, Nova and Samsung Electronics were jointly awarded the Vladimir Ukraintsev Award for \u2018Collaborations in Metrology\u2019 at the SPIE Advanced Lithography Conference. }, {",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:17.247926"
@@ -20236,7 +20236,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "See also\nFortis Inc., A",
+      "evidence_excerpt": "See also Fortis Inc., A",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:17.267172"
@@ -20269,9 +20269,9 @@
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
       "evidence_excerpt": "Not directly stated but Pneumovax 23 vaccine is provided by GSK to Merck & Co.",
-      "review_status": "approved",
-      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.87; votes approve:3). Lead rationale from llama3.1:8b: GSK provides the pneumococcus vaccine to Merck & Co., which is a real operational supply-chain dependency.",
-      "reviewed_at": "2026-08-25T06:09:17.310607"
+      "review_status": "rejected",
+      "review_note": "Automated evidence cleanup: AI-derived relationship has no usable source excerpt.",
+      "reviewed_at": "2026-09-02T20:20:27.338717+00:00"
     },
     {
       "edge_id": 1268,
@@ -20652,7 +20652,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "MantisNet’s tools provided telemetry and visibility into encrypted traffic within containerized environments.",
+      "evidence_excerpt": "MantisNet\u2019s tools provided telemetry and visibility into encrypted traffic within containerized environments.",
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: IPVVU InterPrivate Investment Partners V, Inc. Units.",
       "reviewed_at": "2026-08-25T06:09:18.030160"
@@ -20972,7 +20972,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In December 2021, MP Materials signed a long-term agreement with General Motors to provide neodymium-iron-boron magnets for use in GM\\'s electric vehicle motors.",
+      "evidence_excerpt": "In December 2021, MP Materials signed a long-term agreement with General Motors to provide neodymium-iron-boron magnets for use in GM's electric vehicle motors.",
       "review_status": "approved",
       "review_note": "Ollama review: MP Materials signed a long-term agreement with General Motors to provide neodymium-iron-boron magnets for use in GM's electric vehicle motors, indicating that MP Materials is the supplier and General Motors is the customer.",
       "reviewed_at": "2026-08-25T06:09:18.573506"
@@ -21260,7 +21260,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In March 2021, National Grid announced it intended to purchase Western Power Distribution from PPL Corporation for £7.8 billion,",
+      "evidence_excerpt": "In March 2021, National Grid announced it intended to purchase Western Power Distribution from PPL Corporation for \u00a37.8 billion,",
       "review_status": "rejected",
       "review_note": "Ollama review: The evidence excerpt indicates that PPL Corporation is selling Western Power Distribution to National Grid PLC, not the other way around.",
       "reviewed_at": "2026-08-25T06:09:19.075597"
@@ -21516,7 +21516,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "The concentrate (30–35% lithium chloride solution) is trucked to Salar del Carmen.",
+      "evidence_excerpt": "The concentrate (30\u201335% lithium chloride solution) is trucked to Salar del Carmen.",
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.95; votes approve:3). Lead rationale from qwen2.5:7b-instruct: The evidence excerpt clearly indicates that Sociedad Quimica y Minera de Chile SA (SQM) trucks the lithium chloride solution to Salar del Carmen, which is a customer or receiver in this context.",
       "reviewed_at": "2026-08-25T06:09:19.528826"
@@ -22172,7 +22172,7 @@
       "confidence_score": 0.925,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Graphics Solution / “Small Wonder” – Series of 8-bit ISA cards with MDA, Hercules, CGA and Plantronics Color+ compatibility using the United Microelectronics Corporation (UMC) UM6845E CRT controller.",
+      "evidence_excerpt": "Graphics Solution / \u201cSmall Wonder\u201d \u2013 Series of 8-bit ISA cards with MDA, Hercules, CGA and Plantronics Color+ compatibility using the United Microelectronics Corporation (UMC) UM6845E CRT controller.",
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reject:1). Lead rationale from mistral:7b-instruct: The proposed edge involves a semiconductor manufacturer (United Microelectronics Corp.) providing a specific product (UM6845E CRT controller) to a company in the metal fabrication industry (ATI Inc.). The evidence excerpt confirms this relationship as they mention the use of UMC's CRT controller in graphics solutions.",
       "reviewed_at": "2026-08-25T06:09:20.970230"
@@ -22524,7 +22524,7 @@
       "confidence_score": 0.9167,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Instead of precious metals, Bloom Energy\\u2019s fuel cells use wafers made from sand that are stained with proprietary ink.",
+      "evidence_excerpt": "Instead of precious metals, Bloom Energy\u2019s fuel cells use wafers made from sand that are stained with proprietary ink.",
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.92; votes approve:3). Lead rationale from mistral:7b-instruct: Bloom Energy uses sand wafers made from Smart Sand's product in their fuel cells, making Smart Sand a supplier to Bloom Energy.",
       "reviewed_at": "2026-08-25T06:09:21.514619"
@@ -22988,9 +22988,9 @@
       "confidence_score": 0.9167,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In 1963, Waters’ produced its first five gel permeation chromatography instruments, selling three to Dow Chemical, one to BFGoodrich, and one to Esso.",
+      "evidence_excerpt": "In 1963, Waters\u2019 produced its first five gel permeation chromatography instruments, selling three to Dow Chemical, one to BFGoodrich, and one to Esso.",
       "review_status": "approved",
-      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.92; votes approve:3). Lead rationale from mistral:7b-instruct: In 1963, Waters’ produced its first five gel permeation chromatography instruments, selling three to Dow Chemical. This indicates an operational supply-chain relationship between Waters Corp and Dow Inc.",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.92; votes approve:3). Lead rationale from mistral:7b-instruct: In 1963, Waters\u2019 produced its first five gel permeation chromatography instruments, selling three to Dow Chemical. This indicates an operational supply-chain relationship between Waters Corp and Dow Inc.",
       "reviewed_at": "2026-08-25T06:09:22.161837"
     },
     {
@@ -23020,7 +23020,7 @@
       "confidence_score": 0.9,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "One of its early success stories is with the Novartis-led \\u201cSMS for Life\\u201d project in Tanzania, for which Vodafone developed and deployed a text-message based system that enables all the country\\u2019s 4,600 public health facilities to report their levels of anti-malarial medications so that stock level data can be viewed centrally in real-time, enabling timely re-supply of stock.",
+      "evidence_excerpt": "One of its early success stories is with the Novartis-led \u201cSMS for Life\u201d project in Tanzania, for which Vodafone developed and deployed a text-message based system that enables all the country\u2019s 4,600 public health facilities to report their levels of anti-malarial medications so that stock level data can be viewed centrally in real-time, enabling timely re-supply of stock.",
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.90; votes approve:2, reject:1). Lead rationale from mistral:7b-instruct: Vodafone developed and deployed a text-message based system that enables Novartis's public health facilities to report their levels of anti-malarial medications in real-time. This is an operational supply-chain relationship where Vodafone provides a service to Novartis.",
       "reviewed_at": "2026-08-25T06:09:22.205190"
@@ -23629,9 +23629,9 @@
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
       "evidence_excerpt": "While not explicitly mentioned in the text, Ericsson is a well-known supplier of telecommunications equipment to many operators, including Vodafone.",
-      "review_status": "approved",
-      "review_note": "Ollama review: Ericsson is a well-known supplier of telecommunications equipment to many operators, including Vodafone.",
-      "reviewed_at": "2026-08-25T06:09:23.020594"
+      "review_status": "rejected",
+      "review_note": "Automated evidence cleanup: AI-derived relationship has no usable source excerpt.",
+      "reviewed_at": "2026-09-02T20:20:27.338717+00:00"
     },
     {
       "edge_id": 1478,
@@ -23996,7 +23996,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Éleuthère Irénée du Pont noticed that the gunpowder industry in North America was lagging behind Europe.",
+      "evidence_excerpt": "\u00c9leuth\u00e8re Ir\u00e9n\u00e9e du Pont noticed that the gunpowder industry in North America was lagging behind Europe.",
       "review_status": "rejected",
       "review_note": "Ollama review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: CEE The Central and Eastern Europe Fund, Inc..",
       "reviewed_at": "2026-08-25T06:09:23.487786"
@@ -24732,7 +24732,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "While not explicitly stated, Enterprise Products Partners operates a significant midstream infrastructure network that likely supports Devon Energy’s operations in the mentioned regions by providing logistics services.",
+      "evidence_excerpt": "While not explicitly stated, Enterprise Products Partners operates a significant midstream infrastructure network that likely supports Devon Energy\u2019s operations in the mentioned regions by providing logistics services.",
       "review_status": "rejected",
       "review_note": "Manual correction: speculative evidence is not enough to publish an operational supply-chain relationship.",
       "reviewed_at": "2026-08-25T06:09:24.432570"
@@ -24789,7 +24789,7 @@
       "edge_id": 1550,
       "source_ticker": "BBDO",
       "target_ticker": "OMC",
-      "source_name": "Banco Bradesco S.A. American Depositary Shares (Each representing one  Common Share, no par value)",
+      "source_name": "Banco Bradesco S.A. American Depositary Shares (Each representing one Common Share, no par value)",
       "target_name": "Omnicom Group Inc.",
       "dependency_type": "Creative Agency Services",
       "product": "",
@@ -24798,7 +24798,7 @@
       "source_title": "AI Multi-Source Research",
       "evidence_excerpt": null,
       "review_status": "rejected",
-      "review_note": "Ollama review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: BBDO Banco Bradesco S.A. American Depositary Shares (Each representing one  Common Share, no par value).",
+      "review_note": "Ollama review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: BBDO Banco Bradesco S.A. American Depositary Shares (Each representing one Common Share, no par value).",
       "reviewed_at": "2026-08-25T06:09:24.519588"
     },
     {
@@ -25772,7 +25772,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "AstraZeneca develops, manufactures and sells pharmaceutical and biotechnology products to treat disorders in the oncology, cardiovascular, gastrointestinal, infection,  neuroscience, respiratory and inflammation areas.",
+      "evidence_excerpt": "AstraZeneca develops, manufactures and sells pharmaceutical and biotechnology products to treat disorders in the oncology, cardiovascular, gastrointestinal, infection, neuroscience, respiratory and inflammation areas.",
       "review_status": "rejected",
       "review_note": "Ollama review: The evidence excerpt describes AstraZeneca's activities but does not indicate a supply relationship between Takeda Pharmaceutical Company Limited and AstraZeneca PLC. Both companies are drug manufacturers in the healthcare sector, but there is no clear indication that one supplies raw materials or pharmaceutical products to the other.",
       "reviewed_at": "2026-08-25T06:09:25.580808"
@@ -25932,7 +25932,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "AT&T bought the other TCI businesses—@Home Corp., National Digital Television Center and Western Tele-Communications Inc.",
+      "evidence_excerpt": "AT&T bought the other TCI businesses\u2014@Home Corp., National Digital Television Center and Western Tele-Communications Inc.",
       "review_status": "rejected",
       "review_note": "Ollama review: The evidence excerpt provided does not establish a supply chain relationship between Meritage Homes Corporation and Liberty Media Corporation Series C Liberty Formula One Common Stock. The excerpt mentions AT&T buying TCI businesses, which is unrelated to the companies in question.",
       "reviewed_at": "2026-08-25T06:09:25.747666"
@@ -27052,7 +27052,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Klarna launched in the United States in 2015, and the US has become its principal focus for growth, after securing exclusive partnerships with luxury department store Macy’s.",
+      "evidence_excerpt": "Klarna launched in the United States in 2015, and the US has become its principal focus for growth, after securing exclusive partnerships with luxury department store Macy\u2019s.",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:26.924462"
@@ -27084,7 +27084,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In May 2024, Alkermes completed the sale of its Athlone, Ireland facility to Novo Nordisk. ",
+      "evidence_excerpt": "In May 2024, Alkermes completed the sale of its Athlone, Ireland facility to Novo Nordisk.",
       "review_status": "approved",
       "review_note": "Ollama review: Alkermes sold its manufacturing facility to Novo Nordisk, indicating that Alkermes is the supplier and Novo Nordisk is the customer in this transaction.",
       "reviewed_at": "2026-08-25T06:09:26.955266"
@@ -27148,7 +27148,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Amentum is the main contractor for NASA’s Exploration Ground Systems program at Kennedy Space Center under the Consolidated Operations, Management, Engineering and Test (COMET) contract.",
+      "evidence_excerpt": "Amentum is the main contractor for NASA\u2019s Exploration Ground Systems program at Kennedy Space Center under the Consolidated Operations, Management, Engineering and Test (COMET) contract.",
       "review_status": "rejected",
       "review_note": "Ollama review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: NASA Tema Space Innovators ETF.",
       "reviewed_at": "2026-08-25T06:09:27.037535"
@@ -27180,7 +27180,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Novo Nordisk is suing Hims & Hers because it says Hims was marketing and selling “copycat” compounded semaglutide products that compete with Wegovy/Ozempic.",
+      "evidence_excerpt": "Novo Nordisk is suing Hims & Hers because it says Hims was marketing and selling \u201ccopycat\u201d compounded semaglutide products that compete with Wegovy/Ozempic.",
       "review_status": "rejected",
       "review_note": "Manual correction: legal, financial, ownership, competitive, breach, or asset-sale items are not operational supply-chain relationships.",
       "reviewed_at": "2026-08-25T06:09:27.069850"
@@ -27292,7 +27292,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "As of 2022, LG Display is the manufacturer of the OLED panels used in Sony\\u2019s OLED TVs.",
+      "evidence_excerpt": "As of 2022, LG Display is the manufacturer of the OLED panels used in Sony\u2019s OLED TVs.",
       "review_status": "approved",
       "review_note": "Ollama review: LG Display manufactures OLED panels used in Sony's OLED TVs.",
       "reviewed_at": "2026-08-25T06:09:27.183105"
@@ -27308,7 +27308,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\\u2019s 2009 27-inch iMac, Apple\\u2019s Thunderbolt Display, and Dell\\u2019s U2711 LCD Monitor.",
+      "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\u2019s 2009 27-inch iMac, Apple\u2019s Thunderbolt Display, and Dell\u2019s U2711 LCD Monitor.",
       "review_status": "approved",
       "review_note": "Ollama review: The evidence excerpt clearly indicates that Dell Technologies Inc. uses LCD panels from LG Display Co. Ltd., establishing a clear operational supply-chain relationship.",
       "reviewed_at": "2026-08-25T06:09:27.199406"
@@ -27708,7 +27708,7 @@
       "confidence_score": 0.95,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "In January 2017, Rivian acquired the plant and its manufacturing contents for $16 million, with the plant to become Rivian\\u2019s primary North American manufacturing facility.",
+      "evidence_excerpt": "In January 2017, Rivian acquired the plant and its manufacturing contents for $16 million, with the plant to become Rivian\u2019s primary North American manufacturing facility.",
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-08-25T06:09:27.639345"
@@ -28828,7 +28828,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Apart from institutions, other investors own 18%. As of 2024, CEO James Litinsky was the company\\'s largest shareholder. Other large shareholders include Vanguard, Shenghe Resources, BlackRock and Hancock Prospecting.",
+      "evidence_excerpt": "Apart from institutions, other investors own 18%. As of 2024, CEO James Litinsky was the company's largest shareholder. Other large shareholders include Vanguard, Shenghe Resources, BlackRock and Hancock Prospecting.",
       "review_status": "rejected",
       "review_note": "Ollama review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: VOO Vanguard S&P 500 ETF.",
       "reviewed_at": "2026-08-25T06:09:28.830871"
@@ -28844,7 +28844,7 @@
       "confidence_score": 0.96,
       "source_url": "AI Multi-Source Research",
       "source_title": "AI Multi-Source Research",
-      "evidence_excerpt": "Apart from institutions, other investors own 18%. As of 2024, CEO James Litinsky was the company\\'s largest shareholder. Other large shareholders include Vanguard, Shenghe Resources, BlackRock and Hancock Prospecting.",
+      "evidence_excerpt": "Apart from institutions, other investors own 18%. As of 2024, CEO James Litinsky was the company's largest shareholder. Other large shareholders include Vanguard, Shenghe Resources, BlackRock and Hancock Prospecting.",
       "review_status": "rejected",
       "review_note": "Ollama review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: CII BlackRock Enhanced Large Cap Core Fund, Inc..",
       "reviewed_at": "2026-08-25T06:09:28.845213"

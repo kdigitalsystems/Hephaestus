@@ -77,6 +77,25 @@ def test_extract_dependencies_keeps_valid_items_when_one_is_malformed(monkeypatc
     assert [item["source_company"] for item in result["dependencies"]] == ["Supplier Inc."]
 
 
+def test_extract_dependencies_unescapes_double_encoded_model_text(monkeypatch):
+    monkeypatch.setattr(parser.ollama, "chat", lambda **_kwargs: {
+        "message": {"content": r"""{
+            "dependencies": [{
+                "source_company": "LG Display",
+                "target_company": "Apple Inc.",
+                "dependency_type": "Display Panels",
+                "product": "27-inch panels",
+                "evidence_excerpt": "LG panels are used in Apple\\u2019s 2009 27-inch iMac and GM\\'s\\nnewer displays.",
+                "confidence_score": 0.8
+            }]
+        }"""}
+    })
+
+    result = parser.extract_dependencies("source text")
+
+    assert result["dependencies"][0]["evidence_excerpt"] == "LG panels are used in Apple’s 2009 27-inch iMac and GM's newer displays."
+
+
 def test_extract_dependencies_rejects_url_with_trailing_payload(monkeypatch):
     monkeypatch.setattr(parser.ollama, "chat", lambda **_kwargs: {
         "message": {"content": """{

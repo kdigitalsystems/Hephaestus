@@ -107,15 +107,14 @@ def test_annotated_history_series_ends_with_the_current_run(tmp_path):
     export.annotate_dashboard_data(dashboard, str(history_path))
 
     metrics = dashboard["investor_metrics"]
+    generated_on = dashboard["generated_at"][:10]
     assert metrics["unique_links"] == 1
     assert metrics["change_summary"]["previous_unique_links"] == 1
     assert metrics["change_summary"]["net_change"] == 0
-    assert [entry["generated_on"] for entry in metrics["history"]] == [
-        "2026-08-28",
-        datetime.now(timezone.utc).date().isoformat(),
-    ]
+    assert [entry["generated_on"] for entry in metrics["history"]] == ["2026-08-28", generated_on]
     assert metrics["history"][-1]["unique_links"] == 1
     assert metrics["history"][-1]["linked_companies"] == 2
+    assert metrics["history"][-1]["rejected_links"] == 0
 
 
 def test_publish_dashboard_writes_dashboard_then_history_without_temp_files(tmp_path):
@@ -156,6 +155,42 @@ def test_write_json_atomic_leaves_existing_file_intact_on_failure(tmp_path):
 
     assert json.loads(target.read_text(encoding="utf-8")) == {"ok": True}
     assert not [path for path in tmp_path.iterdir() if path.suffix == ".tmp"]
+
+
+def test_merged_rows_keep_key_and_edge_id_from_the_same_member_and_fold_case_duplicates():
+    manual = {"edge_id": 10, "ticker": "TSM", "name": "TSMC", "type": "Advanced Silicon Fabrication", "product": "chips",
+              "confidence": 1.0, "source_type": "Manual", "review_status": "approved", "evidence_excerpt": "",
+              "relationship_key": "TSM->AMD:ADVANCED SILICON FABRICATION"}
+    ai = {"edge_id": 3, "ticker": "TSM", "name": "TSMC", "type": "foundry services", "product": "wafers",
+          "confidence": 0.9, "source_type": "AI Research", "review_status": "approved", "evidence_excerpt": "x",
+          "relationship_key": "TSM->AMD:FOUNDRY SERVICES"}
+    duplicate_case = dict(ai, edge_id=4, type="Foundry Services", relationship_key="TSM->AMD:FOUNDRY SERVICES")
+
+    merged = export.merge_relationships([ai, manual, duplicate_case])[0]
+
+    assert merged["edge_id"] == 10
+    assert merged["relationship_key"] == "TSM->AMD:ADVANCED SILICON FABRICATION"
+    assert merged["type"] == "Advanced Silicon Fabrication / foundry services"
+
+
+def test_rejected_members_never_contribute_to_a_merged_row():
+    approved = {"edge_id": 1, "ticker": "TSM", "name": "TSMC", "type": "Foundry", "product": "wafers", "confidence": 0.9,
+                "source_type": "AI Research", "review_status": "approved", "evidence_excerpt": "", "relationship_key": "TSM->AMD:FOUNDRY"}
+    rejected = {"edge_id": 2, "ticker": "TSM", "name": "TSMC", "type": "Competitor", "product": "x", "confidence": 1.0,
+                "source_type": "Manual", "review_status": "rejected", "evidence_excerpt": "", "relationship_key": "TSM->AMD:COMPETITOR"}
+
+    merged = export.merge_relationships([approved, rejected])[0]
+
+    assert merged["review_status"] == "approved"
+    assert merged["type"] == "Foundry"
+
+
+def test_placeholders_are_never_published_as_values():
+    assert export.displayable("None") == "N/A"
+    assert export.displayable("none") == "N/A"
+    assert export.displayable("Uncategorized") == "N/A"
+    assert export.displayable(None) == "N/A"
+    assert export.displayable("Buy") == "Buy"
 
 
 def test_merge_relationship_group_tolerates_missing_edge_ids():

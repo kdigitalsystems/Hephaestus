@@ -6,6 +6,20 @@ import sqlite3
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DB_PATH = os.path.join(BASE_DIR, "supply_chain.db")
 REQUIRED_TABLES = {"nodes", "edges"}
+# Columns the pipeline queries; a database created before they existed must be
+# reported unhealthy so the caller runs database.py and its migrations.
+REQUIRED_EDGE_COLUMNS = {
+    "source_id",
+    "target_id",
+    "dependency_type",
+    "product",
+    "source_url",
+    "source_title",
+    "evidence_excerpt",
+    "review_status",
+    "review_note",
+    "reviewed_at",
+}
 SQLITE_TIMEOUT_SECONDS = 30
 
 
@@ -25,6 +39,11 @@ def database_status(path=DEFAULT_DB_PATH, require_nodes=False):
             missing = sorted(REQUIRED_TABLES - tables)
             if missing:
                 return False, f"database schema is missing table(s): {', '.join(missing)}"
+
+            edge_columns = {row[1] for row in connection.execute("PRAGMA table_info(edges)").fetchall()}
+            missing_columns = sorted(REQUIRED_EDGE_COLUMNS - edge_columns)
+            if missing_columns:
+                return False, f"database schema is missing edge column(s): {', '.join(missing_columns)}"
 
             if require_nodes:
                 node_count = connection.execute("SELECT COUNT(*) FROM nodes").fetchone()[0]

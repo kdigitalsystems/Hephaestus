@@ -80,7 +80,9 @@ jobs:
           git add docs/predictions.json docs/prediction_history.json
           if ! git diff --cached --quiet; then
             git commit -m "Automated research signals: Update top-50 graph predictions"
-            git pull --rebase origin main
+            # A conflicting rebase must not be left half-applied on the self-hosted
+            # runner, or every later run fails at checkout.
+            git pull --rebase origin main || { git rebase --abort; echo "Rebase onto origin/main conflicted; aborted."; exit 1; }
             git push origin main
           else
             echo "No research signal changes to publish."

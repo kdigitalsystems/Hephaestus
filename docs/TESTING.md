@@ -12,6 +12,8 @@ python -m compileall -q backend tests
 node --check docs/app.js
 node tests/check_app_behaviors.js
 node tests/check_app_link_count.js
+node tests/check_sanitize_review_decisions.js
+node scripts/sanitize_review_decisions.js --check data/edge_review_decisions.json
 python backend/validate_dashboard_data.py
 python backend/validate_predictions.py
 git diff --check
@@ -27,12 +29,12 @@ If the host Python is missing packages such as SQLAlchemy, Ollama, or BeautifulS
 
 ## CI Jobs
 
-`.github/workflows/ci.yml` is split into three jobs:
+`.github/workflows/ci.yml` is split into four jobs:
 
-- `python-tests`: installs Python dependencies, compiles backend/tests, and runs `pytest` on Python 3.10 and 3.12.
-- `dashboard-checks`: runs the JavaScript syntax and dashboard behavior checks, then validates `docs/dashboard_data.json`.
-- `quality-gates`: checks shell script syntax and committed whitespace.
+- `python-tests`: installs Python dependencies, runs `ruff`, compiles backend/tests, and runs `pytest` on Python 3.10 and 3.12.
+- `dashboard-checks`: runs the JavaScript syntax and dashboard behavior checks, confirms the committed review decisions are already sanitized, then validates `docs/dashboard_data.json`.
 - `prediction-checks`: validates the bounded prediction export and the deterministic graph-learning tests. It does not invoke Ollama or make market-data requests.
+- `quality-gates`: checks shell script syntax and committed whitespace.
 
 CI disables live source fetches with:
 

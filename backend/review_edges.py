@@ -1,10 +1,21 @@
 import argparse
 from datetime import datetime, timezone
 
+from sqlalchemy.exc import IntegrityError
+
 from database import SessionLocal
+from edge_review_decisions import DEFAULT_PATH as DECISIONS_PATH, export_decisions
 from models import Edge, Node
 
 VALID_STATUSES = {"pending", "approved", "rejected"}
+
+
+def persist_decisions(args):
+    """Keep data/edge_review_decisions.json in sync so the next pipeline run cannot revert this review."""
+    if getattr(args, "no_persist", False):
+        print("Note: decision not persisted; run `python3 backend/edge_review_decisions.py export` before the next pipeline run.")
+        return
+    export_decisions(DECISIONS_PATH)
 
 
 def format_edge(edge):
@@ -47,12 +58,15 @@ def set_status(args):
             raise SystemExit(f"Edge {args.edge_id} not found.")
 
         edge.review_status = args.status
-        edge.review_note = args.note
+        if args.note:
+            # An omitted --note must not erase the existing rationale.
+            edge.review_note = args.note
         edge.reviewed_at = datetime.now(timezone.utc) if args.status in {"approved", "rejected"} else None
         session.commit()
         print(format_edge(edge))
     finally:
         session.close()
+    persist_decisions(args)
 
 
 def edit_edge(args):
@@ -75,10 +89,18 @@ def edit_edge(args):
         if args.note:
             edge.review_note = args.note
 
-        session.commit()
+        try:
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+            raise SystemExit(
+                f"Edge {args.edge_id} was not changed: another edge with dependency type "
+                f"{args.type!r} already exists between these two companies."
+            )
         print(format_edge(edge))
     finally:
         session.close()
+    persist_decisions(args)
 
 
 def build_parser():
@@ -96,6 +118,7 @@ def build_parser():
         status_parser = subparsers.add_parser(status, help=f"Mark an edge as {status}.")
         status_parser.add_argument("edge_id", type=int)
         status_parser.add_argument("--note", default="")
+        status_parser.add_argument("--no-persist", action="store_true", help="Do not refresh data/edge_review_decisions.json.")
         status_parser.set_defaults(
             func=set_status,
             status={"approve": "approved", "reject": "rejected", "pend": "pending"}[status]
@@ -109,6 +132,7 @@ def build_parser():
     edit_parser.add_argument("--source-title")
     edit_parser.add_argument("--evidence")
     edit_parser.add_argument("--note")
+    edit_parser.add_argument("--no-persist", action="store_true", help="Do not refresh data/edge_review_decisions.json.")
     edit_parser.set_defaults(func=edit_edge)
 
     return parser

@@ -104,23 +104,21 @@ def unique_join(values):
     merged = []
     for value in values:
         value = str(value or "").strip()
-        if not value or value in seen:
+        key = value.lower()
+        if not value or key in seen:
             continue
-        seen.add(value)
+        seen.add(key)
         merged.append(value)
     return " / ".join(merged)
 
 def merge_relationship_group(relationships):
-    ranked = sorted(relationships, key=edge_rank, reverse=True)
+    # A rejected member must never contribute to a published row.
+    kept = [relationship for relationship in relationships if relationship_status(relationship) != "rejected"]
+    ranked = sorted(kept or relationships, key=edge_rank, reverse=True)
     primary = dict(ranked[0])
-    primary["edge_id"] = min(
-        (
-            relationship.get("edge_id")
-            for relationship in ranked
-            if relationship.get("edge_id") is not None
-        ),
-        default=None,
-    )
+    # relationship_key and edge_id must describe the same underlying decision, so
+    # both come from the highest-ranked member rather than from different rows.
+    primary["edge_id"] = ranked[0].get("edge_id")
     primary["type"] = unique_join(relationship.get("type") for relationship in ranked)
     primary["product"] = unique_join(relationship.get("product") for relationship in ranked)
     primary["source"] = unique_join(relationship.get("source") for relationship in ranked)
@@ -284,6 +282,15 @@ def summarize_company_relationships(company):
         "freshness_score": freshness_score,
     }
 
+def publishable_file_mode(path):
+    """Keep an existing file's permissions, otherwise 0644 minus the process umask."""
+    try:
+        return os.stat(path).st_mode & 0o777
+    except FileNotFoundError:
+        current_umask = os.umask(0)
+        os.umask(current_umask)
+        return 0o666 & ~current_umask
+
 def write_json_atomic(path, payload):
     """Write JSON via a temp file and rename so a failure never leaves a truncated artifact."""
     directory = os.path.dirname(os.path.abspath(path))
@@ -293,6 +300,8 @@ def write_json_atomic(path, payload):
         with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
             json.dump(payload, handle, indent=2, allow_nan=False)
             handle.write("\n")
+        # mkstemp creates 0600; a published artifact must keep world-readable bits.
+        os.chmod(temporary_path, publishable_file_mode(path))
         os.replace(temporary_path, path)
     except Exception:
         try:
@@ -497,6 +506,7 @@ def annotate_dashboard_data(dashboard_data, history_path=HISTORY_PATH):
         "unique_links": len(unique_relationships),
         "approved_links": unique_count("approved"),
         "pending_links": unique_count("pending"),
+        "rejected_links": unique_count("rejected"),
         "linked_companies": linked_companies,
     }
     dashboard_data["investor_metrics"] = {
@@ -558,6 +568,13 @@ def annotate_dashboard_data(dashboard_data, history_path=HISTORY_PATH):
         "relationship_snapshot": current_snapshot,
     }
     return dashboard_data
+
+PLACEHOLDER_VALUES = {"", "none", "null", "n/a", "uncategorized", "pending update"}
+
+def displayable(value, fallback="N/A"):
+    """Yahoo returns the literal string "none" for uncovered names; never publish it."""
+    text = str(value or "").strip()
+    return fallback if text.lower() in PLACEHOLDER_VALUES else text
 
 def is_ignored_sector(node):
     sector = node.sector if node.sector else "Uncategorized"
@@ -704,7 +721,7 @@ def export_to_json():
                 "id": node.id,
                 "name": node.name,
                 "ticker": node.ticker,
-                "industry": node.industry or "N/A",
+                "industry": displayable(node.industry),
                 "price": clean_num(node.current_price),
                 "change": clean_num(node.percent_change) or 0.0,
                 "market_cap": clean_num(node.market_cap),
@@ -718,8 +735,8 @@ def export_to_json():
                 "revenue": clean_num(node.total_revenue),
                 "margin": clean_num(node.gross_margin),
                 "target_price": clean_num(node.target_price),
-                "recommendation": node.recommendation or "N/A",
-                "ceo": node.ceo_name or "N/A",
+                "recommendation": displayable(node.recommendation),
+                "ceo": displayable(node.ceo_name),
                 "employees": node.employees,
                 "summary": node.business_summary or "No summary available.",
                 "last_updated": node.last_updated.strftime('%Y-%m-%d') if node.last_updated else "N/A",

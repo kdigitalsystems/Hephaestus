@@ -30,10 +30,13 @@ Disable individual source groups:
 ```bash
 HEPHAESTUS_USE_SEC_SOURCE=0 python backend/auto_discover_edges.py --limit 5
 HEPHAESTUS_USE_SEC_EXHIBITS=0 python backend/auto_discover_edges.py --limit 5
+HEPHAESTUS_USE_CONFIGURED_SOURCE_URLS=0 python backend/auto_discover_edges.py --limit 5
 HEPHAESTUS_USE_IR_SOURCES=0 python backend/auto_discover_edges.py --limit 5
 HEPHAESTUS_USE_PROCUREMENT_SOURCE=0 python backend/auto_discover_edges.py --limit 5
 HEPHAESTUS_USE_REGULATORY_SOURCE=0 python backend/auto_discover_edges.py --limit 5
 ```
+
+Configured and IR URLs must be public `http(s)` origins; localhost, private, link-local, and metadata addresses are refused, and redirects to them are discarded. Pages that contain no supply-chain vocabulary at all are dropped rather than published as evidence sections.
 
 Enable optional article fetching:
 

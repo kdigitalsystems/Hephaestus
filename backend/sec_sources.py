@@ -19,8 +19,11 @@ DEFAULT_USER_AGENT = os.environ.get(
     "HephaestusTerminal/1.0 research@saqibdesktop.local",
 )
 DEFAULT_FORMS = ("10-K", "20-F", "40-F", "10-Q")
-EXHIBIT_FORMS = ("8-K", "10-K", "10-Q", "20-F", "40-F")
-FORM_PRIORITY = {form: index for index, form in enumerate(DEFAULT_FORMS)}
+# Annual reports first: issuers file 8-Ks so often that listing them first consumed the
+# whole filing budget, and 8-K exhibits are press releases rather than contracts.
+EXHIBIT_FORMS = ("10-K", "20-F", "40-F", "10-Q", "8-K")
+# Inline-XBRL filings can exceed 30 MB; only the first few MB are needed for windows.
+MAX_DOCUMENT_BYTES = int(os.environ.get("HEPHAESTUS_MAX_DOCUMENT_BYTES", str(6 * 1024 * 1024)))
 SUPPLY_CHAIN_TERMS = (
     "customer",
     "customers",
@@ -98,14 +101,21 @@ def recent_filings(cik, forms=DEFAULT_FORMS, limit=2, timeout=20):
     url = f"{SEC_BASE_URL}/submissions/CIK{str(cik).zfill(10)}.json"
     response = requests.get(url, headers=sec_headers(), timeout=timeout)
     response.raise_for_status()
-    recent = response.json().get("filings", {}).get("recent", {})
+    recent = response.json().get("filings", {}).get("recent", {}) or {}
+    form_list = list(recent.get("form") or [])
+    accessions = list(recent.get("accessionNumber") or [])
+    documents = list(recent.get("primaryDocument") or [])
+    dates = list(recent.get("filingDate") or [])
     filings_by_form = {form: [] for form in forms}
-    for index, form in enumerate(recent.get("form", [])):
+    # The parallel arrays are indexed together; a missing or shorter array must not
+    # raise IndexError and silently drop the whole SEC source for a company.
+    for index in range(min(len(form_list), len(accessions), len(documents))):
+        form = form_list[index]
         if form not in forms:
             continue
-        accession = recent.get("accessionNumber", [])[index]
-        primary_doc = recent.get("primaryDocument", [])[index]
-        filing_date = recent.get("filingDate", [None])[index]
+        accession = accessions[index]
+        primary_doc = documents[index]
+        filing_date = dates[index] if index < len(dates) else None
         if not accession or not primary_doc:
             continue
         filings_by_form[form].append(
@@ -150,7 +160,8 @@ def filing_index_url(cik, accession):
 
 def html_to_text(html):
     if BeautifulSoup is None:
-        text = re.sub(r"<(script|style|ix:header|ix:hidden)\b.*?</\1>", " ", html, flags=re.IGNORECASE | re.DOTALL)
+        text = re.sub(r"<!--.*?-->", " ", html, flags=re.DOTALL)
+        text = re.sub(r"<(script|style|ix:header|ix:hidden)\b.*?</\1>", " ", text, flags=re.IGNORECASE | re.DOTALL)
         text = re.sub(r"<[^>]+>", " ", text)
         text = unescape(text)
         return re.sub(r"\s+", " ", text).strip()
@@ -158,12 +169,50 @@ def html_to_text(html):
     soup = BeautifulSoup(html, "html.parser")
     for tag in soup(["script", "style", "ix:header", "ix:hidden"]):
         tag.decompose()
+    # get_text() already decodes entities; unescaping again would turn escaped
+    # markup in the filing text back into live markup.
     text = soup.get_text(" ")
-    text = unescape(text)
     return re.sub(r"\s+", " ", text).strip()
 
 
-def relevant_windows(text, terms=SUPPLY_CHAIN_TERMS, window=650, max_chars=5000):
+def decode_body(body, content_type=""):
+    """Decode a response body without requests' ISO-8859-1 default for charset-less HTML."""
+    match = re.search(r"charset=([\w.\-]+)", str(content_type or ""), re.IGNORECASE)
+    if match:
+        try:
+            return body.decode(match.group(1), errors="replace")
+        except LookupError:
+            pass
+    try:
+        return body.decode("utf-8")
+    except UnicodeDecodeError:
+        return body.decode("cp1252", errors="replace")
+
+
+def read_response_text(response, max_bytes=MAX_DOCUMENT_BYTES):
+    """Read at most max_bytes from a streamed response and decode it."""
+    chunks = []
+    total = 0
+    for chunk in response.iter_content(chunk_size=65536):
+        if not chunk:
+            continue
+        chunks.append(chunk)
+        total += len(chunk)
+        if total >= max_bytes:
+            break
+    return decode_body(b"".join(chunks)[:max_bytes], response.headers.get("content-type", ""))
+
+
+def fetch_document_text(url, headers, timeout, max_bytes=MAX_DOCUMENT_BYTES):
+    response = requests.get(url, headers=headers, timeout=timeout, stream=True)
+    try:
+        response.raise_for_status()
+        return read_response_text(response, max_bytes)
+    finally:
+        response.close()
+
+
+def relevant_windows(text, terms=SUPPLY_CHAIN_TERMS, window=650, max_chars=5000, require_match=False):
     lowered = text.lower()
     spans = []
     for term in terms:
@@ -177,7 +226,9 @@ def relevant_windows(text, terms=SUPPLY_CHAIN_TERMS, window=650, max_chars=5000)
             start = index + len(term)
 
     if not spans:
-        return text[:max_chars]
+        # Filings are worth keeping even without a term hit; web pages are not, or a
+        # cookie banner becomes a full evidence section.
+        return "" if require_match else text[:max_chars]
 
     spans.sort()
     merged = []
@@ -198,13 +249,12 @@ def relevant_windows(text, terms=SUPPLY_CHAIN_TERMS, window=650, max_chars=5000)
             break
         chunks.append(chunk[:remaining])
         total += len(chunks[-1])
-    return "\n...\n".join(chunks)
+    # The separators were never budgeted; enforce the cap on the joined result.
+    return "\n...\n".join(chunks)[:max_chars]
 
 
 def fetch_filing_text(filing, timeout=30):
-    response = requests.get(filing["url"], headers=sec_archive_headers(), timeout=timeout)
-    response.raise_for_status()
-    return html_to_text(response.text)
+    return html_to_text(fetch_document_text(filing["url"], sec_archive_headers(), timeout))
 
 
 def fetch_filing_index(filing, timeout=20):
@@ -250,9 +300,7 @@ def exhibit_documents(filing, index_payload=None, limit=4):
 
 
 def fetch_exhibit_text(exhibit, timeout=25):
-    response = requests.get(exhibit["url"], headers=sec_archive_headers(), timeout=timeout)
-    response.raise_for_status()
-    return html_to_text(response.text)
+    return html_to_text(fetch_document_text(exhibit["url"], sec_archive_headers(), timeout))
 
 
 def get_sec_supply_chain_text(ticker, company_name="", filing_limit=2, max_chars=5500):

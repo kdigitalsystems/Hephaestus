@@ -245,6 +245,32 @@ def test_prune_history_never_drops_unresolved_predictions_before_maturity():
     assert "old-0" not in ids and f"old-{HISTORY_RETENTION_LIMIT - 1}" in ids
 
 
+def test_prune_history_keeps_a_calibration_corpus_when_unresolved_entries_dominate():
+    from predictions import MIN_RESOLVED_HISTORY, calibration_from_history
+
+    now = datetime(2026, 6, 1, tzinfo=timezone.utc)
+    resolved = [
+        {"prediction_id": f"old-{index}", "outcome": "correct", "generated_at": "2026-01-01T00:00:00+00:00", "connection_paths": [{"relationship_type": "Customer"}]}
+        for index in range(3000)
+    ]
+    unresolved = [
+        {"prediction_id": f"open-{index}", "generated_at": "2026-05-20T00:00:00+00:00", "horizon_days": 30}
+        for index in range(4000)
+    ]
+
+    retained = prune_history(resolved + unresolved, now)
+
+    assert sum(1 for entry in retained if entry.get("outcome")) == MIN_RESOLVED_HISTORY
+    assert sum(1 for entry in retained if not entry.get("outcome")) == 4000
+    assert calibration_from_history(retained)["resolved_predictions"] == MIN_RESOLVED_HISTORY
+
+
+def test_scenario_parser_skips_an_unterminated_brace_before_the_answer():
+    response = '{"broken": "x\n{"scenario_summary": "x", "bull_case": "y", "bear_case": "z"}'
+
+    assert parse_ollama_scenario(response) == {"scenario_summary": "x", "bull_case": "y", "bear_case": "z"}
+
+
 def test_retrieval_tolerates_null_evaluated_at():
     prediction = {"ticker": "SUP", "sector": "Technology", "connection_paths": [{"relationship_type": "Customer"}]}
     history = [

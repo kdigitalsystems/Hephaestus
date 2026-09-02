@@ -1,4 +1,5 @@
 import json
+import re
 import ollama
 from pydantic import BaseModel, Field, ValidationError
 from typing import List, Optional
@@ -20,6 +21,23 @@ class Dependency(BaseModel):
 
 class ExtractionResult(BaseModel):
     dependencies: List[Dependency]
+
+
+TEXT_FIELDS = ("source_company", "target_company", "dependency_type", "product", "evidence_excerpt")
+
+
+def clean_model_text(value):
+    """Undo the double escaping small models emit inside JSON strings.
+
+    A model that writes "Apple\\u2019s" or "GM\\'s" inside an already-JSON-encoded
+    string leaves literal backslash sequences in the parsed value, which were then
+    published verbatim.
+    """
+    if not isinstance(value, str):
+        return value
+    text = re.sub(r"\\u([0-9a-fA-F]{4})", lambda match: chr(int(match.group(1), 16)), value)
+    text = text.replace("\\'", "'").replace('\\"', '"').replace("\\n", " ").replace("\\t", " ")
+    return " ".join(text.split())
 
 def extract_dependencies(text: str, target_name: str = "the target company", target_ticker: str = "", model_name: str = "llama3.1:8b-instruct-q8_0") -> dict:
     """
@@ -89,6 +107,8 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
     dependencies = []
     rejected = 0
     for item in items:
+        if isinstance(item, dict):
+            item = {key: clean_model_text(value) if key in TEXT_FIELDS else value for key, value in item.items()}
         try:
             dependencies.append(Dependency.model_validate(item).model_dump())
         except ValidationError:

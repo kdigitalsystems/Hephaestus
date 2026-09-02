@@ -46,8 +46,14 @@ class Node(Base):
     metadata_json = Column(String, nullable=True) 
     last_updated = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
-    supplied_by = relationship("Edge", foreign_keys="[Edge.target_id]", back_populates="target_node")
-    supplies_to = relationship("Edge", foreign_keys="[Edge.source_id]", back_populates="source_node")
+    # Deleting a company must remove its edges rather than leave orphans or fail on
+    # the NOT NULL foreign keys.
+    supplied_by = relationship(
+        "Edge", foreign_keys="[Edge.target_id]", back_populates="target_node", cascade="all, delete-orphan"
+    )
+    supplies_to = relationship(
+        "Edge", foreign_keys="[Edge.source_id]", back_populates="source_node", cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return f"<Node(name='{self.name}', ticker='{self.ticker}')>"
@@ -58,15 +64,17 @@ class Edge(Base):
         UniqueConstraint('source_id', 'target_id', 'dependency_type', name='uq_edge_dependency'),
     )
     id = Column(Integer, primary_key=True, autoincrement=True)
-    source_id = Column(Integer, ForeignKey('nodes.id'), nullable=False)
-    target_id = Column(Integer, ForeignKey('nodes.id'), nullable=False)
+    # The unique constraint only covers source_id as a leading column; customer-side
+    # lookups and status filters need their own indexes to avoid full scans on export.
+    source_id = Column(Integer, ForeignKey('nodes.id'), nullable=False, index=True)
+    target_id = Column(Integer, ForeignKey('nodes.id'), nullable=False, index=True)
     dependency_type = Column(String, nullable=False)
     product = Column(String, nullable=True)
     confidence_score = Column(Float, nullable=True)
     source_url = Column(String, nullable=True)
     source_title = Column(String, nullable=True)
     evidence_excerpt = Column(Text, nullable=True)
-    review_status = Column(String, nullable=False, default="pending")
+    review_status = Column(String, nullable=False, default="pending", index=True)
     review_note = Column(Text, nullable=True)
     reviewed_at = Column(DateTime, nullable=True)
     last_verified = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

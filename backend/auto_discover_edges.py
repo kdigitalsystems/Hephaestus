@@ -14,7 +14,13 @@ from parser import extract_dependencies
 from yahooquery import search as yq_search, Ticker
 from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_text
 from additional_sources import get_additional_supply_chain_text
-from evidence_quality import has_non_supply_relationship, has_usable_evidence, is_role_label
+from evidence_quality import (
+    has_non_supply_relationship,
+    has_usable_evidence,
+    is_customer_role_label,
+    is_role_label,
+    is_supplier_role_label,
+)
 
 # --- CONFIGURATION ---
 wikipedia.set_user_agent("HephaestusTerminal/1.0 (research@saqibdesktop.local)")
@@ -88,14 +94,22 @@ def excerpt_supported_by_source(excerpt, source_text):
     return fuzz.partial_ratio(needle, haystack) >= EXCERPT_MATCH_MIN_SCORE
 
 
+SOURCE_HEADER_URL_PATTERN = re.compile(r"^SOURCE:.*?(https?://[^\s()]+)", re.MULTILINE)
+
+
+def collector_source_urls(source_text):
+    """URLs that appear in our own SOURCE header lines, not in scraped page bodies."""
+    return set(SOURCE_HEADER_URL_PATTERN.findall(str(source_text or "")))
+
+
 def verified_source_url(url, source_text):
     """Only keep a provenance URL that one of our collectors actually emitted.
 
     Scraped pages can contain text shaped like a SOURCE header; a URL the model did
     not copy from our own headers would otherwise be published as trusted provenance.
     """
-    url = str(url or "").strip()
-    if url.startswith(("http://", "https://")) and url in (source_text or ""):
+    url = str(url or "").strip().rstrip(".,;)")
+    if url.startswith(("http://", "https://")) and url in collector_source_urls(source_text):
         return url
     return None
 
@@ -120,14 +134,21 @@ def is_speculative_dependency(*labels):
     return any(marker in label_text for marker in speculative_markers)
 
 def normalize_dependency(dep):
-    """Keep edge direction as supplier/provider -> customer/receiver."""
-    dep = dict(dep)
-    if not is_reversed_role_dependency(dep.get("dependency_type")):
-        return dep
+    """Keep edge direction as supplier/provider -> customer/receiver.
 
-    dep["source_company"], dep["target_company"] = dep.get("target_company"), dep.get("source_company")
-    dep["source_ticker"], dep["target_ticker"] = dep.get("target_ticker"), dep.get("source_ticker")
-    dep["dependency_type"] = "Supply Relationship"
+    A customer-side role label ("Customer") almost always means the model emitted
+    customer -> supplier, so the endpoints are swapped. A supplier-side role label
+    ("Supplier", "Service Provider") is wrong in either direction about as often,
+    so the direction is left for the reviewer; only the useless label is replaced.
+    """
+    dep = dict(dep)
+    dependency_type = dep.get("dependency_type")
+    if is_customer_role_label(dependency_type):
+        dep["source_company"], dep["target_company"] = dep.get("target_company"), dep.get("source_company")
+        dep["source_ticker"], dep["target_ticker"] = dep.get("target_ticker"), dep.get("source_ticker")
+        dep["dependency_type"] = "Supply Relationship"
+    elif is_supplier_role_label(dependency_type):
+        dep["dependency_type"] = "Supply Relationship"
     return dep
 
 def upsert_pending_edge(session, source_node, target_node, dep):
@@ -189,21 +210,41 @@ def upsert_pending_edge(session, source_node, target_node, dep):
             return existing, False
         raise
 
+# Common trade names that share no words with the listed company name.
+KNOWN_NAME_ALIASES = {
+    "tsmc": {"TSM"},
+    "google": {"GOOG", "GOOGL"},
+    "facebook": {"META"},
+    "foxconn": {"HNHPF", "HNHAF"},
+    "3m": {"MMM"},
+}
+
+
 def name_consistent(node, company_name):
     """Reject a ticker match whose company name clearly names a different business.
 
-    Single-word names are often aliases the fuzzy score cannot verify (TSMC, Foxconn,
-    Google), so only multi-word names are checked.
+    Accepts a fuzzy name match, a known trade-name alias, or an all-caps acronym that
+    matches the company's initials (TSMC, IBM, AMD). Anything else - including
+    "Apple Inc." paired with Microsoft's ticker - is rejected.
     """
     if not node or not company_name:
         return True
-    expected = clean_company_name(str(company_name)).lower().strip()
+    raw = str(company_name).strip()
+    expected = clean_company_name(raw).lower().strip()
     actual = clean_company_name(str(node.name or "")).lower().strip()
     if not expected or not actual:
         return True
-    if " " not in expected and len(expected) <= 8:
+    if fuzz.token_set_ratio(expected, actual) >= NAME_MATCH_MIN_SCORE:
         return True
-    return fuzz.token_set_ratio(expected, actual) >= NAME_MATCH_MIN_SCORE
+    ticker = str(node.ticker or "").upper()
+    if ticker in KNOWN_NAME_ALIASES.get(expected, set()):
+        return True
+    if raw.isupper() and 2 <= len(raw) <= 6:
+        if raw == ticker:
+            return True
+        initials = "".join(word[0] for word in re.findall(r"[A-Za-z]+", str(node.name or ""))).lower()
+        return raw.lower() in initials
+    return False
 
 
 def resolve_counterparty(session, ticker, company_name):
@@ -284,7 +325,8 @@ class IntelGatherer:
     @staticmethod
     def wiki_section(content, section, max_chars=1500):
         """Return the body of a Wikipedia section by heading, not by first word occurrence."""
-        heading = re.search(rf"^=+\s*{re.escape(section)}\s*=+\s*$", content, re.M | re.I)
+        # Real headings are often compound ("== Operations and structure ==").
+        heading = re.search(rf"^=+\s*{re.escape(section)}\b[^=\n]*=+\s*$", content, re.M | re.I)
         if not heading:
             return ""
         start = heading.end()

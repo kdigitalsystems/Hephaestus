@@ -11,52 +11,71 @@ def module_payload(ticker_data, name):
     return value if isinstance(value, dict) else {}
 
 
-def apply_ticker_modules(node, ticker_data):
-    """Update only the fields whose Yahoo module was actually returned.
+NO_RECOMMENDATION_VALUES = {"", "none", "null", "n/a"}
+
+
+def ticker_updates(ticker_data):
+    """Compute the fields to update from the Yahoo modules that were actually returned.
 
     A missing module must leave the previously stored values in place; otherwise a
-    partial response wipes sector/industry/financials for a whole batch.
+    partial response wipes sector/industry/financials for a whole batch. Values are
+    collected first and assigned together so a failure never persists a half-updated
+    company.
     """
     p = module_payload(ticker_data, 'price')
     s = module_payload(ticker_data, 'summaryDetail')
     prof = module_payload(ticker_data, 'assetProfile')
     fin = module_payload(ticker_data, 'financialData')
     stat = module_payload(ticker_data, 'defaultKeyStatistics')
+    updates = {}
 
     if 'regularMarketPrice' in p:
-        node.current_price = p.get('regularMarketPrice')
-        node.market_cap = p.get('marketCap')
+        updates['current_price'] = p.get('regularMarketPrice')
+        updates['market_cap'] = p.get('marketCap')
         open_price = p.get('regularMarketOpen', 1)
         current = p.get('regularMarketPrice', 0)
         if open_price and current:
-            node.percent_change = ((current - open_price) / open_price) * 100
+            updates['percent_change'] = ((current - open_price) / open_price) * 100
 
     if s:
-        node.dividend_yield = f"{s.get('dividendYield', 0) * 100:.2f}%" if s.get('dividendYield') else "N/A"
-        node.trailing_pe = s.get('trailingPE')
-        node.forward_pe = s.get('forwardPE')
-        node.fifty_two_week_high = s.get('fiftyTwoWeekHigh')
-        node.fifty_two_week_low = s.get('fiftyTwoWeekLow')
+        updates['dividend_yield'] = f"{s.get('dividendYield', 0) * 100:.2f}%" if s.get('dividendYield') else "N/A"
+        updates['trailing_pe'] = s.get('trailingPE')
+        updates['forward_pe'] = s.get('forwardPE')
+        updates['fifty_two_week_high'] = s.get('fiftyTwoWeekHigh')
+        updates['fifty_two_week_low'] = s.get('fiftyTwoWeekLow')
 
     if stat:
-        node.enterprise_value = stat.get('enterpriseValue')
-        node.price_to_book = stat.get('priceToBook')
+        updates['enterprise_value'] = stat.get('enterpriseValue')
+        updates['price_to_book'] = stat.get('priceToBook')
 
     if fin:
-        node.total_revenue = fin.get('totalRevenue')
-        node.gross_margin = fin.get('grossMargins')
-        node.target_price = fin.get('targetMeanPrice')
-        if fin.get('recommendationKey'):
-            node.recommendation = str(fin.get('recommendationKey')).replace('_', ' ').title()
+        # Revenue is reported in the filing currency while market cap is in USD;
+        # storing KRW or ARS revenue next to a USD cap makes every ratio meaningless.
+        financial_currency = str(fin.get('financialCurrency') or 'USD').upper()
+        updates['total_revenue'] = fin.get('totalRevenue') if financial_currency == 'USD' else None
+        updates['gross_margin'] = fin.get('grossMargins')
+        updates['target_price'] = fin.get('targetMeanPrice')
+        recommendation = str(fin.get('recommendationKey') or '').strip()
+        # Yahoo returns the literal string "none" for uncovered names.
+        if recommendation.lower() not in NO_RECOMMENDATION_VALUES:
+            updates['recommendation'] = recommendation.replace('_', ' ').title()
+        else:
+            updates['recommendation'] = None
 
     if prof:
-        node.sector = prof.get('sector') or 'Uncategorized'
-        node.industry = prof.get('industry') or 'Uncategorized'
-        node.employees = prof.get('fullTimeEmployees')
-        node.business_summary = prof.get('longBusinessSummary')
+        updates['sector'] = prof.get('sector') or 'Uncategorized'
+        updates['industry'] = prof.get('industry') or 'Uncategorized'
+        updates['employees'] = prof.get('fullTimeEmployees')
+        updates['business_summary'] = prof.get('longBusinessSummary')
         officers = prof.get('companyOfficers') or []
         if officers and isinstance(officers[0], dict):
-            node.ceo_name = officers[0].get('name', 'N/A')
+            updates['ceo_name'] = officers[0].get('name', 'N/A')
+    return updates
+
+
+def apply_ticker_modules(node, ticker_data):
+    for field, value in ticker_updates(ticker_data).items():
+        setattr(node, field, value)
 
 
 def update_financial_metrics(limit=None):

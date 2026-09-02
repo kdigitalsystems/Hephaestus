@@ -77,6 +77,9 @@ jobs:
           node tests/check_app_behaviors.js
           node tests/check_sanitize_review_decisions.js
 
+      - name: Check committed review decisions are sanitized
+        run: node scripts/sanitize_review_decisions.js --check data/edge_review_decisions.json
+
       - name: Validate published dashboard data
         run: python backend/validate_dashboard_data.py
 

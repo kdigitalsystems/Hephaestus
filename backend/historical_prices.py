@@ -49,10 +49,11 @@ def historical_close_on_or_after(ticker: str, target_at: datetime) -> tuple[floa
         )
         rows = history.reset_index().to_dict("records")
     except Exception as exc:
-        # A provider failure must stay distinguishable from "no session yet" in the
-        # persisted status, and must not be silent in the run log.
+        # A provider failure must not be silent in the run log, and retrying the
+        # same lookup within one run only deepens the rate limiting that caused it.
         print(f"  [-] Historical close lookup failed for {ticker} @ {target_date}: {type(exc).__name__}: {exc}")
-        return None, "historical_close_unavailable"
+        _LOOKUP_CACHE[cache_key] = (None, "historical_close_unavailable")
+        return _LOOKUP_CACHE[cache_key]
 
     candidates = []
     for row in rows:

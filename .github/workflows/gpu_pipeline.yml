@@ -154,7 +154,9 @@ jobs:
           
           if ! git diff --cached --quiet; then
             git commit -m "Automated AI extraction: Update Supply Chain X-Ray"
-            git pull --rebase origin main
+            # A conflicting rebase must not be left half-applied on the self-hosted
+            # runner, or every later run fails at checkout.
+            git pull --rebase origin main || { git rebase --abort; echo "Rebase onto origin/main conflicted; aborted."; exit 1; }
             git push origin main
           else
             echo "No new edges discovered today. Skipping commit."

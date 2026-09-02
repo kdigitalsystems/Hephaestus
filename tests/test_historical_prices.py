@@ -92,3 +92,5 @@ def test_historical_close_is_explicit_when_provider_fails(monkeypatch):
 
     assert close is None
     assert source == "historical_close_unavailable"
+    # A provider failure is remembered for the run instead of retried per prediction.
+    assert historical_prices._LOOKUP_CACHE[("BASE", datetime(2026, 2, 1).date())] == (None, "historical_close_unavailable")

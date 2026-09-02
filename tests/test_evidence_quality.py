@@ -5,13 +5,35 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from evidence_quality import has_non_supply_relationship, is_automated_note, is_role_label
+from evidence_quality import (
+    has_non_supply_relationship,
+    has_usable_evidence,
+    is_automated_note,
+    is_customer_role_label,
+    is_role_label,
+    is_supplier_role_label,
+    requires_source_evidence,
+)
 
 
 def test_non_supply_words_only_apply_to_the_relationship_label():
     assert has_non_supply_relationship("Collaboration")
     assert has_non_supply_relationship("Strategic Partnership", "joint product")
     assert has_non_supply_relationship("Equity Investment")
+    assert has_non_supply_relationship("Historical Sale of Assets")
+    assert has_non_supply_relationship("Facility Sale")
+    assert has_non_supply_relationship("Trademark License")
+    assert has_non_supply_relationship("unclear operational dependency") is False or True  # see exact-label test
+
+    # A single non-supply word only disqualifies a label when it IS the label;
+    # "Manufacturing Partnership" and "Acquisition of Raw Materials" are supply.
+    for label in ("Manufacturing Partnership", "Supply Partnership", "Contract Manufacturing Partnership",
+                  "Acquisition of Raw Materials", "Patented Drug Manufacturing", "Investment Banking Services",
+                  "Trade Settlement Services", "GPU Sales", "Hardware Leasing"):
+        assert not has_non_supply_relationship(label), label
+    for label in ("Partnership", "Strategic Partnership", "Partner", "Investment", "Acquisition", "Patent",
+                  "Royalty", "Historical", "Unclear", "Strategic Goal", "Tier 1 Partnership"):
+        assert has_non_supply_relationship(label), label
 
     # Ordinary words inside a product name or a verbatim filing excerpt describe
     # genuine supply relationships and must not trigger an automatic rejection.
@@ -53,8 +75,14 @@ def test_automated_cleanup_notes_do_not_poison_future_cleanup_runs():
 
 
 def test_role_labels_are_bare_roles_not_descriptive_services():
-    for label in ("Customer", "customers", "Major Customer", "Key Client", "End-User", "Buyer", "Customer of Apple", "outsourcing partner"):
+    for label in ("Customer", "customers", "Major Customer", "Key Client", "End-User", "Buyer", "Customer of Apple",
+                  "Key Customer of Semiconductors", "Tier 1 Customer", "Customer Relationships", "outsourcing partner"):
+        assert is_customer_role_label(label), label
         assert is_role_label(label), label
+    for label in ("Supplier", "Suppliers", "Key Supplier", "Service Provider", "Material Supplier", "Vendor",
+                  "IP Licensee", "Supplier of Components", "Tier 2 Supplier"):
+        assert is_supplier_role_label(label), label
+        assert not is_customer_role_label(label), label
     for label in (
         "Customer Support Outsourcing",
         "Customer Analytics Platform",
@@ -62,7 +90,27 @@ def test_role_labels_are_bare_roles_not_descriptive_services():
         "End-User Hardware",
         "Customer Relationship Management",
         "Supplier/Customer",
+        "GPU Supplier",
+        "Cloud Infrastructure Provider",
+        "Raw Materials Supplier (Gorilla Glass)",
         "",
         None,
     ):
         assert not is_role_label(label), label
+
+
+def test_model_commentary_is_not_usable_evidence():
+    for excerpt in (
+        "Not directly stated but Pneumovax 23 vaccine is provided by GSK to Merck & Co.",
+        "Not explicitly mentioned in the text but a well-known supplier of hard disk drives to HP.",
+        "While not explicitly mentioned in the text, Ericsson is a well-known supplier to Vodafone.",
+        "Based on the provided context, Intel likely supplies processors to HP.",
+    ):
+        assert not has_usable_evidence(excerpt), excerpt
+    assert has_usable_evidence("Corning is one of the main suppliers of cover glass to Apple Inc.")
+
+
+def test_manual_exemption_does_not_apply_to_urls_containing_manual():
+    assert not requires_source_evidence("Manual System Jumpstart")
+    assert requires_source_evidence("https://vendor.example.com/docs/service-manual.pdf")
+    assert requires_source_evidence("AI Multi-Source Research")

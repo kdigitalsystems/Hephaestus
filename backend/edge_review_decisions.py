@@ -4,6 +4,7 @@ import os
 from datetime import datetime, timezone
 
 from sqlalchemy.exc import IntegrityError
+from thefuzz import fuzz
 
 from database import SessionLocal
 from models import Edge, Node
@@ -114,7 +115,9 @@ def apply_decision(session, decision):
             .all()
         )
         unreviewed = [candidate for candidate in candidates if (candidate.review_status or "pending") == "pending"]
-        if len(unreviewed) == 1:
+        # The same filing often yields several distinct relationships; only adopt the
+        # candidate that carries this decision's evidence, never a sibling.
+        if len(unreviewed) == 1 and same_evidence(unreviewed[0].evidence_excerpt, decision.get("evidence_excerpt")):
             edge = unreviewed[0]
 
     if not edge:
@@ -129,8 +132,27 @@ def apply_decision(session, decision):
     edge.evidence_excerpt = decision.get("evidence_excerpt")
     edge.review_status = decision["review_status"]
     edge.review_note = decision.get("review_note")
-    edge.reviewed_at = datetime.now(timezone.utc)
+    edge.reviewed_at = parse_reviewed_at(decision.get("reviewed_at")) or datetime.now(timezone.utc)
     return "applied"
+
+
+def same_evidence(left, right):
+    normalized_left = " ".join(str(left or "").lower().split())
+    normalized_right = " ".join(str(right or "").lower().split())
+    if not normalized_left or not normalized_right:
+        return normalized_left == normalized_right
+    return normalized_left == normalized_right or fuzz.ratio(normalized_left, normalized_right) >= 90
+
+
+def parse_reviewed_at(value):
+    """Replaying a decision must not reset when it was actually reviewed."""
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
 
 
 REVIEW_STATUS_RANK = {"approved": 2, "rejected": 1, "pending": 0}

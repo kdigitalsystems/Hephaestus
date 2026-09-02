@@ -1,22 +1,31 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 import re
 
+# Identify the project honestly instead of impersonating a desktop browser; the
+# source policy in docs/DATA_SOURCES.md rules out scraping pages that would block us.
+DEFAULT_USER_AGENT = os.environ.get(
+    "HEPHAESTUS_SOURCE_USER_AGENT",
+    "HephaestusTerminal/1.0 research@saqibdesktop.local",
+)
+MAX_ARTICLE_BYTES = 4 * 1024 * 1024
+
 def scrape_article(url: str) -> str:
     """
-    Fetches a web page and extracts the core text paragraphs, 
+    Fetches a web page and extracts the core text paragraphs,
     stripping away the HTML boilerplate.
     """
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    }
-    
+    headers = {"User-Agent": DEFAULT_USER_AGENT}
+
     try:
         print(f"Scraping: {url}")
         response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
-        
-        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Let BeautifulSoup sniff <meta charset>; response.text defaults to
+        # ISO-8859-1 when the server omits a charset and garbles UTF-8 names.
+        soup = BeautifulSoup(response.content[:MAX_ARTICLE_BYTES], 'html.parser')
         
         # Target paragraph tags which usually contain the meat of financial articles
         paragraphs = soup.find_all('p')

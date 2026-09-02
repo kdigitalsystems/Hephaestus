@@ -11,6 +11,13 @@ sys.path.insert(0, str(ROOT / "backend"))
 from db_health import database_status
 
 
+EDGES_SCHEMA = (
+    "CREATE TABLE edges (id INTEGER PRIMARY KEY, source_id INTEGER, target_id INTEGER, "
+    "dependency_type TEXT, product TEXT, source_url TEXT, source_title TEXT, evidence_excerpt TEXT, "
+    "review_status TEXT, review_note TEXT, reviewed_at DATETIME)"
+)
+
+
 def test_database_status_rejects_empty_file(tmp_path):
     db_path = tmp_path / "empty.db"
     db_path.write_bytes(b"")
@@ -47,11 +54,25 @@ def test_database_status_rejects_missing_tables(tmp_path):
     assert "missing table" in message
 
 
+def test_database_status_rejects_stale_edge_schema(tmp_path):
+    db_path = tmp_path / "stale.db"
+    with sqlite3.connect(db_path) as connection:
+        connection.execute("CREATE TABLE nodes (id INTEGER PRIMARY KEY)")
+        connection.execute("CREATE TABLE edges (id INTEGER PRIMARY KEY, source_id INTEGER, target_id INTEGER, dependency_type TEXT)")
+        connection.execute("INSERT INTO nodes (id) VALUES (1)")
+
+    ok, message = database_status(db_path, require_nodes=True)
+
+    assert ok is False
+    assert "missing edge column" in message
+    assert "review_status" in message
+
+
 def test_database_status_can_require_seeded_nodes(tmp_path):
     db_path = tmp_path / "ready.db"
     with sqlite3.connect(db_path) as connection:
         connection.execute("CREATE TABLE nodes (id INTEGER PRIMARY KEY)")
-        connection.execute("CREATE TABLE edges (id INTEGER PRIMARY KEY)")
+        connection.execute(EDGES_SCHEMA)
 
     ok, message = database_status(db_path, require_nodes=True)
     assert ok is False
@@ -69,7 +90,7 @@ def test_database_status_uses_a_bounded_sqlite_wait(monkeypatch, tmp_path):
     db_path = tmp_path / "ready.db"
     with sqlite3.connect(db_path) as connection:
         connection.execute("CREATE TABLE nodes (id INTEGER PRIMARY KEY)")
-        connection.execute("CREATE TABLE edges (id INTEGER PRIMARY KEY)")
+        connection.execute(EDGES_SCHEMA)
 
     original_connect = sqlite3.connect
     observed_timeouts = []

@@ -70,6 +70,57 @@ def test_manufacturing_partnership_in_filing_excerpt_is_not_hard_rejected():
     assert deterministic_review(candidate) is None
 
 
+def candidate_edge(source, target, evidence, source_url="AI Multi-Source Research", mirror=None):
+    source_node = SimpleNamespace(ticker=source[0], name=source[1], sector="Technology", industry="Semiconductors", supplies_to=[])
+    target_node = SimpleNamespace(ticker=target[0], name=target[1], sector="Technology", industry="Semiconductors", supplies_to=list(mirror or []))
+    return SimpleNamespace(
+        id=1,
+        source_id=10,
+        target_id=20,
+        source_url=source_url,
+        source_node=source_node,
+        target_node=target_node,
+        dependency_type="Components",
+        product="parts",
+        evidence_excerpt=evidence,
+        confidence_score=0.9,
+    )
+
+
+def test_evidence_that_names_neither_company_is_held_for_a_human():
+    vale_bhp = candidate_edge(("VALE", "Vale S.A."), ("BHP", "BHP Group Limited"), "The company's iron ore mines are primarily in Brazil.")
+    boston = candidate_edge(("BSX", "Boston Scientific Corporation"), ("IOT", "Samsara Inc."), "Samsara works with the cities of Boston and Chicago on fleet telematics.")
+    corning = candidate_edge(("GLW", "Corning Incorporated"), ("AAPL", "Apple Inc."), "Corning is one of the main suppliers of cover glass to Apple Inc.")
+    tsmc = candidate_edge(("TSM", "Taiwan Semiconductor Manufacturing Company Ltd."), ("AMD", "Advanced Micro Devices, Inc."), "TSMC fabricates the advanced node processors sold by AMD.")
+
+    assert deterministic_review(vale_bhp)["action"] == "pending"
+    assert deterministic_review(boston)["action"] == "pending"
+    assert deterministic_review(corning) is None
+    assert deterministic_review(tsmc) is None
+
+
+def test_reciprocal_of_an_approved_edge_is_held_not_approved():
+    mirror = [SimpleNamespace(id=99, target_id=10, review_status="approved")]
+    edge = candidate_edge(("GM", "General Motors Company"), ("MP", "MP Materials Corp."), "MP Materials signed a long-term agreement with General Motors to provide magnets.", mirror=mirror)
+
+    result = deterministic_review(edge)
+
+    assert result["action"] == "pending"
+    assert "#99" in result["reason"]
+
+
+def test_update_metadata_never_stores_a_bare_role_label():
+    from review_edges_with_ollama import update_metadata
+
+    edge = SimpleNamespace(dependency_type="Supplier", product="", confidence_score=0.5, review_note="", reviewed_at=None)
+    update_metadata(edge, {"relationship_type": "Vendor", "product": "wafers", "confidence": 0.9, "reason": "ok"})
+    assert edge.dependency_type == "Supply Relationship"
+
+    edge = SimpleNamespace(dependency_type="Foundry Services", product="", confidence_score=0.5, review_note="", reviewed_at=None)
+    update_metadata(edge, {"relationship_type": "Supplier", "product": "wafers", "confidence": 0.9, "reason": "ok"})
+    assert edge.dependency_type == "Foundry Services"
+
+
 def test_supplied_by_rationale_keeps_a_correct_reverse_vote():
     candidate = SimpleNamespace(
         source_node=SimpleNamespace(ticker="AMD", name="Advanced Micro Devices, Inc."),

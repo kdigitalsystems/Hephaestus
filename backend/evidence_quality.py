@@ -5,13 +5,33 @@ from __future__ import annotations
 import re
 
 
+# Phrases that mark an excerpt as model commentary rather than a quote from the
+# collected source text.
 EVIDENCE_PLACEHOLDERS = (
     "not found in source text",
     "no evidence",
     "not explicitly stated",
+    "not explicitly mentioned",
+    "not directly stated",
+    "not directly mentioned",
+    "not mentioned in the text",
+    "not stated in the text",
+    "no direct mention",
+    "no specific mention",
     "source text does not",
+    "the text does not",
+    "the provided text",
+    "based on the provided",
+    "the text states",
+    "the text mentions",
     "could not find",
     "unable to find",
+    "well-known supplier",
+    "well known supplier",
+    "well-known customer",
+    "well known customer",
+    "is known to supply",
+    "general knowledge",
 )
 
 # Phrases that signal a non-supply relationship wherever they appear: relationship
@@ -41,69 +61,115 @@ NON_SUPPLY_EVIDENCE_MARKERS = (
     "unknown operational supply chain",
 )
 
-# Relationship labels that describe something other than an operational supply
-# relationship. Many of these words are ordinary in product names ("Collaboration
-# software") and in filing prose ("we acquired components from"), so they are only
-# matched against the relationship label itself, never against products, evidence,
-# or reviewer rationale.
-NON_SUPPLY_LABEL_MARKERS = NON_SUPPLY_EVIDENCE_MARKERS + (
-    "acquisition",
-    "acquired",
-    "acquires",
+# Multi-word phrases that make a relationship label non-supply wherever they appear
+# in the label ("Historical Sale of Assets", "Equity Stake in ...").
+NON_SUPPLY_LABEL_PHRASES = NON_SUPPLY_EVIDENCE_MARKERS + (
     "asset purchase",
     "asset sale",
-    "banned",
+    "brand license",
+    "business sale",
     "business unit purchase",
     "co-commercialization",
-    "collaboration",
-    "competition",
     "competitor",
+    "division sale",
+    "equity investment",
     "equity stake",
-    "funding",
+    "facility sale",
+    "formation of",
+    "franchise agreement",
     "historical acquisition",
-    "investment",
-    "investor",
     "joint exploration agreement",
     "joint vaccine",
     "joint venture",
+    "landlord",
     "license agreement",
     "licensing agreement",
     "merged company",
     "merger",
     "option deal",
-    "ownership",
     "parent company of",
-    "partnership",
-    "patent",
-    "prohibited",
-    "rights to",
-    "royalty",
+    "patent dispute",
+    "patent license",
+    "patent licensing",
+    "property owner",
+    "royalty agreement",
+    "royalty stream",
+    "sale of",
     "sale_of_assets",
-    "settlement",
     "shareholder",
     "sold its subsidiary",
     "spin-off",
     "spinoff",
     "spun off",
     "spun-off",
+    "trademark license",
     "transfer of rights",
     "zero emission vehicle credit",
 )
 
+# Single words that describe a non-supply relationship only when they ARE the label
+# (after generic qualifiers are removed). "Partnership" is not a supply relationship;
+# "Manufacturing Partnership" is, so these are never matched as substrings.
+NON_SUPPLY_EXACT_LABELS = frozenset({
+    "acquisition",
+    "acquisitions",
+    "acquired",
+    "acquires",
+    "alliance",
+    "banned",
+    "collaboration",
+    "collaborations",
+    "competition",
+    "funding",
+    "historical",
+    "investment",
+    "investments",
+    "investor",
+    "investors",
+    "news",
+    "ownership",
+    "partner",
+    "partners",
+    "partnership",
+    "partnerships",
+    "patent",
+    "patents",
+    "prohibited",
+    "royalty",
+    "royalties",
+    "settlement",
+    "strategic goal",
+    "unclear",
+    "unknown",
+})
+
+# Leading words that do not change what a label means ("Strategic Partnership",
+# "Key Customer", "Tier 1 Supplier").
+LABEL_QUALIFIERS = frozenset({
+    "a", "an", "the", "key", "major", "primary", "main", "largest", "strategic", "significant",
+    "direct", "important", "top", "core", "critical", "long-term", "long", "term", "historical",
+    "former", "past", "previous", "current", "ongoing", "potential", "commercial", "business",
+    "corporate", "technology", "global", "preferred", "exclusive", "tier",
+})
+
 # Bare role labels mean the extractor described who the counterparty is instead of
-# what is supplied. They usually indicate a customer -> supplier direction error.
+# what is supplied. Customer-side labels usually mean the edge was emitted
+# customer -> supplier and should be swapped. Supplier-side labels are just as
+# unreliable but in either direction, so they are only flagged for review.
 # Descriptive labels that merely contain a role word ("Customer Support Outsourcing",
-# "End-User Hardware") describe a real product or service and are not role labels.
-ROLE_LABELS = frozenset({
+# "GPU Supplier") name a real product or service and are not role labels.
+CUSTOMER_ROLE_LABELS = frozenset({
     "buyer",
     "buyers",
     "client",
     "clients",
     "client relationship",
+    "client relationships",
     "customer",
     "customers",
     "customer base",
     "customer relationship",
+    "customer relationships",
     "end user",
     "end users",
     "end-user",
@@ -114,10 +180,29 @@ ROLE_LABELS = frozenset({
     "purchaser",
     "purchasers",
 })
-ROLE_LABEL_QUALIFIERS = frozenset({
-    "a", "the", "key", "major", "primary", "main", "largest", "strategic", "significant", "direct", "important", "top",
+SUPPLIER_ROLE_LABELS = frozenset({
+    "supplier",
+    "suppliers",
+    "provider",
+    "providers",
+    "vendor",
+    "vendors",
+    "service provider",
+    "service providers",
+    "solution provider",
+    "solutions provider",
+    "material supplier",
+    "materials supplier",
+    "component supplier",
+    "components supplier",
+    "parts supplier",
+    "sole supplier",
+    "licensee",
+    "licensor",
+    "ip licensee",
+    "ip licensor",
 })
-ROLE_LABEL_OF_PATTERN = re.compile(r"^(?:customer|client|buyer|purchaser)s?\s+(?:of|for)\s+\S.*$")
+ROLE_LABEL_OF_PATTERN = re.compile(r"^(?:customer|client|buyer|purchaser|supplier|vendor|provider)s?\s+(?:of|for|to)\s+\S.*$")
 
 AUTOMATED_NOTE_PREFIXES = ("automated cleanup:", "automated evidence cleanup:")
 
@@ -127,11 +212,23 @@ def _compile(markers):
 
 
 _EVIDENCE_PATTERNS = _compile(NON_SUPPLY_EVIDENCE_MARKERS)
-_LABEL_PATTERNS = _compile(NON_SUPPLY_LABEL_MARKERS)
+_LABEL_PATTERNS = _compile(NON_SUPPLY_LABEL_PHRASES)
 
 
 def normalize_text(value: object) -> str:
     return " ".join(str(value or "").lower().split())
+
+
+def normalize_label(value: object) -> str:
+    label = normalize_text(value).replace("_", " ")
+    return re.sub(r"[^a-z0-9\s/&-]", "", label).strip()
+
+
+def strip_label_qualifiers(label: str) -> str:
+    words = label.split()
+    while words and (words[0] in LABEL_QUALIFIERS or re.fullmatch(r"\d+", words[0])):
+        words.pop(0)
+    return " ".join(words)
 
 
 def _matches_any(text: str, patterns) -> bool:
@@ -144,7 +241,12 @@ def is_ai_source(source: object) -> bool:
 
 
 def requires_source_evidence(source: object) -> bool:
-    return "manual" not in str(source or "").strip().lower()
+    """Only curated manual provenance labels are exempt; a URL that happens to contain
+    the word "manual" (…/service-manual.pdf) is still AI-derived evidence."""
+    label = str(source or "").strip().lower()
+    if label.startswith(("http://", "https://")):
+        return True
+    return "manual" not in label
 
 
 def has_usable_evidence(value: object, minimum_length: int = 20) -> bool:
@@ -164,9 +266,19 @@ def is_automated_note(note: object) -> bool:
     return normalize_text(note).startswith(AUTOMATED_NOTE_PREFIXES)
 
 
+def is_non_supply_label(dependency_type: object) -> bool:
+    label = normalize_label(dependency_type)
+    if not label:
+        return False
+    if _matches_any(label, _LABEL_PATTERNS):
+        return True
+    # Check the raw label too: "Historical" is both a qualifier and, alone, a non-supply label.
+    return label in NON_SUPPLY_EXACT_LABELS or strip_label_qualifiers(label) in NON_SUPPLY_EXACT_LABELS
+
+
 def has_non_supply_relationship(dependency_type=None, product=None, evidence=None, note=None) -> bool:
     """True when the relationship label or its supporting text describes a non-supply relationship."""
-    if _matches_any(normalize_text(dependency_type), _LABEL_PATTERNS):
+    if is_non_supply_label(dependency_type):
         return True
     supporting = " ".join(
         normalize_text(value)
@@ -176,15 +288,30 @@ def has_non_supply_relationship(dependency_type=None, product=None, evidence=Non
     return _matches_any(supporting, _EVIDENCE_PATTERNS)
 
 
-def is_role_label(dependency_type: object) -> bool:
-    """True when a dependency label is just a counterparty role such as "Customer"."""
-    label = normalize_text(dependency_type).replace("_", " ")
-    label = re.sub(r"[^a-z0-9\s/-]", "", label).strip()
+def _role_label(dependency_type: object, roles) -> bool:
+    label = normalize_label(dependency_type)
     if not label:
         return False
-    if ROLE_LABEL_OF_PATTERN.match(label):
+    stripped = strip_label_qualifiers(label)
+    if stripped in roles:
         return True
-    words = label.split()
-    while words and words[0] in ROLE_LABEL_QUALIFIERS:
-        words.pop(0)
-    return " ".join(words) in ROLE_LABELS
+    match = ROLE_LABEL_OF_PATTERN.match(stripped)
+    if not match:
+        return False
+    role = stripped.split()[0].rstrip("s")
+    return any(candidate.startswith(role) for candidate in roles)
+
+
+def is_customer_role_label(dependency_type: object) -> bool:
+    """True for labels such as "Customer" or "Major Buyer" that name the customer role."""
+    return _role_label(dependency_type, CUSTOMER_ROLE_LABELS)
+
+
+def is_supplier_role_label(dependency_type: object) -> bool:
+    """True for labels such as "Supplier" or "Service Provider" that name the supplier role."""
+    return _role_label(dependency_type, SUPPLIER_ROLE_LABELS)
+
+
+def is_role_label(dependency_type: object) -> bool:
+    """True when a dependency label is just a counterparty role instead of what is supplied."""
+    return is_customer_role_label(dependency_type) or is_supplier_role_label(dependency_type)

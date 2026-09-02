@@ -84,6 +84,16 @@ function mockElement(tag = "div", id = "") {
     remove() {
       if (node.parentNode) node.parentNode.removeChild(node);
     },
+    insertBefore(child, reference) {
+      const index = reference ? node.children.indexOf(reference) : -1;
+      child.parentNode = node;
+      if (index >= 0) node.children.splice(index, 0, child);
+      else node.children.push(child);
+      return child;
+    },
+    attributes: {},
+    setAttribute(name, value) { node.attributes[name] = String(value); },
+    getAttribute(name) { return Object.prototype.hasOwnProperty.call(node.attributes, name) ? node.attributes[name] : null; },
     querySelector() { return null; },
   };
   Object.defineProperty(node, "firstChild", {
@@ -137,6 +147,26 @@ context.globalThis = context;
 
 vm.createContext(context);
 vm.runInContext(appSource, context);
+
+// The theme toggle must be labelled from the stored theme before any data loads.
+if (element("theme-toggle-label").textContent !== "Dark" || element("theme-toggle").getAttribute("aria-label") !== "Switch to light theme") {
+  throw new Error("theme toggle should be synchronised with the stored theme at startup");
+}
+
+vm.runInContext(`
+  window.location.hash = "#overview";
+  applyRoute({ view: "overview" });
+  updateRouteHash({ view: "companies", query: "nvidia" }, true);
+  globalThis.__hashAfterFilter = window.location.hash;
+  window.location.hash = "#overview";
+  globalThis.__routeBeforeBack = currentRoute.view;
+  handleLocationChange();
+  globalThis.__routeAfterBack = currentRoute.view;
+`, context);
+
+if (context.__hashAfterFilter !== "#companies?query=nvidia" || context.__routeBeforeBack !== "companies" || context.__routeAfterBack !== "overview") {
+  throw new Error(`Back after a filter route must re-apply the previous route: ${context.__hashAfterFilter} ${context.__routeBeforeBack} -> ${context.__routeAfterBack}`);
+}
 
 const roundTrip = context.hashToRoute(context.routeToHash({
   view: "companies",

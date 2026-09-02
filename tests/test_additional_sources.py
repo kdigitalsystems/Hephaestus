@@ -50,12 +50,15 @@ def test_source_section_labels_evidence_and_company():
 def test_configured_source_text_fetches_configured_urls(monkeypatch):
     class Response:
         headers = {"content-type": "text/html"}
-        text = "<p>Acme uses supplier Beta Manufacturing for assemblies.</p>"
+        url = "https://example.com/acme"
+        # No charset declared: the UTF-8 name must survive decoding.
+        content = "<p>Acme uses supplier Beta Manufacturing and Société Générale for assemblies.</p>".encode("utf-8")
 
         def raise_for_status(self):
             pass
 
     monkeypatch.setattr(additional_sources.requests, "get", lambda *args, **kwargs: Response())
+    monkeypatch.setattr(additional_sources, "is_public_http_url", lambda url: True)
 
     text = additional_sources.configured_source_text(
         "ACME",
@@ -65,6 +68,37 @@ def test_configured_source_text_fetches_configured_urls(monkeypatch):
 
     assert "Configured Web Source" in text
     assert "supplier Beta Manufacturing" in text
+    assert "Société Générale" in text
+
+
+def test_fetch_url_text_refuses_non_public_urls(monkeypatch):
+    monkeypatch.setattr(additional_sources.requests, "get", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("must not fetch")))
+
+    for url in ("file:///etc/passwd", "http://localhost:11434/api/tags", "http://127.0.0.1/", "http://169.254.169.254/latest/meta-data/", "http://10.0.0.5/admin", "ftp://example.com/x"):
+        try:
+            additional_sources.fetch_url_text(url)
+        except additional_sources.requests.RequestException as exc:
+            assert "non-public" in str(exc)
+        else:
+            raise AssertionError(f"{url} must be refused")
+
+
+def test_candidate_ir_urls_use_the_site_origin():
+    urls = additional_sources.candidate_ir_urls("https://sub.example.com/investors/index.html")
+
+    assert urls[0] == "https://sub.example.com/investors/index.html"
+    assert "https://sub.example.com/investors" in urls
+    assert not any("index.html/" in url for url in urls)
+
+
+def test_source_section_ignores_pages_without_supply_chain_vocabulary():
+    assert additional_sources.source_section(
+        "Company IR / Website",
+        "Acme",
+        "ACME",
+        "Cookie consent. We use cookies to improve your experience. Accept all. Privacy policy.",
+        url="https://example.com/",
+    ) == ""
 
 
 def test_sam_opportunities_requires_api_key(monkeypatch):

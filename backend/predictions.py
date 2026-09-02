@@ -29,6 +29,9 @@ MODEL_VERSION = "graph-signal-v1"
 # Resolved predictions are kept up to this many; unresolved predictions are always
 # retained until they can mature, so a larger --limit cannot starve calibration.
 HISTORY_RETENTION_LIMIT = 2000
+# Never prune the calibration corpus below this, even when unresolved entries pile
+# up because the price provider has been unavailable.
+MIN_RESOLVED_HISTORY = 500
 # Unresolved predictions older than this can no longer be evaluated meaningfully.
 UNRESOLVED_RETENTION_MULTIPLIER = 4
 RESOLVED_OUTCOMES = frozenset({"correct", "incorrect"})
@@ -374,7 +377,11 @@ def prune_history(history: list[dict[str, Any]], now: datetime) -> list[dict[str
     overflow = len(retained) - HISTORY_RETENTION_LIMIT
     if overflow <= 0:
         return retained
-    # Drop the oldest resolved entries first; unresolved entries must survive.
+    # Drop the oldest resolved entries first, but keep a calibration corpus; unresolved
+    # entries always survive, even if that leaves the file over the soft limit.
+    resolved_count = sum(1 for entry in retained if entry.get("outcome") in RESOLVED_OUTCOMES)
+    droppable = max(0, resolved_count - MIN_RESOLVED_HISTORY)
+    overflow = min(overflow, droppable)
     bounded = []
     dropped = 0
     for entry in retained:
@@ -467,7 +474,9 @@ def iter_json_objects(text: str) -> Iterable[dict[str, Any]]:
                     end = index
                     break
         if end == -1:
-            return
+            # An unterminated brace earlier in the output must not hide a later answer.
+            start = text.find("{", start + 1)
+            continue
         try:
             payload = json.loads(text[start:end + 1])
             if isinstance(payload, dict):
@@ -590,6 +599,14 @@ def write_outputs(payload: dict[str, Any], history: list[dict[str, Any]], predic
                 handle.write("\n")
                 handle.flush()
                 os.fsync(handle.fileno())
+            # mkstemp creates 0600; a published artifact must keep world-readable bits.
+            try:
+                mode = os.stat(path).st_mode & 0o777
+            except FileNotFoundError:
+                current_umask = os.umask(0)
+                os.umask(current_umask)
+                mode = 0o666 & ~current_umask
+            os.chmod(temporary_name, mode)
             os.replace(temporary_name, path)
         except Exception:
             try:

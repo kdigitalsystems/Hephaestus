@@ -12,9 +12,11 @@ sys.path.insert(0, str(ROOT / "backend"))
 
 import edge_review_decisions
 from auto_discover_edges import (
+    IntelGatherer,
     clean_company_name,
     excerpt_supported_by_source,
     name_consistent,
+    normalize_dependency,
     resolve_counterparty,
     upsert_pending_edge,
     verified_source_url,
@@ -150,28 +152,94 @@ def test_duplicate_edge_rank_prefers_reviewed_approval_over_confidence():
 
 def test_ticker_resolution_rejects_hallucinated_tickers_but_keeps_aliases():
     Session, session, tsm, amd = seeded_session()
-    session.add(Node(name="Sanofi", ticker="SNY", market_cap=1e11))
+    session.add_all([
+        Node(name="Sanofi", ticker="SNY", market_cap=1e11),
+        Node(name="Microsoft Corporation Common Stock", ticker="MSFT", market_cap=3e12),
+        Node(name="International Business Machines Corporation", ticker="IBM", market_cap=2e11),
+    ])
     session.commit()
+    microsoft = session.query(Node).filter(Node.ticker == "MSFT").one()
+    sanofi = session.query(Node).filter(Node.ticker == "SNY").one()
+    ibm = session.query(Node).filter(Node.ticker == "IBM").one()
 
     assert resolve_counterparty(session, "SNY", "Sanofi").ticker == "SNY"
     assert resolve_counterparty(session, "TSM", "TSMC").ticker == "TSM"
     assert resolve_counterparty(session, "AMD", "Advanced Micro Devices").ticker == "AMD"
-    # A wrong ticker for a multi-word name must not bind the relationship to Sanofi.
-    assert name_consistent(session.query(Node).filter(Node.ticker == "SNY").one(), "Sunny Optical") is False
+    assert name_consistent(ibm, "IBM")
+    assert name_consistent(microsoft, "Microsoft")
+    # A wrong ticker must not bind the relationship to the wrong company, even when
+    # the supplied name collapses to one word after cleaning ("Apple Inc." -> "Apple").
+    assert name_consistent(sanofi, "Sunny Optical") is False
+    assert name_consistent(microsoft, "Apple Inc.") is False
+    assert name_consistent(microsoft, "Nvidia Corporation") is False
+    assert resolve_counterparty(session, "MSFT", "Apple Inc.") is None
+
+
+def test_supplier_role_labels_keep_direction_but_lose_the_role_label():
+    swapped = normalize_dependency({"source_company": "Apple", "target_company": "Corning", "dependency_type": "Customer"})
+    kept = normalize_dependency({"source_company": "Corning", "target_company": "Apple", "dependency_type": "Supplier"})
+
+    assert (swapped["source_company"], swapped["target_company"]) == ("Corning", "Apple")
+    assert swapped["dependency_type"] == "Supply Relationship"
+    assert (kept["source_company"], kept["target_company"]) == ("Corning", "Apple")
+    assert kept["dependency_type"] == "Supply Relationship"
+
+
+def test_wikipedia_sections_match_compound_headings():
+    content = "Lead paragraph.\n\n== Operations and structure ==\nIt operates fabs in Taiwan.\n\n=== Sub ===\nmore\n\n== History ==\nold\n"
+
+    assert IntelGatherer.wiki_section(content, "Operations").startswith("It operates fabs in Taiwan.")
+    assert IntelGatherer.wiki_section(content, "Products") == ""
 
 
 def test_evidence_must_quote_collected_source_text_and_urls_must_be_ours():
     source_text = (
         "SOURCE: SEC EDGAR (10-K; https://www.sec.gov/Archives/edgar/data/1/10k.htm)\nDATA:\n"
         "Samsung supplies substantially all of our NAND flash memory under a long-term supply agreement.\n"
+        "See also https://evil.example.com/hallucinated for details.\n"
     )
 
     assert excerpt_supported_by_source("Samsung supplies substantially all of our NAND flash memory", source_text)
     assert excerpt_supported_by_source("Samsung  supplies substantially all of our NAND flash memory under a long term supply agreement", source_text)
     assert not excerpt_supported_by_source("Acme Corp is the sole supplier of cobalt to Apple.", source_text)
     assert verified_source_url("https://www.sec.gov/Archives/edgar/data/1/10k.htm", source_text) == "https://www.sec.gov/Archives/edgar/data/1/10k.htm"
+    assert verified_source_url("https://www.sec.gov/Archives/edgar/data/1/10k.htm).", source_text) == "https://www.sec.gov/Archives/edgar/data/1/10k.htm"
+    # Only URLs from our own SOURCE headers count; a URL inside scraped body text does not.
+    assert verified_source_url("https://evil.example.com/hallucinated", source_text) is None
+    assert verified_source_url("https://www.sec.gov/Archives/edgar/data/1/", source_text) is None
     assert verified_source_url("https://www.sec.gov/Archives/edgar/data/320193/fake.htm", source_text) is None
     assert verified_source_url("AI Multi-Source Research", source_text) is None
+
+
+def test_review_decision_apply_does_not_adopt_a_different_pending_relationship_from_the_same_filing():
+    Session, session, source, target = seeded_session()
+    session.add(Edge(
+        source_id=source.id,
+        target_id=target.id,
+        dependency_type="Advanced Packaging",
+        product="CoWoS",
+        source_url="https://www.sec.gov/Archives/edgar/data/1/10k.htm",
+        evidence_excerpt="TSMC provides CoWoS advanced packaging for AMD accelerators.",
+        review_status="pending",
+    ))
+    session.commit()
+
+    apply_payload(Session, [{
+        "source_ticker": "TSM",
+        "target_ticker": "AMD",
+        "dependency_type": "Foundry Services",
+        "product": "wafers",
+        "confidence_score": 0.9,
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1/10k.htm",
+        "evidence_excerpt": "TSMC fabricates wafers for AMD.",
+        "review_status": "approved",
+    }])
+
+    edges = sorted(Session().query(Edge).all(), key=lambda edge: edge.id)
+    assert [(edge.dependency_type, edge.review_status) for edge in edges] == [
+        ("Advanced Packaging", "pending"),
+        ("Foundry Services", "approved"),
+    ]
 
 
 def test_review_decision_apply_updates_existing_unique_edge():

@@ -29854,56 +29854,29 @@
         "summary": "GSK plc, together with its subsidiaries, engages in the research, development, and manufacture of vaccines, specialty medicines, and general medicines to prevent and treat disease in the United Kingdom, the United States, and internationally. It operates through Commercial Operations and Total R&D segments. The company offers specialty medicines that include oncology, respiratory/immunology, inflammation, and inhaled medicines for HIV, respiratory eosinophildriven diseases, lupus and lupus nephritis, ovarian cancer, and endometrial cancer. It also provides vaccines for Shingles, Meningitis, RSV, Seasonal Influenza, Hepatitis, Diphtheria, Tetanus, Acellular Pertussis, Rotavirus, Pertussis, Polio, Haemophilus, Invasive Diseases, Pneumonia, Acute Otitis Media, Measles, Mumps, Rubella and Chickenpox, and Human Papilloma Virus. Additionally, the company offers general medicines for asthma, COPD, bacterial infection, benign prostatic hyperplasia, allergic rhinitis, and inflammatory skin conditions. It also focuses on the discovery, development, and commercialization of oral small molecule therapies for patients with unmet needs in oncology and inflammatory diseases. It has a collaboration agreement with CureVac to develop mRNA vaccines for infectious diseases; and strategic research collaboration with Engitix Ltd. to identify and validate novel therapeutic targets driving liver fibrosis regression. The company has a strategic alliance with AN2 Therapeutics, Inc. for the development of new therapies for TB. GSK plc was formerly known as GlaxoSmithKline plc and changed its name to GSK plc in May 2022. The company was founded in 1715 and is headquartered in London, United Kingdom.",
         "last_updated": "2026-08-25",
         "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 1267,
-            "relationship_key": "GSK->MRK:SUPPLY CHAIN DEPENDENCY",
-            "name": "Merck & Co., Inc.",
-            "ticker": "MRK",
-            "type": "supply chain dependency",
-            "product": "Pneumococcus vaccine (via Pneumovax 23)",
-            "confidence": 0.8667,
-            "source": "AI Multi-Source Research",
-            "source_title": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "review_status": "approved",
-            "evidence_excerpt": "Not directly stated but Pneumovax 23 vaccine is provided by GSK to Merck & Co.",
-            "last_verified": "2026-08-25"
-          }
-        ],
+        "downstream": [],
         "sector": "Healthcare",
         "investor_metrics": {
           "upstream_count": 0,
-          "downstream_count": 1,
-          "total_links": 1,
-          "approved_count": 1,
+          "downstream_count": 0,
+          "total_links": 0,
+          "approved_count": 0,
           "pending_count": 0,
           "rejected_count": 0,
           "manual_count": 0,
           "web_source_count": 0,
-          "ai_research_count": 1,
-          "average_confidence": 0.867,
-          "concentration_score": 1.0,
+          "ai_research_count": 0,
+          "average_confidence": null,
+          "concentration_score": 0.0,
           "top_upstream": [],
-          "top_downstream": [
-            {
-              "ticker": "MRK",
-              "name": "Merck & Co., Inc.",
-              "type": "supply chain dependency",
-              "product": "Pneumococcus vaccine (via Pneumovax 23)",
-              "confidence": 0.8667,
-              "review_status": "approved",
-              "source_type": "AI Research",
-              "last_verified": "2026-08-25"
-            }
-          ],
-          "last_verified": "2026-08-25",
-          "risk_score": 48,
+          "top_downstream": [],
+          "last_verified": "N/A",
+          "risk_score": 0,
           "supplier_risk": 0,
-          "customer_risk": 100,
-          "confidence_score": 87,
-          "review_score": 100,
-          "freshness_score": 100
+          "customer_risk": 0,
+          "confidence_score": 0,
+          "review_score": 0,
+          "freshness_score": 0
         }
       },
       {
@@ -49452,7 +49425,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Natera offers a cloud-based bioinformatics platform called Constellation, allowing laboratories to access and use Natera\\u2019s technology in their own facilities.",
+            "evidence_excerpt": "Natera offers a cloud-based bioinformatics platform called Constellation, allowing laboratories to access and use Natera\u2019s technology in their own facilities.",
             "last_verified": "2026-08-25"
           },
           {
@@ -66379,48 +66352,23 @@
             "review_status": "approved",
             "evidence_excerpt": "deals to provide processors for 5G Infrastructure for Huawei, Nokia, Ericsson, ZTE, and Samsung.",
             "last_verified": "2026-08-25"
-          },
-          {
-            "edge_id": 1477,
-            "relationship_key": "ERIC->VOD:TELECOMMUNICATIONS EQUIPMENT PROVIDER",
-            "name": "Vodafone Group Plc American Depositary Shares",
-            "ticker": "VOD",
-            "type": "Telecommunications Equipment Provider",
-            "product": "Telecommunications Equipment",
-            "confidence": 0.95,
-            "source": "AI Multi-Source Research",
-            "source_title": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "review_status": "approved",
-            "evidence_excerpt": "While not explicitly mentioned in the text, Ericsson is a well-known supplier of telecommunications equipment to many operators, including Vodafone.",
-            "last_verified": "2026-08-25"
           }
         ],
         "sector": "Technology",
         "investor_metrics": {
           "upstream_count": 0,
-          "downstream_count": 2,
-          "total_links": 2,
-          "approved_count": 2,
+          "downstream_count": 1,
+          "total_links": 1,
+          "approved_count": 1,
           "pending_count": 0,
           "rejected_count": 0,
           "manual_count": 0,
           "web_source_count": 0,
-          "ai_research_count": 2,
-          "average_confidence": 0.9,
+          "ai_research_count": 1,
+          "average_confidence": 0.85,
           "concentration_score": 1.0,
           "top_upstream": [],
           "top_downstream": [
-            {
-              "ticker": "VOD",
-              "name": "Vodafone Group Plc American Depositary Shares",
-              "type": "Telecommunications Equipment Provider",
-              "product": "Telecommunications Equipment",
-              "confidence": 0.95,
-              "review_status": "approved",
-              "source_type": "AI Research",
-              "last_verified": "2026-08-25"
-            },
             {
               "ticker": "MRVL",
               "name": "Marvell Technology, Inc. Common Stock",
@@ -66433,10 +66381,10 @@
             }
           ],
           "last_verified": "2026-08-25",
-          "risk_score": 47,
+          "risk_score": 48,
           "supplier_risk": 0,
           "customer_risk": 100,
-          "confidence_score": 90,
+          "confidence_score": 85,
           "review_score": 100,
           "freshness_score": 100
         }
@@ -68918,7 +68866,7 @@
             "last_verified": "2026-08-25"
           },
           {
-            "edge_id": 269,
+            "edge_id": 1917,
             "relationship_key": "NVDA->SMCI:AI ACCELERATOR CHIPS",
             "name": "Super Micro Computer, Inc. Common Stock",
             "ticker": "SMCI",
@@ -69422,7 +69370,7 @@
         "last_updated": "2026-08-25",
         "upstream": [
           {
-            "edge_id": 271,
+            "edge_id": 1918,
             "relationship_key": "AMD->SMCI:SERVER PROCESSORS",
             "name": "Advanced Micro Devices, Inc. Common Stock",
             "ticker": "AMD",
@@ -69437,7 +69385,7 @@
             "last_verified": "2026-08-25"
           },
           {
-            "edge_id": 269,
+            "edge_id": 1917,
             "relationship_key": "NVDA->SMCI:AI ACCELERATOR CHIPS",
             "name": "NVIDIA Corporation Common Stock",
             "ticker": "NVDA",
@@ -70978,7 +70926,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\\u2019s 2009 27-inch iMac, Apple\\u2019s Thunderbolt Display, and Dell\\u2019s U2711 LCD Monitor.",
+            "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\u2019s 2009 27-inch iMac, Apple\u2019s Thunderbolt Display, and Dell\u2019s U2711 LCD Monitor.",
             "last_verified": "2026-08-25"
           },
           {
@@ -76096,21 +76044,6 @@
             "review_status": "approved",
             "evidence_excerpt": "HP develops personal computers (PCs; both consumer and business laptops and desktops)...",
             "last_verified": "2026-08-25"
-          },
-          {
-            "edge_id": 1031,
-            "relationship_key": "STX->HPQ:HARD DISK DRIVES",
-            "name": "Seagate Technology Holdings PLC Ordinary Shares (Ireland)",
-            "ticker": "STX",
-            "type": "Hard Disk Drives",
-            "product": "Hard Disk Drives",
-            "confidence": 0.95,
-            "source": "AI Multi-Source Research",
-            "source_title": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "review_status": "approved",
-            "evidence_excerpt": "Not explicitly mentioned in the text but a well-known supplier of hard disk drives to HP.",
-            "last_verified": "2026-08-25"
           }
         ],
         "downstream": [
@@ -76132,28 +76065,18 @@
         ],
         "sector": "Technology",
         "investor_metrics": {
-          "upstream_count": 2,
+          "upstream_count": 1,
           "downstream_count": 1,
-          "total_links": 3,
-          "approved_count": 3,
+          "total_links": 2,
+          "approved_count": 2,
           "pending_count": 0,
           "rejected_count": 0,
           "manual_count": 0,
           "web_source_count": 0,
-          "ai_research_count": 3,
-          "average_confidence": 0.933,
-          "concentration_score": 0.667,
+          "ai_research_count": 2,
+          "average_confidence": 0.925,
+          "concentration_score": 0.5,
           "top_upstream": [
-            {
-              "ticker": "STX",
-              "name": "Seagate Technology Holdings PLC Ordinary Shares (Ireland)",
-              "type": "Hard Disk Drives",
-              "product": "Hard Disk Drives",
-              "confidence": 0.95,
-              "review_status": "approved",
-              "source_type": "AI Research",
-              "last_verified": "2026-08-25"
-            },
             {
               "ticker": "INTC",
               "name": "Intel Corporation Common Stock",
@@ -76178,10 +76101,10 @@
             }
           ],
           "last_verified": "2026-08-25",
-          "risk_score": 32,
-          "supplier_risk": 45,
-          "customer_risk": 22,
-          "confidence_score": 93,
+          "risk_score": 24,
+          "supplier_risk": 25,
+          "customer_risk": 25,
+          "confidence_score": 92,
           "review_score": 100,
           "freshness_score": 100
         }
@@ -78689,7 +78612,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "In December 2021, MP Materials signed a long-term agreement with General Motors to provide neodymium-iron-boron magnets for use in GM\\'s electric vehicle motors.",
+            "evidence_excerpt": "In December 2021, MP Materials signed a long-term agreement with General Motors to provide neodymium-iron-boron magnets for use in GM's electric vehicle motors.",
             "last_verified": "2026-08-25"
           },
           {
@@ -94670,7 +94593,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Its electricity supply business manages energy sales, dispatch, and delivery from Exelon\\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
+            "evidence_excerpt": "Its electricity supply business manages energy sales, dispatch, and delivery from Exelon\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
             "last_verified": "2026-08-25"
           },
           {
@@ -94685,7 +94608,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Constellation manages energy sales, dispatch, and delivery from Exelon\\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
+            "evidence_excerpt": "Constellation manages energy sales, dispatch, and delivery from Exelon\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
             "last_verified": "2026-08-25"
           },
           {
@@ -95167,7 +95090,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Its electricity supply business manages energy sales, dispatch, and delivery from Exelon\\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
+            "evidence_excerpt": "Its electricity supply business manages energy sales, dispatch, and delivery from Exelon\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
             "last_verified": "2026-08-25"
           }
         ],
@@ -95341,7 +95264,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Constellation manages energy sales, dispatch, and delivery from Exelon\\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
+            "evidence_excerpt": "Constellation manages energy sales, dispatch, and delivery from Exelon\u2019s power generation portfolio to utilities, municipal co-ops, and energy retailers nationwide.",
             "last_verified": "2026-08-25"
           }
         ],
@@ -96830,26 +96753,11 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "One of its early success stories is with the Novartis-led \\u201cSMS for Life\\u201d project in Tanzania, for which Vodafone developed and deployed a text-message based system that enables all the country\\u2019s 4,600 public health facilities to report their levels of anti-malarial medications so that stock level data can be viewed centrally in real-time, enabling timely re-supply of stock.",
+            "evidence_excerpt": "One of its early success stories is with the Novartis-led \u201cSMS for Life\u201d project in Tanzania, for which Vodafone developed and deployed a text-message based system that enables all the country\u2019s 4,600 public health facilities to report their levels of anti-malarial medications so that stock level data can be viewed centrally in real-time, enabling timely re-supply of stock.",
             "last_verified": "2026-08-25"
           }
         ],
         "downstream": [
-          {
-            "edge_id": 751,
-            "relationship_key": "NVS->MRK:RAW MATERIALS",
-            "name": "Merck & Co., Inc.",
-            "ticker": "MRK",
-            "type": "Raw Materials",
-            "product": "Rota virus vaccine (RotaTeq)",
-            "confidence": 0.8667,
-            "source": "AI Multi-Source Research",
-            "source_title": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "review_status": "approved",
-            "evidence_excerpt": "Not directly stated but RotaTeq vaccine is provided by Novartis to Merck & Co.",
-            "last_verified": "2026-08-25"
-          },
           {
             "edge_id": 470,
             "relationship_key": "NVS->VEEV:REGULATORY AFFAIRS MANAGEMENT PLATFORM SUBSCRIPTION",
@@ -96869,16 +96777,16 @@
         "sector": "Linked Companies",
         "investor_metrics": {
           "upstream_count": 3,
-          "downstream_count": 2,
-          "total_links": 5,
-          "approved_count": 5,
+          "downstream_count": 1,
+          "total_links": 4,
+          "approved_count": 4,
           "pending_count": 0,
           "rejected_count": 0,
           "manual_count": 0,
           "web_source_count": 0,
-          "ai_research_count": 5,
-          "average_confidence": 0.893,
-          "concentration_score": 0.6,
+          "ai_research_count": 4,
+          "average_confidence": 0.9,
+          "concentration_score": 0.75,
           "top_upstream": [
             {
               "ticker": "VEEV",
@@ -96913,16 +96821,6 @@
           ],
           "top_downstream": [
             {
-              "ticker": "MRK",
-              "name": "Merck & Co., Inc.",
-              "type": "Raw Materials",
-              "product": "Rota virus vaccine (RotaTeq)",
-              "confidence": 0.8667,
-              "review_status": "approved",
-              "source_type": "AI Research",
-              "last_verified": "2026-08-25"
-            },
-            {
               "ticker": "VEEV",
               "name": "Veeva Systems Inc.",
               "type": "Regulatory Affairs Management Platform Subscription",
@@ -96934,10 +96832,10 @@
             }
           ],
           "last_verified": "2026-08-25",
-          "risk_score": 29,
-          "supplier_risk": 36,
-          "customer_risk": 24,
-          "confidence_score": 89,
+          "risk_score": 36,
+          "supplier_risk": 56,
+          "customer_risk": 19,
+          "confidence_score": 90,
           "review_score": 100,
           "freshness_score": 100
         }
@@ -98159,12 +98057,12 @@
         "last_updated": "2026-08-25",
         "upstream": [
           {
-            "edge_id": 6,
+            "edge_id": 653,
             "relationship_key": "TSM->QCOM:FOUNDRY SERVICES",
             "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
             "ticker": "TSM",
-            "type": "foundry services / Foundry Services",
-            "product": "semiconductor manufacturing / Semiconductor Manufacturing",
+            "type": "foundry services",
+            "product": "semiconductor manufacturing",
             "confidence": 1,
             "source": "AI Multi-Source Research",
             "source_title": "AI Multi-Source Research",
@@ -98207,8 +98105,8 @@
             {
               "ticker": "TSM",
               "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
-              "type": "foundry services / Foundry Services",
-              "product": "semiconductor manufacturing / Semiconductor Manufacturing",
+              "type": "foundry services",
+              "product": "semiconductor manufacturing",
               "confidence": 1,
               "review_status": "approved",
               "source_type": "AI Research",
@@ -98803,7 +98701,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "In 1978, the first Ralph Lauren fragrances, produced by Warner-Lauren, Ltd were launched at Bloomingdale\\u2019s.",
+            "evidence_excerpt": "In 1978, the first Ralph Lauren fragrances, produced by Warner-Lauren, Ltd were launched at Bloomingdale\u2019s.",
             "last_verified": "2026-08-25"
           }
         ],
@@ -99950,7 +99848,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Instead of precious metals, Bloom Energy\\u2019s fuel cells use wafers made from sand that are stained with proprietary ink.",
+            "evidence_excerpt": "Instead of precious metals, Bloom Energy\u2019s fuel cells use wafers made from sand that are stained with proprietary ink.",
             "last_verified": "2026-08-25"
           }
         ],
@@ -100295,82 +100193,6 @@
         }
       },
       {
-        "id": 5743,
-        "name": "Sanofi ADS",
-        "ticker": "SNY",
-        "industry": "Uncategorized",
-        "price": null,
-        "change": 0.0,
-        "market_cap": null,
-        "enterprise_value": null,
-        "trailing_pe": null,
-        "forward_pe": null,
-        "price_to_book": null,
-        "dividend": "N/A",
-        "high_52w": null,
-        "low_52w": null,
-        "revenue": null,
-        "margin": null,
-        "target_price": null,
-        "recommendation": "N/A",
-        "ceo": "N/A",
-        "employees": null,
-        "summary": "No summary available.",
-        "last_updated": "2026-08-25",
-        "upstream": [],
-        "downstream": [
-          {
-            "edge_id": 671,
-            "relationship_key": "SNY->MRK:RAW MATERIALS",
-            "name": "Merck & Co., Inc.",
-            "ticker": "MRK",
-            "type": "Raw Materials",
-            "product": "Human Papillomavirus (HPV) vaccine under Gardasil brand name",
-            "confidence": 0.925,
-            "source": "AI Multi-Source Research",
-            "source_title": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "review_status": "approved",
-            "evidence_excerpt": "Not directly stated but a vaccine against multiple serotypes of human papillomavirus (HPV) is provided by Sanofi to Merck & Co. under Gardasil brand name.",
-            "last_verified": "2026-08-25"
-          }
-        ],
-        "sector": "Linked Companies",
-        "investor_metrics": {
-          "upstream_count": 0,
-          "downstream_count": 1,
-          "total_links": 1,
-          "approved_count": 1,
-          "pending_count": 0,
-          "rejected_count": 0,
-          "manual_count": 0,
-          "web_source_count": 0,
-          "ai_research_count": 1,
-          "average_confidence": 0.925,
-          "concentration_score": 1.0,
-          "top_upstream": [],
-          "top_downstream": [
-            {
-              "ticker": "MRK",
-              "name": "Merck & Co., Inc.",
-              "type": "Raw Materials",
-              "product": "Human Papillomavirus (HPV) vaccine under Gardasil brand name",
-              "confidence": 0.925,
-              "review_status": "approved",
-              "source_type": "AI Research",
-              "last_verified": "2026-08-25"
-            }
-          ],
-          "last_verified": "2026-08-25",
-          "risk_score": 47,
-          "supplier_risk": 0,
-          "customer_risk": 100,
-          "confidence_score": 92,
-          "review_score": 100,
-          "freshness_score": 100
-        }
-      },
-      {
         "id": 5745,
         "name": "The Southern Company",
         "ticker": "SO",
@@ -100482,7 +100304,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "As of 2022, LG Display is the manufacturer of the OLED panels used in Sony\\u2019s OLED TVs.",
+            "evidence_excerpt": "As of 2022, LG Display is the manufacturer of the OLED panels used in Sony\u2019s OLED TVs.",
             "last_verified": "2026-08-25"
           }
         ],
@@ -101057,36 +100879,20 @@
             "last_verified": "2026-08-25"
           }
         ],
-        "downstream": [
-          {
-            "edge_id": 1031,
-            "relationship_key": "STX->HPQ:HARD DISK DRIVES",
-            "name": "HP Inc.",
-            "ticker": "HPQ",
-            "type": "Hard Disk Drives",
-            "product": "Hard Disk Drives",
-            "confidence": 0.95,
-            "source": "AI Multi-Source Research",
-            "source_title": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "review_status": "approved",
-            "evidence_excerpt": "Not explicitly mentioned in the text but a well-known supplier of hard disk drives to HP.",
-            "last_verified": "2026-08-25"
-          }
-        ],
+        "downstream": [],
         "sector": "Linked Companies",
         "investor_metrics": {
           "upstream_count": 2,
-          "downstream_count": 1,
-          "total_links": 3,
-          "approved_count": 3,
+          "downstream_count": 0,
+          "total_links": 2,
+          "approved_count": 2,
           "pending_count": 0,
           "rejected_count": 0,
           "manual_count": 0,
           "web_source_count": 0,
-          "ai_research_count": 3,
-          "average_confidence": 0.942,
-          "concentration_score": 0.667,
+          "ai_research_count": 2,
+          "average_confidence": 0.938,
+          "concentration_score": 1.0,
           "top_upstream": [
             {
               "ticker": "AVGO",
@@ -101109,22 +100915,11 @@
               "last_verified": "2026-08-25"
             }
           ],
-          "top_downstream": [
-            {
-              "ticker": "HPQ",
-              "name": "HP Inc.",
-              "type": "Hard Disk Drives",
-              "product": "Hard Disk Drives",
-              "confidence": 0.95,
-              "review_status": "approved",
-              "source_type": "AI Research",
-              "last_verified": "2026-08-25"
-            }
-          ],
+          "top_downstream": [],
           "last_verified": "2026-08-25",
-          "risk_score": 31,
-          "supplier_risk": 45,
-          "customer_risk": 22,
+          "risk_score": 46,
+          "supplier_risk": 100,
+          "customer_risk": 0,
           "confidence_score": 94,
           "review_score": 100,
           "freshness_score": 100
@@ -102461,7 +102256,7 @@
             "last_verified": "2026-08-25"
           },
           {
-            "edge_id": 1626,
+            "edge_id": 1813,
             "relationship_key": "TSM->AMD:ADVANCED SILICON FABRICATION",
             "name": "Advanced Micro Devices, Inc. Common Stock",
             "ticker": "AMD",
@@ -102536,12 +102331,12 @@
             "last_verified": "2026-08-25"
           },
           {
-            "edge_id": 6,
+            "edge_id": 653,
             "relationship_key": "TSM->QCOM:FOUNDRY SERVICES",
             "name": "QUALCOMM Incorporated Common Stock",
             "ticker": "QCOM",
-            "type": "foundry services / Foundry Services",
-            "product": "semiconductor manufacturing / Semiconductor Manufacturing",
+            "type": "foundry services",
+            "product": "semiconductor manufacturing",
             "confidence": 1,
             "source": "AI Multi-Source Research",
             "source_title": "AI Multi-Source Research",
@@ -102650,8 +102445,8 @@
             {
               "ticker": "QCOM",
               "name": "QUALCOMM Incorporated Common Stock",
-              "type": "foundry services / Foundry Services",
-              "product": "semiconductor manufacturing / Semiconductor Manufacturing",
+              "type": "foundry services",
+              "product": "semiconductor manufacturing",
               "confidence": 1,
               "review_status": "approved",
               "source_type": "AI Research",
@@ -104528,23 +104323,7 @@
         "employees": null,
         "summary": "No summary available.",
         "last_updated": "2026-08-25",
-        "upstream": [
-          {
-            "edge_id": 1477,
-            "relationship_key": "ERIC->VOD:TELECOMMUNICATIONS EQUIPMENT PROVIDER",
-            "name": "Ericsson American Depositary Shares",
-            "ticker": "ERIC",
-            "type": "Telecommunications Equipment Provider",
-            "product": "Telecommunications Equipment",
-            "confidence": 0.95,
-            "source": "AI Multi-Source Research",
-            "source_title": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "review_status": "approved",
-            "evidence_excerpt": "While not explicitly mentioned in the text, Ericsson is a well-known supplier of telecommunications equipment to many operators, including Vodafone.",
-            "last_verified": "2026-08-25"
-          }
-        ],
+        "upstream": [],
         "downstream": [
           {
             "edge_id": 1439,
@@ -104558,7 +104337,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "One of its early success stories is with the Novartis-led \\u201cSMS for Life\\u201d project in Tanzania, for which Vodafone developed and deployed a text-message based system that enables all the country\\u2019s 4,600 public health facilities to report their levels of anti-malarial medications so that stock level data can be viewed centrally in real-time, enabling timely re-supply of stock.",
+            "evidence_excerpt": "One of its early success stories is with the Novartis-led \u201cSMS for Life\u201d project in Tanzania, for which Vodafone developed and deployed a text-message based system that enables all the country\u2019s 4,600 public health facilities to report their levels of anti-malarial medications so that stock level data can be viewed centrally in real-time, enabling timely re-supply of stock.",
             "last_verified": "2026-08-25"
           },
           {
@@ -104579,29 +104358,18 @@
         ],
         "sector": "Linked Companies",
         "investor_metrics": {
-          "upstream_count": 1,
+          "upstream_count": 0,
           "downstream_count": 2,
-          "total_links": 3,
-          "approved_count": 3,
+          "total_links": 2,
+          "approved_count": 2,
           "pending_count": 0,
           "rejected_count": 0,
           "manual_count": 0,
           "web_source_count": 0,
-          "ai_research_count": 3,
-          "average_confidence": 0.9,
-          "concentration_score": 0.667,
-          "top_upstream": [
-            {
-              "ticker": "ERIC",
-              "name": "Ericsson American Depositary Shares",
-              "type": "Telecommunications Equipment Provider",
-              "product": "Telecommunications Equipment",
-              "confidence": 0.95,
-              "review_status": "approved",
-              "source_type": "AI Research",
-              "last_verified": "2026-08-25"
-            }
-          ],
+          "ai_research_count": 2,
+          "average_confidence": 0.875,
+          "concentration_score": 1.0,
+          "top_upstream": [],
           "top_downstream": [
             {
               "ticker": "NVS",
@@ -104625,10 +104393,10 @@
             }
           ],
           "last_verified": "2026-08-25",
-          "risk_score": 32,
-          "supplier_risk": 22,
-          "customer_risk": 45,
-          "confidence_score": 90,
+          "risk_score": 47,
+          "supplier_risk": 0,
+          "customer_risk": 100,
+          "confidence_score": 88,
           "review_score": 100,
           "freshness_score": 100
         }
@@ -105993,7 +105761,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "In 1978, the first Ralph Lauren fragrances, produced by Warner-Lauren, Ltd were launched at Bloomingdale\\u2019s.",
+            "evidence_excerpt": "In 1978, the first Ralph Lauren fragrances, produced by Warner-Lauren, Ltd were launched at Bloomingdale\u2019s.",
             "last_verified": "2026-08-25"
           }
         ],
@@ -106160,7 +105928,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Natera offers a cloud-based bioinformatics platform called Constellation, allowing laboratories to access and use Natera\\u2019s technology in their own facilities.",
+            "evidence_excerpt": "Natera offers a cloud-based bioinformatics platform called Constellation, allowing laboratories to access and use Natera\u2019s technology in their own facilities.",
             "last_verified": "2026-08-25"
           }
         ],
@@ -108976,36 +108744,6 @@
         "last_updated": "2026-08-25",
         "upstream": [
           {
-            "edge_id": 1267,
-            "relationship_key": "GSK->MRK:SUPPLY CHAIN DEPENDENCY",
-            "name": "GSK plc American Depositary Shares (Each representing two Ordinary Shares)",
-            "ticker": "GSK",
-            "type": "supply chain dependency",
-            "product": "Pneumococcus vaccine (via Pneumovax 23)",
-            "confidence": 0.8667,
-            "source": "AI Multi-Source Research",
-            "source_title": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "review_status": "approved",
-            "evidence_excerpt": "Not directly stated but Pneumovax 23 vaccine is provided by GSK to Merck & Co.",
-            "last_verified": "2026-08-25"
-          },
-          {
-            "edge_id": 751,
-            "relationship_key": "NVS->MRK:RAW MATERIALS",
-            "name": "Novartis AG",
-            "ticker": "NVS",
-            "type": "Raw Materials",
-            "product": "Rota virus vaccine (RotaTeq)",
-            "confidence": 0.8667,
-            "source": "AI Multi-Source Research",
-            "source_title": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "review_status": "approved",
-            "evidence_excerpt": "Not directly stated but RotaTeq vaccine is provided by Novartis to Merck & Co.",
-            "last_verified": "2026-08-25"
-          },
-          {
             "edge_id": 672,
             "relationship_key": "PFE->MRK:MANUFACTURING PARTNER",
             "name": "Pfizer Inc.",
@@ -109018,21 +108756,6 @@
             "source_type": "AI Research",
             "review_status": "approved",
             "evidence_excerpt": "The U.S. government agreed to spend $1.2 billion to purchase 1.7 million doses of Molnupiravir, a Merck product, if it were to be approved by regulators to treat COVID-19.",
-            "last_verified": "2026-08-25"
-          },
-          {
-            "edge_id": 671,
-            "relationship_key": "SNY->MRK:RAW MATERIALS",
-            "name": "Sanofi ADS",
-            "ticker": "SNY",
-            "type": "Raw Materials",
-            "product": "Human Papillomavirus (HPV) vaccine under Gardasil brand name",
-            "confidence": 0.925,
-            "source": "AI Multi-Source Research",
-            "source_title": "AI Multi-Source Research",
-            "source_type": "AI Research",
-            "review_status": "approved",
-            "evidence_excerpt": "Not directly stated but a vaccine against multiple serotypes of human papillomavirus (HPV) is provided by Sanofi to Merck & Co. under Gardasil brand name.",
             "last_verified": "2026-08-25"
           },
           {
@@ -109070,17 +108793,17 @@
         ],
         "sector": "Linked Companies",
         "investor_metrics": {
-          "upstream_count": 5,
+          "upstream_count": 2,
           "downstream_count": 1,
-          "total_links": 6,
-          "approved_count": 6,
+          "total_links": 3,
+          "approved_count": 3,
           "pending_count": 0,
           "rejected_count": 0,
           "manual_count": 0,
           "web_source_count": 0,
-          "ai_research_count": 6,
-          "average_confidence": 0.893,
-          "concentration_score": 0.833,
+          "ai_research_count": 3,
+          "average_confidence": 0.9,
+          "concentration_score": 0.667,
           "top_upstream": [
             {
               "ticker": "VEEV",
@@ -109093,41 +108816,11 @@
               "last_verified": "2026-08-25"
             },
             {
-              "ticker": "SNY",
-              "name": "Sanofi ADS",
-              "type": "Raw Materials",
-              "product": "Human Papillomavirus (HPV) vaccine under Gardasil brand name",
-              "confidence": 0.925,
-              "review_status": "approved",
-              "source_type": "AI Research",
-              "last_verified": "2026-08-25"
-            },
-            {
               "ticker": "PFE",
               "name": "Pfizer Inc.",
               "type": "Manufacturing Partner",
               "product": "Molnupiravir",
               "confidence": 0.9,
-              "review_status": "approved",
-              "source_type": "AI Research",
-              "last_verified": "2026-08-25"
-            },
-            {
-              "ticker": "NVS",
-              "name": "Novartis AG",
-              "type": "Raw Materials",
-              "product": "Rota virus vaccine (RotaTeq)",
-              "confidence": 0.8667,
-              "review_status": "approved",
-              "source_type": "AI Research",
-              "last_verified": "2026-08-25"
-            },
-            {
-              "ticker": "GSK",
-              "name": "GSK plc American Depositary Shares (Each representing two Ordinary Shares)",
-              "type": "supply chain dependency",
-              "product": "Pneumococcus vaccine (via Pneumovax 23)",
-              "confidence": 0.8667,
               "review_status": "approved",
               "source_type": "AI Research",
               "last_verified": "2026-08-25"
@@ -109146,10 +108839,10 @@
             }
           ],
           "last_verified": "2026-08-25",
-          "risk_score": 40,
-          "supplier_risk": 69,
-          "customer_risk": 14,
-          "confidence_score": 89,
+          "risk_score": 32,
+          "supplier_risk": 45,
+          "customer_risk": 22,
+          "confidence_score": 90,
           "review_score": 100,
           "freshness_score": 100
         }
@@ -109342,7 +109035,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "In December 2021, MP Materials signed a long-term agreement with General Motors to provide neodymium-iron-boron magnets for use in GM\\'s electric vehicle motors.",
+            "evidence_excerpt": "In December 2021, MP Materials signed a long-term agreement with General Motors to provide neodymium-iron-boron magnets for use in GM's electric vehicle motors.",
             "last_verified": "2026-08-25"
           }
         ],
@@ -109551,7 +109244,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\\u2019s 2009 27-inch iMac, Apple\\u2019s Thunderbolt Display, and Dell\\u2019s U2711 LCD Monitor.",
+            "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\u2019s 2009 27-inch iMac, Apple\u2019s Thunderbolt Display, and Dell\u2019s U2711 LCD Monitor.",
             "last_verified": "2026-08-25"
           },
           {
@@ -111778,7 +111471,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\\u2019s 2009 27-inch iMac, Apple\\u2019s Thunderbolt Display, and Dell\\u2019s U2711 LCD Monitor.",
+            "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\u2019s 2009 27-inch iMac, Apple\u2019s Thunderbolt Display, and Dell\u2019s U2711 LCD Monitor.",
             "last_verified": "2026-08-25"
           },
           {
@@ -111793,7 +111486,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\\u2019s 2009 27-inch iMac, Apple\\u2019s Thunderbolt Display, and Dell\\u2019s U2711 LCD Monitor.",
+            "evidence_excerpt": "Some examples of products that use LCD panels from LG display are Apple\u2019s 2009 27-inch iMac, Apple\u2019s Thunderbolt Display, and Dell\u2019s U2711 LCD Monitor.",
             "last_verified": "2026-08-25"
           },
           {
@@ -111808,7 +111501,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "As of 2022, LG Display is the manufacturer of the OLED panels used in Sony\\u2019s OLED TVs.",
+            "evidence_excerpt": "As of 2022, LG Display is the manufacturer of the OLED panels used in Sony\u2019s OLED TVs.",
             "last_verified": "2026-08-25"
           }
         ],
@@ -113011,7 +112704,7 @@
             "source_title": "AI Multi-Source Research",
             "source_type": "AI Research",
             "review_status": "approved",
-            "evidence_excerpt": "Instead of precious metals, Bloom Energy\\u2019s fuel cells use wafers made from sand that are stained with proprietary ink.",
+            "evidence_excerpt": "Instead of precious metals, Bloom Energy\u2019s fuel cells use wafers made from sand that are stained with proprietary ink.",
             "last_verified": "2026-08-25"
           }
         ],
@@ -113146,7 +112839,7 @@
             "last_verified": "2026-08-25"
           },
           {
-            "edge_id": 1626,
+            "edge_id": 1813,
             "relationship_key": "TSM->AMD:ADVANCED SILICON FABRICATION",
             "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
             "ticker": "TSM",
@@ -113208,7 +112901,7 @@
             "last_verified": "2026-08-25"
           },
           {
-            "edge_id": 271,
+            "edge_id": 1918,
             "relationship_key": "AMD->SMCI:SERVER PROCESSORS",
             "name": "Super Micro Computer, Inc. Common Stock",
             "ticker": "SMCI",
@@ -114347,20 +114040,20 @@
   },
   "quality": {
     "pending_count": 0,
-    "approved_count": 316,
-    "rejected_count": 1602,
+    "approved_count": 311,
+    "rejected_count": 1607,
     "review_queue": []
   },
-  "generated_at": "2026-08-26T04:30:22+00:00",
+  "generated_at": "2026-09-02T20:20:27+00:00",
   "investor_metrics": {
-    "company_count": 2004,
+    "company_count": 2003,
     "sector_count": 10,
-    "unique_links": 309,
-    "relationship_entries": 618,
-    "approved_links": 309,
+    "unique_links": 304,
+    "relationship_entries": 608,
+    "approved_links": 304,
     "pending_links": 0,
     "rejected_links": 0,
-    "linked_companies": 317,
+    "linked_companies": 315,
     "most_connected": [
       {
         "ticker": "TSM",
@@ -114518,16 +114211,16 @@
     "sector_exposure": [
       {
         "sector": "Linked Companies",
-        "companies": 175,
-        "linked_companies": 175,
-        "relationship_entries": 346,
+        "companies": 174,
+        "linked_companies": 174,
+        "relationship_entries": 339,
         "coverage": 1.0
       },
       {
         "sector": "Technology",
         "companies": 338,
         "linked_companies": 37,
-        "relationship_entries": 93,
+        "relationship_entries": 91,
         "coverage": 0.109
       },
       {
@@ -114547,9 +114240,9 @@
       {
         "sector": "Healthcare",
         "companies": 477,
-        "linked_companies": 23,
-        "relationship_entries": 31,
-        "coverage": 0.048
+        "linked_companies": 22,
+        "relationship_entries": 30,
+        "coverage": 0.046
       },
       {
         "sector": "Consumer Cyclical",
@@ -114588,153 +114281,64 @@
       }
     ],
     "change_summary": {
-      "previous_unique_links": 441,
-      "current_unique_links": 309,
-      "net_change": -132,
-      "new_count": 1,
-      "removed_count": 133,
+      "previous_unique_links": 309,
+      "current_unique_links": 304,
+      "net_change": -5,
+      "new_count": 0,
+      "removed_count": 5,
       "changed_count": 0,
       "rejected_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "TSM->MRVL:FOUNDRY SERVICES",
-          "source_ticker": "TSM",
-          "target_ticker": "MRVL",
-          "type": "Foundry Services",
-          "product": "semiconductor chips",
-          "review_status": "approved",
-          "confidence": 0.95
-        }
-      ],
+      "new_links": [],
       "removed_links": [
         {
-          "relationship_key": "AA->F:MATERIAL SUPPLIER",
-          "source_ticker": "AA",
-          "target_ticker": "F",
-          "type": "material supplier",
-          "product": "Advanced Aluminum Alloys",
+          "relationship_key": "ERIC->VOD:TELECOMMUNICATIONS EQUIPMENT PROVIDER",
+          "source_ticker": "ERIC",
+          "target_ticker": "VOD",
+          "type": "Telecommunications Equipment Provider",
+          "product": "Telecommunications Equipment",
           "review_status": "approved",
-          "confidence": 0.85
+          "confidence": 0.95
         },
         {
-          "relationship_key": "AA->HWM:RAW MATERIALS",
-          "source_ticker": "AA",
-          "target_ticker": "HWM",
+          "relationship_key": "GSK->MRK:SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "GSK",
+          "target_ticker": "MRK",
+          "type": "supply chain dependency",
+          "product": "Pneumococcus vaccine (via Pneumovax 23)",
+          "review_status": "approved",
+          "confidence": 0.8667
+        },
+        {
+          "relationship_key": "NVS->MRK:RAW MATERIALS",
+          "source_ticker": "NVS",
+          "target_ticker": "MRK",
           "type": "Raw Materials",
-          "product": "Aluminum",
+          "product": "Rota virus vaccine (RotaTeq)",
           "review_status": "approved",
-          "confidence": 0.95
+          "confidence": 0.8667
         },
         {
-          "relationship_key": "ADM->BG:GRAIN SUPPLY",
-          "source_ticker": "ADM",
-          "target_ticker": "BG",
-          "type": "Grain Supply",
-          "product": "Agricultural Commodities",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "AKAM->LUMN:CDN SERVICES",
-          "source_ticker": "AKAM",
-          "target_ticker": "LUMN",
-          "type": "CDN services",
-          "product": "Content Delivery Network (CDN) services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "AM->AR:MIDSTREAM OPERATIONS AFFILIATE",
-          "source_ticker": "AM",
-          "target_ticker": "AR",
-          "type": "Midstream Operations Affiliate",
-          "product": "midstream services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "APD->LRCX:RAW MATERIALS",
-          "source_ticker": "APD",
-          "target_ticker": "LRCX",
+          "relationship_key": "SNY->MRK:RAW MATERIALS",
+          "source_ticker": "SNY",
+          "target_ticker": "MRK",
           "type": "Raw Materials",
-          "product": "Gases",
+          "product": "Human Papillomavirus (HPV) vaccine under Gardasil brand name",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "STX->HPQ:HARD DISK DRIVES",
+          "source_ticker": "STX",
+          "target_ticker": "HPQ",
+          "type": "Hard Disk Drives",
+          "product": "Hard Disk Drives",
           "review_status": "approved",
           "confidence": 0.95
-        },
-        {
-          "relationship_key": "ASPI->TDY:RADIOLOGICAL ISOTOPES",
-          "source_ticker": "ASPI",
-          "target_ticker": "TDY",
-          "type": "Radiological Isotopes",
-          "product": "Radioactive Materials",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "BA->ALK:AIRCRAFT SUPPLIER",
-          "source_ticker": "BA",
-          "target_ticker": "ALK",
-          "type": "Aircraft Supplier",
-          "product": "Commercial Aircraft",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "BA->DAL:COMMERCIAL AIRCRAFT",
-          "source_ticker": "BA",
-          "target_ticker": "DAL",
-          "type": "Commercial Aircraft",
-          "product": "737-800 aircraft",
-          "review_status": "approved",
-          "confidence": 0.975
-        },
-        {
-          "relationship_key": "BA->LUV:MANUFACTURING",
-          "source_ticker": "BA",
-          "target_ticker": "LUV",
-          "type": "Manufacturing",
-          "product": "Aircraft",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "BBY->TMUS:RETAILER OF MOBILE DEVICES",
-          "source_ticker": "BBY",
-          "target_ticker": "TMUS",
-          "type": "Retailer of Mobile Devices",
-          "product": "Cellular Phones/Handsets",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "BHP->FCX:MOLYBDENUM MINING OPERATIONS",
-          "source_ticker": "BHP",
-          "target_ticker": "FCX",
-          "type": "Molybdenum Mining Operations",
-          "product": "Molybdenum Ore",
-          "review_status": "approved",
-          "confidence": 0.9
         }
       ],
       "changed_links": []
     },
     "history": [
-      {
-        "generated_at": "2026-08-07T06:58:41+00:00",
-        "generated_on": "2026-08-07",
-        "unique_links": 442,
-        "approved_links": 442,
-        "pending_links": 0,
-        "linked_companies": 390
-      },
-      {
-        "generated_at": "2026-08-08T06:20:38+00:00",
-        "generated_on": "2026-08-08",
-        "unique_links": 442,
-        "approved_links": 442,
-        "pending_links": 0,
-        "linked_companies": 390
-      },
       {
         "generated_at": "2026-08-09T05:57:59+00:00",
         "generated_on": "2026-08-09",
@@ -114830,6 +114434,23 @@
         "approved_links": 441,
         "pending_links": 0,
         "linked_companies": 389
+      },
+      {
+        "generated_at": "2026-08-26T04:30:22+00:00",
+        "generated_on": "2026-08-26",
+        "unique_links": 309,
+        "approved_links": 309,
+        "pending_links": 0,
+        "linked_companies": 317
+      },
+      {
+        "generated_at": "2026-09-02T20:20:27+00:00",
+        "generated_on": "2026-09-02",
+        "unique_links": 304,
+        "approved_links": 304,
+        "pending_links": 0,
+        "rejected_links": 0,
+        "linked_companies": 315
       }
     ]
   }

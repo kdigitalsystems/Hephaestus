@@ -20,6 +20,9 @@ engine = create_engine(
 @event.listens_for(engine, "connect")
 def configure_sqlite_connection(dbapi_connection, _connection_record):
     dbapi_connection.execute(f"PRAGMA busy_timeout = {SQLITE_TIMEOUT_SECONDS * 1000}")
+    # SQLite ignores foreign keys unless asked; without this, deleting a company
+    # leaves edges pointing at a node id that no longer exists.
+    dbapi_connection.execute("PRAGMA foreign_keys = ON")
 
 # Create a configured "Session" class to interact with the DB
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -62,6 +65,11 @@ def apply_lightweight_migrations():
             connection.execute(text("ALTER TABLE edges ADD COLUMN review_note TEXT"))
         if "reviewed_at" not in edge_columns:
             connection.execute(text("ALTER TABLE edges ADD COLUMN reviewed_at DATETIME"))
+        # create_all() skips tables that already exist, so indexes added to the
+        # models later must be created here for databases built before them.
+        connection.execute(text("CREATE INDEX IF NOT EXISTS ix_edges_source_id ON edges (source_id)"))
+        connection.execute(text("CREATE INDEX IF NOT EXISTS ix_edges_target_id ON edges (target_id)"))
+        connection.execute(text("CREATE INDEX IF NOT EXISTS ix_edges_review_status ON edges (review_status)"))
 
 # If you run `python database.py` from the terminal, it will create the tables.
 if __name__ == "__main__":
