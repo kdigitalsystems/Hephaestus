@@ -211,6 +211,41 @@ def test_evidence_must_quote_collected_source_text_and_urls_must_be_ours():
     assert verified_source_url("AI Multi-Source Research", source_text) is None
 
 
+def test_collector_source_titles_are_derived_from_our_headers():
+    from auto_discover_edges import collector_source_title
+
+    blob = (
+        "SOURCE: SEC EDGAR (10-K filed 2025-10-31, https://www.sec.gov/Archives/edgar/data/1/10k.htm)\nDATA:\nx\n"
+        "SOURCE: WIKIPEDIA (Page: Corning Inc.; https://en.wikipedia.org/wiki/Corning_Inc.)\nDATA:\ny\n"
+        "SOURCE: Company IR / Website (https://ir.example.com/)\nDATA:\nz\n"
+    )
+
+    assert collector_source_title("https://www.sec.gov/Archives/edgar/data/1/10k.htm", blob) == "SEC EDGAR (10-K filed 2025-10-31)"
+    assert collector_source_title("https://en.wikipedia.org/wiki/Corning_Inc.", blob) == "WIKIPEDIA (Page: Corning Inc.)"
+    assert collector_source_title("https://ir.example.com/", blob) == "Company IR / Website"
+    assert collector_source_title(None, blob) == "AI Multi-Source Research"
+    assert collector_source_title("https://elsewhere.example.com/", blob) == "AI Multi-Source Research"
+
+
+def test_upsert_stores_and_upgrades_citations():
+    Session = memory_session()
+    session = Session()
+    source = Node(name="Corning", ticker="GLW")
+    target = Node(name="Apple", ticker="AAPL")
+    session.add_all([source, target])
+    session.commit()
+    dependency = {"dependency_type": "Cover Glass", "product": "glass", "confidence_score": 0.8, "evidence_excerpt": "Corning supplies cover glass to Apple."}
+
+    edge, _ = upsert_pending_edge(session, source, target, dict(dependency))
+    assert (edge.source_url, edge.source_title) == ("AI Multi-Source Research", "AI Multi-Source Research")
+
+    cited = dict(dependency, evidence_source_url="https://www.sec.gov/Archives/edgar/data/1/10k.htm", evidence_source_title="SEC EDGAR (10-K filed 2025-10-31)")
+    edge, created = upsert_pending_edge(session, source, target, cited)
+    assert created is False
+    assert edge.source_url == "https://www.sec.gov/Archives/edgar/data/1/10k.htm"
+    assert edge.source_title == "SEC EDGAR (10-K filed 2025-10-31)"
+
+
 def test_review_decision_apply_does_not_adopt_a_different_pending_relationship_from_the_same_filing():
     Session, session, source, target = seeded_session()
     session.add(Edge(

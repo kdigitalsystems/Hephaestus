@@ -7,6 +7,7 @@ from export import (
     annotate_dashboard_data,
     merge_relationships,
     publish_dashboard,
+    summarize_review,
 )
 from evidence_quality import unsupported_ai_evidence
 
@@ -102,6 +103,7 @@ def decision_relationship(decision, connected_ticker, connected_name):
         "source_title": decision.get("source_title") or source_url,
         "source_type": source_type(source_url),
         "review_status": decision.get("review_status") or "approved",
+        "review_summary": summarize_review(decision.get("review_note"), source_url, decision.get("review_status") or "approved"),
         "revenue_share": decision.get("revenue_share"),
         "evidence_excerpt": decision.get("evidence_excerpt") or "",
         "last_verified": reviewed_at[:10] if reviewed_at else "N/A",

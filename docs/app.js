@@ -1086,6 +1086,24 @@ function renderSupplyGraph(company) {
     graph.appendChild(makeGraphColumn('downstream', 'Downstream', downstream));
 }
 
+const hasSourceUrl = (dep) => Boolean(dep.source && /^https?:\/\//i.test(dep.source));
+
+// What a relationship's evidence actually is, stated honestly: a cited document, a
+// curated seed, or model research with no direct citation.
+const provenanceLabel = (dep) => {
+    if (hasSourceUrl(dep)) {
+        return dep.source_title && dep.source_title !== dep.source ? dep.source_title : 'Cited source';
+    }
+    if (/manual/i.test(String(dep.source_type || '')) || /manual/i.test(String(dep.source || ''))) return 'Curated seed';
+    return 'AI research · no direct citation';
+};
+
+const reviewLabel = (dep) => {
+    const summary = dep.review_summary;
+    if (summary && summary.label) return summary.label;
+    return relationshipStatus(dep) === 'approved' ? 'Reviewed' : 'Awaiting review';
+};
+
 // revenue_share is the share of the SUPPLIER's revenue that the customer represents,
 // from the supplier's own 10%-customer disclosure.
 const revenueShareLabel = (dep, directionClass) => {
@@ -1122,7 +1140,8 @@ function renderXRay(company) {
         if (share) meta.appendChild(makeElement('span', 'source-badge revenue-share', share));
         const confidence = dep.confidence !== undefined && dep.confidence !== null ? `${Math.round(Number(dep.confidence) * 100)}% confidence` : 'Confidence N/A';
         meta.appendChild(makeElement('span', 'source-badge', confidence));
-        meta.appendChild(makeElement('span', 'source-badge', dep.source_type || 'Source N/A'));
+        meta.appendChild(makeElement('span', `source-badge provenance ${hasSourceUrl(dep) ? 'cited' : 'uncited'}`, provenanceLabel(dep)));
+        meta.appendChild(makeElement('span', 'source-badge review', reviewLabel(dep)));
         meta.appendChild(makeElement('span', 'source-badge', dep.last_verified ? `Verified ${dep.last_verified}` : 'Verification N/A'));
         card.appendChild(meta);
 
@@ -1131,15 +1150,15 @@ function renderXRay(company) {
         }
 
         const actions = makeElement('div', 'relationship-actions');
-        const hasSourceUrl = dep.source && /^https?:\/\//i.test(dep.source);
-        const evidenceButton = makeElement('button', 'mini-button', dep.evidence_excerpt || hasSourceUrl ? 'Evidence' : 'Details');
+        const cited = hasSourceUrl(dep);
+        const evidenceButton = makeElement('button', 'mini-button', dep.evidence_excerpt || cited ? 'Evidence' : 'Details');
         evidenceButton.type = 'button';
         evidenceButton.onclick = event => {
             event.stopPropagation();
             openEvidenceModal(dep, getCompanyByTicker(currentRoute.ticker) || {}, directionClass);
         };
         actions.appendChild(evidenceButton);
-        if (hasSourceUrl) {
+        if (cited) {
             const sourceLink = makeElement('a', 'mini-button', 'Source');
             sourceLink.href = dep.source;
             sourceLink.target = '_blank';
@@ -1193,13 +1212,16 @@ function openEvidenceModal(dep, company = {}, direction = '') {
     const body = document.getElementById('modal-body');
     clearElement(body);
     setText('modal-title', `${company.ticker || 'Company'} ${direction === 'upstream' ? '<-' : '->'} ${dep.ticker || dep.name || 'Counterparty'}`);
+    const summary = dep.review_summary || {};
     [
         ['Counterparty', `${displayCompanyName(dep.name)} ${dep.ticker ? `(${dep.ticker})` : ''}`],
         ['Relationship', dep.type || 'Supply Link'],
         ['Product / service', dep.product || 'N/A'],
         ['Share of supplier revenue', revenueShareLabel(dep, 'downstream') || 'Not disclosed'],
         ['Confidence', dep.confidence !== undefined && dep.confidence !== null ? `${Math.round(Number(dep.confidence) * 100)}%` : 'N/A'],
+        ['Source', provenanceLabel(dep)],
         ['Source type', dep.source_type || 'N/A'],
+        ['Verification', reviewLabel(dep)],
         ['Last verified', dep.last_verified || 'N/A'],
     ].forEach(([label, value]) => {
         const row = makeElement('div', 'modal-row');
@@ -1212,13 +1234,23 @@ function openEvidenceModal(dep, company = {}, direction = '') {
     } else {
         body.appendChild(makeElement('p', 'modal-evidence muted', 'No evidence excerpt was saved for this relationship.'));
     }
-    if (dep.source && /^https?:\/\//i.test(dep.source)) {
+    if (summary.rationale) {
+        body.appendChild(makeElement('p', 'modal-rationale', `Reviewer rationale: ${summary.rationale}`));
+    }
+    const links = makeElement('div', 'modal-links');
+    if (hasSourceUrl(dep)) {
         const link = makeElement('a', 'source-link modal-source', 'Open source');
         link.href = dep.source;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
-        body.appendChild(link);
+        links.appendChild(link);
     }
+    const methodology = makeElement('a', 'source-link modal-source', 'How links are verified');
+    methodology.href = 'methodology.html#review';
+    methodology.target = '_blank';
+    methodology.rel = 'noopener noreferrer';
+    links.appendChild(methodology);
+    body.appendChild(links);
     modal.classList.remove('hidden');
 }
 

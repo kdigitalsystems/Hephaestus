@@ -1,6 +1,7 @@
 import os
 import json
 import math
+import re
 import tempfile
 from datetime import datetime, timezone
 from database import SessionLocal
@@ -42,6 +43,64 @@ def clean_num(val):
     except (ValueError, TypeError):
         return val
 
+CONSENSUS_PATTERN = re.compile(r"Consensus (\d+)/(\d+) for (\w+)")
+# Model names contain colons ("qwen2.5:7b-instruct"); the rationale starts after the
+# first colon that is followed by whitespace.
+LEAD_RATIONALE_PATTERN = re.compile(r"Lead rationale from .+?:\s+(.+)$", re.DOTALL)
+RATIONALE_MAX_CHARS = 280
+
+
+def compact_rationale(text):
+    text = " ".join(str(text or "").split())
+    if len(text) <= RATIONALE_MAX_CHARS:
+        return text
+    return text[:RATIONALE_MAX_CHARS].rsplit(" ", 1)[0] + "…"
+
+
+def summarize_review(note, source_url=None, review_status=None):
+    """Turn a free-text review note into a small, publishable verification record.
+
+    The dashboard shows how a link was verified (curated seed, consensus panel vote,
+    single-model review, human review) without exposing internal queue mechanics.
+    """
+    note_text = " ".join(str(note or "").split())
+    lowered = note_text.lower()
+    source = str(source_url or "")
+    if "manual" in source.lower() and not source.lower().startswith(("http://", "https://")) or lowered.startswith("curated seed"):
+        return {"method": "curated", "label": "Curated seed relationship", "votes_for": None, "votes_total": None, "rationale": ""}
+    match = CONSENSUS_PATTERN.search(note_text)
+    if match:
+        votes_for, votes_total = int(match.group(1)), int(match.group(2))
+        rationale = LEAD_RATIONALE_PATTERN.search(note_text)
+        return {
+            "method": "consensus",
+            "label": f"Consensus panel {votes_for}/{votes_total} models",
+            "votes_for": votes_for,
+            "votes_total": votes_total,
+            "rationale": compact_rationale(rationale.group(1) if rationale else ""),
+        }
+    if lowered.startswith(("ollama review:", "ollama report review:")):
+        return {
+            "method": "model",
+            "label": "Single-model review",
+            "votes_for": 1,
+            "votes_total": 1,
+            "rationale": compact_rationale(note_text.split(":", 1)[1]),
+        }
+    if lowered.startswith("automated"):
+        return {"method": "automated", "label": "Automated rule", "votes_for": None, "votes_total": None, "rationale": compact_rationale(note_text)}
+    if note_text:
+        return {"method": "human", "label": "Human review", "votes_for": None, "votes_total": None, "rationale": compact_rationale(note_text)}
+    status = (review_status or "pending").lower()
+    return {
+        "method": "unreviewed" if status == "pending" else "unrecorded",
+        "label": "Awaiting review" if status == "pending" else "Review record unavailable",
+        "votes_for": None,
+        "votes_total": None,
+        "rationale": "",
+    }
+
+
 def stable_edge_key(edge, supplier_node=None, customer_node=None):
     supplier_node = supplier_node or edge.source_node
     customer_node = customer_node or edge.target_node
@@ -74,6 +133,7 @@ def edge_payload(edge, node, supplier_node=None, customer_node=None):
         "source_title": edge.source_title or source_url,
         "source_type": source_type,
         "review_status": edge.review_status or "pending",
+        "review_summary": summarize_review(getattr(edge, "review_note", None), source_url, edge.review_status),
         "revenue_share": clean_num(getattr(edge, "revenue_share", None)),
         "evidence_excerpt": edge.evidence_excerpt or "",
         "last_verified": edge.last_verified.strftime('%Y-%m-%d') if edge.last_verified else "N/A"

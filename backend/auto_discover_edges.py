@@ -118,6 +118,28 @@ def verified_source_url(url, source_text):
     return None
 
 
+DEFAULT_SOURCE_TITLE = "AI Multi-Source Research"
+
+
+def collector_source_title(url, source_text):
+    """Human-readable citation for a verified URL, taken from our own SOURCE header.
+
+    "SOURCE: SEC EDGAR (10-K filed 2025-10-31, https://…)" becomes
+    "SEC EDGAR (10-K filed 2025-10-31)".
+    """
+    if not url:
+        return DEFAULT_SOURCE_TITLE
+    for line in str(source_text or "").splitlines():
+        if not line.startswith("SOURCE:") or url not in line:
+            continue
+        title = line[len("SOURCE:"):].strip()
+        title = re.sub(r"[;,]?\s*" + re.escape(url), "", title)
+        title = re.sub(r"\(\s*\)", "", title)
+        title = " ".join(title.split()).strip(" ;,")
+        return title or DEFAULT_SOURCE_TITLE
+    return DEFAULT_SOURCE_TITLE
+
+
 def has_invalid_dependency_label(value):
     return str(value or "").strip().lower() in {"news", "unknown"}
 
@@ -194,6 +216,7 @@ def discover_customer_concentration(session, company, known_names):
             "confidence_score": CONCENTRATION_CONFIDENCE,
             "evidence_excerpt": f"{clean_company_name(company.name or '')} ({company.ticker}) {label}: {disclosure.sentence}",
             "evidence_source_url": filing["url"],
+            "evidence_source_title": f"SEC EDGAR ({label}; customer-concentration disclosure)",
             "revenue_share": disclosure.share_pct,
         }
         edge, was_created = upsert_pending_edge(session, company, customer, dep)
@@ -215,8 +238,11 @@ def upsert_pending_edge(session, source_node, target_node, dep):
         conf = conf / 100.0 if conf > 10 else conf / 10.0
     conf = max(0.0, min(1.0, conf))
     evidence_source_url = str(dep.get('evidence_source_url') or '').strip()
-    if not evidence_source_url.startswith(('http://', 'https://')):
-        evidence_source_url = "AI Multi-Source Research"
+    has_citation = evidence_source_url.startswith(('http://', 'https://'))
+    if not has_citation:
+        evidence_source_url = DEFAULT_SOURCE_TITLE
+    source_title = str(dep.get('evidence_source_title') or '').strip() if has_citation else ''
+    source_title = source_title or DEFAULT_SOURCE_TITLE
 
     existing = session.query(Edge).filter(
         Edge.source_id == source_node.id,
@@ -230,12 +256,12 @@ def upsert_pending_edge(session, source_node, target_node, dep):
         if dep.get('evidence_excerpt') and not existing.evidence_excerpt:
             existing.evidence_excerpt = dep.get('evidence_excerpt')
         existing.confidence_score = max(existing.confidence_score or 0, conf)
-        if not existing.source_title:
-            existing.source_title = "AI Multi-Source Research"
-        if not existing.source_url or (
-            existing.source_url == "AI Multi-Source Research" and evidence_source_url.startswith(('http://', 'https://'))
-        ):
+        if not existing.source_url or (existing.source_url == DEFAULT_SOURCE_TITLE and has_citation):
+            # A real citation always upgrades an uncited edge.
             existing.source_url = evidence_source_url
+            existing.source_title = source_title
+        elif not existing.source_title:
+            existing.source_title = DEFAULT_SOURCE_TITLE
         return existing, False
 
     new_edge = Edge(
@@ -245,7 +271,7 @@ def upsert_pending_edge(session, source_node, target_node, dep):
         product=dep.get('product'),
         confidence_score=conf,
         source_url=evidence_source_url,
-        source_title="AI Multi-Source Research",
+        source_title=source_title,
         evidence_excerpt=dep.get('evidence_excerpt'),
         revenue_share=dep.get('revenue_share'),
         review_status="pending"
@@ -566,6 +592,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                     print(f"  [!] Ignored relationship whose excerpt is not in the collected source text: {dep.get('dependency_type')}")
                     continue
                 dep['evidence_source_url'] = verified_source_url(dep.get('evidence_source_url'), intel_blob)
+                dep['evidence_source_title'] = collector_source_title(dep['evidence_source_url'], intel_blob)
 
                 s_node = resolve_counterparty(session, dep.get('source_ticker'), dep.get('source_company'))
                 t_node = resolve_counterparty(session, dep.get('target_ticker'), dep.get('target_company'))
