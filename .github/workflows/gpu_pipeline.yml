@@ -160,6 +160,9 @@ jobs:
           echo "Publishing change feeds..."
           venv/bin/python backend/generate_change_feed.py
 
+          echo "Pre-rendering company pages and sitemap..."
+          venv/bin/python backend/generate_static_pages.py
+
       - name: Commit and Push Dashboard Data
         run: |
           git config --global user.name "github-actions[bot]"
@@ -167,6 +170,7 @@ jobs:
           
           git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
           git add docs/changes.json docs/feed.xml
+          git add -A docs/company docs/sitemap.xml
 
           if ! git diff --cached --quiet; then
             git commit -m "Automated AI extraction: Update Supply Chain X-Ray"

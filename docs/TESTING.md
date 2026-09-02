@@ -56,6 +56,7 @@ python backend/export.py
 python backend/repair_dashboard_from_decisions.py
 python backend/validate_dashboard_data.py
 python backend/generate_change_feed.py
+python backend/generate_static_pages.py
 ```
 
 The scheduled pipeline requires the self-hosted GPU runner, Alpaca credentials, and local Ollama review models.

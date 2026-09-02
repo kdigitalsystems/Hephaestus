@@ -33,6 +33,7 @@ docs/
   TESTING.md              Local checks, CI jobs, and scheduled pipeline notes
   index.html              Static dashboard shell
   methodology.html        Public explanation of sources, review rules, labels, and limits
+  company/                Pre-rendered, indexable page per linked company plus an index
   app.js                  Dashboard behavior
   styles.css              Dashboard styling
   dashboard_data.json     Exported dashboard data
@@ -389,7 +390,7 @@ GitHub CI runs Python tests on Python 3.10 and 3.12, frontend/dashboard checks o
 
 Research-signal generation is isolated in `.github/workflows/predictions.yml`. It uses the self-hosted GPU runner and Ollama, writes only `docs/predictions.json` and `docs/prediction_history.json`, and does not alter the daily discovery/update workflow. The prediction and daily graph workflows share a concurrency group before their publishing steps, preventing simultaneous pushes to `main`. Standard CI includes a separate prediction-export check that runs without Ollama. Scheduled prediction generation fails when Ollama cannot produce any valid, evidence-bound scenario rather than quietly publishing a model-fallback run.
 
-The static site includes `docs/sitemap.xml` and `docs/robots.txt` for GitHub Pages discovery. The app uses hash routes such as `#company?ticker=AMD` internally, but the sitemap points search engines at the canonical dashboard entry point because URL fragments are not reliable sitemap targets.
+The app uses hash routes such as `#company?ticker=AMD` internally, which search engines do not index, so `python3 backend/generate_static_pages.py` pre-renders one static page per company with published relationships under `docs/company/<TICKER>.html` (suppliers, customers, verification labels, evidence, citations, and links back to the interactive brief and exposure map), plus `docs/company/index.html` and `docs/sitemap.xml` listing them all. Both pipelines run it after the feeds; pages for companies that lose their last relationship are removed. `docs/robots.txt` points crawlers at the sitemap.
 
 ## Full Pipeline
 
