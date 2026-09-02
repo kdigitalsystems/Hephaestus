@@ -41,6 +41,7 @@ def export_decisions(path):
                     "dependency_type": edge.dependency_type,
                     "product": edge.product,
                     "confidence_score": edge.confidence_score,
+                    "revenue_share": edge.revenue_share,
                     "source_url": edge.source_url,
                     "source_title": edge.source_title,
                     "evidence_excerpt": edge.evidence_excerpt,
@@ -127,6 +128,7 @@ def apply_decision(session, decision):
     edge.dependency_type = decision["dependency_type"]
     edge.product = decision.get("product")
     edge.confidence_score = decision.get("confidence_score")
+    edge.revenue_share = decision.get("revenue_share")
     edge.source_url = decision.get("source_url")
     edge.source_title = decision.get("source_title")
     edge.evidence_excerpt = decision.get("evidence_excerpt")

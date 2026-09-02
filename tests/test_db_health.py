@@ -14,7 +14,7 @@ from db_health import database_status
 EDGES_SCHEMA = (
     "CREATE TABLE edges (id INTEGER PRIMARY KEY, source_id INTEGER, target_id INTEGER, "
     "dependency_type TEXT, product TEXT, source_url TEXT, source_title TEXT, evidence_excerpt TEXT, "
-    "review_status TEXT, review_note TEXT, reviewed_at DATETIME)"
+    "review_status TEXT, review_note TEXT, reviewed_at DATETIME, revenue_share FLOAT)"
 )
 
 

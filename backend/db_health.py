@@ -19,6 +19,7 @@ REQUIRED_EDGE_COLUMNS = {
     "review_status",
     "review_note",
     "reviewed_at",
+    "revenue_share",
 }
 SQLITE_TIMEOUT_SECONDS = 30
 

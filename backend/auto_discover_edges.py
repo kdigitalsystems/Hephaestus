@@ -12,8 +12,9 @@ from database import SessionLocal
 from models import Node, Edge
 from parser import extract_dependencies
 from yahooquery import search as yq_search, Ticker
-from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_text
+from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_text, latest_annual_filing
 from additional_sources import get_additional_supply_chain_text
+from customer_concentration import describe_share, extract_disclosures
 from evidence_quality import (
     has_non_supply_relationship,
     has_usable_evidence,
@@ -28,6 +29,9 @@ warnings.filterwarnings("ignore", category=UserWarning, module='wikipedia')
 USE_SEC_SOURCE = os.environ.get("HEPHAESTUS_USE_SEC_SOURCE", "1") != "0"
 USE_SEC_EXHIBITS = os.environ.get("HEPHAESTUS_USE_SEC_EXHIBITS", "1") != "0"
 USE_ADDITIONAL_SOURCES = os.environ.get("HEPHAESTUS_USE_ADDITIONAL_SOURCES", "1") != "0"
+# Deterministic extraction of "customers >= 10% of revenue" disclosures from annual reports.
+USE_CUSTOMER_CONCENTRATION = os.environ.get("HEPHAESTUS_USE_CUSTOMER_CONCENTRATION", "1") != "0"
+CONCENTRATION_CONFIDENCE = 0.9
 CONTEXT_MAX_CHARS = int(os.environ.get("HEPHAESTUS_CONTEXT_MAX_CHARS", "15000"))
 # Wikipedia is the lowest-quality source; without its own budget it could consume the
 # whole context window and push the SEC filing text out entirely.
@@ -151,6 +155,56 @@ def normalize_dependency(dep):
         dep["dependency_type"] = "Supply Relationship"
     return dep
 
+def known_company_names(session):
+    """Display name -> cleaned name for every listed company, for concentration matching."""
+    names = {}
+    for name, in session.query(Node.name).filter(Node.ticker.is_not(None)).all():
+        cleaned = clean_company_name(str(name or ""))
+        if cleaned:
+            names[name] = cleaned
+    return names
+
+
+def discover_customer_concentration(session, company, known_names):
+    """Create pending edges from the filer's own 10% customer disclosures.
+
+    The filer is the supplier and the named customer the receiver; the disclosed
+    share of revenue is stored on the edge so the dashboard can show magnitude.
+    """
+    if not USE_CUSTOMER_CONCENTRATION:
+        return 0
+    try:
+        filing, text = latest_annual_filing(company.ticker)
+    except Exception as exc:
+        print(f"  [-] Customer concentration source unavailable for {company.ticker}: {exc}")
+        return 0
+    if not filing or not text:
+        return 0
+
+    created = 0
+    filer_aliases = (company.name, clean_company_name(company.name or ""), company.ticker)
+    for disclosure in extract_disclosures(text, known_names, filer_aliases):
+        customer = resolve_counterparty(session, None, disclosure.customer_name)
+        if not customer or customer.id == company.id:
+            continue
+        label = f"{filing['form']} filed {filing.get('filing_date') or 'unknown date'}"
+        dep = {
+            "dependency_type": "Revenue Concentration",
+            "product": describe_share(disclosure.share_pct, company.ticker),
+            "confidence_score": CONCENTRATION_CONFIDENCE,
+            "evidence_excerpt": f"{clean_company_name(company.name or '')} ({company.ticker}) {label}: {disclosure.sentence}",
+            "evidence_source_url": filing["url"],
+            "revenue_share": disclosure.share_pct,
+        }
+        edge, was_created = upsert_pending_edge(session, company, customer, dep)
+        if disclosure.share_pct is not None and (edge.revenue_share is None or edge.revenue_share < disclosure.share_pct):
+            edge.revenue_share = disclosure.share_pct
+        if was_created:
+            created += 1
+            print(f"  [+] CUSTOMER CONCENTRATION: {company.ticker} -> {customer.ticker} ({dep['product']})")
+    return created
+
+
 def upsert_pending_edge(session, source_node, target_node, dep):
     dep_type = dep.get('dependency_type') or 'Supply Link'
     try:
@@ -193,6 +247,7 @@ def upsert_pending_edge(session, source_node, target_node, dep):
         source_url=evidence_source_url,
         source_title="AI Multi-Source Research",
         evidence_excerpt=dep.get('evidence_excerpt'),
+        revenue_share=dep.get('revenue_share'),
         review_status="pending"
     )
     try:
@@ -456,8 +511,15 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             print("No actionable companies found in queue!")
             return
 
+        known_names = known_company_names(session) if USE_CUSTOMER_CONCENTRATION and USE_SEC_SOURCE else {}
+
         for company in lonely_nodes:
             print(f"\n[->] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
+
+            if known_names:
+                concentration_edges = discover_customer_concentration(session, company, known_names)
+                if concentration_edges:
+                    session.commit()
 
             intel_blob = ""
             intel_blob += IntelGatherer.get_wiki_data(company.name, company.ticker)

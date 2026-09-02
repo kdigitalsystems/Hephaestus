@@ -102,6 +102,7 @@ def decision_relationship(decision, connected_ticker, connected_name):
         "source_title": decision.get("source_title") or source_url,
         "source_type": source_type(source_url),
         "review_status": decision.get("review_status") or "approved",
+        "revenue_share": decision.get("revenue_share"),
         "evidence_excerpt": decision.get("evidence_excerpt") or "",
         "last_verified": reviewed_at[:10] if reviewed_at else "N/A",
     }

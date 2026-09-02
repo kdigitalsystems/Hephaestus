@@ -1086,6 +1086,15 @@ function renderSupplyGraph(company) {
     graph.appendChild(makeGraphColumn('downstream', 'Downstream', downstream));
 }
 
+// revenue_share is the share of the SUPPLIER's revenue that the customer represents,
+// from the supplier's own 10%-customer disclosure.
+const revenueShareLabel = (dep, directionClass) => {
+    const share = Number(dep.revenue_share);
+    if (!Number.isFinite(share) || share <= 0) return '';
+    const value = `${Number.isInteger(share) ? share : share.toFixed(1)}%`;
+    return directionClass === 'downstream' ? `${value} of revenue` : `${value} of ${dep.ticker || 'supplier'} revenue`;
+};
+
 function renderXRay(company) {
     const renderXRayCard = (dep, directionClass) => {
         const linkedCompany = getCompanyByTicker(dep.ticker);
@@ -1109,6 +1118,8 @@ function renderXRay(company) {
         }
 
         const meta = makeElement('div', 'relationship-meta');
+        const share = revenueShareLabel(dep, directionClass);
+        if (share) meta.appendChild(makeElement('span', 'source-badge revenue-share', share));
         const confidence = dep.confidence !== undefined && dep.confidence !== null ? `${Math.round(Number(dep.confidence) * 100)}% confidence` : 'Confidence N/A';
         meta.appendChild(makeElement('span', 'source-badge', confidence));
         meta.appendChild(makeElement('span', 'source-badge', dep.source_type || 'Source N/A'));
@@ -1186,6 +1197,7 @@ function openEvidenceModal(dep, company = {}, direction = '') {
         ['Counterparty', `${displayCompanyName(dep.name)} ${dep.ticker ? `(${dep.ticker})` : ''}`],
         ['Relationship', dep.type || 'Supply Link'],
         ['Product / service', dep.product || 'N/A'],
+        ['Share of supplier revenue', revenueShareLabel(dep, 'downstream') || 'Not disclosed'],
         ['Confidence', dep.confidence !== undefined && dep.confidence !== null ? `${Math.round(Number(dep.confidence) * 100)}%` : 'N/A'],
         ['Source type', dep.source_type || 'N/A'],
         ['Last verified', dep.last_verified || 'N/A'],

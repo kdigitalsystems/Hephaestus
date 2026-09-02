@@ -2626,6 +2626,12 @@ td.muted {
     gap: 8px;
 }
 
+.source-badge.revenue-share {
+    border-color: var(--border-strong);
+    color: var(--accent);
+    font-weight: 900;
+}
+
 @media (max-width: 680px) {
     .prediction-calibration,
     .prediction-metrics {

@@ -74,6 +74,7 @@ def edge_payload(edge, node, supplier_node=None, customer_node=None):
         "source_title": edge.source_title or source_url,
         "source_type": source_type,
         "review_status": edge.review_status or "pending",
+        "revenue_share": clean_num(getattr(edge, "revenue_share", None)),
         "evidence_excerpt": edge.evidence_excerpt or "",
         "last_verified": edge.last_verified.strftime('%Y-%m-%d') if edge.last_verified else "N/A"
     }
@@ -137,6 +138,12 @@ def merge_relationship_group(relationships):
         if relationship.get("confidence") is not None
     ]
     primary["confidence"] = max(confidences) if confidences else None
+    shares = [
+        relationship.get("revenue_share")
+        for relationship in ranked
+        if isinstance(relationship.get("revenue_share"), (int, float))
+    ]
+    primary["revenue_share"] = max(shares) if shares else None
     return primary
 
 def merge_relationships(relationships):
