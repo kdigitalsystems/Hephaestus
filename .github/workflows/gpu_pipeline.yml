@@ -5,8 +5,10 @@ on:
   schedule:
     - cron: '0 3 * * *'
 
+# Publishing uses the Hephaestus Pipeline Bot app token minted below, which is the
+# only identity allowed to push to main directly; GITHUB_TOKEN needs no write access.
 permissions:
-  contents: write 
+  contents: read
 
 concurrency:
   group: hephaestus-main-publisher
@@ -30,8 +32,18 @@ jobs:
       HEPHAESTUS_REVIEW_CONSENSUS_MIN_RATIO: "0.66"
 
     steps:
+      - name: Mint pipeline app token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.HEPHAESTUS_APP_ID }}
+          private-key: ${{ secrets.HEPHAESTUS_APP_PRIVATE_KEY }}
+
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          # Persisted for the push step; the app bypasses the PR-only rule on main.
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Refresh main before generation
         run: |

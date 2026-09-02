@@ -375,6 +375,8 @@ python3 -m pytest -q
 
 GitHub CI runs Python tests on Python 3.10 and 3.12, frontend/dashboard checks on Node 24, shell syntax checks, committed whitespace checks, and dashboard validation. Standard CI disables live source fetching and relies on mocked unit tests for external API collectors. The scheduled GPU pipeline runs the SQLite-backed relationship audit after live discovery and review.
 
+`main` only accepts changes through pull requests. The two scheduled publishing workflows are the exception: they authenticate as the **Hephaestus Pipeline Bot** GitHub App (secrets `HEPHAESTUS_APP_ID` and `HEPHAESTUS_APP_PRIVATE_KEY`, minted per run with `actions/create-github-app-token`), and that app is the only actor on the ruleset's bypass list.
+
 Research-signal generation is isolated in `.github/workflows/predictions.yml`. It uses the self-hosted GPU runner and Ollama, writes only `docs/predictions.json` and `docs/prediction_history.json`, and does not alter the daily discovery/update workflow. The prediction and daily graph workflows share a concurrency group before their publishing steps, preventing simultaneous pushes to `main`. Standard CI includes a separate prediction-export check that runs without Ollama. Scheduled prediction generation fails when Ollama cannot produce any valid, evidence-bound scenario rather than quietly publishing a model-fallback run.
 
 The static site includes `docs/sitemap.xml` and `docs/robots.txt` for GitHub Pages discovery. The app uses hash routes such as `#company?ticker=AMD` internally, but the sitemap points search engines at the canonical dashboard entry point because URL fragments are not reliable sitemap targets.
