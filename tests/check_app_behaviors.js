@@ -302,6 +302,35 @@ const overviewStatsText = collectText(element("overview-stats"));
   }
 });
 
+const quietChangesText = collectText(element("overview-changes"));
+if (!quietChangesText.includes("Change tracking starts")) {
+  throw new Error(`overview should explain missing change data; got ${quietChangesText}`);
+}
+
+vm.runInContext(`
+  dashboardMeta = { investor_metrics: { unique_links: 12, change_summary: {
+    previous_generated_on: "2026-09-01", current_generated_on: "2026-09-02",
+    previous_unique_links: 10, current_unique_links: 12, net_change: 2, new_count: 2, removed_count: 1, changed_count: 0,
+    new_links: [
+      { relationship_key: "TSM->AMD:FOUNDRY", source_ticker: "TSM", target_ticker: "AMD", type: "Foundry", product: "wafers" },
+      { relationship_key: "ASML->TSM:EQUIPMENT", source_ticker: "ASML", target_ticker: "TSM", type: "Equipment", product: "Equipment" },
+    ],
+    removed_links: [{ relationship_key: "X->Y:Z", source_ticker: "X", target_ticker: "Y", type: "Z", product: "Z" }],
+    changed_links: [],
+  }, history: [
+    { generated_on: "2026-09-01", unique_links: 10 },
+    { generated_on: "2026-09-02", unique_links: 12 },
+  ] } };
+  renderOverviewStats();
+`, context);
+const changesText = collectText(element("overview-changes"));
+["+2 net supply links", "since 2026-09-01", "2 new, 1 removed, 0 updated", "New (2)", "Removed (1)", "TSM", "AMD", "Foundry · wafers", "2026-09-01 → 2026-09-02: 10 → 12 links", "RSS", "JSON"].forEach((expected) => {
+  if (!changesText.includes(expected)) {
+    throw new Error(`change panel missing ${expected}; got ${changesText}`);
+  }
+});
+vm.runInContext("dashboardMeta = { investor_metrics: { unique_links: 12 } };", context);
+
 vm.runInContext(`
   openEvidenceModal({ ticker: "TSM", name: "Taiwan Semiconductor", type: "Foundry", product: "wafers", confidence: 0.95, source_type: "AI Research", last_verified: "2026-06-01" }, { ticker: "AMD" }, "upstream");
 `, context);

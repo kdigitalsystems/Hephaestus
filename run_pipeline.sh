@@ -107,8 +107,12 @@ python3 backend/repair_dashboard_from_decisions.py
 echo "Validating published dashboard data..."
 python3 backend/validate_dashboard_data.py
 
+echo "Publishing change feeds..."
+python3 backend/generate_change_feed.py
+
 echo "Checking for dashboard changes..."
 git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
+git add docs/changes.json docs/feed.xml
 if ! git diff --cached --quiet; then
   git commit -m "Automated dashboard update: $(date +'%Y-%m-%d')"
   # The scheduled workflow may have published since this run started. Unrelated

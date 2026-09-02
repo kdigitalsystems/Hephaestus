@@ -36,6 +36,8 @@ docs/
   styles.css              Dashboard styling
   dashboard_data.json     Exported dashboard data
   link_history.json       Daily published link-count history
+  changes.json            Day-over-day graph changes, newest first (from link history)
+  feed.xml                RSS feed of the same changes
   predictions.json        Published, research-only top-50 signal export
   prediction_history.json Outcome history used for conservative recalibration
 one_off_scripts/
@@ -300,7 +302,8 @@ The dashboard payload also includes investor-facing derived metrics:
 
 - `investor_metrics.unique_links`, `approved_links`, `pending_links`, and `sector_exposure` summarize the published graph.
 - Each company has `investor_metrics` with upstream/downstream counts, approval counts, top counterparties, average confidence, concentration score, explainable risk scores, and last verified date.
-- `docs/link_history.json` keeps one rolling snapshot per UTC date of published relationship keys so the dashboard can show what changed between daily runs without adding duplicate same-day snapshots.
+- `docs/link_history.json` keeps one rolling snapshot per UTC date of published relationship keys so the dashboard can show what changed between daily runs without adding duplicate same-day snapshots. The overview renders that comparison as a "What changed in the graph" panel, and `python3 backend/generate_change_feed.py` derives `docs/changes.json` and an RSS feed (`docs/feed.xml`) from the same snapshots; both pipelines run it after validation.
+- `update_metrics.py` refreshes companies that have supply-chain links before the rest of the universe, so a throttled market-data crawl degrades the long tail rather than the companies people open.
 - The static UI uses those fields for search filters, watchlist cards, comparison views, source/evidence modals, sector pages, and company Decision Briefs.
 
 The risk scores are intentionally simple and explainable:

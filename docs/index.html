@@ -16,7 +16,8 @@
             document.documentElement.dataset.theme = 'dark';
         }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260902-fixes1">
+    <link rel="alternate" type="application/rss+xml" title="Hephaestus supply-chain changes" href="feed.xml">
+    <link rel="stylesheet" href="styles.css?v=20260902-changes1">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js" defer></script>
 </head>
 <body>
@@ -87,6 +88,14 @@
                     <span>Has supply-chain data</span>
                 </label>
                 <button class="clear-filters" type="button" onclick="clearFilters()">Clear</button>
+            </section>
+
+            <section class="insight-panel changes-panel">
+                <div class="section-heading">
+                    <p class="eyebrow">Recent changes</p>
+                    <h2>What changed in the graph</h2>
+                </div>
+                <div id="overview-changes"></div>
             </section>
 
             <section class="insight-panel">
