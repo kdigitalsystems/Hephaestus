@@ -1,8 +1,14 @@
 import json
+import os
 import re
 import ollama
 from pydantic import BaseModel, Field, ValidationError
 from typing import List, Optional
+
+# Must be a model the runner actually has; the workflow pulls it alongside the
+# review models. The previous hard-coded tag did not exist, and every extraction
+# failed with "model not found" while the pipeline kept publishing.
+DEFAULT_EXTRACTION_MODEL = os.environ.get("HEPHAESTUS_EXTRACTION_MODEL", "llama3.1:8b")
 
 class Dependency(BaseModel):
     source_company: str = Field(min_length=2, description="The name of the supplier or provider.")
@@ -39,11 +45,14 @@ def clean_model_text(value):
     text = text.replace("\\'", "'").replace('\\"', '"').replace("\\n", " ").replace("\\t", " ")
     return " ".join(text.split())
 
-def extract_dependencies(text: str, target_name: str = "the target company", target_ticker: str = "", model_name: str = "llama3.1:8b-instruct-q8_0") -> dict:
+def extract_dependencies(text: str, target_name: str = "the target company", target_ticker: str = "", model_name: str = None) -> dict:
     """
     Passes raw scraped text to the local Ollama model.
     Uses strict ego-centric instructions when a target is provided.
+    Returns {"dependencies": [...]} and, when the model call itself failed,
+    an additional "error" message so callers can tell "nothing found" from "broken".
     """
+    model_name = model_name or DEFAULT_EXTRACTION_MODEL
 
     has_target = target_name and target_name != "the target company"
     target_label = f"{target_name} ({target_ticker})" if target_ticker else target_name
@@ -96,7 +105,7 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
         parsed_data = json.loads(raw_json)
     except Exception as e:
         print(f"Error during LLM extraction: {e}")
-        return {"dependencies": []}
+        return {"dependencies": [], "error": str(e)}
 
     items = parsed_data.get("dependencies") if isinstance(parsed_data, dict) else None
     if not isinstance(items, list):

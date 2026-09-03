@@ -538,6 +538,9 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             return
 
         known_names = known_company_names(session) if USE_CUSTOMER_CONCENTRATION and USE_SEC_SOURCE else {}
+        extraction_attempts = 0
+        extraction_failures = 0
+        last_extraction_error = ""
 
         for company in lonely_nodes:
             print(f"\n[->] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
@@ -565,6 +568,10 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             print(f"  [*] GPU is analyzing {len(intel_blob)} characters for {company.ticker}...")
 
             extraction = extract_dependencies(intel_blob, target_name=clean_target_name, target_ticker=company.ticker)
+            extraction_attempts += 1
+            if extraction.get("error"):
+                extraction_failures += 1
+                last_extraction_error = str(extraction["error"])
             dependencies = extraction.get("dependencies", [])
 
             if dependencies:
@@ -619,6 +626,13 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             time.sleep(1.5)
 
         print("\n--- Titan Queue Complete. Refresh your dashboard to see new X-Ray data. ---")
+        print(f"Extraction summary: {extraction_attempts} companies analyzed, {extraction_failures} extraction failure(s).")
+        if extraction_attempts and extraction_failures == extraction_attempts:
+            # A dead extractor must not look like a quiet day.
+            print(
+                "  [!] EVERY extraction failed, so discovery produced nothing. "
+                f"Last error: {last_extraction_error}. Check HEPHAESTUS_EXTRACTION_MODEL and that Ollama has that model."
+            )
 
     except Exception as e:
         print(f"CRITICAL ERROR: {e}")
