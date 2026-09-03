@@ -131,6 +131,24 @@ def test_extract_dependencies_rejects_url_with_trailing_payload(monkeypatch):
     assert parser.extract_dependencies("source text") == {"dependencies": []}
 
 
+def test_extraction_schema_stays_grammar_safe():
+    """Ollama compiles the schema to a llama.cpp grammar with a tiny regex subset.
+
+    A `pattern` on the URL field made every extraction fail with "failed to parse
+    grammar"; URL validation lives in a Python validator instead.
+    """
+    def walk(node):
+        if isinstance(node, dict):
+            for key, value in node.items():
+                assert key != "pattern", "regex patterns must not reach the Ollama grammar"
+                walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(parser.ExtractionResult.model_json_schema())
+
+
 def test_extract_dependencies_rejects_malformed_source_url(monkeypatch):
     monkeypatch.setattr(parser.ollama, "chat", lambda **_kwargs: {
         "message": {"content": """{

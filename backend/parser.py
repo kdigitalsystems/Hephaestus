@@ -2,8 +2,13 @@ import json
 import os
 import re
 import ollama
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, ValidationError, field_validator
 from typing import List, Optional
+
+# Validated in Python, not via a JSON-schema `pattern`: Ollama compiles the schema
+# into a llama.cpp grammar, and its regex subset rejected `\S`, so every request
+# failed with "Failed to initialize samplers: failed to parse grammar".
+SOURCE_URL_PATTERN = re.compile(r"^https?://\S+$")
 
 # Must be a model the runner actually has; the workflow pulls it alongside the
 # review models. The previous hard-coded tag did not exist, and every extraction
@@ -20,10 +25,18 @@ class Dependency(BaseModel):
     evidence_excerpt: str = Field(min_length=20, description="A short verbatim supporting excerpt from the source text.")
     evidence_source_url: Optional[str] = Field(
         default=None,
-        pattern=r"^https?://\S+$",
-        description="The exact URL from the SOURCE header supporting the excerpt, or null when unavailable.",
+        description="The exact HTTP or HTTPS URL from the SOURCE header supporting the excerpt, or null when unavailable.",
     )
     confidence_score: float = Field(ge=0.0, le=1.0, description="Confidence from 0.0 to 1.0.")
+
+    @field_validator("evidence_source_url")
+    @classmethod
+    def source_url_must_be_http(cls, value):
+        if value is None:
+            return None
+        if not SOURCE_URL_PATTERN.match(value):
+            raise ValueError("evidence_source_url must be a single http(s) URL")
+        return value
 
 class ExtractionResult(BaseModel):
     dependencies: List[Dependency]
