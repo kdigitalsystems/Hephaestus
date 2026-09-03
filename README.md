@@ -152,7 +152,7 @@ Run LLM-assisted discovery for companies that do not yet have relationships:
 python3 backend/auto_discover_edges.py --limit 5
 ```
 
-Discovery combines Wikipedia operations/product sections, recent YahooQuery headlines, recent SEC EDGAR annual filings, SEC material-contract exhibits, company IR/web pages, configured source URLs, government procurement summaries, and sector-aware regulatory datasets.
+Discovery combines Wikipedia operations/product sections, recent YahooQuery headlines, recent SEC EDGAR annual filings, SEC material-contract exhibits, company IR/web pages, configured source URLs, government procurement summaries, and sector-aware regulatory datasets. The extraction model is `HEPHAESTUS_EXTRACTION_MODEL` (default `llama3.1:8b`); the scheduled workflow pulls it alongside the review models, and discovery prints an extraction summary and a loud warning when every extraction fails, so a missing model can no longer look like a quiet day.
 
 The current source mix includes:
 

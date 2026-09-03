@@ -31,6 +31,23 @@ def test_extract_dependencies_validates_model_payload(monkeypatch):
     assert result["dependencies"][0]["evidence_source_url"] == "https://example.com/filing"
 
 
+def test_extraction_model_comes_from_the_environment_and_failures_are_reported(monkeypatch):
+    calls = []
+
+    def failing_chat(**kwargs):
+        calls.append(kwargs["model"])
+        raise RuntimeError("model 'x' not found (status code: 404)")
+
+    monkeypatch.setattr(parser.ollama, "chat", failing_chat)
+    monkeypatch.setattr(parser, "DEFAULT_EXTRACTION_MODEL", "llama3.1:8b")
+
+    result = parser.extract_dependencies("source text")
+
+    assert calls == ["llama3.1:8b"]
+    assert result["dependencies"] == []
+    assert "not found" in result["error"]
+
+
 def test_extract_dependencies_rejects_unbounded_or_missing_evidence(monkeypatch):
     monkeypatch.setattr(parser.ollama, "chat", lambda **_kwargs: {
         "message": {"content": """{

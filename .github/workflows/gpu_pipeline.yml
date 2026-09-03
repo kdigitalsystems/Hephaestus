@@ -24,6 +24,7 @@ jobs:
     # GPU runner and the shared publisher concurrency group for the 6-hour default.
     timeout-minutes: 240
     env:
+      HEPHAESTUS_EXTRACTION_MODEL: llama3.1:8b
       HEPHAESTUS_REVIEW_MODELS: qwen2.5:7b-instruct,llama3.1:8b,mistral:7b-instruct
       HEPHAESTUS_REVIEW_LIMIT: "200"
       HEPHAESTUS_REVIEW_MAX_SECONDS: "3300"
@@ -42,8 +43,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          # Persisted for the push step; the app bypasses the PR-only rule on main.
           token: ${{ steps.app-token.outputs.token }}
+          # The default clean runs `git clean -ffdx`, which deletes the git-ignored
+          # SQLite graph (backend/supply_chain.db) on every run and forces a full
+          # re-seed plus a 12k-ticker market-data crawl that Yahoo throttles.
+          clean: false
 
       - name: Refresh main before generation
         run: |
@@ -85,7 +89,9 @@ jobs:
           fi
 
           IFS=',' read -ra REVIEW_MODELS <<< "$HEPHAESTUS_REVIEW_MODELS"
-          for MODEL in "${REVIEW_MODELS[@]}"; do
+          # The extraction model is as essential as the reviewers: without it every
+          # company logs "model not found" and discovery silently produces nothing.
+          for MODEL in "${REVIEW_MODELS[@]}" "$HEPHAESTUS_EXTRACTION_MODEL"; do
             MODEL="$(echo "$MODEL" | xargs)"
             if [ -z "$MODEL" ]; then
               continue
@@ -97,7 +103,7 @@ jobs:
             fi
           done
 
-          echo "Ollama consensus review models are ready: $HEPHAESTUS_REVIEW_MODELS"
+          echo "Ollama models are ready: extraction=$HEPHAESTUS_EXTRACTION_MODEL review=$HEPHAESTUS_REVIEW_MODELS"
 
       - name: Update Market Metrics
         env:
@@ -163,11 +169,24 @@ jobs:
           echo "Pre-rendering company pages and sitemap..."
           venv/bin/python backend/generate_static_pages.py
 
+      - name: Mint fresh publish token
+        # App installation tokens expire after one hour and this job runs for up to
+        # four; the checkout token is stale by the time the results are pushed.
+        id: push-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.HEPHAESTUS_APP_ID }}
+          private-key: ${{ secrets.HEPHAESTUS_APP_PRIVATE_KEY }}
+
       - name: Commit and Push Dashboard Data
+        env:
+          PUSH_TOKEN: ${{ steps.push-token.outputs.token }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git config --local http.https://github.com/.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$PUSH_TOKEN" | base64 -w0)"
+
           git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
           git add docs/changes.json docs/feed.xml
           git add -A docs/company docs/sitemap.xml
@@ -176,8 +195,13 @@ jobs:
             git commit -m "Automated AI extraction: Update Supply Chain X-Ray"
             # A conflicting rebase must not be left half-applied on the self-hosted
             # runner, or every later run fails at checkout.
-            git pull --rebase origin main || { git rebase --abort; echo "Rebase onto origin/main conflicted; aborted."; exit 1; }
+            if ! git pull --rebase origin main; then
+              git rebase --abort 2>/dev/null || true
+              echo "Rebase onto origin/main failed; aborted without publishing."
+              exit 1
+            fi
             git push origin main
           else
             echo "No new edges discovered today. Skipping commit."
           fi
+          git config --local --unset-all http.https://github.com/.extraheader || true

@@ -45,6 +45,17 @@ CONTEXT_BEFORE = re.compile(
 )
 MIN_NAME_LENGTH = 4
 MAX_SENTENCE_LENGTH = 700
+# A genuine disclosure names one to three customers; a longer list is a peer group,
+# an index constituent list, or a remuneration benchmark.
+MAX_NAMES_PER_SENTENCE = 3
+# The sentence (or the one before it) must be about customers, distributors, or
+# sales, not revenue in general - "Youdao accounted for 81.9% of revenues" is a
+# segment, not a customer.
+CUSTOMER_CUE = re.compile(
+    r"\b(?:customers?|distributors?|wholesalers?|resellers?|sales\s+to|revenues?\s+from|shipments\s+to|billings\s+to)\b",
+    re.IGNORECASE,
+)
+SALES_TO_CUE = re.compile(r"\b(?:sales|revenue|revenues|shipments|billings)\s+(?:to|from)\s*$", re.IGNORECASE)
 
 
 @dataclass
@@ -114,8 +125,25 @@ def mentioned_names(sentence, known_names, exclude=()):
     for position, name in found:
         if any(name != other and name.lower() in other.lower() for _, other in found):
             continue
-        ordered.append(name)
+        ordered.append((position, name))
     return ordered
+
+
+def subject_names(sentence, positioned_names):
+    """Keep the names that are the subject of the disclosure.
+
+    A customer is named before the concentration verb ("Apple accounted for 24%")
+    or right after a sales cue ("sales to Walmart represented 14%"). A company
+    mentioned after the verb ("...ahead of Coca-Cola") is context, not a customer.
+    """
+    verb = CONCENTRATION_PATTERN.search(sentence)
+    verb_position = verb.start() if verb else len(sentence)
+    kept = []
+    for position, name in positioned_names:
+        before = sentence[max(0, position - 24):position]
+        if position < verb_position or SALES_TO_CUE.search(before):
+            kept.append(name)
+    return kept
 
 
 def pair_names_with_shares(names, shares, sentence):
@@ -145,17 +173,27 @@ def extract_disclosures(text, known_names, filer_names=()):
     """
     disclosures = []
     seen = set()
+    previous = ""
     for sentence in split_sentences(text):
+        context = f"{previous} {sentence}"
+        previous = sentence
         if not is_concentration_sentence(sentence):
             continue
-        if any(term in sentence.lower() for term in GOVERNMENT_TERMS) and not mentioned_names(sentence, known_names, filer_names):
+        if not CUSTOMER_CUE.search(context):
             continue
-        names = mentioned_names(sentence, known_names, filer_names)
+        positioned = mentioned_names(sentence, known_names, filer_names)
+        if not positioned or len(positioned) > MAX_NAMES_PER_SENTENCE:
+            continue
+        names = subject_names(sentence, positioned)
         if not names:
             continue
         shares = percentages(sentence)
         year = fiscal_year(sentence)
         for name, share in pair_names_with_shares(names, shares, sentence):
+            if share is None:
+                # A named company without a pairable percentage is usually a list or
+                # a comparison, not a disclosure; magnitude is the whole point here.
+                continue
             key = (name.lower(), share)
             if key in seen:
                 continue

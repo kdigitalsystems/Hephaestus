@@ -26,6 +26,7 @@ KNOWN = {
 
 FILING = """
 Item 1. Business. We design and manufacture sensors. Our target market is industrial automation.
+We depend on a small number of customers for a significant portion of our revenue.
 Apple accounted for approximately 24% of our net sales in fiscal 2025 and 21% in fiscal 2024.
 Sales to Walmart represented 14% of total revenue during the year ended December 31, 2025.
 Our largest customers, Boeing and Airbus, accounted for 31% and 22% of revenue, respectively.
@@ -34,6 +35,9 @@ One customer accounted for 12% of revenue in 2023.
 Sales to the U.S. government accounted for 40% of net sales.
 Acme Semiconductor recorded revenue growth of 15% compared with the prior year.
 Sales to Target Corporation accounted for 11% of revenues.
+Our peer group for remuneration benchmarking comprised Apple, Microsoft, Amazon.com, Boeing, Airbus and Walmart, whose revenues exceeded 30% of ours.
+Walmart accounted for 16% of our net revenue from customers, ahead of Target.
+Youdao accounted for 81.9% of our total net revenues.
 """
 
 
@@ -53,14 +57,26 @@ def test_named_customers_and_shares_are_extracted():
     assert ("Microsoft Corporation Common Stock", 10.0) in found
     assert ("Amazon.com, Inc. Common Stock", 10.0) in found
     assert ("Target Corporation Common Stock", 11.0) in found
+    assert ("Walmart Inc. Common Stock", 16.0) in found
     # The filer itself, unnamed customers, governments, and "our target market" are not customers.
     assert not any(name.startswith("Acme") for name, _ in found)
     assert all(name != "Target Corporation Common Stock" or share == 11.0 for name, share in found)
+    # A six-company peer list, a company mentioned after the verb ("ahead of Target"),
+    # and a segment without a customer cue (Youdao) are not disclosures.
+    assert not any(share == 30.0 for _, share in found)
+    assert not any(share == 81.9 for _, share in found)
 
 
 def test_ambiguous_names_need_corporate_context():
-    assert extract_disclosures("Our target customers accounted for 30% of revenue.", KNOWN) == []
-    assert extract_disclosures("Apple, Inc. accounted for 30% of revenue.", KNOWN)[0].customer_name == "Apple Inc. Common Stock"
+    assert extract_disclosures("We have major customers. Our target customers accounted for 30% of revenue.", KNOWN) == []
+    assert extract_disclosures("We have major customers. Apple, Inc. accounted for 30% of revenue.", KNOWN)[0].customer_name == "Apple Inc. Common Stock"
+
+
+def test_disclosures_require_a_customer_cue_and_a_pairable_share():
+    known = {"Youdao, Inc.": "Youdao", "Cisco Systems, Inc.": "Cisco Systems", "Chevron Corporation": "Chevron"}
+    assert extract_disclosures("Youdao accounted for 81.9% of our total net revenues.", known) == []
+    assert extract_disclosures("Revenue from customers such as Chevron and Cisco Systems accounted for more than 10% of revenues.", known) == []
+    assert [d.customer_name for d in extract_disclosures("Our largest customer, Chevron, accounted for 12% of revenues.", known)] == ["Chevron Corporation"]
 
 
 def test_describe_share():
@@ -113,6 +129,7 @@ def test_discovery_creates_pending_edges_with_revenue_share(monkeypatch):
     edges = {(e.source_node.ticker, e.target_node.ticker): e for e in session.query(Edge).all()}
     assert created == 2
     assert set(edges) == {("ACME", "AAPL"), ("ACME", "WMT")}
+    assert edges[("ACME", "WMT")].revenue_share == 16.0  # the larger of 14% and 16% wins
     apple_edge = edges[("ACME", "AAPL")]
     assert apple_edge.review_status == "pending"
     assert apple_edge.revenue_share == 24.0
