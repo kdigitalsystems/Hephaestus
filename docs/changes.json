@@ -1,8 +1,338 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-02T21:16:09+00:00",
-  "unique_links": 304,
+  "generated_at": "2026-09-06T22:44:10+00:00",
+  "unique_links": 299,
   "days": [
+    {
+      "date": "2026-09-06",
+      "generated_at": "2026-09-06T22:44:10+00:00",
+      "previous_date": "2026-09-02",
+      "unique_links": 299,
+      "net_change": -5,
+      "new_count": 15,
+      "removed_count": 20,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AAPL->AVGO:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "AAPL",
+          "target_ticker": "AVGO",
+          "type": "operational supply-chain dependency",
+          "product": "Network Interface Cards (NICs)",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "AMGN->CAH:REVENUE CONCENTRATION",
+          "source_ticker": "AMGN",
+          "target_ticker": "CAH",
+          "type": "Revenue Concentration",
+          "product": "Amgen's products",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "AMGN->COR:REVENUE CONCENTRATION",
+          "source_ticker": "AMGN",
+          "target_ticker": "COR",
+          "type": "Revenue Concentration",
+          "product": "Amgen's products",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMGN->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "AMGN",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "Amgen's products",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "BR->ADP:BROKERAGE SERVICE PROVIDER",
+          "source_ticker": "BR",
+          "target_ticker": "ADP",
+          "type": "Brokerage Service Provider",
+          "product": "Brokerage Services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "DELL->AVGO:MANUFACTURER -> CUSTOMER",
+          "source_ticker": "DELL",
+          "target_ticker": "AVGO",
+          "type": "manufacturer -> customer",
+          "product": "Ethernet Port Adapters",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "HPE->AVGO:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "HPE",
+          "target_ticker": "AVGO",
+          "type": "operational supply-chain dependency",
+          "product": "Network Interface Cards (NICs)",
+          "review_status": "approved",
+          "confidence": 0.875
+        },
+        {
+          "relationship_key": "HWM->GE:REVENUE CONCENTRATION",
+          "source_ticker": "HWM",
+          "target_ticker": "GE",
+          "type": "Revenue Concentration",
+          "product": "Aerospace products and services",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "META->NVDA:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "META",
+          "target_ticker": "NVDA",
+          "type": "operational supply-chain dependency",
+          "product": "Graphics Processing Units (GPUs)",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "MRK->CAH:REVENUE CONCENTRATION",
+          "source_ticker": "MRK",
+          "target_ticker": "CAH",
+          "type": "Revenue Concentration",
+          "product": "Drug Manufacturing Services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MRK->COR:REVENUE CONCENTRATION",
+          "source_ticker": "MRK",
+          "target_ticker": "COR",
+          "type": "Revenue Concentration",
+          "product": "Drug Manufacturing Services",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "MRK->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "MRK",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "Drug Manufacturers",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "PEP->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "PEP",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Concentrate sales for finished goods sold by independent bottlers to Walmart",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "PG->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "PG",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Household & Personal Products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "TAK->ABBV:MANUFACTURING PARTNER",
+          "source_ticker": "TAK",
+          "target_ticker": "ABBV",
+          "type": "Manufacturing Partner",
+          "product": "Lupron Depot (Leuprolide Acetate for Depot Suspension)",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "AAPL->GLW:SUPPLIER",
+          "source_ticker": "AAPL",
+          "target_ticker": "GLW",
+          "type": "Supplier",
+          "product": "Gorilla Glass",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->SPOT:SERVICE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "SPOT",
+          "type": "Service Provider",
+          "product": "Smart Home Devices",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "AVGO->A:HISTORICAL",
+          "source_ticker": "AVGO",
+          "target_ticker": "A",
+          "type": "historical",
+          "product": "Semiconductor Integrated Circuits (Chips)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AVGO->STX:SSD CONTROLLER BUSINESS SALE",
+          "source_ticker": "AVGO",
+          "target_ticker": "STX",
+          "type": "SSD Controller Business Sale",
+          "product": "SSD controller business",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "BWMX->VMC:MATERIAL SUPPLIER",
+          "source_ticker": "BWMX",
+          "target_ticker": "VMC",
+          "type": "material supplier",
+          "product": "crushed limestone",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "CORZ->CRWV:VENDOR",
+          "source_ticker": "CORZ",
+          "target_ticker": "CRWV",
+          "type": "Vendor",
+          "product": "HPC capacity",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "DD->Q:FORMATION OF A NEW COMPANY",
+          "source_ticker": "DD",
+          "target_ticker": "Q",
+          "type": "formation of a new company",
+          "product": "Electronics Division",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "DVN->HAL:SERVICE PROVIDER",
+          "source_ticker": "DVN",
+          "target_ticker": "HAL",
+          "type": "Service Provider",
+          "product": "Well capping services",
+          "review_status": "approved",
+          "confidence": 0.85
+        },
+        {
+          "relationship_key": "EQT->CVX:HISTORICAL SALE OF ASSETS",
+          "source_ticker": "EQT",
+          "target_ticker": "CVX",
+          "type": "Historical Sale of Assets",
+          "product": "Natural Gas Extraction Assets",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ESLT->LMT:SUPPLIER",
+          "source_ticker": "ESLT",
+          "target_ticker": "LMT",
+          "type": "Supplier",
+          "product": "External Fuel Tanks for F-35I Adir",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "GM->PAG:SUPPLIER OF VEHICLES",
+          "source_ticker": "GM",
+          "target_ticker": "PAG",
+          "type": "Supplier of Vehicles",
+          "product": "Saturn brand vehicles",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "HPQ->JAGX:TECHNOLOGY SUPPLIER",
+          "source_ticker": "HPQ",
+          "target_ticker": "JAGX",
+          "type": "Technology Supplier",
+          "product": "Computer Hardware and Technology Services",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "KO->KOF:BRAND LICENSE",
+          "source_ticker": "KO",
+          "target_ticker": "KOF",
+          "type": "Brand License",
+          "product": "Non-Alcoholic Beverages",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "LMT->ESLT:SUPPLIER OF COMPONENTS",
+          "source_ticker": "LMT",
+          "target_ticker": "ESLT",
+          "type": "Supplier of Components",
+          "product": "F-35I 'Adir' aircraft components",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "LMT->HWM:MATERIAL SUPPLIER",
+          "source_ticker": "LMT",
+          "target_ticker": "HWM",
+          "type": "Material Supplier",
+          "product": "Titanium components",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MGM->VICI:LEASE/PROPERTY OWNER OPERATOR RELATIONSHIP",
+          "source_ticker": "MGM",
+          "target_ticker": "VICI",
+          "type": "Lease/Property Owner Operator Relationship",
+          "product": "Casino Resort Property",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "NVO->ALKS:FACILITY SALE",
+          "source_ticker": "NVO",
+          "target_ticker": "ALKS",
+          "type": "Facility Sale",
+          "product": "Manufacturing Facility",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "NXPI->ARM:IP LICENSEE",
+          "source_ticker": "NXPI",
+          "target_ticker": "ARM",
+          "type": "IP Licensee",
+          "product": "ARM IP",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "POR->PH:STRATEGIC GOAL",
+          "source_ticker": "POR",
+          "target_ticker": "PH",
+          "type": "strategic goal",
+          "product": "Motion Control Technologies",
+          "review_status": "approved",
+          "confidence": 0.875
+        },
+        {
+          "relationship_key": "YUM->YUMC:TRADEMARK LICENSE",
+          "source_ticker": "YUM",
+          "target_ticker": "YUMC",
+          "type": "Trademark License",
+          "product": "Branding",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "changed_links": []
+    },
     {
       "date": "2026-09-02",
       "generated_at": "2026-09-02T21:16:09+00:00",
@@ -680,19 +1010,6 @@
       "date": "2026-08-11",
       "generated_at": "2026-08-11T06:09:38+00:00",
       "previous_date": "2026-08-10",
-      "unique_links": 442,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-10",
-      "generated_at": "2026-08-10T06:16:36+00:00",
-      "previous_date": "2026-08-09",
       "unique_links": 442,
       "net_change": 0,
       "new_count": 0,
