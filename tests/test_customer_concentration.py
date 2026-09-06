@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
 import auto_discover_edges
-from customer_concentration import describe_share, extract_disclosures, is_concentration_sentence
+from customer_concentration import describe_share, disclosure_sentence, extract_disclosures, is_concentration_sentence
 from models import Base, Edge, Node
 
 
@@ -77,6 +77,51 @@ def test_disclosures_require_a_customer_cue_and_a_pairable_share():
     assert extract_disclosures("Youdao accounted for 81.9% of our total net revenues.", known) == []
     assert extract_disclosures("Revenue from customers such as Chevron and Cisco Systems accounted for more than 10% of revenues.", known) == []
     assert [d.customer_name for d in extract_disclosures("Our largest customer, Chevron, accounted for 12% of revenues.", known)] == ["Chevron Corporation"]
+
+
+HOWMET = (
+    "Howmet Aerospace (HWM) 10-K filed 2026-02-12: Sales by Market and Significant Customer Revenue Sales by market "
+    "for the years ended December 31, 2025, 2024, and 2023, were: For the Year Ended December 31, 2025 2024 2023 "
+    "Aerospace - Commercial 53 % 52 % 49 % Aerospace - Defense 17 % 16 % 15 % Commercial Transportation 15 % 17 % 21 % "
+    "Gas Turbines 11 % 10 % 10 % Other 4 % 5 % 5 % In 2025, RTX Corporation and GE Aerospace each represented "
+    "approximately 11% of the Company's third-party sales."
+)
+
+
+def test_percentages_pair_with_the_name_they_follow():
+    known = {"GE Aerospace": "GE Aerospace", "RTX Corporation": "RTX Corporation"}
+    # The table fragment's 53% precedes the name; the 11% after it is the disclosure.
+    found = extract_disclosures(disclosure_sentence(HOWMET), known, filer_names=("Howmet Aerospace Inc.", "Howmet Aerospace"))
+    assert {(d.customer_name, d.share_pct) for d in found} == {("GE Aerospace", 11.0), ("RTX Corporation", 11.0)}
+    # Two named customers with their own percentages keep their own.
+    found = extract_disclosures("Sales to Walmart accounted for 16% of revenue and sales to Target Corporation accounted for 11%.", KNOWN)
+    assert {(d.customer_name, d.share_pct) for d in found} == {("Walmart Inc. Common Stock", 16.0), ("Target Corporation Common Stock", 11.0)}
+
+
+def test_recheck_corrects_published_concentration_shares():
+    from cleanup_reviewed_edges import recheck_concentration_edges
+
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    howmet = Node(name="Howmet Aerospace Inc.", ticker="HWM", market_cap=7e10)
+    ge = Node(name="GE Aerospace", ticker="GE", market_cap=3e11)
+    acme = Node(name="Acme Semiconductor Inc.", ticker="ACME", market_cap=5e9)
+    apple = Node(name="Apple Inc. Common Stock", ticker="AAPL", market_cap=3e12)
+    session.add_all([howmet, ge, acme, apple])
+    session.commit()
+    wrong = Edge(source_id=howmet.id, target_id=ge.id, dependency_type="Revenue Concentration", product="53% of HWM revenue", revenue_share=53.0, evidence_excerpt=HOWMET, review_status="approved")
+    stale = Edge(source_id=acme.id, target_id=apple.id, dependency_type="Revenue Concentration", product="24% of ACME revenue", revenue_share=24.0, evidence_excerpt="Acme Semiconductor (ACME) 10-K filed 2025-10-31: Our peer group comprised Apple and five others whose revenues exceeded 24% of ours.", review_status="approved")
+    session.add_all([wrong, stale])
+    session.commit()
+
+    counts = {}
+    recheck_concentration_edges(session, counts)
+    session.commit()
+
+    assert counts == {"concentration_share_corrected": 1, "concentration_unsupported": 1}
+    assert (wrong.revenue_share, wrong.product, wrong.review_status) == (11.0, "11% of HWM revenue", "approved")
+    assert stale.review_status == "pending" and "no longer yields" in stale.review_note
 
 
 def test_describe_share():

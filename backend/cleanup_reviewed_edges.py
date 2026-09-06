@@ -7,15 +7,54 @@ from audit_data_quality import (
     has_speculative_supply_label,
     has_wrong_direction_review,
 )
+from customer_concentration import describe_share, disclosure_sentence, extract_disclosures
 from database import SessionLocal
 from evidence_quality import unsupported_ai_evidence
 from models import Edge
+
+CONCENTRATION_TYPE = "Revenue Concentration"
+
+
+def recheck_concentration_edges(session, counts):
+    """Re-derive each stored concentration share from its own evidence sentence.
+
+    The extractor is deterministic, so its rules can be tightened after the fact:
+    a share paired wrongly in an earlier run (Howmet -> GE was published at 53%, the
+    commercial-aerospace segment, when the sentence says GE is ~11%) is corrected
+    here, and the decisions file re-applied at the start of the next run then
+    carries the corrected value instead of restoring the old one. Evidence that no
+    longer yields a share for the named customer sends the edge back to review.
+    """
+    from auto_discover_edges import clean_company_name  # heavy module; import lazily
+
+    edges = session.query(Edge).filter(Edge.dependency_type == CONCENTRATION_TYPE).all()
+    for edge in edges:
+        filer, customer = edge.source_node, edge.target_node
+        if not filer or not customer:
+            continue
+        sentence = disclosure_sentence(edge.evidence_excerpt)
+        known = {customer.name: clean_company_name(customer.name)}
+        filer_names = (filer.name, clean_company_name(filer.name))
+        shares = [d.share_pct for d in extract_disclosures(sentence, known, filer_names) if d.customer_name == customer.name and d.share_pct is not None]
+        if not shares:
+            if edge.review_status != "pending":
+                edge.review_status = "pending"
+                edge.review_note = "Automated recheck: the filing sentence no longer yields a revenue share for this customer."
+                edge.reviewed_at = None
+                counts["concentration_unsupported"] = counts.get("concentration_unsupported", 0) + 1
+            continue
+        share = max(shares)
+        if edge.revenue_share != share:
+            edge.revenue_share = share
+            edge.product = describe_share(share, filer.ticker)
+            counts["concentration_share_corrected"] = counts.get("concentration_share_corrected", 0) + 1
 
 
 def cleanup_reviewed_edges():
     session = SessionLocal()
     counts = {"rejected_non_supply": 0, "rejected_unsupported_ai": 0, "pending_role_labels": 0}
     try:
+        recheck_concentration_edges(session, counts)
         approved_edges = session.query(Edge).filter(Edge.review_status == "approved").all()
         for edge in approved_edges:
             if unsupported_ai_evidence(edge.source_url, edge.evidence_excerpt):

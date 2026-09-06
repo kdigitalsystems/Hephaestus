@@ -78,7 +78,8 @@ def is_concentration_sentence(sentence):
     return bool(PERCENT_PATTERN.search(sentence) and REVENUE_PATTERN.search(sentence) and CONCENTRATION_PATTERN.search(sentence))
 
 
-def percentages(sentence):
+def positioned_percentages(sentence):
+    """(position, value) for every plausible percentage in the sentence, in order."""
     values = []
     for match in PERCENT_PATTERN.finditer(sentence):
         try:
@@ -86,8 +87,21 @@ def percentages(sentence):
         except ValueError:
             continue
         if 0 < value < 100:
-            values.append(value)
+            values.append((match.start(), value))
     return values
+
+
+def percentages(sentence):
+    return [value for _, value in positioned_percentages(sentence)]
+
+
+# Discovery stores the disclosure as "{filer} ({ticker}) {form} filed {date}: {sentence}".
+EVIDENCE_PREFIX = re.compile(r"^.*? filed \d{4}-\d{2}-\d{2}:\s*")
+
+
+def disclosure_sentence(evidence_excerpt):
+    """The filing sentence behind a stored concentration edge, without the provenance prefix."""
+    return EVIDENCE_PREFIX.sub("", str(evidence_excerpt or ""), count=1).strip()
 
 
 def fiscal_year(sentence):
@@ -142,26 +156,58 @@ def subject_names(sentence, positioned_names):
     for position, name in positioned_names:
         before = sentence[max(0, position - 24):position]
         if position < verb_position or SALES_TO_CUE.search(before):
-            kept.append(name)
+            kept.append((position, name))
     return kept
 
 
-def pair_names_with_shares(names, shares, sentence):
-    """Match customers to percentages.
+def pair_names_with_shares(positioned_names, positioned_shares, sentence):
+    """Match each customer to the percentage that belongs to it.
 
-    Filings list the current year first ("24% in 2025 and 21% in 2024"), so with
-    at least as many percentages as names the leading ones are taken in order.
-    "X and Y each accounted for more than 10%" gives every name the same share.
-    Anything else is a named 10% customer whose exact share is unknown.
+    A percentage belongs to the name it follows: "Apple accounted for 24% ... and
+    21% in 2024" pairs Apple with 24 (filings list the current year first), and a
+    table fragment such as "Aerospace - Commercial 53% ... GE Aerospace each
+    represented approximately 11%" pairs GE with 11, never with the 53 that
+    precedes it. Names listed together ("Boeing and Airbus, accounted for 31% and
+    22%") take the trailing percentages in order, and "each accounted for more
+    than 10%" gives every name the same share. A lone name with a lone percentage
+    is unambiguous whichever comes first. Anything else is unknown (None).
     """
-    lowered = f" {sentence.lower()} "
+    names = sorted(positioned_names)
     if not names:
         return []
-    if len(shares) >= len(names):
-        return list(zip(names, shares[:len(names)]))
-    if len(shares) == 1 and " each " in lowered:
-        return [(name, shares[0]) for name in names]
-    return [(name, None) for name in names]
+    shares = sorted(positioned_shares)
+    if len(names) == 1 and len(shares) == 1:
+        return [(names[0][1], shares[0][1])]
+
+    assigned = {}
+    used = set()
+    for index, (position, name) in enumerate(names):
+        is_last = index == len(names) - 1
+        if is_last and any(other not in assigned for _, other in names[:-1]):
+            # "Boeing and Airbus, accounted for 31% and 22%": the trailing
+            # percentages belong to the group, not to the last name alone.
+            break
+        limit = names[index + 1][0] if not is_last else len(sentence)
+        for share_index, (share_position, value) in enumerate(shares):
+            if share_index not in used and position < share_position < limit:
+                assigned[name] = value
+                used.add(share_index)
+                break
+
+    unassigned = [name for _, name in names if name not in assigned]
+    trailing = [
+        (share_index, value)
+        for share_index, (share_position, value) in enumerate(shares)
+        if share_index not in used and share_position > names[-1][0]
+    ]
+    if unassigned:
+        if len(trailing) >= len(unassigned):
+            for name, (_, value) in zip(unassigned, trailing):
+                assigned[name] = value
+        elif len(trailing) == 1 and " each " in f" {sentence.lower()} ":
+            for name in unassigned:
+                assigned[name] = trailing[0][1]
+    return [(name, assigned.get(name)) for _, name in names]
 
 
 def extract_disclosures(text, known_names, filer_names=()):
@@ -187,8 +233,9 @@ def extract_disclosures(text, known_names, filer_names=()):
         names = subject_names(sentence, positioned)
         if not names:
             continue
-        shares = percentages(sentence)
+        shares = positioned_percentages(sentence)
         year = fiscal_year(sentence)
+        candidates = [name for _, name in names]
         for name, share in pair_names_with_shares(names, shares, sentence):
             if share is None:
                 # A named company without a pairable percentage is usually a list or
@@ -198,7 +245,7 @@ def extract_disclosures(text, known_names, filer_names=()):
             if key in seen:
                 continue
             seen.add(key)
-            disclosures.append(ConcentrationDisclosure(name, share, sentence, year, names))
+            disclosures.append(ConcentrationDisclosure(name, share, sentence, year, candidates))
     return disclosures
 
 
