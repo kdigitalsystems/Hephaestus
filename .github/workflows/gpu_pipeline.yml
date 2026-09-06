@@ -47,6 +47,10 @@ jobs:
         uses: actions/checkout@v6
         with:
           token: ${{ steps.app-token.outputs.token }}
+          # Do not leave the checkout token behind: checkout@v6 persists it through an
+          # includeIf credentials file, and a second AUTHORIZATION header at publish
+          # time made GitHub answer 400. The repo is public, so refresh fetches need no auth.
+          persist-credentials: false
           # The default clean runs `git clean -ffdx`, which deletes the git-ignored
           # SQLite graph (backend/supply_chain.db) on every run and forces a full
           # re-seed plus a 12k-ticker market-data crawl that Yahoo throttles.
