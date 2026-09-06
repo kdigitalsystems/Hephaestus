@@ -37,6 +37,9 @@ jobs:
         with:
           # Persisted for the push step; the app bypasses the PR-only rule on main.
           token: ${{ steps.app-token.outputs.token }}
+          # Same as the GPU pipeline: the publish step mints its own token, and a
+          # persisted checkout credential would be sent alongside it (HTTP 400).
+          persist-credentials: false
 
       - name: Refresh main before generation
         run: |
