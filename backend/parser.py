@@ -14,6 +14,17 @@ SOURCE_URL_PATTERN = re.compile(r"^https?://\S+$")
 # review models. The previous hard-coded tag did not exist, and every extraction
 # failed with "model not found" while the pipeline kept publishing.
 DEFAULT_EXTRACTION_MODEL = os.environ.get("HEPHAESTUS_EXTRACTION_MODEL", "llama3.1:8b")
+# Grammar-constrained output can loop forever while staying valid JSON; on a
+# 32k-context server one company generated for an hour without returning. A
+# dozen dependencies fit comfortably in 2048 tokens, and no company is worth
+# more than a few minutes of GPU time.
+EXTRACTION_MAX_TOKENS = int(os.environ.get("HEPHAESTUS_EXTRACTION_MAX_TOKENS", "2048"))
+EXTRACTION_TIMEOUT_SECONDS = float(os.environ.get("HEPHAESTUS_EXTRACTION_TIMEOUT_SECONDS", "300"))
+
+
+def ollama_chat(**kwargs):
+    """`ollama.chat` has no timeout; a hung request would stall the whole queue."""
+    return ollama.Client(timeout=EXTRACTION_TIMEOUT_SECONDS).chat(**kwargs)
 
 class Dependency(BaseModel):
     source_company: str = Field(min_length=2, description="The name of the supplier or provider.")
@@ -105,13 +116,14 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
     """
 
     try:
-        response = ollama.chat(
+        response = ollama_chat(
             model=model_name,
             messages=[
                 {'role': 'system', 'content': SYSTEM_PROMPT},
                 {'role': 'user', 'content': user_prompt}
             ],
-            format=ExtractionResult.model_json_schema()
+            format=ExtractionResult.model_json_schema(),
+            options={"num_predict": EXTRACTION_MAX_TOKENS},
         )
         
         raw_json = response['message']['content']

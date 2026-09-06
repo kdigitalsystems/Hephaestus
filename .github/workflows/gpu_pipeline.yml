@@ -27,6 +27,9 @@ jobs:
       HEPHAESTUS_EXTRACTION_MODEL: llama3.1:8b
       HEPHAESTUS_REVIEW_MODELS: qwen2.5:7b-instruct,llama3.1:8b,mistral:7b-instruct
       HEPHAESTUS_REVIEW_LIMIT: "200"
+      # Budget: metrics <= ~35 min, discovery 100 min (+ one bounded extraction),
+      # review 55 min, export/pages/publish ~5 min, inside the 240-minute job timeout.
+      HEPHAESTUS_DISCOVERY_MAX_SECONDS: "6000"
       HEPHAESTUS_REVIEW_MAX_SECONDS: "3300"
       HEPHAESTUS_REVIEW_MIN_CONFIDENCE: "0.85"
       HEPHAESTUS_REVIEW_CONSENSUS_MIN_VOTES: "2"

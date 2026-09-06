@@ -425,15 +425,21 @@ def normalize_review(raw):
     }
 
 
+# A verdict is a few dozen tokens; a grammar-constrained response that keeps
+# going, or a wedged server, must fail the edge rather than stall the run.
+REVIEW_MAX_TOKENS = int(os.environ.get("HEPHAESTUS_REVIEW_MAX_TOKENS", "512"))
+REVIEW_TIMEOUT_SECONDS = float(os.environ.get("HEPHAESTUS_REVIEW_TIMEOUT_SECONDS", "180"))
+
+
 def review_edge_with_model(edge, model):
-    response = ollama.chat(
+    response = ollama.Client(timeout=REVIEW_TIMEOUT_SECONDS).chat(
         model=model,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": build_user_prompt(edge)},
         ],
         format=REVIEW_SCHEMA,
-        options={"temperature": 0},
+        options={"temperature": 0, "num_predict": REVIEW_MAX_TOKENS},
     )
     review = normalize_review(parse_json_response(response["message"]["content"]))
     review = correct_review_for_reason(edge, review)

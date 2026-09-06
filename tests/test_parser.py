@@ -9,7 +9,7 @@ import parser
 
 
 def test_extract_dependencies_validates_model_payload(monkeypatch):
-    monkeypatch.setattr(parser.ollama, "chat", lambda **_kwargs: {
+    monkeypatch.setattr(parser, "ollama_chat",lambda **_kwargs: {
         "message": {"content": """{
             "dependencies": [{
                 "source_company": "Supplier Inc.",
@@ -38,7 +38,7 @@ def test_extraction_model_comes_from_the_environment_and_failures_are_reported(m
         calls.append(kwargs["model"])
         raise RuntimeError("model 'x' not found (status code: 404)")
 
-    monkeypatch.setattr(parser.ollama, "chat", failing_chat)
+    monkeypatch.setattr(parser, "ollama_chat",failing_chat)
     monkeypatch.setattr(parser, "DEFAULT_EXTRACTION_MODEL", "llama3.1:8b")
 
     result = parser.extract_dependencies("source text")
@@ -49,7 +49,7 @@ def test_extraction_model_comes_from_the_environment_and_failures_are_reported(m
 
 
 def test_extract_dependencies_rejects_unbounded_or_missing_evidence(monkeypatch):
-    monkeypatch.setattr(parser.ollama, "chat", lambda **_kwargs: {
+    monkeypatch.setattr(parser, "ollama_chat",lambda **_kwargs: {
         "message": {"content": """{
             "dependencies": [{
                 "source_company": "Supplier Inc.",
@@ -66,7 +66,7 @@ def test_extract_dependencies_rejects_unbounded_or_missing_evidence(monkeypatch)
 
 
 def test_extract_dependencies_keeps_valid_items_when_one_is_malformed(monkeypatch):
-    monkeypatch.setattr(parser.ollama, "chat", lambda **_kwargs: {
+    monkeypatch.setattr(parser, "ollama_chat",lambda **_kwargs: {
         "message": {"content": """{
             "dependencies": [
                 {
@@ -95,7 +95,7 @@ def test_extract_dependencies_keeps_valid_items_when_one_is_malformed(monkeypatc
 
 
 def test_extract_dependencies_unescapes_double_encoded_model_text(monkeypatch):
-    monkeypatch.setattr(parser.ollama, "chat", lambda **_kwargs: {
+    monkeypatch.setattr(parser, "ollama_chat",lambda **_kwargs: {
         "message": {"content": r"""{
             "dependencies": [{
                 "source_company": "LG Display",
@@ -114,7 +114,7 @@ def test_extract_dependencies_unescapes_double_encoded_model_text(monkeypatch):
 
 
 def test_extract_dependencies_rejects_url_with_trailing_payload(monkeypatch):
-    monkeypatch.setattr(parser.ollama, "chat", lambda **_kwargs: {
+    monkeypatch.setattr(parser, "ollama_chat",lambda **_kwargs: {
         "message": {"content": """{
             "dependencies": [{
                 "source_company": "Supplier Inc.",
@@ -129,6 +129,26 @@ def test_extract_dependencies_rejects_url_with_trailing_payload(monkeypatch):
     })
 
     assert parser.extract_dependencies("source text") == {"dependencies": []}
+
+
+def test_extraction_requests_are_bounded(monkeypatch):
+    """One unbounded generation stalled a run for an hour; every request must carry
+    a token cap, and the client must enforce a wall-clock timeout."""
+    seen = {}
+
+    class FakeClient:
+        def __init__(self, timeout=None, **_kwargs):
+            seen["timeout"] = timeout
+
+        def chat(self, **kwargs):
+            seen["options"] = kwargs.get("options")
+            return {"message": {"content": '{"dependencies": []}'}}
+
+    monkeypatch.setattr(parser.ollama, "Client", FakeClient)
+
+    assert parser.extract_dependencies("source text") == {"dependencies": []}
+    assert seen["timeout"] == parser.EXTRACTION_TIMEOUT_SECONDS > 0
+    assert 0 < seen["options"]["num_predict"] <= 4096
 
 
 def test_extraction_schema_stays_grammar_safe():
@@ -150,7 +170,7 @@ def test_extraction_schema_stays_grammar_safe():
 
 
 def test_extract_dependencies_rejects_malformed_source_url(monkeypatch):
-    monkeypatch.setattr(parser.ollama, "chat", lambda **_kwargs: {
+    monkeypatch.setattr(parser, "ollama_chat",lambda **_kwargs: {
         "message": {"content": """{
             "dependencies": [{
                 "source_company": "Supplier Inc.",

@@ -141,3 +141,11 @@ def test_discovery_creates_pending_edges_with_revenue_share(monkeypatch):
     # Re-running is idempotent.
     assert auto_discover_edges.discover_customer_concentration(session, filer, auto_discover_edges.known_company_names(session)) == 0
     assert session.query(Edge).count() == 2
+
+
+def test_discovery_budget_defers_the_rest_of_the_queue():
+    # 0 or negative means unlimited; otherwise the loop stops once the budget is spent.
+    assert auto_discover_edges.budget_exhausted(started=100.0, max_seconds=0, now=10_000.0) is False
+    assert auto_discover_edges.budget_exhausted(started=100.0, max_seconds=-5, now=10_000.0) is False
+    assert auto_discover_edges.budget_exhausted(started=100.0, max_seconds=60, now=159.0) is False
+    assert auto_discover_edges.budget_exhausted(started=100.0, max_seconds=60, now=160.0) is True
