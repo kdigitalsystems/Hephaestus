@@ -33,6 +33,18 @@ USE_ADDITIONAL_SOURCES = os.environ.get("HEPHAESTUS_USE_ADDITIONAL_SOURCES", "1"
 USE_CUSTOMER_CONCENTRATION = os.environ.get("HEPHAESTUS_USE_CUSTOMER_CONCENTRATION", "1") != "0"
 CONCENTRATION_CONFIDENCE = 0.9
 CONTEXT_MAX_CHARS = int(os.environ.get("HEPHAESTUS_CONTEXT_MAX_CHARS", "15000"))
+# Wall-clock budget for the discovery loop (0 = unlimited). The scheduled job has
+# a fixed timeout, and a queue that does not fit in it starves the review, export,
+# and publish steps that follow: nothing reaches the site at all.
+DISCOVERY_MAX_SECONDS = float(os.environ.get("HEPHAESTUS_DISCOVERY_MAX_SECONDS", "0"))
+
+
+def budget_exhausted(started, max_seconds, now=None):
+    """True once the discovery loop has used its wall-clock budget."""
+    if not max_seconds or max_seconds <= 0:
+        return False
+    now = time.monotonic() if now is None else now
+    return (now - started) >= max_seconds
 # Wikipedia is the lowest-quality source; without its own budget it could consume the
 # whole context window and push the SEC filing text out entirely.
 WIKI_MAX_CHARS = int(os.environ.get("HEPHAESTUS_WIKI_MAX_CHARS", "4000"))
@@ -541,8 +553,17 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
         extraction_attempts = 0
         extraction_failures = 0
         last_extraction_error = ""
+        started = time.monotonic()
+        deferred = 0
 
-        for company in lonely_nodes:
+        for index, company in enumerate(lonely_nodes):
+            if budget_exhausted(started, DISCOVERY_MAX_SECONDS):
+                deferred = len(lonely_nodes) - index
+                print(
+                    f"\n[!] Discovery time budget of {DISCOVERY_MAX_SECONDS:.0f}s reached after {index} companies; "
+                    f"{deferred} deferred to the next run so review and publish still happen today."
+                )
+                break
             print(f"\n[->] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
 
             if known_names:
@@ -626,7 +647,10 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             time.sleep(1.5)
 
         print("\n--- Titan Queue Complete. Refresh your dashboard to see new X-Ray data. ---")
-        print(f"Extraction summary: {extraction_attempts} companies analyzed, {extraction_failures} extraction failure(s).")
+        print(
+            f"Extraction summary: {extraction_attempts} companies analyzed, {extraction_failures} extraction failure(s), "
+            f"{deferred} deferred, {time.monotonic() - started:.0f}s elapsed."
+        )
         if extraction_attempts and extraction_failures == extraction_attempts:
             # A dead extractor must not look like a quiet day.
             print(

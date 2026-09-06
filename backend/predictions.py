@@ -40,6 +40,8 @@ VALID_DIRECTIONS = frozenset({"up", "down", "neutral"})
 MIN_RESOLVED_FOR_TRACK_RECORD = 30
 # Fixed field order: the generator and the validator must inspect exactly the same text.
 SCENARIO_FIELDS = ("scenario_summary", "bull_case", "bear_case")
+SCENARIO_MAX_TOKENS = int(os.environ.get("HEPHAESTUS_SCENARIO_MAX_TOKENS", "800"))
+SCENARIO_TIMEOUT_SECONDS = float(os.environ.get("HEPHAESTUS_SCENARIO_TIMEOUT_SECONDS", "180"))
 UNSAFE_SCENARIO_PATTERNS = (
     r"\b(buy|buys|buying|sell|sells|selling|short|shorting|cover|accumulate|accumulating|trade|trading|hold|outperform|underperform|overweight|underweight)\b",
     r"\b(bullish|bearish)\b",
@@ -637,11 +639,13 @@ def enhance_scenarios_with_ollama(payload: dict[str, Any], model: str, history: 
                 "scenario_summary, bull_case, and bear_case.\n"
                 f"Evidence: {json.dumps(evidence, ensure_ascii=True)}"
             )
-            response = ollama.chat(
+            # Three short prose fields; cap the output and the wall clock so one
+            # runaway generation cannot consume the whole job.
+            response = ollama.Client(timeout=SCENARIO_TIMEOUT_SECONDS).chat(
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
                 format="json",
-                options={"temperature": 0},
+                options={"temperature": 0, "num_predict": SCENARIO_MAX_TOKENS},
             )
             content = response.get("message", {}).get("content", "")
             scenario = parse_ollama_scenario(content)
