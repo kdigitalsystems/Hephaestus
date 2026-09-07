@@ -4,6 +4,10 @@ Hephaestus uses a small set of deterministic checks so source expansion and dash
 
 ## Local Smoke Checks
 
+### End-to-end publish chain
+
+`tests/test_pipeline_end_to_end.py` copies `backend/` into a temporary directory with its own SQLite file, seeds a five-company fixture graph, and runs the real commands the scheduled job runs, in order: apply decisions, consensus review (with a stub `ollama` module on `PYTHONPATH` whose every vote approves), cleanup, decisions export, audit, export, repair, validate, change feed, static pages, dashboard split and run status. It asserts the published links, that a held edge is never persisted or published, and that every artifact the workflow commits exists. It runs in a few seconds and is part of the normal `pytest` run.
+
 Run these before committing frontend, source, or data-quality changes:
 
 ```bash
