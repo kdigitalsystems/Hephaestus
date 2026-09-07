@@ -184,6 +184,9 @@ jobs:
           echo "Pre-rendering company pages and sitemap..."
           venv/bin/python backend/generate_static_pages.py
 
+          echo "Splitting the dashboard into the homepage file and detail shards..."
+          venv/bin/python backend/split_dashboard.py
+
           echo "Writing the run status for the site..."
           venv/bin/python backend/write_status.py
 
@@ -208,6 +211,8 @@ jobs:
           git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
           git add docs/changes.json docs/feed.xml docs/status.json
           git add -A docs/company docs/sitemap.xml
+          git add docs/dashboard_lite.json
+          git add -A docs/company-data
 
           if ! git diff --cached --quiet; then
             git commit -m "Automated AI extraction: Update Supply Chain X-Ray"

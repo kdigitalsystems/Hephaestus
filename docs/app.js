@@ -203,11 +203,73 @@ const hydrateCompanies = (data) => {
     );
 };
 
-fetch('dashboard_data.json')
-    .then(response => {
+// Company briefs need two fields the homepage does not: the business summary and,
+// for unlinked companies, the all-zero investor metrics. They make up two thirds of
+// the full export, so they live in per-letter shards fetched when a brief opens.
+const DETAIL_FIELDS = ['summary', 'investor_metrics'];
+const detailShardCache = {};
+
+const detailShardKey = (ticker) => {
+    const first = String(ticker || '').trim().toUpperCase().slice(0, 1);
+    return /^[A-Z0-9]$/.test(first) ? first : '_';
+};
+
+const needsCompanyDetail = (company) => Boolean(company && company.ticker) && company.summary === undefined;
+
+function loadDetailShard(key) {
+    if (!detailShardCache[key]) {
+        detailShardCache[key] = fetch(`company-data/${key}.json`)
+            .then(response => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
+            .catch(error => {
+                delete detailShardCache[key];
+                throw error;
+            });
+    }
+    return detailShardCache[key];
+}
+
+function mergeCompanyDetail(ticker, detail) {
+    // The brief, the screener list and the sector view each hold their own copy.
+    const apply = (company) => {
+        if (!company || company.ticker !== ticker) return;
+        DETAIL_FIELDS.forEach(field => {
+            if (detail[field] !== undefined && company[field] === undefined) company[field] = detail[field];
+        });
+    };
+    Object.values(globalData).forEach(list => (Array.isArray(list) ? list : []).forEach(apply));
+    allCompanies.forEach(apply);
+}
+
+function ensureCompanyDetail(company) {
+    if (!needsCompanyDetail(company)) return Promise.resolve(false);
+    const ticker = company.ticker;
+    return loadDetailShard(detailShardKey(ticker))
+        .then(shard => {
+            const detail = shard && shard[ticker];
+            if (!detail) return false;
+            mergeCompanyDetail(ticker, detail);
+            DETAIL_FIELDS.forEach(field => {
+                if (detail[field] !== undefined && company[field] === undefined) company[field] = detail[field];
+            });
+            return true;
+        })
+        .catch(error => {
+            console.warn(`Company detail load failed for ${ticker}:`, error);
+            return false;
+        });
+}
+
+function fetchDashboard() {
+    // The lite file is the same structure at a quarter of the bytes; a deploy that
+    // predates it only has the full file.
+    const parse = (response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
-    })
+    };
+    return fetch('dashboard_lite.json').then(parse).catch(() => fetch('dashboard_data.json').then(parse));
+}
+
+fetchDashboard()
     .then(data => {
         globalData = data.industries || {};
         dashboardMeta = data;
@@ -903,6 +965,20 @@ function renderLevel3(company, previousRoute = null) {
     renderMetrics(company);
     renderSupplyGraph(company);
     renderXRay(company);
+
+    if (needsCompanyDetail(company)) {
+        setText('detail-summary', 'Loading company profile\u2026');
+        ensureCompanyDetail(company).then(loaded => {
+            const stillOpen = currentRoute.view === 'company' && currentRoute.ticker === company.ticker;
+            if (!stillOpen) return;
+            if (loaded) {
+                renderStory(company);
+                renderDecisionBrief(company);
+                renderXRay(company);
+            }
+            renderMetrics(company);
+        });
+    }
 }
 
 function updateDetailBackLabel(previousRoute) {
