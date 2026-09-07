@@ -323,3 +323,14 @@ def test_reciprocal_duplicates_keep_the_real_label_and_hold_the_mirror():
     # Idempotent: the held mirror is no longer published, so nothing else changes.
     resolve_reciprocal_duplicates(session, counts := {})
     assert counts == {}
+
+
+def test_a_collective_share_is_not_split_onto_each_customer():
+    known = {"Best Buy Co., Inc.": "Best Buy", "Walmart Inc. Common Stock": "Walmart"}
+    sentence = "Our customers Best Buy and Walmart collectively accounted for 81% of player revenue."
+    assert extract_disclosures(sentence, known) == []
+    # Individual figures and "each" still pair.
+    sentence = "Our customers Best Buy and Walmart accounted for 44% and 37% of player revenue, respectively."
+    assert {(d.customer_name, d.share_pct) for d in extract_disclosures(sentence, known)} == {("Best Buy Co., Inc.", 44.0), ("Walmart Inc. Common Stock", 37.0)}
+    sentence = "Our customers Best Buy and Walmart each accounted for more than 10% of revenue."
+    assert {d.share_pct for d in extract_disclosures(sentence, known)} == {10.0}

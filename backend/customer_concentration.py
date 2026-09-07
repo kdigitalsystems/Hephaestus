@@ -56,6 +56,9 @@ CUSTOMER_CUE = re.compile(
     re.IGNORECASE,
 )
 SALES_TO_CUE = re.compile(r"\b(?:sales|revenue|revenues|shipments|billings)\s+(?:to|from)\s*$", re.IGNORECASE)
+# "Amazon, Best Buy and Walmart collectively accounted for 81%" is a group figure;
+# it belongs to none of the names individually (Roku's retailers were each published at 81%).
+COLLECTIVE_CUE = re.compile(r"\b(?:collectively|combined|together|in\s+(?:the\s+)?aggregate|as\s+a\s+group|in\s+total)\b", re.IGNORECASE)
 # A rating agency named next to "rating" is not a customer (Sabesp -> S&P Global 50%).
 RATING_CONTEXT = re.compile(r"\b(?:credit\s+)?ratings?\b|\brated\b|\bmoody|\bfitch\b", re.IGNORECASE)
 # Shares outside these bounds are usually a mispaired percentage and need a human look:
@@ -210,6 +213,9 @@ def pair_names_with_shares(positioned_names, positioned_shares, sentence):
         for share_index, (share_position, value) in enumerate(shares)
         if share_index not in used and share_position > names[-1][0]
     ]
+    if unassigned and len(trailing) < len(unassigned) and COLLECTIVE_CUE.search(sentence):
+        # One figure for several names is the group's share, not each name's.
+        return [(name, assigned.get(name)) for _, name in names]
     if unassigned:
         if len(trailing) >= len(unassigned):
             for name, (_, value) in zip(unassigned, trailing):
