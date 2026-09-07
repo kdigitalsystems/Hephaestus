@@ -293,3 +293,33 @@ def test_discovery_holds_are_applied_before_an_edge_is_created():
     session.add(Edge(source_id=apple.id, target_id=tsmc.id, dependency_type="Chips", review_status="approved"))
     session.commit()
     assert "opposite direction already approved" in auto_discover_edges.discovery_hold_reason(session, tsmc, apple, "TSMC fabricates the A-series chips for Apple.")
+
+
+def test_reciprocal_duplicates_keep_the_real_label_and_hold_the_mirror():
+    from cleanup_reviewed_edges import HELD_NOTE_PREFIX, resolve_reciprocal_duplicates
+
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    avgo = Node(name="Broadcom Inc.", ticker="AVGO", market_cap=1e12)
+    dell = Node(name="Dell Technologies Inc.", ticker="DELL", market_cap=1e11)
+    session.add_all([avgo, dell])
+    session.commit()
+    evidence = "Broadcom supplies Ethernet port adapters used in Dell PowerEdge servers."
+    real = Edge(source_id=avgo.id, target_id=dell.id, dependency_type="Raw Materials (Ethernet port adapters)", evidence_excerpt=evidence, review_status="approved", review_note="Ollama consensus review: supplier to customer.")
+    mirror = Edge(source_id=dell.id, target_id=avgo.id, dependency_type="manufacturer -> customer", evidence_excerpt=evidence, review_status="approved", review_note="Ollama consensus review: fine.")
+    unrelated = Edge(source_id=dell.id, target_id=avgo.id, dependency_type="Servers", evidence_excerpt="Dell sells servers to Broadcom's data centers.", review_status="approved")
+    session.add_all([real, mirror, unrelated])
+    session.commit()
+
+    counts = {}
+    resolve_reciprocal_duplicates(session, counts)
+    session.commit()
+
+    assert counts == {"reciprocal_held": 1}
+    assert real.review_status == "approved"
+    assert mirror.review_status == "pending" and mirror.review_note.startswith(HELD_NOTE_PREFIX) and f"#{real.id}" in mirror.review_note
+    assert unrelated.review_status == "approved"
+    # Idempotent: the held mirror is no longer published, so nothing else changes.
+    resolve_reciprocal_duplicates(session, counts := {})
+    assert counts == {}

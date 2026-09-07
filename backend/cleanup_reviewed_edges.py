@@ -6,7 +6,10 @@ from audit_data_quality import (
     has_reversed_role_label,
     has_speculative_supply_label,
     has_wrong_direction_review,
+    normalized_evidence,
+    reciprocal_same_evidence_edges,
 )
+from evidence_quality import is_role_label
 from customer_concentration import describe_share, disclosure_sentence, extract_disclosures, implausible_share
 from database import SessionLocal
 from evidence_quality import unsupported_ai_evidence
@@ -62,6 +65,52 @@ def recheck_concentration_edges(session, counts):
             counts["concentration_held_implausible"] = counts.get("concentration_held_implausible", 0) + 1
 
 
+def is_published(edge):
+    return edge.review_status != "rejected" and (edge.review_status == "approved" or "Manual" in (edge.source_url or ""))
+
+
+def direction_rank(edge):
+    """Higher keeps: a real dependency label over a role label, a human verdict over a
+    model's, then the older edge."""
+    note = str(edge.review_note or "")
+    human = edge.review_status == "approved" and not note.startswith("Ollama consensus") and not note.startswith("Automated")
+    return (0 if is_role_label(edge.dependency_type) else 1, 1 if human else 0, -(edge.id or 0))
+
+
+def resolve_reciprocal_duplicates(session, counts):
+    """One fact published in both directions is always wrong; keep one, hold the other.
+
+    Two runners' graphs merged through the decisions file can leave an approved edge
+    and its approved mirror with identical evidence (Broadcom <-> Dell). The audit
+    treats that as a warning and would block the whole publish; a human should
+    decide the direction, so the weaker one goes back to review with a held note.
+    """
+    published = [edge for edge in session.query(Edge).all() if is_published(edge)]
+    flagged = reciprocal_same_evidence_edges(published)
+    by_key = {}
+    for edge in flagged:
+        if edge.source_node and edge.target_node:
+            key = (edge.source_id, edge.target_id, normalized_evidence(edge.evidence_excerpt))
+            by_key.setdefault(key, []).append(edge)
+    handled = set()
+    for (source_id, target_id, evidence), edges in by_key.items():
+        mirrors = by_key.get((target_id, source_id, evidence), [])
+        if not mirrors or (target_id, source_id, evidence) in handled:
+            continue
+        handled.add((source_id, target_id, evidence))
+        keeper = max(edges + mirrors, key=direction_rank)
+        for edge in edges + mirrors:
+            if edge is keeper or edge.review_status == "pending":
+                continue
+            edge.review_status = "pending"
+            edge.review_note = (
+                f"{HELD_NOTE_PREFIX} hold: the opposite direction is published as edge #{keeper.id} "
+                "with the same evidence; a human must decide which direction is correct."
+            )[:1000]
+            edge.reviewed_at = None
+            counts["reciprocal_held"] = counts.get("reciprocal_held", 0) + 1
+
+
 def needs_human_confirmation(edge):
     """Fresh or model-approved edges go to a human; a human's own verdict stands."""
     note = str(edge.review_note or "")
@@ -77,6 +126,7 @@ def cleanup_reviewed_edges():
     counts = {"rejected_non_supply": 0, "rejected_unsupported_ai": 0, "pending_role_labels": 0}
     try:
         recheck_concentration_edges(session, counts)
+        resolve_reciprocal_duplicates(session, counts)
         approved_edges = session.query(Edge).filter(Edge.review_status == "approved").all()
         for edge in approved_edges:
             if unsupported_ai_evidence(edge.source_url, edge.evidence_excerpt):
