@@ -1,8 +1,148 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-06T22:44:10+00:00",
-  "unique_links": 299,
+  "generated_at": "2026-09-07T10:08:18+00:00",
+  "unique_links": 313,
   "days": [
+    {
+      "date": "2026-09-07",
+      "generated_at": "2026-09-07T10:08:18+00:00",
+      "previous_date": "2026-09-06",
+      "unique_links": 313,
+      "net_change": 14,
+      "new_count": 14,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AAPL->GLW:SUPPLY RELATIONSHIP",
+          "source_ticker": "AAPL",
+          "target_ticker": "GLW",
+          "type": "Supply Relationship",
+          "product": "Gorilla Glass",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMKR->AAPL:REVENUE CONCENTRATION",
+          "source_ticker": "AMKR",
+          "target_ticker": "AAPL",
+          "type": "Revenue Concentration",
+          "product": "Semiconductor Equipment & Materials",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "BSP->GPRO:ACQUISITION OF SOFTWARE APPLICATION (SPLICE)",
+          "source_ticker": "BSP",
+          "target_ticker": "GPRO",
+          "type": "Acquisition of software application (Splice)",
+          "product": "Video editing application (Splice)",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "GM->PAG:SUPPLY RELATIONSHIP",
+          "source_ticker": "GM",
+          "target_ticker": "PAG",
+          "type": "Supply Relationship",
+          "product": "Saturn brand vehicles",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "LMT->ESLT:SUPPLY RELATIONSHIP",
+          "source_ticker": "LMT",
+          "target_ticker": "ESLT",
+          "type": "Supply Relationship",
+          "product": "F-35I 'Adir' aircraft components",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "MKC->PEP:REVENUE CONCENTRATION",
+          "source_ticker": "MKC",
+          "target_ticker": "PEP",
+          "type": "Revenue Concentration",
+          "product": "Flavor Solutions (specific product)",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "ONC->COR:REVENUE CONCENTRATION",
+          "source_ticker": "ONC",
+          "target_ticker": "COR",
+          "type": "Revenue Concentration",
+          "product": "Product Distributor Services",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "ONC->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "ONC",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "18% of ONC revenue",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "PAA->XOM:REVENUE CONCENTRATION",
+          "source_ticker": "PAA",
+          "target_ticker": "XOM",
+          "type": "Revenue Concentration",
+          "product": "Pipeline Services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "PAC->AAL:REVENUE CONCENTRATION",
+          "source_ticker": "PAC",
+          "target_ticker": "AAL",
+          "type": "Revenue Concentration",
+          "product": "Airport services for Montego Bay airport",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "PAC->JBLU:REVENUE CONCENTRATION",
+          "source_ticker": "PAC",
+          "target_ticker": "JBLU",
+          "type": "Revenue Concentration",
+          "product": "Airport services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "VTRS->CAH:REVENUE CONCENTRATION",
+          "source_ticker": "VTRS",
+          "target_ticker": "CAH",
+          "type": "Revenue Concentration",
+          "product": "Drug Manufacturers - Specialty & Generic",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "VTRS->COR:REVENUE CONCENTRATION",
+          "source_ticker": "VTRS",
+          "target_ticker": "COR",
+          "type": "Revenue Concentration",
+          "product": "Drug Manufacturers - Specialty & Generic",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "VTRS->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "VTRS",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "Drug Manufacturers - Specialty & Generic",
+          "review_status": "approved",
+          "confidence": 0.9167
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-09-06",
       "generated_at": "2026-09-06T22:44:10+00:00",
@@ -997,19 +1137,6 @@
       "date": "2026-08-12",
       "generated_at": "2026-08-12T07:12:06+00:00",
       "previous_date": "2026-08-11",
-      "unique_links": 442,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-11",
-      "generated_at": "2026-08-11T06:09:38+00:00",
-      "previous_date": "2026-08-10",
       "unique_links": 442,
       "net_change": 0,
       "new_count": 0,
