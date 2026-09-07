@@ -7,12 +7,15 @@ from audit_data_quality import (
     has_speculative_supply_label,
     has_wrong_direction_review,
 )
-from customer_concentration import describe_share, disclosure_sentence, extract_disclosures
+from customer_concentration import describe_share, disclosure_sentence, extract_disclosures, implausible_share
 from database import SessionLocal
 from evidence_quality import unsupported_ai_evidence
 from models import Edge
 
 CONCENTRATION_TYPE = "Revenue Concentration"
+# Must match review_edges_with_ollama.HELD_NOTE_PREFIX; importing that module pulls in
+# the Ollama client, which this cleanup step does not need.
+HELD_NOTE_PREFIX = "Ollama consensus review"
 
 
 def recheck_concentration_edges(session, counts):
@@ -48,6 +51,25 @@ def recheck_concentration_edges(session, counts):
             edge.revenue_share = share
             edge.product = describe_share(share, filer.ticker)
             counts["concentration_share_corrected"] = counts.get("concentration_share_corrected", 0) + 1
+
+        reason = implausible_share(share, customer.market_cap)
+        if reason and needs_human_confirmation(edge):
+            # Held notes are skipped by the consensus review, so a human decides once
+            # instead of the models re-approving what this step keeps holding.
+            edge.review_status = "pending"
+            edge.review_note = f"{HELD_NOTE_PREFIX} hold: {reason}; a human must confirm this disclosure."[:1000]
+            edge.reviewed_at = None
+            counts["concentration_held_implausible"] = counts.get("concentration_held_implausible", 0) + 1
+
+
+def needs_human_confirmation(edge):
+    """Fresh or model-approved edges go to a human; a human's own verdict stands."""
+    note = str(edge.review_note or "")
+    if edge.review_status == "pending":
+        return not note.startswith(HELD_NOTE_PREFIX)
+    if edge.review_status == "approved":
+        return note.startswith("Ollama consensus")
+    return False
 
 
 def cleanup_reviewed_edges():

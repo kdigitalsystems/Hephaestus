@@ -246,6 +246,36 @@ function renderDataLoadError(error) {
     host.insertBefore(banner, view);
 }
 
+fetch('status.json')
+    .then(response => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
+    .then(status => renderPipelineStatus(status))
+    .catch(error => console.warn('Run status load failed:', error));
+
+function pipelineStatusLabel(status) {
+    // "Updated Sep 7, 2026 · 158 companies researched · 14 new links · 300 filings swept"
+    if (!status || typeof status !== 'object') return '';
+    const parts = [];
+    const asOf = status.data_as_of || status.generated_at;
+    if (asOf) {
+        const date = new Date(asOf);
+        parts.push(`Updated ${Number.isNaN(date.getTime()) ? String(asOf).slice(0, 10) : date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}`);
+    }
+    const count = (value, singular, plural) => (typeof value === 'number' ? `${value.toLocaleString()} ${value === 1 ? singular : plural}` : null);
+    const researched = count(status.companies_researched, 'company researched', 'companies researched');
+    const fresh = count(status.new_links, 'new link', 'new links');
+    const swept = count(status.filings_swept, 'filing swept', 'filings swept');
+    [researched, fresh, swept].forEach(part => { if (part) parts.push(part); });
+    return parts.join(' \u00b7 ');
+}
+
+function renderPipelineStatus(status) {
+    const label = pipelineStatusLabel(status);
+    const element = document.getElementById('pipeline-status');
+    if (!element) return;
+    element.textContent = label;
+    element.hidden = !label;
+}
+
 fetch('predictions.json')
     .then(response => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
     .then(data => {

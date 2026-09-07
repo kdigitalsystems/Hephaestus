@@ -1,0 +1,14 @@
+{
+  "companies": 3923,
+  "companies_deferred": null,
+  "companies_researched": null,
+  "data_as_of": "2026-09-07T10:08:18+00:00",
+  "disclosures_found": null,
+  "extraction_failures": null,
+  "filings_swept": null,
+  "generated_at": "2026-09-07T13:58:54+00:00",
+  "linked_companies": 319,
+  "new_links": 14,
+  "removed_links": 0,
+  "unique_links": 313
+}

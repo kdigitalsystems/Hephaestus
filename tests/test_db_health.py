@@ -71,7 +71,7 @@ def test_database_status_rejects_stale_edge_schema(tmp_path):
 def test_database_status_can_require_seeded_nodes(tmp_path):
     db_path = tmp_path / "ready.db"
     with sqlite3.connect(db_path) as connection:
-        connection.execute("CREATE TABLE nodes (id INTEGER PRIMARY KEY)")
+        connection.execute("CREATE TABLE nodes (id INTEGER PRIMARY KEY, last_researched_at DATETIME, concentration_checked_at DATETIME)")
         connection.execute(EDGES_SCHEMA)
 
     ok, message = database_status(db_path, require_nodes=True)
@@ -89,7 +89,7 @@ def test_database_status_can_require_seeded_nodes(tmp_path):
 def test_database_status_uses_a_bounded_sqlite_wait(monkeypatch, tmp_path):
     db_path = tmp_path / "ready.db"
     with sqlite3.connect(db_path) as connection:
-        connection.execute("CREATE TABLE nodes (id INTEGER PRIMARY KEY)")
+        connection.execute("CREATE TABLE nodes (id INTEGER PRIMARY KEY, last_researched_at DATETIME, concentration_checked_at DATETIME)")
         connection.execute(EDGES_SCHEMA)
 
     original_connect = sqlite3.connect
@@ -104,3 +104,22 @@ def test_database_status_uses_a_bounded_sqlite_wait(monkeypatch, tmp_path):
 
     assert ok is True
     assert observed_timeouts == [30]
+
+
+def test_database_status_rejects_stale_node_schema(tmp_path):
+    import sqlite3
+
+    db_path = tmp_path / "old-nodes.db"
+    with sqlite3.connect(db_path) as connection:
+        connection.execute("CREATE TABLE nodes (id INTEGER PRIMARY KEY)")
+        connection.execute(
+            "CREATE TABLE edges (id INTEGER PRIMARY KEY, source_id INTEGER, target_id INTEGER, dependency_type TEXT, "
+            "product TEXT, source_url TEXT, source_title TEXT, evidence_excerpt TEXT, review_status TEXT, "
+            "review_note TEXT, reviewed_at DATETIME, revenue_share FLOAT)"
+        )
+
+    ok, message = database_status(db_path)
+
+    # Discovery bookkeeping columns are required, so the workflow runs the migration.
+    assert ok is False
+    assert "node column" in message and "last_researched_at" in message

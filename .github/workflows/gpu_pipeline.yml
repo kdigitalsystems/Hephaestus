@@ -3,7 +3,8 @@ name: Local GPU AI Pipeline
 on:
   workflow_dispatch: 
   schedule:
-    - cron: '0 3 * * *'
+    # Off the top of the hour: '0 3' fired four to five hours late every day.
+    - cron: '23 2 * * *'
 
 # Publishing uses the Hephaestus Pipeline Bot app token minted below, which is the
 # only identity allowed to push to main directly; GITHUB_TOKEN needs no write access.
@@ -19,9 +20,12 @@ env:
 
 jobs:
   run-ai-discovery:
-    runs-on: [self-hosted, nvidia-gpu]
-    # Recent runs take 20 minutes to ~2h45m. A hung Ollama call must not pin the single
-    # GPU runner and the shared publisher concurrency group for the 6-hour default.
+    # Pinned to one runner: each machine keeps its own SQLite graph, so alternating
+    # runners published different days' work out of order. 'hephaestus' is a custom
+    # label on server1; if that runner is offline the job waits rather than moving.
+    runs-on: [self-hosted, nvidia-gpu, hephaestus]
+    # The step budgets below add up to ~210 minutes; a hung Ollama call must not pin
+    # the runner and the shared publisher concurrency group for the 6-hour default.
     timeout-minutes: 240
     env:
       HEPHAESTUS_EXTRACTION_MODEL: llama3.1:8b
@@ -30,6 +34,10 @@ jobs:
       # Budget: metrics <= ~35 min, discovery 100 min (+ one bounded extraction),
       # review 55 min, export/pages/publish ~5 min, inside the 240-minute job timeout.
       HEPHAESTUS_DISCOVERY_MAX_SECONDS: "6000"
+      # Filing sweep for customer-concentration disclosures (no GPU): up to 300 filings
+      # or 15 minutes per run, each company rechecked every 120 days.
+      HEPHAESTUS_CONCENTRATION_SWEEP_LIMIT: "300"
+      HEPHAESTUS_CONCENTRATION_SWEEP_MAX_SECONDS: "900"
       HEPHAESTUS_REVIEW_MAX_SECONDS: "3300"
       HEPHAESTUS_REVIEW_MIN_CONFIDENCE: "0.85"
       HEPHAESTUS_REVIEW_CONSENSUS_MIN_VOTES: "2"
@@ -176,6 +184,9 @@ jobs:
           echo "Pre-rendering company pages and sitemap..."
           venv/bin/python backend/generate_static_pages.py
 
+          echo "Writing the run status for the site..."
+          venv/bin/python backend/write_status.py
+
       - name: Mint fresh publish token
         # App installation tokens expire after one hour and this job runs for up to
         # four; the checkout token is stale by the time the results are pushed.
@@ -195,7 +206,7 @@ jobs:
           git config --local http.https://github.com/.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$PUSH_TOKEN" | base64 -w0)"
 
           git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
-          git add docs/changes.json docs/feed.xml
+          git add docs/changes.json docs/feed.xml docs/status.json
           git add -A docs/company docs/sitemap.xml
 
           if ! git diff --cached --quiet; then

@@ -7,6 +7,7 @@ from sqlalchemy import inspect
 from sqlalchemy.exc import SQLAlchemyError
 
 from database import engine
+from customer_concentration import implausible_share
 from database import SessionLocal
 from models import Edge, Node
 from evidence_quality import has_non_supply_relationship, is_role_label, unsupported_ai_evidence
@@ -179,6 +180,12 @@ def audit_database(fail_on_warnings=False):
             edge for edge in published_edges
             if unsupported_ai_evidence(edge.source_url, edge.evidence_excerpt)
         ]
+        implausible_share_edges = [
+            edge for edge in published_edges
+            if edge.dependency_type == "Revenue Concentration"
+            and str(edge.review_note or "").startswith("Ollama consensus")
+            and implausible_share(edge.revenue_share, edge.target_node.market_cap if edge.target_node else None)
+        ]
         ai_edges = [edge for edge in edges if "AI" in (edge.source_url or "")]
         manual_edges = [edge for edge in edges if "Manual" in (edge.source_url or "")]
         status_counts = Counter(edge.review_status or "pending" for edge in edges)
@@ -199,6 +206,7 @@ def audit_database(fail_on_warnings=False):
         print(f"Reciprocal duplicate evidence warnings: {len(reciprocal_duplicate_edges)}")
         print(f"Self-edge warnings: {len(self_edges)}")
         print(f"Unsupported AI evidence warnings: {len(unsupported_ai_edges)}")
+        print(f"Implausible revenue-share warnings: {len(implausible_share_edges)}")
 
         if duplicate_tickers:
             print("Duplicate ticker examples:", ", ".join(duplicate_tickers[:10]))
@@ -211,6 +219,7 @@ def audit_database(fail_on_warnings=False):
             ("Reciprocal duplicate evidence", reciprocal_duplicate_edges),
             ("Self-edge", self_edges),
             ("Unsupported AI evidence", unsupported_ai_edges),
+            ("Implausible revenue share", implausible_share_edges),
         ):
             for edge in flagged_edges[:10]:
                 source = edge.source_node.ticker if edge.source_node else edge.source_id
@@ -230,6 +239,7 @@ def audit_database(fail_on_warnings=False):
             + len(reciprocal_duplicate_edges)
             + len(self_edges)
             + len(unsupported_ai_edges)
+            + len(implausible_share_edges)
         )
         if fail_on_warnings and warning_count:
             raise SystemExit(1)
