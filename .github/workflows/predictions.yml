@@ -41,6 +41,10 @@ jobs:
           # Same as the GPU pipeline: the publish step mints its own token, and a
           # persisted checkout credential would be sent alongside it (HTTP 400).
           persist-credentials: false
+          # Both workflows now run on the same pinned runner and share its workspace.
+          # The default `git clean -ffdx` would delete the git-ignored SQLite graph
+          # every weekday, forcing the GPU pipeline to re-seed and re-crawl.
+          clean: false
 
       - name: Refresh main before generation
         run: |
@@ -102,6 +106,10 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          # Remove the credential on every exit path: a failed rebase or a rejected
+          # push would otherwise leave the token in .git/config on the self-hosted
+          # runner until the next checkout.
+          trap 'git config --local --unset-all http.https://github.com/.extraheader || true' EXIT
           git config --local --unset-all http.https://github.com/.extraheader || true
           git config --local http.https://github.com/.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$PUSH_TOKEN" | base64 -w0)"
           git add docs/predictions.json docs/prediction_history.json

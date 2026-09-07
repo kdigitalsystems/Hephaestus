@@ -8,6 +8,7 @@ let sortCol = 'market_cap';
 let sortAsc = false;
 let watchlist = new Set();
 let searchInputTimer = null;
+let companiesByTicker = new Map();
 let chartRenderToken = 0;
 const LIVE_SEARCH_MIN_CHARS = 3;
 const PREFIX_SEARCH_MIN_CHARS = 2;
@@ -175,6 +176,17 @@ function applyTheme(theme) {
 
 function toggleTheme() {
     applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    // The chart is an iframe built with the theme baked in, so it needs a re-render.
+    if (currentRoute.view === 'company') {
+        const company = getCompanyByTicker(currentRoute.ticker);
+        if (company) {
+            try {
+                renderChart(company);
+            } catch (error) {
+                console.warn('Chart re-render failed:', error);
+            }
+        }
+    }
 }
 
 // Sync the toggle's label and aria-label with the stored theme immediately, not
@@ -201,6 +213,9 @@ const hydrateCompanies = (data) => {
             connection_count: relationshipCount(company)
         }))
     );
+    // The exposure view looks a ticker up once per link on every keystroke; a linear
+    // scan of ~4,000 companies made that ~1.4M string comparisons per character.
+    companiesByTicker = new Map(allCompanies.map(company => [String(company.ticker || '').toUpperCase(), company]));
 };
 
 // Company briefs need two fields the homepage does not: the business summary and,
@@ -241,21 +256,21 @@ function mergeCompanyDetail(ticker, detail) {
 }
 
 function ensureCompanyDetail(company) {
-    if (!needsCompanyDetail(company)) return Promise.resolve(false);
+    if (!needsCompanyDetail(company)) return Promise.resolve('loaded');
     const ticker = company.ticker;
     return loadDetailShard(detailShardKey(ticker))
         .then(shard => {
             const detail = shard && shard[ticker];
-            if (!detail) return false;
+            if (!detail) return 'missing';
             mergeCompanyDetail(ticker, detail);
             DETAIL_FIELDS.forEach(field => {
                 if (detail[field] !== undefined && company[field] === undefined) company[field] = detail[field];
             });
-            return true;
+            return 'loaded';
         })
         .catch(error => {
             console.warn(`Company detail load failed for ${ticker}:`, error);
-            return false;
+            return 'failed';
         });
 }
 
@@ -470,6 +485,9 @@ function applyRouteFromHash(push = false) {
 }
 
 function applyRoute(route) {
+    // A search typed moments ago must not fire after the user has navigated away:
+    // the callback would re-render the screener over whatever view this route opens.
+    window.clearTimeout(searchInputTimer);
     lastRoutedHash = window.location.hash;
     currentRoute = route;
     updateActiveNav(route);
@@ -821,7 +839,7 @@ function applyFilters(updateRoute = true, committedSearch = false, openExactTick
         return;
     }
 
-    if (query && query.length < LIVE_SEARCH_MIN_CHARS && !tickerPrefixSearch && !hasStructuredFilter) {
+    if (query && query.length < LIVE_SEARCH_MIN_CHARS && !exactTicker && !tickerPrefixSearch && !hasStructuredFilter) {
         currentCompaniesList = [];
         if (currentRoute.view !== 'overview') {
             if (updateRoute) updateRouteHash({ view: 'overview' }, false);
@@ -941,7 +959,10 @@ function renderCompanyTableRow(company) {
 
 const getCompanyByTicker = (ticker) => {
     const normalized = String(ticker || '').trim().toUpperCase();
-    return allCompanies.find(company => String(company.ticker || '').toUpperCase() === normalized) || null;
+    if (!normalized) return null;
+    return companiesByTicker.get(normalized)
+        || allCompanies.find(company => String(company.ticker || '').toUpperCase() === normalized)
+        || null;
 };
 
 function renderLevel3(company, previousRoute = null) {
@@ -960,23 +981,33 @@ function renderLevel3(company, previousRoute = null) {
     updateDetailBackLabel(currentRoute.previous);
 
     renderStory(company);
-    renderChart(company);
     renderDecisionBrief(company);
     renderMetrics(company);
     renderSupplyGraph(company);
     renderXRay(company);
+    // Last, and guarded: the chart comes from a third-party script, and a throw here
+    // used to leave the rest of the brief showing the previous company.
+    try {
+        renderChart(company);
+    } catch (error) {
+        console.warn('Chart render failed:', error);
+    }
 
     if (needsCompanyDetail(company)) {
         setText('detail-summary', 'Loading company profile\u2026');
-        ensureCompanyDetail(company).then(loaded => {
+        ensureCompanyDetail(company).then(outcome => {
             const stillOpen = currentRoute.view === 'company' && currentRoute.ticker === company.ticker;
             if (!stillOpen) return;
-            if (loaded) {
+            if (outcome === 'loaded') {
                 renderStory(company);
                 renderDecisionBrief(company);
                 renderXRay(company);
             }
             renderMetrics(company);
+            if (outcome === 'failed') {
+                // A network failure is not "this company has no profile".
+                setText('detail-summary', 'Company profile could not be loaded. Check your connection and reopen this company.');
+            }
         });
     }
 }
@@ -1032,12 +1063,12 @@ function renderChart(company) {
             autosize: true,
             symbol: company.ticker,
             timezone: "America/New_York",
-            theme: "dark",
+            theme: currentTheme === 'light' ? 'light' : 'dark',
             style: "3",
             locale: "en",
             enable_publishing: false,
-            backgroundColor: "#151a20",
-            gridColor: "#242c35",
+            backgroundColor: currentTheme === 'light' ? "#ffffff" : "#151a20",
+            gridColor: currentTheme === 'light' ? "#e5e7eb" : "#242c35",
             hide_top_toolbar: true,
             hide_legend: true,
             save_image: false,

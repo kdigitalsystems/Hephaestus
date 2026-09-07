@@ -1,6 +1,7 @@
 import os
 import time
 import argparse
+import sys
 from database import SessionLocal
 from models import Edge, Node
 from yahooquery import Ticker
@@ -89,8 +90,27 @@ THROTTLE_RATIO = 0.5
 THROTTLE_PAUSE_SECONDS = float(os.environ.get("HEPHAESTUS_YAHOO_THROTTLE_PAUSE", "20"))
 
 
-def fetch_batch(tickers):
-    return Ticker(tickers, asynchronous=True).get_modules(MODULES)
+_TICKER_CLIENT = None
+
+
+def ticker_client(tickers, refresh=False):
+    """One yahooquery client for the whole crawl.
+
+    Constructing Ticker() performs a cookie and crumb bootstrap against Yahoo, so
+    building one per 100-ticker batch issues 120+ bootstraps in a full run - itself
+    the pattern Yahoo throttles. The client is reused and rebuilt only after an empty
+    batch, so a genuinely poisoned session can still recover.
+    """
+    global _TICKER_CLIENT
+    if _TICKER_CLIENT is None or refresh:
+        _TICKER_CLIENT = Ticker(tickers, asynchronous=True)
+    else:
+        _TICKER_CLIENT.symbols = tickers
+    return _TICKER_CLIENT
+
+
+def fetch_batch(tickers, refresh=False):
+    return ticker_client(tickers, refresh=refresh).get_modules(MODULES)
 
 
 def looks_throttled(dict_data, tickers):
@@ -148,7 +168,7 @@ def update_financial_metrics(limit=None):
                 if looks_throttled(dict_data, tickers):
                     print(f"  [!] Most of this batch returned no data; pausing {THROTTLE_PAUSE_SECONDS:.0f}s and retrying once.")
                     time.sleep(THROTTLE_PAUSE_SECONDS)
-                    dict_data = fetch_batch(tickers)
+                    dict_data = fetch_batch(tickers, refresh=True)
 
                 for node in batch:
                     ticker_data = dict_data.get(node.ticker, {})
@@ -183,7 +203,10 @@ def update_financial_metrics(limit=None):
         
     except Exception as e:
         session.rollback()
-        print(f"Database error: {e}")
+        # A database error is real breakage (a locked or corrupt file), not a flaky
+        # provider; exiting 0 here let the pipeline publish as if metrics had run.
+        print(f"Database error: {e}", file=sys.stderr)
+        raise SystemExit(1) from e
     finally:
         session.close()
 

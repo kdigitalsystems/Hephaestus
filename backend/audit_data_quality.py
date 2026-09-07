@@ -1,4 +1,5 @@
 import argparse
+import re
 from collections import Counter
 from collections import defaultdict
 import sys
@@ -69,8 +70,18 @@ def has_speculative_supply_label(*labels):
     return any(marker in label_text for marker in SPECULATIVE_SUPPLY_MARKERS)
 
 
+# "Ollama consensus review: votes reverse:2, approve:1. Lead rationale ..." is the
+# panel reporting how it *fixed* the direction. Matching the tally re-opened the very
+# edges the review step had just corrected, every run, forever.
+CONSENSUS_TALLY = re.compile(r"^ollama consensus review[^.]*?(?:votes [^.]*)?\.\s*", re.IGNORECASE)
+
+
+def strip_consensus_tally(text):
+    return CONSENSUS_TALLY.sub("", str(text or ""), count=1)
+
+
 def has_wrong_direction_review(*labels):
-    label_text = " ".join(label or "" for label in labels).lower()
+    label_text = " ".join(strip_consensus_tally(label) for label in labels).lower()
     return any(marker in label_text for marker in WRONG_DIRECTION_REVIEW_MARKERS)
 
 

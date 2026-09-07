@@ -14,11 +14,13 @@ from dataclasses import dataclass, field
 
 
 PERCENT_PATTERN = re.compile(r"(?<![\d.])(\d{1,2}(?:\.\d+)?)\s?(?:%|percent)", re.IGNORECASE)
+# Revenue only: a customer's share of accounts receivable is a different (and usually
+# larger) number, and publishing it as "24% of revenue" would be wrong.
 REVENUE_PATTERN = re.compile(
-    r"\b(?:net\s+sales|net\s+revenues?|revenues?|sales|total\s+revenues?|consolidated\s+revenues?|"
-    r"accounts?\s+receivable|billings)\b",
+    r"\b(?:net\s+sales|net\s+revenues?|revenues?|sales|total\s+revenues?|consolidated\s+revenues?)\b",
     re.IGNORECASE,
 )
+RECEIVABLES_PATTERN = re.compile(r"\b(?:accounts?\s+receivable|receivables?|billings)\b", re.IGNORECASE)
 CONCENTRATION_PATTERN = re.compile(
     r"\b(?:accounted\s+for|represented|represents|comprised|constituted|contributed|"
     r"made\s+up|generated|derived\s+from|attributable\s+to|concentrat)",
@@ -86,6 +88,9 @@ def split_sentences(text):
 def is_concentration_sentence(sentence):
     if len(sentence) > MAX_SENTENCE_LENGTH:
         return False
+    if RECEIVABLES_PATTERN.search(sentence):
+        # "35% of total accounts receivable" is not a revenue share.
+        return False
     return bool(PERCENT_PATTERN.search(sentence) and REVENUE_PATTERN.search(sentence) and CONCENTRATION_PATTERN.search(sentence))
 
 
@@ -144,13 +149,15 @@ def mentioned_names(sentence, known_names, exclude=()):
                 after = sentence[match.end():match.end() + 24]
                 if not (CONTEXT_AFTER.search(after) or CONTEXT_BEFORE.search(before)):
                     continue
-            found.append((match.start(), display_name))
+            found.append((match.start(), display_name, cleaned))
             break
     found.sort()
-    # Prefer the longest name when one is a prefix of another ("Amazon" vs "Amazon Web Services").
+    # Prefer the longest match when one cleaned name contains another ("Coca-Cola" vs
+    # "Coca-Cola Consolidated"). Comparing display names instead dropped both, because
+    # neither "The Coca-Cola Company" nor "Coca-Cola Consolidated, Inc." contains the other.
     ordered = []
-    for position, name in found:
-        if any(name != other and name.lower() in other.lower() for _, other in found):
+    for position, name, cleaned in found:
+        if any(cleaned.lower() != other.lower() and cleaned.lower() in other.lower() for _, _, other in found):
             continue
         ordered.append((position, name))
     return ordered
@@ -226,7 +233,7 @@ def pair_names_with_shares(positioned_names, positioned_shares, sentence):
     return [(name, assigned.get(name)) for _, name in names]
 
 
-def extract_disclosures(text, known_names, filer_names=()):
+def extract_disclosures(text, known_names, filer_names=(), require_customer_cue=True):
     """Return customer-concentration disclosures found in filing text.
 
     `known_names` maps display names to cleaned names for the companies that can be
@@ -241,7 +248,7 @@ def extract_disclosures(text, known_names, filer_names=()):
         previous = sentence
         if not is_concentration_sentence(sentence):
             continue
-        if not CUSTOMER_CUE.search(context):
+        if require_customer_cue and not CUSTOMER_CUE.search(context):
             continue
         positioned = mentioned_names(sentence, known_names, filer_names)
         if not positioned or len(positioned) > MAX_NAMES_PER_SENTENCE:

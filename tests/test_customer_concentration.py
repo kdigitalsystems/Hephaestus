@@ -112,14 +112,21 @@ def test_recheck_corrects_published_concentration_shares():
     session.commit()
     wrong = Edge(source_id=howmet.id, target_id=ge.id, dependency_type="Revenue Concentration", product="53% of HWM revenue", revenue_share=53.0, evidence_excerpt=HOWMET, review_status="approved")
     stale = Edge(source_id=acme.id, target_id=apple.id, dependency_type="Revenue Concentration", product="24% of ACME revenue", revenue_share=24.0, evidence_excerpt="Acme Semiconductor (ACME) 10-K filed 2025-10-31: Our peer group comprised Apple and five others whose revenues exceeded 24% of ours.", review_status="approved")
-    session.add_all([wrong, stale])
+    # A peer list of listed companies: with only the customer's name the recheck would
+    # see one name and confirm it; with the whole universe it sees four and rejects it.
+    for name, ticker in (("Microsoft Corporation", "MSFT"), ("Amazon.com, Inc.", "AMZN"), ("Walmart Inc.", "WMT")):
+        session.add(Node(name=name, ticker=ticker, market_cap=1e12))
+    session.commit()
+    peers = Edge(source_id=acme.id, target_id=ge.id, dependency_type="Revenue Concentration", product="30% of ACME revenue", revenue_share=30.0, evidence_excerpt="Acme Semiconductor (ACME) 10-K filed 2025-10-31: Customers in our peer group, GE Aerospace, Microsoft, Amazon.com and Walmart, accounted for 30% of revenues.", review_status="approved")
+    session.add_all([wrong, stale, peers])
     session.commit()
 
     counts = {}
     recheck_concentration_edges(session, counts)
     session.commit()
 
-    assert counts == {"concentration_share_corrected": 1, "concentration_unsupported": 1}
+    assert counts == {"concentration_share_corrected": 1, "concentration_unsupported": 2}
+    assert peers.review_status == "pending"
     assert (wrong.revenue_share, wrong.product, wrong.review_status) == (11.0, "11% of HWM revenue", "approved")
     assert stale.review_status == "pending" and "no longer yields" in stale.review_note
 
@@ -258,7 +265,8 @@ def test_discovery_cooldown_and_sweep(monkeypatch):
     bank = Node(name="Acme Bank", ticker="ACMB", market_cap=9e9, sector="Banks")
     recent = Node(name="Recently Checked Co", ticker="RCC", market_cap=8e9, sector="Industrials", concentration_checked_at=now - timedelta(days=3))
     apple = Node(name="Apple Inc. Common Stock", ticker="AAPL", market_cap=3e12)
-    session.add_all([filer, bank, recent, apple])
+    unsectored = Node(name="No Sector Corp", ticker="NSC", market_cap=2e9, sector=None)
+    session.add_all([filer, bank, recent, apple, unsectored])
     session.commit()
 
     fetched = []
@@ -271,11 +279,14 @@ def test_discovery_cooldown_and_sweep(monkeypatch):
 
     result = auto_discover_edges.sweep_customer_concentration(session, auto_discover_edges.known_company_names(session), limit=10, max_seconds=60)
 
-    # Banks are skipped, recently checked companies are skipped, the rest are stamped once read.
-    assert fetched == ["AAPL", "ACME"]
-    assert result == {"checked": 2, "created": 1}
+    # Banks are skipped, recently checked companies are skipped, the rest are stamped once
+    # the lookup completed, including "no annual filing" so a slot is never held forever.
+    # A NULL sector is not an ignored sector: NSC is swept too.
+    assert fetched == ["AAPL", "ACME", "NSC"]
+    assert result == {"checked": 3, "created": 1}
     # SQLite hands back a naive datetime; compare in UTC.
-    assert filer.concentration_checked_at.replace(tzinfo=timezone.utc) == now and apple.concentration_checked_at is None
+    assert filer.concentration_checked_at.replace(tzinfo=timezone.utc) == now
+    assert apple.concentration_checked_at.replace(tzinfo=timezone.utc) == now
     assert session.query(Edge).count() == 1
 
 
@@ -290,6 +301,16 @@ def test_discovery_holds_are_applied_before_an_edge_is_created():
 
     assert auto_discover_edges.discovery_hold_reason(session, tsmc, apple, "The company fabricates the A-series chips for its largest customer.") == "excerpt does not name both companies"
     assert auto_discover_edges.discovery_hold_reason(session, tsmc, apple, "TSMC fabricates the A-series chips for Apple.") is None
+    # Short tickers and distinctive first words reach review instead of being dropped;
+    # generic first words ("General") do not count as a mention.
+    ge = Node(name="General Electric Company", ticker="GE", market_cap=2e11)
+    ford = Node(name="Ford Motor Company", ticker="F", market_cap=5e10)
+    micron = Node(name="Micron Technology, Inc.", ticker="MU", market_cap=1e11)
+    session.add_all([ge, ford, micron])
+    session.commit()
+    assert auto_discover_edges.discovery_hold_reason(session, ge, ford, "GE supplies turbochargers to Ford under a long-term agreement.") is None
+    assert auto_discover_edges.discovery_hold_reason(session, micron, apple, "Micron ships LPDDR5 memory to Apple for the iPhone.") is None
+    assert auto_discover_edges.discovery_hold_reason(session, ge, ford, "General suppliers provide parts to the automaker.") == "excerpt does not name both companies"
     session.add(Edge(source_id=apple.id, target_id=tsmc.id, dependency_type="Chips", review_status="approved"))
     session.commit()
     assert "opposite direction already approved" in auto_discover_edges.discovery_hold_reason(session, tsmc, apple, "TSMC fabricates the A-series chips for Apple.")
@@ -334,3 +355,50 @@ def test_a_collective_share_is_not_split_onto_each_customer():
     assert {(d.customer_name, d.share_pct) for d in extract_disclosures(sentence, known)} == {("Best Buy Co., Inc.", 44.0), ("Walmart Inc. Common Stock", 37.0)}
     sentence = "Our customers Best Buy and Walmart each accounted for more than 10% of revenue."
     assert {d.share_pct for d in extract_disclosures(sentence, known)} == {10.0}
+
+
+def test_recheck_keeps_edges_whose_cue_was_in_the_previous_sentence():
+    """The stored excerpt is one sentence; discovery may have taken the cue from before it."""
+    from cleanup_reviewed_edges import recheck_concentration_edges
+
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    acme = Node(name="Acme Semiconductor Inc.", ticker="ACME", market_cap=5e9)
+    apple = Node(name="Apple Inc. Common Stock", ticker="AAPL", market_cap=3e12)
+    session.add_all([acme, apple])
+    session.commit()
+    kept = Edge(
+        source_id=acme.id, target_id=apple.id, dependency_type="Revenue Concentration",
+        product="24% of ACME revenue", revenue_share=24.0, review_status="approved",
+        evidence_excerpt="Acme Semiconductor (ACME) 10-K filed 2025-10-31: Apple accounted for 24% of net sales in fiscal 2025.",
+    )
+    # A human's rejection is never reopened by the recheck.
+    rejected = Edge(
+        source_id=apple.id, target_id=acme.id, dependency_type="Revenue Concentration",
+        product="10% of AAPL revenue", revenue_share=10.0, review_status="rejected",
+        review_note="Rejected by hand: wrong direction.",
+        evidence_excerpt="Apple (AAPL) 10-K filed 2025-10-31: no customer accounted for more than 10%.",
+    )
+    session.add_all([kept, rejected])
+    session.commit()
+
+    counts = {}
+    recheck_concentration_edges(session, counts)
+    session.commit()
+
+    assert counts == {}
+    assert kept.review_status == "approved" and kept.revenue_share == 24.0
+    assert rejected.review_status == "rejected"
+
+
+def test_receivables_concentration_is_not_a_revenue_share():
+    known = {"Apple Inc. Common Stock": "Apple", "Dell Technologies Inc.": "Dell"}
+    sentence = "Accounts receivable from our customers Apple and Dell represented 35% and 20% of total accounts receivable."
+    assert extract_disclosures(sentence, known) == []
+
+
+def test_overlapping_universe_names_do_not_cancel_each_other():
+    known = {"The Coca-Cola Company": "Coca-Cola", "Coca-Cola Consolidated, Inc.": "Coca-Cola Consolidated"}
+    found = extract_disclosures("Sales to Coca-Cola Consolidated accounted for 15% of revenues.", known)
+    assert [(d.customer_name, d.share_pct) for d in found] == [("Coca-Cola Consolidated, Inc.", 15.0)]

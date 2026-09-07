@@ -185,8 +185,19 @@ def strong_aliases(node):
     return [alias for alias in dict.fromkeys(aliases) if len(alias) >= 2]
 
 
+def normalize_for_alias_match(text):
+    """Aliases are built with punctuation collapsed to spaces, so the text must be too.
+
+    Without this, "Amazon.com" never matched the alias "amazon com", "Coca-Cola" never
+    matched "coca cola", and "Lowe's" never matched "lowe s" - so the review step held
+    the pipeline's best evidence (named customers in 10-K disclosures) forever.
+    """
+    lowered = re.sub(r"[^a-z0-9& ]+", " ", str(text or "").lower())
+    return " ".join(lowered.split())
+
+
 def mentions_company(text, node):
-    lowered = " ".join(str(text or "").lower().split())
+    lowered = normalize_for_alias_match(text)
     return any(
         re.search(r"(?<![a-z0-9])" + re.escape(alias) + r"(?![a-z0-9])", lowered)
         for alias in strong_aliases(node)

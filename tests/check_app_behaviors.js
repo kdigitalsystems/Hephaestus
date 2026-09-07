@@ -448,6 +448,37 @@ element("connected-filter").checked = false;
 
 vm.runInContext("applyFilters(true); globalThis.__emptySearchResults = currentCompaniesList.map(company => company.ticker); globalThis.__emptySearchCount = document.getElementById('result-count').textContent;", context);
 
+// A one-letter query that is an exact ticker is a result, not a "keep typing" state:
+// 17 such tickers exist (A, F, T, ...), and #companies?query=T rendered the overview.
+vm.runInContext([
+  "const __savedCompanies = allCompanies.slice();",
+  "allCompanies.push({ ticker: 'F', name: 'Ford Motor Company', sector: 'Consumer Cyclical', upstream: [], downstream: [], connection_count: 0 });",
+  "document.getElementById('search-input').value = 'F';",
+  "currentRoute = { view: 'companies' };",
+  "applyFilters(false, true);",
+  "globalThis.__singleLetterView = currentRoute.view;",
+  "globalThis.__singleLetterResults = currentCompaniesList.map(company => company.ticker).join(',');",
+  "allCompanies = __savedCompanies;",
+  "document.getElementById('search-input').value = '';",
+].join("\n"), context);
+if (context.__singleLetterView !== "companies" || String(context.__singleLetterResults) !== "F") {
+  throw new Error(`a one-letter exact ticker must render that company, not the overview: view=${context.__singleLetterView} results=${context.__singleLetterResults}`);
+}
+
+// A search typed just before navigating must not re-render the screener over the
+// destination view once its debounce fires.
+const clearedTimers = [];
+const realClearTimeout = context.window.clearTimeout;
+context.window.clearTimeout = (id) => { clearedTimers.push(id); return realClearTimeout(id); };
+vm.runInContext("document.getElementById('search-input').value = 'nvid'; handleSearchInput(); globalThis.__armedTimer = searchInputTimer; applyRoute({ view: 'overview' });", context);
+context.window.clearTimeout = realClearTimeout;
+if (!context.__armedTimer) {
+  throw new Error("typing in the search box must arm the debounce timer");
+}
+if (!clearedTimers.includes(context.__armedTimer)) {
+  throw new Error("navigating must clear the pending search debounce, or it re-renders the screener over the new view");
+}
+
 if (context.__emptySearchResults.length !== 0 || context.__emptySearchCount !== "0 results") {
   throw new Error(`expected impossible search to stay empty, got ${JSON.stringify(context.__emptySearchResults)} and count ${context.__emptySearchCount}`);
 }

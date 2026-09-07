@@ -60,6 +60,11 @@ CONCENTRATION_RECHECK_DAYS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_RECH
 IGNORED_SECTORS = ["Financial Services", "Real Estate", "Financial", "Asset Management", "Insurance", "Banks", "Shell Companies"]
 
 
+def not_in_ignored_sector():
+    """SQL's NOT IN is NULL for a NULL sector, which silently excluded such companies."""
+    return or_(Node.sector.is_(None), ~Node.sector.in_(IGNORED_SECTORS))
+
+
 def utc_now():
     return datetime.now(timezone.utc)
 
@@ -247,11 +252,17 @@ def discover_customer_concentration(session, company, known_names):
     except Exception as exc:
         print(f"  [-] Customer concentration source unavailable for {company.ticker}: {exc}")
         return 0
-    if not filing or not text:
+    if filing and not text:
+        # The filing exists but its document could not be read (a 403 burst, a timeout).
+        # Leaving the stamp unset keeps the company in the queue instead of silencing
+        # it for the whole recheck interval.
+        print(f"  [-] Customer concentration document unreadable for {company.ticker}; will retry.")
         return 0
-    # Stamped only once the filing was actually read, so an SEC outage does not
-    # silence a company for the whole recheck interval.
+    # Stamped once the lookup completed, including "no annual filing on file", so such a
+    # company stops occupying a sweep slot on every run.
     company.concentration_checked_at = utc_now()
+    if not filing:
+        return 0
 
     created = 0
     filer_aliases = (company.name, clean_company_name(company.name or ""), company.ticker)
@@ -286,7 +297,7 @@ def sweep_customer_concentration(session, known_names, limit=CONCENTRATION_SWEEP
     cutoff = now - timedelta(days=CONCENTRATION_RECHECK_DAYS)
     companies = (
         session.query(Node)
-        .filter(Node.ticker.is_not(None), Node.market_cap > 1_000_000_000, ~Node.sector.in_(IGNORED_SECTORS))
+        .filter(Node.ticker.is_not(None), Node.market_cap > 1_000_000_000, not_in_ignored_sector())
         .filter(or_(Node.concentration_checked_at.is_(None), Node.concentration_checked_at < cutoff))
         .order_by(Node.market_cap.desc())
         .limit(limit)
@@ -304,11 +315,51 @@ def sweep_customer_concentration(session, known_names, limit=CONCENTRATION_SWEEP
     return {"checked": checked, "created": created}
 
 
-def discovery_hold_reason(session, source_node, target_node, excerpt):
-    """Why the review step would only hold this edge; such edges are not created at all."""
+# First words that name a category, a place, or a virtue rather than a company.
+GENERIC_NAME_WORDS = {
+    "general", "american", "united", "national", "international", "first", "global", "standard",
+    "advanced", "universal", "allied", "consolidated", "digital", "energy", "capital", "financial",
+    "north", "south", "west", "east", "royal", "pacific", "atlantic", "central", "western", "eastern",
+    "southern", "northern", "alpha", "beta", "delta", "gamma", "omega", "apex", "summit", "pioneer",
+    "liberty", "freedom", "great", "best", "premier", "prime", "super", "world", "texas", "california",
+    "china", "japan", "taiwan", "boston", "chicago", "new", "old", "mid", "trans", "inter",
+}
+
+
+def loosely_mentions_company(text, node):
+    """Does the excerpt name the company by any reasonable handle?
+
+    The review step's strong-alias test (full cleaned name, its first two words, a
+    ticker of three or more letters) is right for approving, but too strict for
+    deciding what never reaches review: "GE supplies engines", "Ford buys batteries"
+    and "Micron ships DRAM" name the company perfectly well. Here a ticker of two or
+    more letters, or a distinctive first word, also counts; the review step still
+    applies the strict test before anything is published.
+    """
     from review_edges_with_ollama import mentions_company  # lazy: that module is the review CLI
 
-    if not (mentions_company(excerpt, source_node) and mentions_company(excerpt, target_node)):
+    if mentions_company(text, node):
+        return True
+    lowered = " ".join(str(text or "").lower().split())
+    handles = []
+    ticker = str(getattr(node, "ticker", "") or "").strip().lower()
+    if len(ticker) >= 2:
+        handles.append(ticker)
+    cleaned = clean_company_name(str(getattr(node, "name", "") or "")).lower()
+    words = re.findall(r"[a-z0-9&']+", cleaned)
+    if words and len(words[0]) >= 4 and words[0] not in GENERIC_NAME_WORDS:
+        handles.append(words[0])
+    return any(re.search(r"(?<![a-z0-9])" + re.escape(handle) + r"(?![a-z0-9])", lowered) for handle in handles)
+
+
+def discovery_hold_reason(session, source_node, target_node, excerpt):
+    """Why this edge should not be created at all.
+
+    Only clear junk is dropped here: an excerpt naming neither company by any handle,
+    or a relationship whose opposite direction a human already approved. Anything
+    ambiguous is created and left to the review step, which holds it for a human.
+    """
+    if not (loosely_mentions_company(excerpt, source_node) and loosely_mentions_company(excerpt, target_node)):
         return "excerpt does not name both companies"
     mirror = (
         session.query(Edge)
@@ -615,25 +666,57 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
         if not deep_dive:
             query = query.filter(Edge.id.is_(None))
 
+        cooldown_cutoff = utc_now() - timedelta(days=RESEARCH_COOLDOWN_DAYS or 0)
         if not deep_dive and RESEARCH_COOLDOWN_DAYS > 0:
-            cooldown_cutoff = utc_now() - timedelta(days=RESEARCH_COOLDOWN_DAYS)
             query = query.filter(or_(Node.last_researched_at.is_(None), Node.last_researched_at < cooldown_cutoff))
 
         if target_sectors:
             query = query.filter(Node.sector.in_(target_sectors))
         else:
-            query = query.filter(~Node.sector.in_(IGNORED_SECTORS))
+            query = query.filter(not_in_ignored_sector())
 
         # The edge outer join yields one row per incident edge; without DISTINCT the
         # limit is consumed by a few well-connected companies in --deep-dive mode.
         lonely_nodes = query.distinct().order_by(Node.market_cap.desc()).limit(limit).all()
 
-        if not lonely_nodes:
-            print("No actionable companies found in queue!")
-            return
+        if not deep_dive and len(lonely_nodes) < limit and RESEARCH_COOLDOWN_DAYS > 0:
+            # The queue is "companies with no edge", but the concentration sweep gives
+            # edges to filers and to big named customers, which would exclude them from
+            # LLM research forever. Once the edgeless companies are exhausted, top up
+            # with the largest companies whose cooldown has expired.
+            chosen = {node.id for node in lonely_nodes}
+            top_up = (
+                session.query(Node)
+                .filter(Node.market_cap > 1_000_000_000, not_in_ignored_sector())
+                .filter(or_(Node.last_researched_at.is_(None), Node.last_researched_at < cooldown_cutoff))
+                .filter(Node.id.notin_(chosen) if chosen else True)
+            )
+            if target_sectors:
+                top_up = top_up.filter(Node.sector.in_(target_sectors))
+            extra = top_up.order_by(Node.market_cap.desc()).limit(limit - len(lonely_nodes)).all()
+            if extra:
+                print(f"--- Queue topped up with {len(extra)} already-linked company/companies past the research cooldown ---")
+            lonely_nodes.extend(extra)
 
         known_names = known_company_names(session) if USE_CUSTOMER_CONCENTRATION and USE_SEC_SOURCE else {}
+        # The filing sweep is independent of the LLM queue and must run even on a day
+        # the queue is empty.
         sweep = sweep_customer_concentration(session, known_names)
+
+        if not lonely_nodes:
+            print("No actionable companies found in queue!")
+            # Still today's summary: without it write_status.py would publish the
+            # previous run's counts as if this run had researched them.
+            write_discovery_summary({
+                "generated_at": utc_now().isoformat(timespec="seconds"),
+                "companies_analyzed": 0,
+                "extraction_failures": 0,
+                "deferred": 0,
+                "elapsed_seconds": 0,
+                "budget_seconds": DISCOVERY_MAX_SECONDS,
+                "concentration_sweep": sweep,
+            })
+            return
         extraction_attempts = 0
         extraction_failures = 0
         last_extraction_error = ""

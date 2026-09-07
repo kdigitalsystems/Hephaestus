@@ -24,7 +24,8 @@ DOCS_DIR = ROOT / "docs"
 DEFAULT_HISTORY_PATH = DOCS_DIR / "link_history.json"
 DEFAULT_CHANGES_PATH = DOCS_DIR / "changes.json"
 DEFAULT_FEED_PATH = DOCS_DIR / "feed.xml"
-SITE_URL = os.environ.get("HEPHAESTUS_SITE_URL", "https://kdigitalsystems.github.io/Hephaestus/")
+# Trailing slash guaranteed: every use concatenates a path directly onto it.
+SITE_URL = os.environ.get("HEPHAESTUS_SITE_URL", "https://kdigitalsystems.github.io/Hephaestus/").rstrip("/") + "/"
 FEED_DAYS = 14
 MAX_LINKS_PER_LIST = 50
 

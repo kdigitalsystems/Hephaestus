@@ -205,6 +205,10 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          # Remove the credential on every exit path: a failed rebase or a rejected
+          # push would otherwise leave the token in .git/config on the self-hosted
+          # runner until the next checkout.
+          trap 'git config --local --unset-all http.https://github.com/.extraheader || true' EXIT
           git config --local --unset-all http.https://github.com/.extraheader || true
           git config --local http.https://github.com/.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$PUSH_TOKEN" | base64 -w0)"
 

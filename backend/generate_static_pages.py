@@ -117,9 +117,14 @@ def render_link(link, side, known_tickers):
     share = revenue_share_text(link, side)
     if share:
         details.append(escape(share))
-    source = str(link.get("source") or "")
-    if source.startswith(("http://", "https://")):
-        title = str(link.get("source_title") or "").strip()
+    # Merged relationships join their members with " / ", so the field can hold several
+    # sources; each URL becomes its own link and non-URL tokens are dropped.
+    sources = [part.strip() for part in str(link.get("source") or "").split(" / ") if part.strip()]
+    titles = [part.strip() for part in str(link.get("source_title") or "").split(" / ") if part.strip()]
+    for index, source in enumerate(sources):
+        if not source.startswith(("http://", "https://")):
+            continue
+        title = titles[index] if index < len(titles) else ""
         title = title if title and title != source else "Source document"
         details.append(f'<a href="{escape(source)}" rel="noopener noreferrer">{escape(title)}</a>')
     evidence = " ".join(str(link.get("evidence_excerpt") or "").split())
@@ -166,6 +171,9 @@ def render_company_page(company, generated_on, known_tickers):
         "url": canonical,
         "description": description,
     }, ensure_ascii=True)
+    # json.dumps does not escape "<", so a name containing "</script>" would end the
+    # JSON-LD element and the rest would be parsed as HTML.
+    json_ld = json_ld.replace("<", "\\u003c")
 
     def section(title, links, side, empty_text):
         if not links:
@@ -267,8 +275,13 @@ def generate_static_pages(dashboard_path=DEFAULT_DASHBOARD_PATH, output_dir=DEFA
     write_text_atomic(output_dir / "index.html", render_index_page(companies, generated_on))
     written.add("index.html")
 
-    # A company that lost its last relationship must not keep a stale page.
     removed = 0
+    # write_text_atomic leaves ".AMD.html.k3x9.tmp" behind if a run is killed mid-write,
+    # and `git add -A docs/company` would then commit it forever.
+    for orphan in list(output_dir.glob("*.tmp")) + list(output_dir.glob(".*.tmp")):
+        orphan.unlink()
+        removed += 1
+    # A company that lost its last relationship must not keep a stale page.
     for stale in output_dir.glob("*.html"):
         if stale.name not in written:
             os.unlink(stale)

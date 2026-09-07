@@ -55,9 +55,15 @@ def split_dashboard(dashboard):
 
 def write_json(path, payload):
     tmp_path = f"{path}.tmp"
-    with open(tmp_path, "w", encoding="utf-8") as handle:
-        json.dump(payload, handle, separators=(",", ":"), allow_nan=False)
-    os.replace(tmp_path, path)
+    try:
+        with open(tmp_path, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, separators=(",", ":"), allow_nan=False)
+        os.replace(tmp_path, path)
+    except BaseException:
+        # A killed or failed write must not leave a .tmp file for `git add -A`.
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+        raise
 
 
 def write_split(dashboard_path=DEFAULT_DASHBOARD_PATH, lite_path=DEFAULT_LITE_PATH, shard_dir=DEFAULT_SHARD_DIR):
@@ -73,7 +79,10 @@ def write_split(dashboard_path=DEFAULT_DASHBOARD_PATH, lite_path=DEFAULT_LITE_PA
         written.add(name)
     removed = 0
     for name in os.listdir(shard_dir):
-        if name.endswith(".json") and name not in written:
+        if name.endswith(".tmp"):
+            os.remove(os.path.join(shard_dir, name))
+            removed += 1
+        elif name.endswith(".json") and name not in written:
             os.remove(os.path.join(shard_dir, name))
             removed += 1
     lite_size = os.path.getsize(lite_path)
