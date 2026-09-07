@@ -234,3 +234,21 @@ def test_consensus_can_reverse_when_direction_votes_match():
     assert result["action"] == "reverse"
     assert result["supplier_side"] == "target"
     assert result["customer_side"] == "source"
+
+
+def test_company_names_with_punctuation_are_recognised_in_evidence():
+    """Aliases collapse punctuation, so the excerpt must be normalized the same way."""
+    from review_edges_with_ollama import mentions_company
+
+    class FakeNode:
+        def __init__(self, name, ticker):
+            self.name, self.ticker = name, ticker
+
+    cases = [
+        ("Amazon.com, Inc. Common Stock", "AMZN", "Sales to Amazon.com accounted for 20% of revenue."),
+        ("The Coca-Cola Company", "KO", "The bottler ships concentrate to Coca-Cola every quarter."),
+        ("Lowe's Companies, Inc.", "LOW", "Sales to Lowe's represented 12% of net sales."),
+    ]
+    for name, ticker, text in cases:
+        assert mentions_company(text, FakeNode(name, ticker)), f"{ticker} not found in its own evidence"
+    assert not mentions_company("The retailer bought inventory.", FakeNode("Lowe's Companies, Inc.", "LOW"))

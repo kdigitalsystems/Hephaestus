@@ -5,7 +5,7 @@ import socket
 from ipaddress import ip_address
 from pathlib import Path
 from datetime import date, timedelta
-from urllib.parse import urljoin, urlparse, urlunparse
+from urllib.parse import quote, urlencode, urljoin, urlparse, urlunparse
 
 import requests
 
@@ -203,14 +203,33 @@ def is_public_http_url(url):
     return True
 
 
+MAX_REDIRECTS = 5
+
+
+def get_public_url(url, timeout=15, stream=False):
+    """GET a URL, validating every redirect hop before it is followed.
+
+    Following redirects first and checking the final URL afterwards still sends the
+    request: a source that redirects to link-local metadata or to localhost has
+    already been fetched by the time the check runs.
+    """
+    for _ in range(MAX_REDIRECTS + 1):
+        if not is_public_http_url(url):
+            raise requests.RequestException(f"refusing non-public source URL {redacted_url(url)}")
+        response = requests.get(url, headers=source_headers(), timeout=timeout, allow_redirects=False, stream=stream)
+        if not response.is_redirect and not response.is_permanent_redirect:
+            response.raise_for_status()
+            return response
+        location = response.headers.get("location") or ""
+        response.close()
+        if not location:
+            raise requests.RequestException(f"redirect without a location from {redacted_url(url)}")
+        url = requests.compat.urljoin(url, location)
+    raise requests.RequestException(f"too many redirects from {redacted_url(url)}")
+
+
 def fetch_url_text(url, timeout=15):
-    if not is_public_http_url(url):
-        raise requests.RequestException(f"refusing non-public source URL {redacted_url(url)}")
-    response = requests.get(url, headers=source_headers(), timeout=timeout)
-    response.raise_for_status()
-    final_url = getattr(response, "url", url) or url
-    if final_url != url and not is_public_http_url(final_url):
-        raise requests.RequestException(f"source redirected to a non-public URL {redacted_url(final_url)}")
+    response = get_public_url(url, timeout=timeout)
     content_type = response.headers.get("content-type", "")
     if "json" in content_type:
         return json.dumps(response.json(), ensure_ascii=True)
@@ -220,9 +239,9 @@ def fetch_url_text(url, timeout=15):
 
 
 def fetch_json(url, params=None, timeout=20):
-    response = requests.get(url, params=params, headers=source_headers(), timeout=timeout)
-    response.raise_for_status()
-    return response.json()
+    if params:
+        url = f"{url}{'&' if '?' in url else '?'}{urlencode(params)}"
+    return get_public_url(url, timeout=timeout).json()
 
 
 def load_source_config(path=None):
@@ -564,7 +583,7 @@ def nhtsa_manufacturer_text(ticker, company_name="", sector="", industry="", max
     query = clean_company_query(company_name)
     if not query:
         return ""
-    url = f"https://vpic.nhtsa.dot.gov/api/vehicles/GetManufacturerDetails/{query}?format=json"
+    url = f"https://vpic.nhtsa.dot.gov/api/vehicles/GetManufacturerDetails/{quote(query, safe='')}?format=json"
     try:
         response = requests.get(url, headers=source_headers(), timeout=15)
         response.raise_for_status()

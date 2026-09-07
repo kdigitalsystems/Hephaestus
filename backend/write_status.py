@@ -25,14 +25,36 @@ def load_json(path):
         return None
 
 
+# The job's own timeout is four hours, so anything older than this belongs to an
+# earlier run: a 24-hour window would still accept yesterday's summary.
+MAX_SUMMARY_AGE_HOURS = 6
+
+
+def fresh_discovery(discovery, now):
+    """Only a summary written in this run's window counts; an older one is a crashed
+    discovery step and must not publish yesterday's numbers as today's."""
+    if not discovery:
+        return {}
+    stamp = discovery.get("generated_at")
+    try:
+        written = datetime.fromisoformat(str(stamp))
+    except (TypeError, ValueError):
+        return {}
+    if written.tzinfo is None:
+        written = written.replace(tzinfo=timezone.utc)
+    age_hours = (now - written).total_seconds() / 3600
+    return discovery if 0 <= age_hours <= MAX_SUMMARY_AGE_HOURS else {}
+
+
 def build_status(dashboard, discovery=None, now=None):
     dashboard = dashboard or {}
+    now = now or datetime.now(timezone.utc)
     metrics = dashboard.get("investor_metrics") or {}
     change = metrics.get("change_summary") or {}
-    discovery = discovery or {}
+    discovery = fresh_discovery(discovery, now)
     sweep = discovery.get("concentration_sweep") or {}
     return {
-        "generated_at": (now or datetime.now(timezone.utc)).isoformat(timespec="seconds"),
+        "generated_at": now.isoformat(timespec="seconds"),
         "data_as_of": dashboard.get("generated_at"),
         "companies": metrics.get("company_count"),
         "unique_links": metrics.get("unique_links"),

@@ -113,11 +113,14 @@ python3 backend/generate_change_feed.py
 echo "Pre-rendering company pages and sitemap..."
 python3 backend/generate_static_pages.py
 python3 backend/split_dashboard.py
+python3 backend/write_status.py
 
 echo "Checking for dashboard changes..."
 git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
-git add docs/changes.json docs/feed.xml
+git add docs/changes.json docs/feed.xml docs/status.json
 git add -A docs/company docs/sitemap.xml
+git add docs/dashboard_lite.json
+git add -A docs/company-data
 if ! git diff --cached --quiet; then
   git commit -m "Automated dashboard update: $(date +'%Y-%m-%d')"
   # The scheduled workflow may have published since this run started. Unrelated

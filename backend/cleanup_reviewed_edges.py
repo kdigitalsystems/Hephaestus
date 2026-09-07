@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timezone
 
 from audit_data_quality import (
@@ -31,17 +32,30 @@ def recheck_concentration_edges(session, counts):
     carries the corrected value instead of restoring the old one. Evidence that no
     longer yields a share for the named customer sends the edge back to review.
     """
-    from auto_discover_edges import clean_company_name  # heavy module; import lazily
+    from auto_discover_edges import clean_company_name, known_company_names  # heavy module; import lazily
 
-    edges = session.query(Edge).filter(Edge.dependency_type == CONCENTRATION_TYPE).all()
+    # A human's rejection stands; only live edges are rechecked.
+    edges = session.query(Edge).filter(Edge.dependency_type == CONCENTRATION_TYPE, Edge.review_status != "rejected").all()
+    if not edges:
+        return
+    # The whole universe, not just this edge's customer: discovery's rules (at most
+    # three names per sentence, peer lists, rating agencies) must apply identically
+    # here, or the recheck would confirm a share discovery would now reject.
+    known = known_company_names(session)
     for edge in edges:
         filer, customer = edge.source_node, edge.target_node
         if not filer or not customer:
             continue
         sentence = disclosure_sentence(edge.evidence_excerpt)
-        known = {customer.name: clean_company_name(customer.name)}
         filer_names = (filer.name, clean_company_name(filer.name))
-        shares = [d.share_pct for d in extract_disclosures(sentence, known, filer_names) if d.customer_name == customer.name and d.share_pct is not None]
+        # The stored excerpt is the disclosure sentence alone, but discovery may have
+        # taken the customer cue from the sentence before it; requiring the cue again
+        # here would demote a valid edge on every run.
+        shares = [
+            d.share_pct
+            for d in extract_disclosures(sentence, known, filer_names, require_customer_cue=False)
+            if d.customer_name == customer.name and d.share_pct is not None
+        ]
         if not shares:
             if edge.review_status != "pending":
                 edge.review_status = "pending"
@@ -69,12 +83,26 @@ def is_published(edge):
     return edge.review_status != "rejected" and (edge.review_status == "approved" or "Manual" in (edge.source_url or ""))
 
 
+ROLE_WORDS = {"manufacturer", "customer", "customers", "supplier", "suppliers", "vendor", "buyer", "client", "provider", "partner", "distributor", "reseller", "receiver"}
+
+
+def looks_like_role_label(label):
+    """'Customer', 'manufacturer -> customer', 'supplier/customer': roles, not a dependency."""
+    if is_role_label(label):
+        return True
+    text = str(label or "").lower()
+    if "->" in text or "→" in text:
+        return True
+    words = [word for word in re.split(r"[^a-z]+", text) if word]
+    return bool(words) and all(word in ROLE_WORDS or word in {"and", "of", "to", "the", "a"} for word in words)
+
+
 def direction_rank(edge):
     """Higher keeps: a real dependency label over a role label, a human verdict over a
     model's, then the older edge."""
     note = str(edge.review_note or "")
     human = edge.review_status == "approved" and not note.startswith("Ollama consensus") and not note.startswith("Automated")
-    return (0 if is_role_label(edge.dependency_type) else 1, 1 if human else 0, -(edge.id or 0))
+    return (0 if looks_like_role_label(edge.dependency_type) else 1, 1 if human else 0, -(edge.id or 0))
 
 
 def resolve_reciprocal_duplicates(session, counts):

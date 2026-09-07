@@ -35,5 +35,6 @@ python3 backend/validate_dashboard_data.py
 python3 backend/generate_change_feed.py
 python3 backend/generate_static_pages.py
 python3 backend/split_dashboard.py
+python3 backend/write_status.py
 
 echo "Rebuild complete. Dashboard data refreshed at docs/dashboard_data.json"

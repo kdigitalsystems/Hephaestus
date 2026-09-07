@@ -19,7 +19,7 @@ DASHBOARD = {
         "change_summary": {"new_count": 14, "removed_count": 0, "net_change": 14},
     },
 }
-DISCOVERY = {"companies_analyzed": 158, "deferred": 342, "extraction_failures": 7, "concentration_sweep": {"checked": 300, "created": 21}}
+DISCOVERY = {"generated_at": "2026-09-07T10:00:00+00:00", "companies_analyzed": 158, "deferred": 342, "extraction_failures": 7, "concentration_sweep": {"checked": 300, "created": 21}}
 
 
 def test_build_status_combines_dashboard_and_discovery_summary():
@@ -45,3 +45,11 @@ def test_status_survives_a_missing_discovery_summary(tmp_path):
 def test_status_is_not_written_without_dashboard_data(tmp_path):
     assert write_status(tmp_path / "nope.json", tmp_path / "nope2.json", tmp_path / "status.json") is None
     assert not (tmp_path / "status.json").exists()
+
+
+def test_a_stale_discovery_summary_is_ignored():
+    stale = {**DISCOVERY, "generated_at": "2026-09-05T10:00:00+00:00"}
+    status = build_status(DASHBOARD, stale, now=datetime(2026, 9, 7, 10, 9, tzinfo=timezone.utc))
+    assert status["companies_researched"] is None and status["filings_swept"] is None
+    unstamped = {k: v for k, v in DISCOVERY.items() if k != "generated_at"}
+    assert build_status(DASHBOARD, unstamped, now=datetime(2026, 9, 7, 10, 9, tzinfo=timezone.utc))["companies_researched"] is None

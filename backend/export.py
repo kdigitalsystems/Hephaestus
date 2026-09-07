@@ -383,8 +383,10 @@ def load_link_history(history_path=HISTORY_PATH):
     try:
         with open(history_path, encoding="utf-8") as handle:
             payload = json.load(handle)
-    except (OSError, json.JSONDecodeError):
-        return []
+    except (OSError, json.JSONDecodeError) as exc:
+        # An unreadable file is not a first run: treating it as one would report every
+        # existing link as new and then overwrite 30 days of history with one entry.
+        raise RuntimeError(f"link history at {history_path} exists but could not be read: {exc}") from exc
     return payload if isinstance(payload, list) else payload.get("history", [])
 
 def history_entry_date(entry):

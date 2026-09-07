@@ -114,3 +114,14 @@ def test_manual_exemption_does_not_apply_to_urls_containing_manual():
     assert not requires_source_evidence("Manual System Jumpstart")
     assert requires_source_evidence("https://vendor.example.com/docs/service-manual.pdf")
     assert requires_source_evidence("AI Multi-Source Research")
+
+
+def test_a_consensus_vote_tally_is_not_a_wrong_direction_signal():
+    """The panel reporting that it reversed an edge must not re-open that edge."""
+    from audit_data_quality import has_wrong_direction_review
+
+    fixed = "Ollama consensus review: votes reverse:2, approve:1. Lead rationale from qwen: TSMC supplies Apple."
+    assert has_wrong_direction_review(None, fixed) is False
+    # A rationale that still describes a backwards edge is flagged.
+    assert has_wrong_direction_review(None, "Ollama consensus review: approve. The source is the customer here.") is True
+    assert has_wrong_direction_review(None, "Reviewer note: the edge is backwards.") is True

@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
@@ -51,6 +53,9 @@ def test_configured_source_text_fetches_configured_urls(monkeypatch):
     class Response:
         headers = {"content-type": "text/html"}
         url = "https://example.com/acme"
+        # Redirects are now validated hop by hop, so the fake must say it is not one.
+        is_redirect = False
+        is_permanent_redirect = False
         # No charset declared: the UTF-8 name must survive decoding.
         content = "<p>Acme uses supplier Beta Manufacturing and Société Générale for assemblies.</p>".encode("utf-8")
 
@@ -275,3 +280,32 @@ def test_get_additional_supply_chain_text_combines_enabled_sources(monkeypatch):
     assert "openfda source" in text
     assert "fcc source" in text
     assert "nhtsa source" in text
+
+
+def test_a_redirect_to_a_private_address_is_never_fetched(monkeypatch):
+    """The old check ran after requests had already followed every hop."""
+    requested = []
+
+    class Redirect:
+        headers = {"location": "http://169.254.169.254/latest/meta-data/"}
+        is_redirect = True
+        is_permanent_redirect = False
+
+        def close(self):
+            pass
+
+        def raise_for_status(self):  # pragma: no cover - a redirect never reaches this
+            raise AssertionError("a redirect must not be treated as a final response")
+
+    def fake_get(url, **kwargs):
+        requested.append(url)
+        assert kwargs.get("allow_redirects") is False
+        return Redirect()
+
+    monkeypatch.setattr(additional_sources.requests, "get", fake_get)
+
+    with pytest.raises(additional_sources.requests.RequestException):
+        additional_sources.fetch_url_text("https://example.com/redirector")
+
+    # The public URL was fetched once; the link-local address never was.
+    assert requested == ["https://example.com/redirector"]
