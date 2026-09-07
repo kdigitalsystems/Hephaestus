@@ -139568,13 +139568,13 @@
     }
   },
   {
-    "generated_at": "2026-09-07T10:08:18+00:00",
+    "generated_at": "2026-09-07T20:14:32+00:00",
     "generated_on": "2026-09-07",
-    "unique_links": 313,
-    "approved_links": 313,
+    "unique_links": 365,
+    "approved_links": 365,
     "pending_links": 0,
     "rejected_links": 0,
-    "linked_companies": 319,
+    "linked_companies": 365,
     "links": {
       "A->PHG:MANUFACTURING EQUIPMENT/TECHNOLOGY": {
         "relationship_key": "A->PHG:MANUFACTURING EQUIPMENT/TECHNOLOGY",
@@ -139613,7 +139613,7 @@
         "relationship_key": "AAPL->AVGO:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
         "source_ticker": "AAPL",
         "target_ticker": "AVGO",
-        "type": "operational supply-chain dependency",
+        "type": "operational supply-chain dependency / Raw Materials (NICs)",
         "product": "Network Interface Cards (NICs)",
         "review_status": "approved",
         "confidence": 0.9167,
@@ -139652,6 +139652,17 @@
         "confidence": 0.85,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "ACA->GEV:REVENUE CONCENTRATION": {
+        "relationship_key": "ACA->GEV:REVENUE CONCENTRATION",
+        "source_ticker": "ACA",
+        "target_ticker": "GEV",
+        "type": "Revenue Concentration",
+        "product": "Engineered Structures",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
       },
       "ACI->SBUX:COFFEE SERVICE PROVIDER": {
         "relationship_key": "ACI->SBUX:COFFEE SERVICE PROVIDER",
@@ -139729,6 +139740,17 @@
         "confidence": 0.925,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "AMCR->LYB:COLLABORATION/MANUFACTURING PARTNER": {
+        "relationship_key": "AMCR->LYB:COLLABORATION/MANUFACTURING PARTNER",
+        "source_ticker": "AMCR",
+        "target_ticker": "LYB",
+        "type": "Collaboration/Manufacturing Partner",
+        "product": "Flexible Packaging Solution for Marabou Chocolate Bars",
+        "review_status": "approved",
+        "confidence": 0.8833,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-07"
       },
       "AMD->DELL:OPERATIONAL SUPPLY CHAIN": {
         "relationship_key": "AMD->DELL:OPERATIONAL SUPPLY CHAIN",
@@ -139817,6 +139839,28 @@
         "confidence": 0.95,
         "source_type": "Web Source",
         "last_verified": "2026-09-07"
+      },
+      "AMRX->CAH:REVENUE CONCENTRATION": {
+        "relationship_key": "AMRX->CAH:REVENUE CONCENTRATION",
+        "source_ticker": "AMRX",
+        "target_ticker": "CAH",
+        "type": "Revenue Concentration",
+        "product": "71% of AMRX revenue",
+        "review_status": "approved",
+        "confidence": 0.9667,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
+      "AMRX->COR:REVENUE CONCENTRATION": {
+        "relationship_key": "AMRX->COR:REVENUE CONCENTRATION",
+        "source_ticker": "AMRX",
+        "target_ticker": "COR",
+        "type": "Revenue Concentration",
+        "product": "Drug Manufacturers - Specialty & Generic products",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
       },
       "AMZN->RIVN:DELIVERY VAN SALES": {
         "relationship_key": "AMZN->RIVN:DELIVERY VAN SALES",
@@ -139983,6 +140027,39 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "ATMU->CMI:OPERATIONAL SUPPLY CHAIN DEPENDENCY": {
+        "relationship_key": "ATMU->CMI:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+        "source_ticker": "ATMU",
+        "target_ticker": "CMI",
+        "type": "operational supply chain dependency",
+        "product": "18.8% of ATMU revenue (presumably filtration products)",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
+      "ATMU->PCAR:REVENUE CONCENTRATION": {
+        "relationship_key": "ATMU->PCAR:REVENUE CONCENTRATION",
+        "source_ticker": "ATMU",
+        "target_ticker": "PCAR",
+        "type": "Revenue Concentration",
+        "product": "Filtration products",
+        "review_status": "approved",
+        "confidence": 0.9667,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
+      "AVGO->DELL:RAW MATERIALS (ETHERNET PORT ADAPTERS)": {
+        "relationship_key": "AVGO->DELL:RAW MATERIALS (ETHERNET PORT ADAPTERS)",
+        "source_ticker": "AVGO",
+        "target_ticker": "DELL",
+        "type": "Raw Materials (Ethernet port adapters)",
+        "product": "Ethernet port adapters",
+        "review_status": "approved",
+        "confidence": 0.9167,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-06"
+      },
       "AZN->LLY:MANUFACTURING PARTNER": {
         "relationship_key": "AZN->LLY:MANUFACTURING PARTNER",
         "source_ticker": "AZN",
@@ -140005,6 +140082,39 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "BA->AER:AIRCRAFT SALES/PURCHASES": {
+        "relationship_key": "BA->AER:AIRCRAFT SALES/PURCHASES",
+        "source_ticker": "BA",
+        "target_ticker": "AER",
+        "type": "Aircraft Sales/Purchases",
+        "product": "Dreamliner",
+        "review_status": "approved",
+        "confidence": 0.9167,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-06"
+      },
+      "BA->BETA:RESEARCH AND DEVELOPMENT": {
+        "relationship_key": "BA->BETA:RESEARCH AND DEVELOPMENT",
+        "source_ticker": "BA",
+        "target_ticker": "BETA",
+        "type": "Research and Development",
+        "product": "High-Altitude Hybrid Electric Flight Technology",
+        "review_status": "approved",
+        "confidence": 0.9,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
+      "BA->CPA:AIRCRAFT MANUFACTURER": {
+        "relationship_key": "BA->CPA:AIRCRAFT MANUFACTURER",
+        "source_ticker": "BA",
+        "target_ticker": "CPA",
+        "type": "Aircraft Manufacturer",
+        "product": "737 MAX Aircraft",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-07"
+      },
       "BA->HONA:RAW MATERIALS": {
         "relationship_key": "BA->HONA:RAW MATERIALS",
         "source_ticker": "BA",
@@ -140015,6 +140125,17 @@
         "confidence": 0.9,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "BA->RYAAY:AIRCRAFT AND AIRCRAFT PARTS SUPPLY CHAIN RELATIONSHIP": {
+        "relationship_key": "BA->RYAAY:AIRCRAFT AND AIRCRAFT PARTS SUPPLY CHAIN RELATIONSHIP",
+        "source_ticker": "BA",
+        "target_ticker": "RYAAY",
+        "type": "Aircraft and Aircraft Parts supply chain relationship",
+        "product": "Aircraft and aircraft parts",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-04"
       },
       "BA->TEL:RAW MATERIALS": {
         "relationship_key": "BA->TEL:RAW MATERIALS",
@@ -140104,6 +140225,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-06"
       },
+      "BRZE->MAX:CUSTOMER ENGAGEMENT PLATFORM": {
+        "relationship_key": "BRZE->MAX:CUSTOMER ENGAGEMENT PLATFORM",
+        "source_ticker": "BRZE",
+        "target_ticker": "MAX",
+        "type": "Customer Engagement Platform",
+        "product": "customer engagement technology",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-07"
+      },
       "BSP->GPRO:ACQUISITION OF SOFTWARE APPLICATION (SPLICE)": {
         "relationship_key": "BSP->GPRO:ACQUISITION OF SOFTWARE APPLICATION (SPLICE)",
         "source_ticker": "BSP",
@@ -140147,6 +140279,17 @@
         "confidence": 0.95,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "CAG->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY": {
+        "relationship_key": "CAG->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+        "source_ticker": "CAG",
+        "target_ticker": "WMT",
+        "type": "operational supply chain dependency",
+        "product": "29% of CAG revenue (packaged foods)",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
       },
       "CAR->FDXF:SHIPPING PARTNER": {
         "relationship_key": "CAR->FDXF:SHIPPING PARTNER",
@@ -140258,6 +140401,28 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "COKE->KR:REVENUE CONCENTRATION": {
+        "relationship_key": "COKE->KR:REVENUE CONCENTRATION",
+        "source_ticker": "COKE",
+        "target_ticker": "KR",
+        "type": "Revenue Concentration",
+        "product": "36% of COKE revenue",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
+      "COKE->WMT:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
+        "relationship_key": "COKE->WMT:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+        "source_ticker": "COKE",
+        "target_ticker": "WMT",
+        "type": "operational supply-chain dependency",
+        "product": "bottle/can sales volume to retail customers and net sales",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
       "COP->TTE:OPERATOR OF SURMONT CANADIAN FACILITY (PREVIOUSLY)": {
         "relationship_key": "COP->TTE:OPERATOR OF SURMONT CANADIAN FACILITY (PREVIOUSLY)",
         "source_ticker": "COP",
@@ -140269,16 +140434,16 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
-      "CRL->CTVA:SUPPLIER/TESTING LABORATORY": {
-        "relationship_key": "CRL->CTVA:SUPPLIER/TESTING LABORATORY",
+      "CRL->CTVA:TESTING PARTNER": {
+        "relationship_key": "CRL->CTVA:TESTING PARTNER",
         "source_ticker": "CRL",
         "target_ticker": "CTVA",
-        "type": "Supplier/Testing laboratory",
-        "product": "Fungicide testing",
+        "type": "Testing Partner / Supplier/Testing laboratory",
+        "product": "fungicide testing",
         "review_status": "approved",
-        "confidence": 0.9,
+        "confidence": 1.0,
         "source_type": "AI Research",
-        "last_verified": "2026-09-02"
+        "last_verified": "2026-09-07"
       },
       "CRM->ZM:CRM PLATFORM INTEGRATION": {
         "relationship_key": "CRM->ZM:CRM PLATFORM INTEGRATION",
@@ -140346,6 +140511,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "CWEN->PCG:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
+        "relationship_key": "CWEN->PCG:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+        "source_ticker": "CWEN",
+        "target_ticker": "PCG",
+        "type": "operational supply-chain dependency",
+        "product": "electricity",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
+      },
       "DBX->RBLX:CLOUD COMPUTING SERVICES": {
         "relationship_key": "DBX->RBLX:CLOUD COMPUTING SERVICES",
         "source_ticker": "DBX",
@@ -140379,17 +140555,6 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
-      "DELL->AVGO:MANUFACTURER -> CUSTOMER": {
-        "relationship_key": "DELL->AVGO:MANUFACTURER -> CUSTOMER",
-        "source_ticker": "DELL",
-        "target_ticker": "AVGO",
-        "type": "manufacturer -> customer",
-        "product": "Ethernet Port Adapters",
-        "review_status": "approved",
-        "confidence": 0.95,
-        "source_type": "AI Research",
-        "last_verified": "2026-09-06"
-      },
       "DELL->AXON:CLOUD SERVICES": {
         "relationship_key": "DELL->AXON:CLOUD SERVICES",
         "source_ticker": "DELL",
@@ -140401,14 +140566,14 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
-      "DELL->CRM:HARDWARE - SERVERS AND COMPUTE INFRASTRUCTURE": {
-        "relationship_key": "DELL->CRM:HARDWARE - SERVERS AND COMPUTE INFRASTRUCTURE",
+      "DELL->CRM:IT INFRASTRUCTURE: SERVERS": {
+        "relationship_key": "DELL->CRM:IT INFRASTRUCTURE: SERVERS",
         "source_ticker": "DELL",
         "target_ticker": "CRM",
-        "type": "Hardware - Servers and Compute Infrastructure / IT Infrastructure",
-        "product": "Dell servers with AMD processors / Servers with AMD processors running Linux",
+        "type": "IT Infrastructure: Servers / Hardware - Servers and Compute Infrastructure / IT Infrastructure",
+        "product": "Servers with AMD processors running Linux / Dell servers with AMD processors",
         "review_status": "approved",
-        "confidence": 0.95,
+        "confidence": 0.9833,
         "source_type": "AI Research",
         "last_verified": "2026-09-06"
       },
@@ -140456,6 +140621,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "EFX->AAPL:DATA FURNISHING": {
+        "relationship_key": "EFX->AAPL:DATA FURNISHING",
+        "source_ticker": "EFX",
+        "target_ticker": "AAPL",
+        "type": "Data Furnishing",
+        "product": "Credit Scores",
+        "review_status": "approved",
+        "confidence": 0.9,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-07"
+      },
       "EFX->FICO:DATA SERVICE PROVIDER": {
         "relationship_key": "EFX->FICO:DATA SERVICE PROVIDER",
         "source_ticker": "EFX",
@@ -140466,6 +140642,28 @@
         "confidence": 0.9167,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "ELF->TGT:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
+        "relationship_key": "ELF->TGT:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+        "source_ticker": "ELF",
+        "target_ticker": "TGT",
+        "type": "operational supply-chain dependency",
+        "product": "18% of ELF revenue (presumably cosmetics or personal care products)",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
+      },
+      "ELF->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY": {
+        "relationship_key": "ELF->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+        "source_ticker": "ELF",
+        "target_ticker": "WMT",
+        "type": "operational supply chain dependency",
+        "product": "13% of ELF revenue",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
       },
       "EMBJ->RYAAY:AIRCRAFT MANUFACTURING": {
         "relationship_key": "EMBJ->RYAAY:AIRCRAFT MANUFACTURING",
@@ -140555,6 +140753,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "ETR->CMS:NUCLEAR POWER GENERATION": {
+        "relationship_key": "ETR->CMS:NUCLEAR POWER GENERATION",
+        "source_ticker": "ETR",
+        "target_ticker": "CMS",
+        "type": "Nuclear Power Generation",
+        "product": "Electricity",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
+      },
       "EXC->CEG:POWER GENERATION PORTFOLIO": {
         "relationship_key": "EXC->CEG:POWER GENERATION PORTFOLIO",
         "source_ticker": "EXC",
@@ -140609,6 +140818,39 @@
         "confidence": 0.95,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "FSLR->NEE:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
+        "relationship_key": "FSLR->NEE:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+        "source_ticker": "FSLR",
+        "target_ticker": "NEE",
+        "type": "operational supply-chain dependency",
+        "product": "modules (solar)",
+        "review_status": "approved",
+        "confidence": 0.9833,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
+      "GE->BETA:RESEARCH AND DEVELOPMENT COLLABORATION": {
+        "relationship_key": "GE->BETA:RESEARCH AND DEVELOPMENT COLLABORATION",
+        "source_ticker": "GE",
+        "target_ticker": "BETA",
+        "type": "Research and Development collaboration",
+        "product": "High-Altitude Hybrid Electric Flight Technology",
+        "review_status": "approved",
+        "confidence": 0.975,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
+      "GE->SARO:MAINTENANCE AND OVERHAUL SERVICES FOR ENGINES": {
+        "relationship_key": "GE->SARO:MAINTENANCE AND OVERHAUL SERVICES FOR ENGINES",
+        "source_ticker": "GE",
+        "target_ticker": "SARO",
+        "type": "Maintenance and Overhaul Services for Engines",
+        "product": "CT7-2E1 Engines",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-07"
       },
       "GE->SNPS:ADVANCED SILICON FABRICATION": {
         "relationship_key": "GE->SNPS:ADVANCED SILICON FABRICATION",
@@ -140687,6 +140929,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "GIS->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY": {
+        "relationship_key": "GIS->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+        "source_ticker": "GIS",
+        "target_ticker": "WMT",
+        "type": "operational supply chain dependency",
+        "product": "22% of GIS revenue",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
+      },
       "GM->ALSN:MANUFACTURING PARTNER": {
         "relationship_key": "GM->ALSN:MANUFACTURING PARTNER",
         "source_ticker": "GM",
@@ -140697,6 +140950,17 @@
         "confidence": 0.925,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "GM->JBL:MANUFACTURING PARTNERSHIP": {
+        "relationship_key": "GM->JBL:MANUFACTURING PARTNERSHIP",
+        "source_ticker": "GM",
+        "target_ticker": "JBL",
+        "type": "Manufacturing Partnership",
+        "product": "Automated Manufacturing and Advanced Assembly Technology",
+        "review_status": "approved",
+        "confidence": 0.9167,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-07"
       },
       "GM->MP:NEODYMIUM-IRON-BORON MAGNETS SUPPLY AGREEMENT": {
         "relationship_key": "GM->MP:NEODYMIUM-IRON-BORON MAGNETS SUPPLY AGREEMENT",
@@ -140717,6 +140981,17 @@
         "product": "Saturn brand vehicles",
         "review_status": "approved",
         "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-07"
+      },
+      "GM->VVV:FUEL AND MOTOR OIL SUPPLIER": {
+        "relationship_key": "GM->VVV:FUEL AND MOTOR OIL SUPPLIER",
+        "source_ticker": "GM",
+        "target_ticker": "VVV",
+        "type": "Fuel and Motor Oil supplier",
+        "product": "Fuel and Motor Oil",
+        "review_status": "approved",
+        "confidence": 0.975,
         "source_type": "AI Research",
         "last_verified": "2026-09-07"
       },
@@ -140918,11 +141193,11 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
-      "HPE->AVGO:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
-        "relationship_key": "HPE->AVGO:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+      "HPE->AVGO:RAW MATERIALS SUPPLIER": {
+        "relationship_key": "HPE->AVGO:RAW MATERIALS SUPPLIER",
         "source_ticker": "HPE",
         "target_ticker": "AVGO",
-        "type": "operational supply-chain dependency",
+        "type": "raw materials supplier / operational supply-chain dependency",
         "product": "Network Interface Cards (NICs)",
         "review_status": "approved",
         "confidence": 0.875,
@@ -140973,6 +141248,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "IBM->CRWV:AI INFRASTRUCTURE PARTNER": {
+        "relationship_key": "IBM->CRWV:AI INFRASTRUCTURE PARTNER",
+        "source_ticker": "IBM",
+        "target_ticker": "CRWV",
+        "type": "AI Infrastructure Partner",
+        "product": "Granite models",
+        "review_status": "approved",
+        "confidence": 0.9167,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-07"
+      },
       "IBM->DDOG:CLOUD INFRASTRUCTURE": {
         "relationship_key": "IBM->DDOG:CLOUD INFRASTRUCTURE",
         "source_ticker": "IBM",
@@ -141017,16 +141303,16 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
-      "INTC->AMD:SEMI-CUSTOM GRAPHICS PROCESSING UNIT SALES": {
-        "relationship_key": "INTC->AMD:SEMI-CUSTOM GRAPHICS PROCESSING UNIT SALES",
+      "INTC->AMD:REBATES": {
+        "relationship_key": "INTC->AMD:REBATES",
         "source_ticker": "INTC",
         "target_ticker": "AMD",
-        "type": "Semi-Custom Graphics Processing Unit Sales",
-        "product": "Radeon GPU",
+        "type": "Rebates / Semi-Custom Graphics Processing Unit Sales",
+        "product": "Microprocessors / Radeon GPU",
         "review_status": "approved",
-        "confidence": 0.9167,
+        "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-09-02"
+        "last_verified": "2026-09-04"
       },
       "INTC->BR:VIRTUAL ANNUAL MEETING SERVICES": {
         "relationship_key": "INTC->BR:VIRTUAL ANNUAL MEETING SERVICES",
@@ -141060,6 +141346,17 @@
         "confidence": 0.95,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "INTC->TSM:MANUFACTURER -> LOGISTICS PROVIDER": {
+        "relationship_key": "INTC->TSM:MANUFACTURER -> LOGISTICS PROVIDER",
+        "source_ticker": "INTC",
+        "target_ticker": "TSM",
+        "type": "manufacturer -> logistics provider",
+        "product": "Semiconductors",
+        "review_status": "approved",
+        "confidence": 0.9167,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-04"
       },
       "INTC->WIT:ADVANCED SILICON FABRICATION": {
         "relationship_key": "INTC->WIT:ADVANCED SILICON FABRICATION",
@@ -141149,6 +141446,28 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "KHC->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY": {
+        "relationship_key": "KHC->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+        "source_ticker": "KHC",
+        "target_ticker": "WMT",
+        "type": "operational supply chain dependency",
+        "product": "21% of KHC revenue (packaged foods)",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-04"
+      },
+      "KMB->WMT:REVENUE CONCENTRATION": {
+        "relationship_key": "KMB->WMT:REVENUE CONCENTRATION",
+        "source_ticker": "KMB",
+        "target_ticker": "WMT",
+        "type": "Revenue Concentration",
+        "product": "Personal Care Products (specifically from Kimberly-Clark)",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-04"
+      },
       "KO->DRI:DISTRIBUTION PARTNER": {
         "relationship_key": "KO->DRI:DISTRIBUTION PARTNER",
         "source_ticker": "KO",
@@ -141159,6 +141478,17 @@
         "confidence": 0.95,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "LEA->GM:MANUFACTURING SUPPLIER": {
+        "relationship_key": "LEA->GM:MANUFACTURING SUPPLIER",
+        "source_ticker": "LEA",
+        "target_ticker": "GM",
+        "type": "Manufacturing Supplier",
+        "product": "Auto Parts",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
       },
       "LION->NFLX:CONTENT PROVIDER": {
         "relationship_key": "LION->NFLX:CONTENT PROVIDER",
@@ -141292,6 +141622,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "MCHP->ARW:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
+        "relationship_key": "MCHP->ARW:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+        "source_ticker": "MCHP",
+        "target_ticker": "ARW",
+        "type": "operational supply-chain dependency",
+        "product": "12% of MCHP revenue",
+        "review_status": "approved",
+        "confidence": 0.9833,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-04"
+      },
       "MDB->DOCN:DATABASE SOFTWARE AND SERVICES": {
         "relationship_key": "MDB->DOCN:DATABASE SOFTWARE AND SERVICES",
         "source_ticker": "MDB",
@@ -141346,6 +141687,17 @@
         "confidence": 0.925,
         "source_type": "AI Research",
         "last_verified": "2026-09-06"
+      },
+      "META->VST:ENERGY SUPPLY": {
+        "relationship_key": "META->VST:ENERGY SUPPLY",
+        "source_ticker": "META",
+        "target_ticker": "VST",
+        "type": "Energy Supply",
+        "product": "Zero-Carbon Energy",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-04"
       },
       "MKC->PEP:REVENUE CONCENTRATION": {
         "relationship_key": "MKC->PEP:REVENUE CONCENTRATION",
@@ -141721,6 +142073,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "NOW->FROG:ENTERPRISE SOFTWARE INTEGRATION": {
+        "relationship_key": "NOW->FROG:ENTERPRISE SOFTWARE INTEGRATION",
+        "source_ticker": "NOW",
+        "target_ticker": "FROG",
+        "type": "Enterprise Software Integration",
+        "product": "IT Service Management platform",
+        "review_status": "approved",
+        "confidence": 0.925,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-07"
+      },
       "NRG->SYY:ELECTRICITY_SUPPLY": {
         "relationship_key": "NRG->SYY:ELECTRICITY_SUPPLY",
         "source_ticker": "NRG",
@@ -141731,6 +142094,17 @@
         "confidence": 0.85,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "NSC->CP:TRACKAGE RIGHTS AGREEMENT": {
+        "relationship_key": "NSC->CP:TRACKAGE RIGHTS AGREEMENT",
+        "source_ticker": "NSC",
+        "target_ticker": "CP",
+        "type": "Trackage Rights Agreement",
+        "product": "Railway Track",
+        "review_status": "approved",
+        "confidence": 0.9667,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
       },
       "NTRA->ABT:TEST DEVELOPMENT AND VALIDATION SERVICES": {
         "relationship_key": "NTRA->ABT:TEST DEVELOPMENT AND VALIDATION SERVICES",
@@ -141764,6 +142138,17 @@
         "confidence": 0.9,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "NVDA->CRWD:AI MODEL PROVIDER": {
+        "relationship_key": "NVDA->CRWD:AI MODEL PROVIDER",
+        "source_ticker": "NVDA",
+        "target_ticker": "CRWD",
+        "type": "AI Model provider",
+        "product": "SafeMind Security Models",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-06"
       },
       "NVDA->CRWV:HARDWARE LEASING": {
         "relationship_key": "NVDA->CRWV:HARDWARE LEASING",
@@ -141853,25 +142238,25 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
-      "PAA->XOM:REVENUE CONCENTRATION": {
-        "relationship_key": "PAA->XOM:REVENUE CONCENTRATION",
+      "PAA->XOM:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
+        "relationship_key": "PAA->XOM:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
         "source_ticker": "PAA",
         "target_ticker": "XOM",
-        "type": "Revenue Concentration",
-        "product": "Pipeline Services",
+        "type": "operational supply-chain dependency / Revenue Concentration",
+        "product": "31% of PAA revenue / Pipeline Services",
         "review_status": "approved",
-        "confidence": 0.95,
+        "confidence": 1.0,
         "source_type": "Web Source",
         "last_verified": "2026-09-07"
       },
-      "PAC->AAL:REVENUE CONCENTRATION": {
-        "relationship_key": "PAC->AAL:REVENUE CONCENTRATION",
+      "PAC->AAL:OPERATIONAL SUPPLY CHAIN DEPENDENCY": {
+        "relationship_key": "PAC->AAL:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
         "source_ticker": "PAC",
         "target_ticker": "AAL",
-        "type": "Revenue Concentration",
-        "product": "Airport services for Montego Bay airport",
+        "type": "operational supply chain dependency / Revenue Concentration",
+        "product": "aeronautical and non-aeronautical revenues for the Montego Bay airport / Airport services for Montego Bay airport",
         "review_status": "approved",
-        "confidence": 0.95,
+        "confidence": 1.0,
         "source_type": "Web Source",
         "last_verified": "2026-09-07"
       },
@@ -141952,6 +142337,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "POST->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY": {
+        "relationship_key": "POST->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+        "source_ticker": "POST",
+        "target_ticker": "WMT",
+        "type": "operational supply chain dependency",
+        "product": "17.4% of POST revenue",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
       "PR->OXY:UNCONVENTIONAL OIL PRODUCTION SERVICES": {
         "relationship_key": "PR->OXY:UNCONVENTIONAL OIL PRODUCTION SERVICES",
         "source_ticker": "PR",
@@ -141973,6 +142369,17 @@
         "confidence": 0.85,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "PSX->KMI:PIPELINE OPERATIONS": {
+        "relationship_key": "PSX->KMI:PIPELINE OPERATIONS",
+        "source_ticker": "PSX",
+        "target_ticker": "KMI",
+        "type": "Pipeline Operations",
+        "product": "Crude Oil",
+        "review_status": "approved",
+        "confidence": 0.9167,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-04"
       },
       "PWR->AAPL:MANUFACTURING PARTNER": {
         "relationship_key": "PWR->AAPL:MANUFACTURING PARTNER",
@@ -142073,6 +142480,28 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "ROKU->BBY:OPERATIONAL SUPPLY CHAIN DEPENDENCY": {
+        "relationship_key": "ROKU->BBY:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+        "source_ticker": "ROKU",
+        "target_ticker": "BBY",
+        "type": "operational supply chain dependency",
+        "product": "Devices revenue",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
+      },
+      "ROKU->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY": {
+        "relationship_key": "ROKU->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+        "source_ticker": "ROKU",
+        "target_ticker": "WMT",
+        "type": "operational supply chain dependency",
+        "product": "Devices revenue (81% of ROKU revenue)",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
+      },
       "SANM->ASTC:MANUFACTURING PARTNER": {
         "relationship_key": "SANM->ASTC:MANUFACTURING PARTNER",
         "source_ticker": "SANM",
@@ -142116,6 +142545,17 @@
         "confidence": 0.925,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "SFD->WMT:REVENUE CONCENTRATION": {
+        "relationship_key": "SFD->WMT:REVENUE CONCENTRATION",
+        "source_ticker": "SFD",
+        "target_ticker": "WMT",
+        "type": "Revenue Concentration",
+        "product": "Packaged Meats and Fresh Pork",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
       },
       "SHEL->DINO:REFINING FACILITIES": {
         "relationship_key": "SHEL->DINO:REFINING FACILITIES",
@@ -142194,6 +142634,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "SNOW->BRZE:INTEGRATION": {
+        "relationship_key": "SNOW->BRZE:INTEGRATION",
+        "source_ticker": "SNOW",
+        "target_ticker": "BRZE",
+        "type": "integration",
+        "product": "Cloud Infrastructure",
+        "review_status": "approved",
+        "confidence": 0.85,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-07"
+      },
       "SNPS->CDNS:INTEGRATED CIRCUIT SOFTWARE": {
         "relationship_key": "SNPS->CDNS:INTEGRATED CIRCUIT SOFTWARE",
         "source_ticker": "SNPS",
@@ -142237,6 +142688,17 @@
         "confidence": 0.95,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "STM->AAPL:REVENUE CONCENTRATION": {
+        "relationship_key": "STM->AAPL:REVENUE CONCENTRATION",
+        "source_ticker": "STM",
+        "target_ticker": "AAPL",
+        "type": "Revenue Concentration",
+        "product": "Semiconductors",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-04"
       },
       "STRL->TTMI:MANUFACTURING FACILITIES": {
         "relationship_key": "STRL->TTMI:MANUFACTURING FACILITIES",
@@ -142337,6 +142799,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "TENB->INGM:DISTRIBUTOR": {
+        "relationship_key": "TENB->INGM:DISTRIBUTOR",
+        "source_ticker": "TENB",
+        "target_ticker": "INGM",
+        "type": "distributor",
+        "product": "software products (Tenable's offerings)",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
       "TGT->DIS:DISTRIBUTION AGREEMENT": {
         "relationship_key": "TGT->DIS:DISTRIBUTION AGREEMENT",
         "source_ticker": "TGT",
@@ -142424,6 +142897,17 @@
         "confidence": 0.9,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "TS->CVX:SUPPLY CHAIN": {
+        "relationship_key": "TS->CVX:SUPPLY CHAIN",
+        "source_ticker": "TS",
+        "target_ticker": "CVX",
+        "type": "Supply Chain",
+        "product": "tubular products and services",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-04"
       },
       "TSEM->STM:OUTSOURCING/CONTRACT MANUFACTURING": {
         "relationship_key": "TSEM->STM:OUTSOURCING/CONTRACT MANUFACTURING",
@@ -142513,16 +142997,27 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "TSM->ASML:ADVANCED SILICON FABRICATION": {
+        "relationship_key": "TSM->ASML:ADVANCED SILICON FABRICATION",
+        "source_ticker": "TSM",
+        "target_ticker": "ASML",
+        "type": "Advanced Silicon Fabrication",
+        "product": "Extreme Ultraviolet (EUV) lithography technology",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-04"
+      },
       "TSM->INTC:OUTSOURCED PRODUCTION": {
         "relationship_key": "TSM->INTC:OUTSOURCED PRODUCTION",
         "source_ticker": "TSM",
         "target_ticker": "INTC",
-        "type": "outsourced production",
-        "product": "semiconductor fabrication services",
+        "type": "outsourced production / Contract Manufacturing",
+        "product": "semiconductor fabrication services / Integrated circuits",
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-09-02"
+        "last_verified": "2026-09-04"
       },
       "TSM->MRVL:FOUNDRY SERVICES": {
         "relationship_key": "TSM->MRVL:FOUNDRY SERVICES",
@@ -142590,6 +143085,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "TSN->WMT:REVENUE CONCENTRATION": {
+        "relationship_key": "TSN->WMT:REVENUE CONCENTRATION",
+        "source_ticker": "TSN",
+        "target_ticker": "WMT",
+        "type": "Revenue Concentration",
+        "product": "Meat products",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
       "TTE->CBRS:CLOUD COMPUTING SERVICES": {
         "relationship_key": "TTE->CBRS:CLOUD COMPUTING SERVICES",
         "source_ticker": "TTE",
@@ -142601,6 +143107,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "UFPI->HD:REVENUE CONCENTRATION": {
+        "relationship_key": "UFPI->HD:REVENUE CONCENTRATION",
+        "source_ticker": "UFPI",
+        "target_ticker": "HD",
+        "type": "Revenue Concentration",
+        "product": "Lumber & Wood Production",
+        "review_status": "approved",
+        "confidence": 0.9667,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
       "UHAL->SNA:LOGISTICS": {
         "relationship_key": "UHAL->SNA:LOGISTICS",
         "source_ticker": "UHAL",
@@ -142611,6 +143128,17 @@
         "confidence": 0.925,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "UL->CHD:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
+        "relationship_key": "UL->CHD:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+        "source_ticker": "UL",
+        "target_ticker": "CHD",
+        "type": "operational supply-chain dependency",
+        "product": "oral care brands",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-06"
       },
       "ULTA->TGT:RETAIL PARTNER": {
         "relationship_key": "ULTA->TGT:RETAIL PARTNER",
@@ -142722,6 +143250,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "VALE->TSLA:SUPPLY-CHAIN DEPENDENCY": {
+        "relationship_key": "VALE->TSLA:SUPPLY-CHAIN DEPENDENCY",
+        "source_ticker": "VALE",
+        "target_ticker": "TSLA",
+        "type": "supply-chain dependency",
+        "product": "Low-carbon Class 1 nickel",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-04"
+      },
       "VEEV->ALKS:CLOUD COMPUTING SOFTWARE": {
         "relationship_key": "VEEV->ALKS:CLOUD COMPUTING SOFTWARE",
         "source_ticker": "VEEV",
@@ -142821,6 +143360,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "VLO->PBF:RAW MATERIALS": {
+        "relationship_key": "VLO->PBF:RAW MATERIALS",
+        "source_ticker": "VLO",
+        "target_ticker": "PBF",
+        "type": "Raw Materials",
+        "product": "Crude Oil",
+        "review_status": "approved",
+        "confidence": 0.925,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
+      },
       "VMC->AMZN:PROPERTY DEVELOPMENT": {
         "relationship_key": "VMC->AMZN:PROPERTY DEVELOPMENT",
         "source_ticker": "VMC",
@@ -142898,17 +143448,6 @@
         "source_type": "Manual",
         "last_verified": "2026-09-02"
       },
-      "VTRS->CAH:REVENUE CONCENTRATION": {
-        "relationship_key": "VTRS->CAH:REVENUE CONCENTRATION",
-        "source_ticker": "VTRS",
-        "target_ticker": "CAH",
-        "type": "Revenue Concentration",
-        "product": "Drug Manufacturers - Specialty & Generic",
-        "review_status": "approved",
-        "confidence": 0.9167,
-        "source_type": "Web Source",
-        "last_verified": "2026-09-07"
-      },
       "VTRS->COR:REVENUE CONCENTRATION": {
         "relationship_key": "VTRS->COR:REVENUE CONCENTRATION",
         "source_ticker": "VTRS",
@@ -142942,6 +143481,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "WBI->PR:REVENUE CONCENTRATION": {
+        "relationship_key": "WBI->PR:REVENUE CONCENTRATION",
+        "source_ticker": "WBI",
+        "target_ticker": "PR",
+        "type": "Revenue Concentration",
+        "product": "10% of WBI revenue",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-07"
+      },
       "WCC->KR:WHOLESALE DISTRIBUTION": {
         "relationship_key": "WCC->KR:WHOLESALE DISTRIBUTION",
         "source_ticker": "WCC",
@@ -142964,6 +143514,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "WMT->HRB:EXCLUSIVE DESKTOP TAX PREPARATION SOFTWARE SALES": {
+        "relationship_key": "WMT->HRB:EXCLUSIVE DESKTOP TAX PREPARATION SOFTWARE SALES",
+        "source_ticker": "WMT",
+        "target_ticker": "HRB",
+        "type": "Exclusive Desktop Tax Preparation Software Sales",
+        "product": "Software Services",
+        "review_status": "approved",
+        "confidence": 0.925,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-06"
+      },
       "WTRG->CEG:NATURAL GAS SUPPLY CHAIN": {
         "relationship_key": "WTRG->CEG:NATURAL GAS SUPPLY CHAIN",
         "source_ticker": "WTRG",
@@ -142985,6 +143546,17 @@
         "confidence": 0.95,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "XOM->PBF:RAW MATERIALS": {
+        "relationship_key": "XOM->PBF:RAW MATERIALS",
+        "source_ticker": "XOM",
+        "target_ticker": "PBF",
+        "type": "Raw Materials",
+        "product": "Crude Oil",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-06"
       },
       "XOM->SHEL:REFINERY SERVICES": {
         "relationship_key": "XOM->SHEL:REFINERY SERVICES",
