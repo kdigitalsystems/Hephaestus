@@ -45,7 +45,12 @@ def apply_lightweight_migrations():
         return
 
     edge_columns = {column["name"] for column in inspector.get_columns("edges")}
+    node_columns = {column["name"] for column in inspector.get_columns("nodes")} if "nodes" in inspector.get_table_names() else set()
     with engine.begin() as connection:
+        if node_columns and "last_researched_at" not in node_columns:
+            connection.execute(text("ALTER TABLE nodes ADD COLUMN last_researched_at DATETIME"))
+        if node_columns and "concentration_checked_at" not in node_columns:
+            connection.execute(text("ALTER TABLE nodes ADD COLUMN concentration_checked_at DATETIME"))
         if "product" not in edge_columns:
             connection.execute(text("ALTER TABLE edges ADD COLUMN product VARCHAR"))
         if "source_title" not in edge_columns:

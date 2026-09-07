@@ -21,7 +21,8 @@ env:
 jobs:
   generate-research-signals:
     name: Generate top-50 graph research signals
-    runs-on: [self-hosted, nvidia-gpu]
+    # Same pinned runner as the GPU pipeline (custom label on server1).
+    runs-on: [self-hosted, nvidia-gpu, hephaestus]
     timeout-minutes: 55
 
     steps:

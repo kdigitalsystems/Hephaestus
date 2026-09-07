@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
 import auto_discover_edges
-from customer_concentration import describe_share, disclosure_sentence, extract_disclosures, is_concentration_sentence
+from customer_concentration import describe_share, disclosure_sentence, extract_disclosures, implausible_share, is_concentration_sentence
 from models import Base, Edge, Node
 
 
@@ -194,3 +194,102 @@ def test_discovery_budget_defers_the_rest_of_the_queue():
     assert auto_discover_edges.budget_exhausted(started=100.0, max_seconds=-5, now=10_000.0) is False
     assert auto_discover_edges.budget_exhausted(started=100.0, max_seconds=60, now=159.0) is False
     assert auto_discover_edges.budget_exhausted(started=100.0, max_seconds=60, now=160.0) is True
+
+
+def test_rating_agencies_and_implausible_shares_are_not_customers():
+    known = {"S&P Global Inc.": "S&P Global", "Walmart Inc. Common Stock": "Walmart"}
+    sentence = "We have a small number of customers. Our credit rating from S&P Global represented 50% of the revenue-linked covenant test."
+    assert extract_disclosures(sentence, known) == []
+    assert implausible_share(5.0, 1e9) is not None
+    assert implausible_share(85.0, 7e11) is not None  # Symbotic -> Walmart: real, but confirm by hand
+    assert implausible_share(85.0, 5e9) is None
+    assert implausible_share(24.0, 3e12) is None
+    assert implausible_share(None, 3e12) is None
+
+
+def test_recheck_holds_implausible_shares_once_for_a_human():
+    from cleanup_reviewed_edges import HELD_NOTE_PREFIX, recheck_concentration_edges
+
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    filer = Node(name="Viatris Inc.", ticker="VTRS", market_cap=1e10)
+    cardinal = Node(name="Cardinal Health, Inc.", ticker="CAH", market_cap=4e10)
+    session.add_all([filer, cardinal])
+    session.commit()
+    evidence = "Viatris (VTRS) 10-K filed 2026-02-27: Our customers Cardinal Health accounted for 5% of net sales."
+    fresh = Edge(source_id=filer.id, target_id=cardinal.id, dependency_type="Revenue Concentration", product="5% of VTRS revenue", revenue_share=5.0, evidence_excerpt=evidence, review_status="pending")
+    session.add(fresh)
+    session.commit()
+
+    counts = {}
+    recheck_concentration_edges(session, counts)
+    session.commit()
+    assert counts.get("concentration_held_implausible") == 1
+    assert fresh.review_status == "pending" and fresh.review_note.startswith(HELD_NOTE_PREFIX)
+
+    # Already held: not counted again. A human approval is respected.
+    recheck_concentration_edges(session, counts := {})
+    assert counts == {}
+    fresh.review_status, fresh.review_note = "approved", "Confirmed against the filing by hand."
+    session.commit()
+    recheck_concentration_edges(session, counts := {})
+    assert counts == {} and fresh.review_status == "approved"
+    # A consensus approval of an implausible share goes back to a human.
+    fresh.review_note = "Ollama consensus review: looks fine."
+    session.commit()
+    recheck_concentration_edges(session, counts := {})
+    assert counts.get("concentration_held_implausible") == 1 and fresh.review_status == "pending"
+
+
+def test_discovery_cooldown_and_sweep(monkeypatch):
+    from datetime import datetime, timedelta, timezone
+
+    now = datetime(2026, 9, 7, tzinfo=timezone.utc)
+    assert auto_discover_edges.is_due(None, 30, now) is True
+    assert auto_discover_edges.is_due(now - timedelta(days=31), 30, now) is True
+    assert auto_discover_edges.is_due(now - timedelta(days=29), 30, now) is False
+    assert auto_discover_edges.is_due(now - timedelta(days=400), 0, now) is True
+
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    filer = Node(name="Acme Semiconductor Inc.", ticker="ACME", market_cap=5e9, sector="Technology")
+    bank = Node(name="Acme Bank", ticker="ACMB", market_cap=9e9, sector="Banks")
+    recent = Node(name="Recently Checked Co", ticker="RCC", market_cap=8e9, sector="Industrials", concentration_checked_at=now - timedelta(days=3))
+    apple = Node(name="Apple Inc. Common Stock", ticker="AAPL", market_cap=3e12)
+    session.add_all([filer, bank, recent, apple])
+    session.commit()
+
+    fetched = []
+    filing = {"form": "10-K", "filing_date": "2025-10-31", "url": "https://www.sec.gov/Archives/edgar/data/1/acme-10k.htm"}
+    def fake_filing(ticker):
+        fetched.append(ticker)
+        return (filing, FILING) if ticker == "ACME" else (None, None)
+    monkeypatch.setattr(auto_discover_edges, "latest_annual_filing", fake_filing)
+    monkeypatch.setattr(auto_discover_edges, "utc_now", lambda: now)
+
+    result = auto_discover_edges.sweep_customer_concentration(session, auto_discover_edges.known_company_names(session), limit=10, max_seconds=60)
+
+    # Banks are skipped, recently checked companies are skipped, the rest are stamped once read.
+    assert fetched == ["AAPL", "ACME"]
+    assert result == {"checked": 2, "created": 1}
+    # SQLite hands back a naive datetime; compare in UTC.
+    assert filer.concentration_checked_at.replace(tzinfo=timezone.utc) == now and apple.concentration_checked_at is None
+    assert session.query(Edge).count() == 1
+
+
+def test_discovery_holds_are_applied_before_an_edge_is_created():
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    tsmc = Node(name="Taiwan Semiconductor Manufacturing Company Ltd.", ticker="TSM", market_cap=1e12)
+    apple = Node(name="Apple Inc. Common Stock", ticker="AAPL", market_cap=3e12)
+    session.add_all([tsmc, apple])
+    session.commit()
+
+    assert auto_discover_edges.discovery_hold_reason(session, tsmc, apple, "The company fabricates the A-series chips for its largest customer.") == "excerpt does not name both companies"
+    assert auto_discover_edges.discovery_hold_reason(session, tsmc, apple, "TSMC fabricates the A-series chips for Apple.") is None
+    session.add(Edge(source_id=apple.id, target_id=tsmc.id, dependency_type="Chips", review_status="approved"))
+    session.commit()
+    assert "opposite direction already approved" in auto_discover_edges.discovery_hold_reason(session, tsmc, apple, "TSMC fabricates the A-series chips for Apple.")

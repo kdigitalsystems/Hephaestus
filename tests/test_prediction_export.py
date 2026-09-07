@@ -20,7 +20,9 @@ def test_prediction_workflow_is_separate_from_daily_graph_updates():
     workflow = (ROOT / ".github" / "workflows" / "predictions.yml").read_text(encoding="utf-8")
     daily_workflow = (ROOT / ".github" / "workflows" / "gpu_pipeline.yml").read_text(encoding="utf-8")
 
-    assert "runs-on: [self-hosted, nvidia-gpu]" in workflow
+    # Both publishers run on the one pinned runner so they share a single graph DB.
+    assert "runs-on: [self-hosted, nvidia-gpu, hephaestus]" in workflow
+    assert "runs-on: [self-hosted, nvidia-gpu, hephaestus]" in daily_workflow
     assert "venv/bin/pip install pytest" in workflow
     assert "--use-ollama" in workflow
     assert "--require-ollama" in workflow

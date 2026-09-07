@@ -45,6 +45,10 @@ class Node(Base):
     hierarchy_level = Column(Integer, default=2) 
     metadata_json = Column(String, nullable=True) 
     last_updated = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    # Discovery bookkeeping: when the LLM pipeline last researched this company, and
+    # when its annual filing was last swept for customer-concentration disclosures.
+    last_researched_at = Column(DateTime, nullable=True)
+    concentration_checked_at = Column(DateTime, nullable=True)
 
     # Deleting a company must remove its edges rather than leave orphans or fail on
     # the NOT NULL foreign keys.

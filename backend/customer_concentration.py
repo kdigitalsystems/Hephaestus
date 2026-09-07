@@ -56,6 +56,14 @@ CUSTOMER_CUE = re.compile(
     re.IGNORECASE,
 )
 SALES_TO_CUE = re.compile(r"\b(?:sales|revenue|revenues|shipments|billings)\s+(?:to|from)\s*$", re.IGNORECASE)
+# A rating agency named next to "rating" is not a customer (Sabesp -> S&P Global 50%).
+RATING_CONTEXT = re.compile(r"\b(?:credit\s+)?ratings?\b|\brated\b|\bmoody|\bfitch\b", re.IGNORECASE)
+# Shares outside these bounds are usually a mispaired percentage and need a human look:
+# issuers disclose customers at 10% or more, and a mega-cap customer above 40% of a
+# supplier's revenue is rare enough (Symbotic -> Walmart) to confirm by hand.
+MIN_PLAUSIBLE_SHARE = 9.5
+MEGACAP_MARKET_CAP = 1e11
+MAX_PLAUSIBLE_MEGACAP_SHARE = 40.0
 
 
 @dataclass
@@ -126,6 +134,8 @@ def mentioned_names(sentence, known_names, exclude=()):
         if len(cleaned) < MIN_NAME_LENGTH or cleaned.lower() in lowered_exclusions:
             continue
         for match in name_pattern(cleaned).finditer(sentence):
+            if RATING_CONTEXT.search(sentence[max(0, match.start() - 60):match.end() + 60]):
+                continue
             if cleaned.lower() in AMBIGUOUS_NAMES:
                 before = sentence[max(0, match.start() - 24):match.start()]
                 after = sentence[match.end():match.end() + 24]
@@ -247,6 +257,17 @@ def extract_disclosures(text, known_names, filer_names=()):
             seen.add(key)
             disclosures.append(ConcentrationDisclosure(name, share, sentence, year, candidates))
     return disclosures
+
+
+def implausible_share(share_pct, customer_market_cap=None):
+    """Why a disclosed share needs human confirmation, or None when it looks right."""
+    if share_pct is None:
+        return None
+    if share_pct < MIN_PLAUSIBLE_SHARE:
+        return f"{share_pct:g}% is below the 10% disclosure threshold, which usually means a mispaired percentage"
+    if customer_market_cap and customer_market_cap >= MEGACAP_MARKET_CAP and share_pct > MAX_PLAUSIBLE_MEGACAP_SHARE:
+        return f"{share_pct:g}% of revenue from a mega-cap customer is unusual and needs confirmation"
+    return None
 
 
 def describe_share(share_pct, filer_ticker=None):

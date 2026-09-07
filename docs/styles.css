@@ -2874,3 +2874,10 @@ td.muted {
         grid-template-columns: 1fr;
     }
 }
+
+/* Run status under the overview: turns the pipeline log into a freshness signal. */
+.pipeline-status {
+    margin: 0 0 0.75rem;
+    font-size: 0.85rem;
+    color: var(--muted, #6b7280);
+}

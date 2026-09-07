@@ -1,7 +1,9 @@
+import json
 import os
 import time
 import re
 import argparse
+from datetime import datetime, timedelta, timezone
 import wikipedia
 import warnings
 from sqlalchemy import or_
@@ -37,6 +39,39 @@ CONTEXT_MAX_CHARS = int(os.environ.get("HEPHAESTUS_CONTEXT_MAX_CHARS", "15000"))
 # a fixed timeout, and a queue that does not fit in it starves the review, export,
 # and publish steps that follow: nothing reaches the site at all.
 DISCOVERY_MAX_SECONDS = float(os.environ.get("HEPHAESTUS_DISCOVERY_MAX_SECONDS", "0"))
+# Machine-readable run summary, published to the site by write_status.py.
+DISCOVERY_SUMMARY_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "reports", "discovery_summary.json")
+
+
+def write_discovery_summary(summary, path=DISCOVERY_SUMMARY_PATH):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(summary, handle, indent=2, sort_keys=True)
+
+
+# A company whose sources yielded nothing stays edgeless, and without a cooldown it
+# would be researched again every single day while the rest of the queue waits.
+RESEARCH_COOLDOWN_DAYS = float(os.environ.get("HEPHAESTUS_RESEARCH_COOLDOWN_DAYS", "30"))
+# Customer-concentration disclosures come from the annual filing and need no GPU, so
+# they are swept over the whole universe independently of the LLM queue.
+CONCENTRATION_SWEEP_LIMIT = int(os.environ.get("HEPHAESTUS_CONCENTRATION_SWEEP_LIMIT", "0"))
+CONCENTRATION_SWEEP_MAX_SECONDS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_SWEEP_MAX_SECONDS", "900"))
+CONCENTRATION_RECHECK_DAYS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_RECHECK_DAYS", "120"))
+IGNORED_SECTORS = ["Financial Services", "Real Estate", "Financial", "Asset Management", "Insurance", "Banks", "Shell Companies"]
+
+
+def utc_now():
+    return datetime.now(timezone.utc)
+
+
+def is_due(checked_at, every_days, now=None):
+    """True when a timestamp is missing or older than the interval (0 = always due)."""
+    if not every_days or every_days <= 0 or checked_at is None:
+        return True
+    now = now or utc_now()
+    if checked_at.tzinfo is None:
+        checked_at = checked_at.replace(tzinfo=timezone.utc)
+    return checked_at < now - timedelta(days=every_days)
 
 
 def budget_exhausted(started, max_seconds, now=None):
@@ -214,6 +249,9 @@ def discover_customer_concentration(session, company, known_names):
         return 0
     if not filing or not text:
         return 0
+    # Stamped only once the filing was actually read, so an SEC outage does not
+    # silence a company for the whole recheck interval.
+    company.concentration_checked_at = utc_now()
 
     created = 0
     filer_aliases = (company.name, clean_company_name(company.name or ""), company.ticker)
@@ -238,6 +276,48 @@ def discover_customer_concentration(session, company, known_names):
             created += 1
             print(f"  [+] CUSTOMER CONCENTRATION: {company.ticker} -> {customer.ticker} ({dep['product']})")
     return created
+
+
+def sweep_customer_concentration(session, known_names, limit=CONCENTRATION_SWEEP_LIMIT, max_seconds=CONCENTRATION_SWEEP_MAX_SECONDS):
+    """Check the annual filings of the largest companies not checked recently."""
+    if limit <= 0 or not known_names:
+        return {"checked": 0, "created": 0}
+    now = utc_now()
+    cutoff = now - timedelta(days=CONCENTRATION_RECHECK_DAYS)
+    companies = (
+        session.query(Node)
+        .filter(Node.ticker.is_not(None), Node.market_cap > 1_000_000_000, ~Node.sector.in_(IGNORED_SECTORS))
+        .filter(or_(Node.concentration_checked_at.is_(None), Node.concentration_checked_at < cutoff))
+        .order_by(Node.market_cap.desc())
+        .limit(limit)
+        .all()
+    )
+    started = time.monotonic()
+    checked = created = 0
+    for company in companies:
+        if budget_exhausted(started, max_seconds):
+            break
+        created += discover_customer_concentration(session, company, known_names)
+        checked += 1
+        session.commit()
+    print(f"Concentration sweep: {checked} filing(s) checked, {created} disclosure edge(s) created, {time.monotonic() - started:.0f}s elapsed.")
+    return {"checked": checked, "created": created}
+
+
+def discovery_hold_reason(session, source_node, target_node, excerpt):
+    """Why the review step would only hold this edge; such edges are not created at all."""
+    from review_edges_with_ollama import mentions_company  # lazy: that module is the review CLI
+
+    if not (mentions_company(excerpt, source_node) and mentions_company(excerpt, target_node)):
+        return "excerpt does not name both companies"
+    mirror = (
+        session.query(Edge)
+        .filter(Edge.source_id == target_node.id, Edge.target_id == source_node.id, Edge.review_status == "approved")
+        .first()
+    )
+    if mirror:
+        return f"opposite direction already approved as edge #{mirror.id}"
+    return None
 
 
 def upsert_pending_edge(session, source_node, target_node, dep):
@@ -535,10 +615,13 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
         if not deep_dive:
             query = query.filter(Edge.id.is_(None))
 
+        if not deep_dive and RESEARCH_COOLDOWN_DAYS > 0:
+            cooldown_cutoff = utc_now() - timedelta(days=RESEARCH_COOLDOWN_DAYS)
+            query = query.filter(or_(Node.last_researched_at.is_(None), Node.last_researched_at < cooldown_cutoff))
+
         if target_sectors:
             query = query.filter(Node.sector.in_(target_sectors))
         else:
-            IGNORED_SECTORS = ["Financial Services", "Real Estate", "Financial", "Asset Management", "Insurance", "Banks", "Shell Companies"]
             query = query.filter(~Node.sector.in_(IGNORED_SECTORS))
 
         # The edge outer join yields one row per incident edge; without DISTINCT the
@@ -550,6 +633,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             return
 
         known_names = known_company_names(session) if USE_CUSTOMER_CONCENTRATION and USE_SEC_SOURCE else {}
+        sweep = sweep_customer_concentration(session, known_names)
         extraction_attempts = 0
         extraction_failures = 0
         last_extraction_error = ""
@@ -566,7 +650,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                 break
             print(f"\n[->] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
 
-            if known_names:
+            if known_names and is_due(company.concentration_checked_at, CONCENTRATION_RECHECK_DAYS):
                 concentration_edges = discover_customer_concentration(session, company, known_names)
                 if concentration_edges:
                     session.commit()
@@ -583,6 +667,8 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
 
             if len(intel_blob) < 400:
                 print(f"  [-] Insufficient data found for {company.ticker}.")
+                company.last_researched_at = utc_now()
+                session.commit()
                 continue
 
             clean_target_name = clean_company_name(company.name)
@@ -593,6 +679,10 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             if extraction.get("error"):
                 extraction_failures += 1
                 last_extraction_error = str(extraction["error"])
+            else:
+                # A failed model call is not research; the company stays in the queue.
+                company.last_researched_at = utc_now()
+                session.commit()
             dependencies = extraction.get("dependencies", [])
 
             if dependencies:
@@ -633,6 +723,11 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                         print(f"  [!] Ignored tangential competitor link: {s_node.ticker} -> {t_node.ticker}")
                         continue
 
+                    hold = discovery_hold_reason(session, s_node, t_node, dep.get('evidence_excerpt'))
+                    if hold:
+                        print(f"  [!] Ignored relationship {s_node.ticker} -> {t_node.ticker}: {hold}")
+                        continue
+
                     edge, created = upsert_pending_edge(session, s_node, t_node, dep)
                     if created:
                         print(f"  [+] DYNAMICALLY LINKED: {s_node.ticker} -> {t_node.ticker} ({dep.get('product')})")
@@ -651,6 +746,15 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             f"Extraction summary: {extraction_attempts} companies analyzed, {extraction_failures} extraction failure(s), "
             f"{deferred} deferred, {time.monotonic() - started:.0f}s elapsed."
         )
+        write_discovery_summary({
+            "generated_at": utc_now().isoformat(timespec="seconds"),
+            "companies_analyzed": extraction_attempts,
+            "extraction_failures": extraction_failures,
+            "deferred": deferred,
+            "elapsed_seconds": round(time.monotonic() - started),
+            "budget_seconds": DISCOVERY_MAX_SECONDS,
+            "concentration_sweep": sweep,
+        })
         if extraction_attempts and extraction_failures == extraction_attempts:
             # A dead extractor must not look like a quiet day.
             print(

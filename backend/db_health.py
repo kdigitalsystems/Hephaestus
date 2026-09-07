@@ -21,6 +21,7 @@ REQUIRED_EDGE_COLUMNS = {
     "reviewed_at",
     "revenue_share",
 }
+REQUIRED_NODE_COLUMNS = {"last_researched_at", "concentration_checked_at"}
 SQLITE_TIMEOUT_SECONDS = 30
 
 
@@ -45,6 +46,11 @@ def database_status(path=DEFAULT_DB_PATH, require_nodes=False):
             missing_columns = sorted(REQUIRED_EDGE_COLUMNS - edge_columns)
             if missing_columns:
                 return False, f"database schema is missing edge column(s): {', '.join(missing_columns)}"
+
+            node_columns = {row[1] for row in connection.execute("PRAGMA table_info(nodes)").fetchall()}
+            missing_node_columns = sorted(REQUIRED_NODE_COLUMNS - node_columns)
+            if missing_node_columns:
+                return False, f"database schema is missing node column(s): {', '.join(missing_node_columns)}"
 
             if require_nodes:
                 node_count = connection.execute("SELECT COUNT(*) FROM nodes").fetchone()[0]
