@@ -6,7 +6,7 @@ The project is designed around a simple split:
 
 - Local Python jobs own ingestion, enrichment, LLM-assisted discovery, and export.
 - SQLite stores the company and supply-chain graph.
-- A static frontend reads `docs/dashboard_data.json` and renders the market overview, screener, watchlist, comparison view, sector pages, company briefs, and Supply Chain X-Ray.
+- A static frontend reads `docs/dashboard_lite.json` (the dashboard without business summaries and per-company investor metrics, about a quarter of the size) and fetches `docs/company-data/<letter>.json` when a company brief opens; `docs/dashboard_data.json` remains the complete record for downloads, static pages and validators. It renders the market overview, screener, watchlist, comparison view, sector pages, company briefs, and Supply Chain X-Ray.
 
 ## Repository Layout
 
@@ -36,7 +36,10 @@ docs/
   company/                Pre-rendered, indexable page per linked company plus an index
   app.js                  Dashboard behavior
   styles.css              Dashboard styling
-  dashboard_data.json     Exported dashboard data
+  dashboard_data.json     Exported dashboard data (complete)
+  dashboard_lite.json     Homepage payload: same structure minus summaries and investor metrics
+  company-data/           Per-letter detail shards fetched when a brief opens
+  status.json             Last run: data date, links, new links, companies researched, filings swept
   link_history.json       Daily published link-count history
   changes.json            Day-over-day graph changes, newest first (from link history)
   feed.xml                RSS feed of the same changes
