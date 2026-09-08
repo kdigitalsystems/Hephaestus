@@ -1,8 +1,428 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-07T20:14:32+00:00",
-  "unique_links": 365,
+  "generated_at": "2026-09-08T00:16:12+00:00",
+  "unique_links": 398,
   "days": [
+    {
+      "date": "2026-09-08",
+      "generated_at": "2026-09-08T00:16:12+00:00",
+      "previous_date": "2026-09-07",
+      "unique_links": 398,
+      "net_change": 33,
+      "new_count": 39,
+      "removed_count": 6,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AAOI->MSFT:REVENUE CONCENTRATION",
+          "source_ticker": "AAOI",
+          "target_ticker": "MSFT",
+          "type": "Revenue Concentration",
+          "product": "28.8% of AAOI revenue",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "ALKS->BIIB:LICENSE AND COLLABORATION AGREEMENT",
+          "source_ticker": "ALKS",
+          "target_ticker": "BIIB",
+          "type": "license and collaboration agreement",
+          "product": "Revenues related to this license and collaboration agreement",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "ALKS->CAH:REVENUE CONCENTRATION",
+          "source_ticker": "ALKS",
+          "target_ticker": "CAH",
+          "type": "Revenue Concentration",
+          "product": "ARISTADA and ARISTADA INITIO",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "ALKS->COR:SALES REVENUE CONCENTRATION",
+          "source_ticker": "ALKS",
+          "target_ticker": "COR",
+          "type": "sales revenue concentration",
+          "product": "ARISTADA and ARISTADA INITIO",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "ALSN->PCAR:REVENUE CONCENTRATION",
+          "source_ticker": "ALSN",
+          "target_ticker": "PCAR",
+          "type": "Revenue Concentration",
+          "product": "transmission systems and components for commercial vehicles",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "BLDP->PLUG:MANUFACTURER <-> CUSTOMER",
+          "source_ticker": "BLDP",
+          "target_ticker": "PLUG",
+          "type": "manufacturer <-> customer",
+          "product": "Fuel Cells",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "CENTA->HD:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "CENTA",
+          "target_ticker": "HD",
+          "type": "operational supply chain dependency",
+          "product": "16% of CENTA revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "CENTA->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "CENTA",
+          "target_ticker": "WMT",
+          "type": "operational supply chain dependency",
+          "product": "17% of CENTA revenue (pet products)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "CNX->DTE:SALES/REVENUE CONTRIBUTION",
+          "source_ticker": "CNX",
+          "target_ticker": "DTE",
+          "type": "Sales/Revenue Contribution",
+          "product": "Oil & Gas products (specifically mentioned sales to DTE Energy Trading, Inc.)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "DOX->T:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "DOX",
+          "target_ticker": "T",
+          "type": "operational supply-chain dependency",
+          "product": "25.9% of DOX revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ELAN->COR:REVENUE CONCENTRATION",
+          "source_ticker": "ELAN",
+          "target_ticker": "COR",
+          "type": "Revenue Concentration",
+          "product": "Veterinary products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "FBIN->HD:REVENUE CONCENTRATION",
+          "source_ticker": "FBIN",
+          "target_ticker": "HD",
+          "type": "Revenue Concentration",
+          "product": "21% of FBIN revenue",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "GFF->HD:REVENUE CONCENTRATION",
+          "source_ticker": "GFF",
+          "target_ticker": "HD",
+          "type": "Revenue Concentration",
+          "product": "Building Products & Equipment",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "GPRO->AMBA:SUPPLY CHAIN",
+          "source_ticker": "GPRO",
+          "target_ticker": "AMBA",
+          "type": "supply chain",
+          "product": "High-Quality Consumer Camera Products",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "GRMN->AMBA:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "GRMN",
+          "target_ticker": "AMBA",
+          "type": "operational supply-chain dependency",
+          "product": "High-Quality Automotive Dash Cams",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "HLIT->AMBA:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "HLIT",
+          "target_ticker": "AMBA",
+          "type": "operational supply-chain dependency",
+          "product": "High-End Broadcasting Encoders",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "IDCC->AAPL:REVENUE CONCENTRATION",
+          "source_ticker": "IDCC",
+          "target_ticker": "AAPL",
+          "type": "Revenue Concentration",
+          "product": "Revenue from Samsung, Apple, and vivo each comprised 10% or more of our consolidated revenue.",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "JHX->BCC:DISTRIBUTOR",
+          "source_ticker": "JHX",
+          "target_ticker": "BCC",
+          "type": "distributor",
+          "product": "exterior building products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "KO->PI:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "KO",
+          "target_ticker": "PI",
+          "type": "operational supply-chain dependency",
+          "product": "RFID Monza tag chips and Indy reader chip for Freestyle soda machine",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "LBRT->OXY:REVENUE CONCENTRATION",
+          "source_ticker": "LBRT",
+          "target_ticker": "OXY",
+          "type": "Revenue Concentration",
+          "product": "Oil & Gas E&P services or products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "MAT->TGT:REVENUE CONCENTRATION",
+          "source_ticker": "MAT",
+          "target_ticker": "TGT",
+          "type": "Revenue Concentration",
+          "product": "Mattel's products sold to Target Corporation",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MBLY->APTV:REVENUE CONCENTRATION",
+          "source_ticker": "MBLY",
+          "target_ticker": "APTV",
+          "type": "Revenue Concentration",
+          "product": "Autonomous driving systems and related services",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "MZTI->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "MZTI",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Packaged Foods",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "NFLX->MGNI:ADVERTISING PARTNERSHIPS",
+          "source_ticker": "NFLX",
+          "target_ticker": "MGNI",
+          "type": "advertising partnerships",
+          "product": "advertising services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "NWL->WMT:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "NWL",
+          "target_ticker": "WMT",
+          "type": "operational supply-chain dependency",
+          "product": "13% of NWL revenue (Household & Personal Products)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "NXPI->AVT:REVENUE CONCENTRATION",
+          "source_ticker": "NXPI",
+          "target_ticker": "AVT",
+          "type": "Revenue Concentration",
+          "product": "Semiconductors",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "PBH->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "PBH",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Pharmaceutical products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "PENN->SHAK:LICENSING AND PARTNERSHIPS",
+          "source_ticker": "PENN",
+          "target_ticker": "SHAK",
+          "type": "Licensing and Partnerships",
+          "product": "Shake Shack franchise rights in Hawaii",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "PLUS->CSCO:REVENUE CONCENTRATION",
+          "source_ticker": "PLUS",
+          "target_ticker": "CSCO",
+          "type": "Revenue Concentration",
+          "product": "products from Cisco Systems, Inc.",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "PLUS->VZ:REVENUE CONCENTRATION",
+          "source_ticker": "PLUS",
+          "target_ticker": "VZ",
+          "type": "Revenue Concentration",
+          "product": "Services (Software - Application)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "RIG->EQNR:REVENUE CONCENTRATION",
+          "source_ticker": "RIG",
+          "target_ticker": "EQNR",
+          "type": "Revenue Concentration",
+          "product": "Oil & Gas Drilling Services",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "SLAB->ARW:REVENUE CONCENTRATION",
+          "source_ticker": "SLAB",
+          "target_ticker": "ARW",
+          "type": "Revenue Concentration",
+          "product": "Electronics components and solutions",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "SWK->HD:REVENUE CONCENTRATION",
+          "source_ticker": "SWK",
+          "target_ticker": "HD",
+          "type": "Revenue Concentration",
+          "product": "Tools & Accessories",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "SWKS->AAPL:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "SWKS",
+          "target_ticker": "AAPL",
+          "type": "operational supply-chain dependency / Radio Frequency (RF) Chips",
+          "product": "wireless connectivity and power management products for Apple's devices / GSM Power Amplifier and RF Switch",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "UCTT->AMAT:REVENUE CONCENTRATION",
+          "source_ticker": "UCTT",
+          "target_ticker": "AMAT",
+          "type": "Revenue Concentration",
+          "product": "Semiconductor Equipment & Materials",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "UCTT->LRCX:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "UCTT",
+          "target_ticker": "LRCX",
+          "type": "operational supply-chain dependency",
+          "product": "10% of UCTT revenue",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "UFPT->SYK:REVENUE CONCENTRATION",
+          "source_ticker": "UFPT",
+          "target_ticker": "SYK",
+          "type": "Revenue Concentration",
+          "product": "Medical Devices",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "WERN->DG:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "WERN",
+          "target_ticker": "DG",
+          "type": "operational supply chain dependency",
+          "product": "logistics services",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "WLY->RSSS:REVENUE CONCENTRATION",
+          "source_ticker": "WLY",
+          "target_ticker": "RSSS",
+          "type": "Revenue Concentration",
+          "product": "Research Solutions products and services",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "MRK->CAH:REVENUE CONCENTRATION",
+          "source_ticker": "MRK",
+          "target_ticker": "CAH",
+          "type": "Revenue Concentration",
+          "product": "22% of MRK revenue",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MRK->COR:REVENUE CONCENTRATION",
+          "source_ticker": "MRK",
+          "target_ticker": "COR",
+          "type": "Revenue Concentration",
+          "product": "22% of MRK revenue",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "MRK->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "MRK",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "Drug Manufacturers",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "ONC->COR:REVENUE CONCENTRATION",
+          "source_ticker": "ONC",
+          "target_ticker": "COR",
+          "type": "Revenue Concentration",
+          "product": "Product Distributor Services",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "ONC->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "ONC",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "18% of ONC revenue",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "SWKS->AAPL:RADIO FREQUENCY (RF) CHIPS",
+          "source_ticker": "SWKS",
+          "target_ticker": "AAPL",
+          "type": "Radio Frequency (RF) Chips",
+          "product": "GSM Power Amplifier and RF Switch",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "changed_links": []
+    },
     {
       "date": "2026-09-07",
       "generated_at": "2026-09-07T20:14:32+00:00",
@@ -1501,19 +1921,6 @@
           "confidence": 0.95
         }
       ],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-12",
-      "generated_at": "2026-08-12T07:12:06+00:00",
-      "previous_date": "2026-08-11",
-      "unique_links": 442,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
       "changed_links": []
     }
   ]

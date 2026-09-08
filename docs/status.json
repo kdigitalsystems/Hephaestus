@@ -1,14 +1,14 @@
 {
-  "companies": 3930,
-  "companies_deferred": 295,
-  "companies_researched": 204,
-  "data_as_of": "2026-09-07T20:14:32+00:00",
-  "disclosures_found": 16,
+  "companies": 3931,
+  "companies_deferred": 258,
+  "companies_researched": 242,
+  "data_as_of": "2026-09-08T00:16:12+00:00",
+  "disclosures_found": 29,
   "extraction_failures": 10,
   "filings_swept": 300,
-  "generated_at": "2026-09-07T20:14:34+00:00",
-  "linked_companies": 365,
-  "new_links": 71,
-  "removed_links": 5,
-  "unique_links": 365
+  "generated_at": "2026-09-08T00:16:13+00:00",
+  "linked_companies": 401,
+  "new_links": 39,
+  "removed_links": 6,
+  "unique_links": 398
 }
