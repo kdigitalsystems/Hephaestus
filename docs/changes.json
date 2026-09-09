@@ -1,8 +1,410 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-08T00:16:12+00:00",
-  "unique_links": 398,
+  "generated_at": "2026-09-09T09:41:14+00:00",
+  "unique_links": 439,
   "days": [
+    {
+      "date": "2026-09-09",
+      "generated_at": "2026-09-09T09:41:14+00:00",
+      "previous_date": "2026-09-08",
+      "unique_links": 439,
+      "net_change": 41,
+      "new_count": 42,
+      "removed_count": 1,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "ADNT->F:REVENUE CONCENTRATION",
+          "source_ticker": "ADNT",
+          "target_ticker": "F",
+          "type": "Revenue Concentration",
+          "product": "Auto Parts",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "BHE->AMAT:REVENUE CONCENTRATION",
+          "source_ticker": "BHE",
+          "target_ticker": "AMAT",
+          "type": "Revenue Concentration",
+          "product": "Electronics Manufacturing Services (EMS)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "CENT->HD:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "CENT",
+          "target_ticker": "HD",
+          "type": "operational supply chain dependency",
+          "product": "16% of CENT revenue (Home Depot is a customer)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "CENT->WMT:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "CENT",
+          "target_ticker": "WMT",
+          "type": "operational supply-chain dependency",
+          "product": "17% of CENT revenue (packaged foods)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "CTS->CMI:REVENUE CONCENTRATION",
+          "source_ticker": "CTS",
+          "target_ticker": "CMI",
+          "type": "Revenue Concentration",
+          "product": "not specified in the provided context, but likely related to electronic components based on CTS Corporation's industry",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "DIS->DOLE:BRAND LICENSING",
+          "source_ticker": "DIS",
+          "target_ticker": "DOLE",
+          "type": "brand licensing",
+          "product": "Fruits and Vegetables with Disney Characters",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "DMC->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "DMC",
+          "target_ticker": "WMT",
+          "type": "operational supply chain dependency",
+          "product": "7% of DMC revenue (farm products)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "DMLP->CVX:REVENUE CONCENTRATION",
+          "source_ticker": "DMLP",
+          "target_ticker": "CVX",
+          "type": "Revenue Concentration",
+          "product": "Royalty revenues from oil & gas properties",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "DMLP->FANG:REVENUE CONCENTRATION",
+          "source_ticker": "DMLP",
+          "target_ticker": "FANG",
+          "type": "Revenue Concentration",
+          "product": "Royalties operating revenues from properties operated by Exxon Mobil Corporation and its subsidiaries and Diamondback Energy, Inc.",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "EPC->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "EPC",
+          "target_ticker": "WMT",
+          "type": "operational supply chain dependency",
+          "product": "17.4% of EPC revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "FLO->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "FLO",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Packaged Foods",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "GIII->ROST:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "GIII",
+          "target_ticker": "ROST",
+          "type": "operational supply chain dependency",
+          "product": "apparel products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "GIII->TJX:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "GIII",
+          "target_ticker": "TJX",
+          "type": "operational supply chain dependency",
+          "product": "apparel products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "GOOG->AVGO:SOFTWARE/INFRASTRUCTURE",
+          "source_ticker": "GOOG",
+          "target_ticker": "AVGO",
+          "type": "Software/Infrastructure",
+          "product": "WiFi stack",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "GRMN->IRDM:DISTRIBUTOR",
+          "source_ticker": "GRMN",
+          "target_ticker": "IRDM",
+          "type": "distributor",
+          "product": "commercial distributors for satellite communication services and products",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "HLIT->CMCSA:REVENUE CONCENTRATION",
+          "source_ticker": "HLIT",
+          "target_ticker": "CMCSA",
+          "type": "Revenue Concentration",
+          "product": "Communication Equipment",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "HLIT->PLUS:REVENUE CONCENTRATION",
+          "source_ticker": "HLIT",
+          "target_ticker": "PLUS",
+          "type": "Revenue Concentration",
+          "product": "Communication Equipment",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "HRL->WMT:SALES AND REVENUE CONCENTRATION",
+          "source_ticker": "HRL",
+          "target_ticker": "WMT",
+          "type": "Sales and Revenue Concentration",
+          "product": "Packaged Foods",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "HZO->BC:OPERATIONAL SUPPLY CHAIN",
+          "source_ticker": "HZO",
+          "target_ticker": "BC",
+          "type": "operational supply chain",
+          "product": "new Brunswick boats and yachts",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "IBM->VNET:HISTORICAL DEVELOPMENT RELATIONSHIP",
+          "source_ticker": "IBM",
+          "target_ticker": "VNET",
+          "type": "historical development relationship",
+          "product": "VNET system development backbone infrastructure",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "INTC->PDFS:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "INTC",
+          "target_ticker": "PDFS",
+          "type": "operational supply-chain dependency",
+          "product": "Semiconductors",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "LCII->THO:REVENUE CONCENTRATION",
+          "source_ticker": "LCII",
+          "target_ticker": "THO",
+          "type": "Revenue Concentration",
+          "product": "Recreational Vehicles",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "MBC->HD:RETAIL SUPPLY CHAIN",
+          "source_ticker": "MBC",
+          "target_ticker": "HD",
+          "type": "retail supply chain",
+          "product": "Furnishings, Fixtures & Appliances",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "MCHP->ARW:DISTRIBUTOR RELATIONSHIP",
+          "source_ticker": "MCHP",
+          "target_ticker": "ARW",
+          "type": "distributor relationship / operational supply-chain dependency",
+          "product": "semiconductors / 12% of MCHP revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "MQ->XYZ:REVENUE CONCENTRATION",
+          "source_ticker": "MQ",
+          "target_ticker": "XYZ",
+          "type": "Revenue Concentration",
+          "product": "Marqeta's services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MSFT->BL:CLOUD INFRASTRUCTURE & ERP SYSTEM INTEGRATION",
+          "source_ticker": "MSFT",
+          "target_ticker": "BL",
+          "type": "Cloud Infrastructure & ERP System Integration",
+          "product": "Microsoft Dynamics 365 & Microsoft Cloud Platform",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "MT->WS:LICENSING OF PATENTED TECHNOLOGY",
+          "source_ticker": "MT",
+          "target_ticker": "WS",
+          "type": "Licensing of patented technology",
+          "product": "Ablation technology",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "NKTR->AZN:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "NKTR",
+          "target_ticker": "AZN",
+          "type": "operational supply-chain dependency",
+          "product": "Revenue from drug sales",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "ONC->COR:PRODUCT DISTRIBUTOR SERVICES",
+          "source_ticker": "ONC",
+          "target_ticker": "COR",
+          "type": "Product Distributor Services",
+          "product": "Distributor Services for Biotechnology Products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ORCL->BL:ERP SYSTEM INTEGRATION",
+          "source_ticker": "ORCL",
+          "target_ticker": "BL",
+          "type": "ERP System Integration",
+          "product": "Oracle Corporation ERP system",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "PAGP->XOM:REVENUE CONCENTRATION",
+          "source_ticker": "PAGP",
+          "target_ticker": "XOM",
+          "type": "Revenue Concentration",
+          "product": "Oil & Gas Midstream services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "PCRX->CAH:REVENUE CONCENTRATION",
+          "source_ticker": "PCRX",
+          "target_ticker": "CAH",
+          "type": "Revenue Concentration",
+          "product": "BioSciences products",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "PEP->DOLE:BRAND LICENSING",
+          "source_ticker": "PEP",
+          "target_ticker": "DOLE",
+          "type": "Brand Licensing",
+          "product": "Bottled Fruit Beverages",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "PFE->PAHC:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "PFE",
+          "target_ticker": "PAHC",
+          "type": "operational supply-chain dependency",
+          "product": "Medicated Feed Additives Business",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "PNR->POOL:REVENUE CONCENTRATION",
+          "source_ticker": "PNR",
+          "target_ticker": "POOL",
+          "type": "Revenue Concentration",
+          "product": "Water treatment and filtration systems, pumps, and related products/services for the pool industry.",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "PRGO->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "PRGO",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Pharmaceutical products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "QCOM->PDFS:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "QCOM",
+          "target_ticker": "PDFS",
+          "type": "operational supply-chain dependency",
+          "product": "Semiconductors",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "THRM->ADNT:REVENUE CONCENTRATION",
+          "source_ticker": "THRM",
+          "target_ticker": "ADNT",
+          "type": "Revenue Concentration",
+          "product": "Auto Parts",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "THRM->F:MANUFACTURING PARTNER",
+          "source_ticker": "THRM",
+          "target_ticker": "F",
+          "type": "Manufacturing Partner",
+          "product": "Climate Control Seat system",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "THRM->GM:SUPPLY CHAIN",
+          "source_ticker": "THRM",
+          "target_ticker": "GM",
+          "type": "supply chain",
+          "product": "products (specifically for auto parts)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "TR->DLTR:REVENUE CONCENTRATION",
+          "source_ticker": "TR",
+          "target_ticker": "DLTR",
+          "type": "Revenue Concentration",
+          "product": "Confectionery products",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "VISN->CMCSA:REVENUE CONCENTRATION",
+          "source_ticker": "VISN",
+          "target_ticker": "CMCSA",
+          "type": "Revenue Concentration",
+          "product": "Communication Equipment",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "MCHP->ARW:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "MCHP",
+          "target_ticker": "ARW",
+          "type": "operational supply-chain dependency",
+          "product": "12% of MCHP revenue",
+          "review_status": "approved",
+          "confidence": 0.9833
+        }
+      ],
+      "changed_links": []
+    },
     {
       "date": "2026-09-08",
       "generated_at": "2026-09-08T00:16:12+00:00",
@@ -1898,29 +2300,6 @@
       "changed_count": 0,
       "new_links": [],
       "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-14",
-      "generated_at": "2026-08-14T06:33:40+00:00",
-      "previous_date": "2026-08-12",
-      "unique_links": 441,
-      "net_change": -1,
-      "new_count": 0,
-      "removed_count": 1,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [
-        {
-          "relationship_key": "MCD->BYND:PRODUCT SUPPLIER",
-          "source_ticker": "MCD",
-          "target_ticker": "BYND",
-          "type": "Product Supplier",
-          "product": "Plant-based meat substitutes",
-          "review_status": "approved",
-          "confidence": 0.95
-        }
-      ],
       "changed_links": []
     }
   ]
