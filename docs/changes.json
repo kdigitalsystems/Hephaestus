@@ -1,8 +1,131 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-09T09:41:14+00:00",
-  "unique_links": 439,
+  "generated_at": "2026-09-10T09:28:17+00:00",
+  "unique_links": 447,
   "days": [
+    {
+      "date": "2026-09-10",
+      "generated_at": "2026-09-10T09:28:17+00:00",
+      "previous_date": "2026-09-09",
+      "unique_links": 447,
+      "net_change": 8,
+      "new_count": 10,
+      "removed_count": 2,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "BL->SAP:ERP SYSTEM INTEGRATION",
+          "source_ticker": "BL",
+          "target_ticker": "SAP",
+          "type": "ERP System Integration",
+          "product": "SAP SE ERP System",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "DELL->CRM:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "DELL",
+          "target_ticker": "CRM",
+          "type": "Operational Supply Chain Dependency / IT Infrastructure: Servers / Hardware - Servers and Compute Infrastructure / IT Infrastructure",
+          "product": "Servers with AMD processors running Linux / Dell servers with AMD processors",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "LPL->SONY:SUPPLY_CHAIN",
+          "source_ticker": "LPL",
+          "target_ticker": "SONY",
+          "type": "supply_chain / OLED Panels",
+          "product": "WOLED panels / OLED panels for TVs",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MSFT->SNPS:COLLABORATION AND PARTNERSHIP",
+          "source_ticker": "MSFT",
+          "target_ticker": "SNPS",
+          "type": "Collaboration and Partnership",
+          "product": "AI-assisted chip design tools",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "PCRX->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "PCRX",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "BioSciences products (specifically mentioning medical devices or pharmaceuticals)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "SBUX->AAPL:DIGITAL DOWNLOADS",
+          "source_ticker": "SBUX",
+          "target_ticker": "AAPL",
+          "type": "Digital Downloads",
+          "product": "Music",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "SNOW->UAA:SUPPLY RELATIONSHIP",
+          "source_ticker": "SNOW",
+          "target_ticker": "UAA",
+          "type": "Supply Relationship",
+          "product": "Data Analytics",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "TFII->UPS:CONTRACT LOGISTICS PROVIDER",
+          "source_ticker": "TFII",
+          "target_ticker": "UPS",
+          "type": "Contract Logistics Provider",
+          "product": "Less-than-truckload (LTL) services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "THRM->LEA:REVENUE CONCENTRATION",
+          "source_ticker": "THRM",
+          "target_ticker": "LEA",
+          "type": "Revenue Concentration",
+          "product": "Auto Parts",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "XNCR->INCY:PRODUCT DEVELOPMENT AND MARKETING PARTNERSHIP",
+          "source_ticker": "XNCR",
+          "target_ticker": "INCY",
+          "type": "product development and marketing partnership",
+          "product": "Tafasitamab (Monjuvi)",
+          "review_status": "approved",
+          "confidence": 0.9167
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "DELL->CRM:IT INFRASTRUCTURE: SERVERS",
+          "source_ticker": "DELL",
+          "target_ticker": "CRM",
+          "type": "IT Infrastructure: Servers / Hardware - Servers and Compute Infrastructure / IT Infrastructure",
+          "product": "Servers with AMD processors running Linux / Dell servers with AMD processors",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "LPL->SONY:OLED PANELS",
+          "source_ticker": "LPL",
+          "target_ticker": "SONY",
+          "type": "OLED Panels",
+          "product": "OLED panels for TVs",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "changed_links": []
+    },
     {
       "date": "2026-09-09",
       "generated_at": "2026-09-09T09:41:14+00:00",
@@ -2280,19 +2403,6 @@
       "date": "2026-08-16",
       "generated_at": "2026-08-16T05:24:19+00:00",
       "previous_date": "2026-08-15",
-      "unique_links": 441,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-15",
-      "generated_at": "2026-08-15T05:14:21+00:00",
-      "previous_date": "2026-08-14",
       "unique_links": 441,
       "net_change": 0,
       "new_count": 0,
