@@ -134035,13 +134035,13 @@
     }
   },
   {
-    "generated_at": "2026-09-12T09:14:51+00:00",
+    "generated_at": "2026-09-12T21:01:26+00:00",
     "generated_on": "2026-09-12",
-    "unique_links": 456,
-    "approved_links": 456,
+    "unique_links": 465,
+    "approved_links": 465,
     "pending_links": 0,
     "rejected_links": 0,
-    "linked_companies": 452,
+    "linked_companies": 458,
     "links": {
       "A->PHG:MANUFACTURING EQUIPMENT/TECHNOLOGY": {
         "relationship_key": "A->PHG:MANUFACTURING EQUIPMENT/TECHNOLOGY",
@@ -135818,12 +135818,12 @@
         "relationship_key": "GOOG->GTLB:CLOUD PLATFORM",
         "source_ticker": "GOOG",
         "target_ticker": "GTLB",
-        "type": "Cloud Platform",
-        "product": "GKE",
+        "type": "Cloud Platform / Cloud Infrastructure",
+        "product": "GKE / Google Cloud Platform",
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-09-02"
+        "last_verified": "2026-09-12"
       },
       "GOOG->META:SEARCH ADVERTISING": {
         "relationship_key": "GOOG->META:SEARCH ADVERTISING",
@@ -135967,6 +135967,39 @@
         "confidence": 0.875,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "HELE->AMZN:REVENUE CONCENTRATION": {
+        "relationship_key": "HELE->AMZN:REVENUE CONCENTRATION",
+        "source_ticker": "HELE",
+        "target_ticker": "AMZN",
+        "type": "Revenue Concentration",
+        "product": "Household & Personal Products",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-12"
+      },
+      "HELE->TGT:REVENUE CONCENTRATION": {
+        "relationship_key": "HELE->TGT:REVENUE CONCENTRATION",
+        "source_ticker": "HELE",
+        "target_ticker": "TGT",
+        "type": "Revenue Concentration",
+        "product": "Household & Personal Products",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-12"
+      },
+      "HELE->WMT:REVENUE CONCENTRATION": {
+        "relationship_key": "HELE->WMT:REVENUE CONCENTRATION",
+        "source_ticker": "HELE",
+        "target_ticker": "WMT",
+        "type": "Revenue Concentration",
+        "product": "Household & Personal Products",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-12"
       },
       "HLIT->AMBA:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
         "relationship_key": "HLIT->AMBA:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
@@ -136166,16 +136199,16 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
-      "IBM->RMBS:LICENSED TECHNOLOGY OR SOFTWARE": {
-        "relationship_key": "IBM->RMBS:LICENSED TECHNOLOGY OR SOFTWARE",
+      "IBM->RMBS:LICENSOR-LICENSEE": {
+        "relationship_key": "IBM->RMBS:LICENSOR-LICENSEE",
         "source_ticker": "IBM",
         "target_ticker": "RMBS",
-        "type": "Licensed Technology or Software",
-        "product": "RDRAM technology",
+        "type": "licensor-licensee / Licensed Technology or Software",
+        "product": "RDRAM components / RDRAM technology",
         "review_status": "approved",
         "confidence": 0.95,
         "source_type": "AI Research",
-        "last_verified": "2026-09-02"
+        "last_verified": "2026-09-12"
       },
       "IBM->SNDK:ADVANCED SILICON FABRICATION": {
         "relationship_key": "IBM->SNDK:ADVANCED SILICON FABRICATION",
@@ -136231,6 +136264,17 @@
         "confidence": 0.95,
         "source_type": "AI Research",
         "last_verified": "2026-09-04"
+      },
+      "INTC->AVT:ADVANCED SILICON FABRICATION": {
+        "relationship_key": "INTC->AVT:ADVANCED SILICON FABRICATION",
+        "source_ticker": "INTC",
+        "target_ticker": "AVT",
+        "type": "Advanced Silicon Fabrication",
+        "product": "Computer Peripherals, Complete Systems, and Software",
+        "review_status": "approved",
+        "confidence": 0.95,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-12"
       },
       "INTC->BR:VIRTUAL ANNUAL MEETING SERVICES": {
         "relationship_key": "INTC->BR:VIRTUAL ANNUAL MEETING SERVICES",
@@ -136429,6 +136473,28 @@
         "confidence": 0.95,
         "source_type": "Web Source",
         "last_verified": "2026-09-07"
+      },
+      "KPLT->W:REVENUE CONCENTRATION": {
+        "relationship_key": "KPLT->W:REVENUE CONCENTRATION",
+        "source_ticker": "KPLT",
+        "target_ticker": "W",
+        "type": "Revenue Concentration",
+        "product": "Leases for merchant services",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-12"
+      },
+      "KRNT->AMZN:REVENUE CONCENTRATION": {
+        "relationship_key": "KRNT->AMZN:REVENUE CONCENTRATION",
+        "source_ticker": "KRNT",
+        "target_ticker": "AMZN",
+        "type": "Revenue Concentration",
+        "product": "Printing solutions and services",
+        "review_status": "approved",
+        "confidence": 0.9667,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-12"
       },
       "LBRT->OXY:REVENUE CONCENTRATION": {
         "relationship_key": "LBRT->OXY:REVENUE CONCENTRATION",
@@ -136705,6 +136771,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "META->HRB:DATA SHARING FOR TARGETED ADVERTISING": {
+        "relationship_key": "META->HRB:DATA SHARING FOR TARGETED ADVERTISING",
+        "source_ticker": "META",
+        "target_ticker": "HRB",
+        "type": "Data Sharing for Targeted Advertising",
+        "product": "Tax Preparation Service User Data",
+        "review_status": "approved",
+        "confidence": 0.925,
+        "source_type": "AI Research",
+        "last_verified": "2026-09-12"
+      },
       "META->NVDA:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
         "relationship_key": "META->NVDA:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
         "source_ticker": "META",
@@ -136858,6 +136935,17 @@
         "confidence": 0.9167,
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
+      },
+      "MSFT->RNG:ENTERPRISE SOFTWARE INTEGRATION": {
+        "relationship_key": "MSFT->RNG:ENTERPRISE SOFTWARE INTEGRATION",
+        "source_ticker": "MSFT",
+        "target_ticker": "RNG",
+        "type": "Enterprise Software Integration",
+        "product": "Teams",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-12"
       },
       "MSFT->SNOW:CLOUD INFRASTRUCTURE PROVIDER": {
         "relationship_key": "MSFT->SNOW:CLOUD INFRASTRUCTURE PROVIDER",
@@ -137904,6 +137992,17 @@
         "source_type": "AI Research",
         "last_verified": "2026-09-02"
       },
+      "SMPL->WMT:REVENUE CONCENTRATION": {
+        "relationship_key": "SMPL->WMT:REVENUE CONCENTRATION",
+        "source_ticker": "SMPL",
+        "target_ticker": "WMT",
+        "type": "Revenue Concentration",
+        "product": "Packaged Foods",
+        "review_status": "approved",
+        "confidence": 1.0,
+        "source_type": "Web Source",
+        "last_verified": "2026-09-12"
+      },
       "SND->BE:RAW MATERIALS": {
         "relationship_key": "SND->BE:RAW MATERIALS",
         "source_ticker": "SND",
@@ -138788,12 +138887,12 @@
         "relationship_key": "VLO->PBF:RAW MATERIALS",
         "source_ticker": "VLO",
         "target_ticker": "PBF",
-        "type": "Raw Materials",
-        "product": "Crude Oil",
+        "type": "Raw Materials / Refinery Sale",
+        "product": "Crude Oil / Paulsboro refinery",
         "review_status": "approved",
-        "confidence": 0.925,
-        "source_type": "Web Source",
-        "last_verified": "2026-09-06"
+        "confidence": 1.0,
+        "source_type": "Web Source / AI Research",
+        "last_verified": "2026-09-12"
       },
       "VMC->AMZN:PROPERTY DEVELOPMENT": {
         "relationship_key": "VMC->AMZN:PROPERTY DEVELOPMENT",
@@ -138960,16 +139059,16 @@
         "source_type": "Web Source",
         "last_verified": "2026-09-08"
       },
-      "WMT->HRB:EXCLUSIVE DESKTOP TAX PREPARATION SOFTWARE SALES": {
-        "relationship_key": "WMT->HRB:EXCLUSIVE DESKTOP TAX PREPARATION SOFTWARE SALES",
+      "WMT->HRB:OPERATIONAL SUPPLY-CHAIN DEPENDENCY": {
+        "relationship_key": "WMT->HRB:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
         "source_ticker": "WMT",
         "target_ticker": "HRB",
-        "type": "Exclusive Desktop Tax Preparation Software Sales",
-        "product": "Software Services",
+        "type": "operational supply-chain dependency / Exclusive Desktop Tax Preparation Software Sales",
+        "product": "Desktop Tax Preparation Software / Software Services",
         "review_status": "approved",
-        "confidence": 0.925,
+        "confidence": 0.975,
         "source_type": "AI Research",
-        "last_verified": "2026-09-06"
+        "last_verified": "2026-09-12"
       },
       "WTRG->CEG:NATURAL GAS SUPPLY CHAIN": {
         "relationship_key": "WTRG->CEG:NATURAL GAS SUPPLY CHAIN",
@@ -139008,12 +139107,12 @@
         "relationship_key": "XOM->PBF:RAW MATERIALS",
         "source_ticker": "XOM",
         "target_ticker": "PBF",
-        "type": "Raw Materials",
+        "type": "Raw Materials / Crude Oil Supplier",
         "product": "Crude Oil",
         "review_status": "approved",
-        "confidence": 0.95,
-        "source_type": "Web Source",
-        "last_verified": "2026-09-06"
+        "confidence": 0.975,
+        "source_type": "Web Source / AI Research",
+        "last_verified": "2026-09-12"
       },
       "XOM->SHEL:REFINERY SERVICES": {
         "relationship_key": "XOM->SHEL:REFINERY SERVICES",

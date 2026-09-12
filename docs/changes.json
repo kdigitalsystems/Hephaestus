@@ -1,17 +1,17 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-12T09:14:51+00:00",
-  "unique_links": 456,
+  "generated_at": "2026-09-12T21:01:26+00:00",
+  "unique_links": 465,
   "days": [
     {
       "date": "2026-09-12",
-      "generated_at": "2026-09-12T09:14:51+00:00",
+      "generated_at": "2026-09-12T21:01:26+00:00",
       "previous_date": "2026-09-11",
-      "unique_links": 456,
-      "net_change": 2,
-      "new_count": 2,
-      "removed_count": 0,
-      "changed_count": 0,
+      "unique_links": 465,
+      "net_change": 11,
+      "new_count": 13,
+      "removed_count": 2,
+      "changed_count": 2,
       "new_links": [
         {
           "relationship_key": "DXCM->TNDM:SOFTWARE INTEGRATION",
@@ -23,6 +23,96 @@
           "confidence": 0.9667
         },
         {
+          "relationship_key": "HELE->AMZN:REVENUE CONCENTRATION",
+          "source_ticker": "HELE",
+          "target_ticker": "AMZN",
+          "type": "Revenue Concentration",
+          "product": "Household & Personal Products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "HELE->TGT:REVENUE CONCENTRATION",
+          "source_ticker": "HELE",
+          "target_ticker": "TGT",
+          "type": "Revenue Concentration",
+          "product": "Household & Personal Products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "HELE->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "HELE",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Household & Personal Products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "IBM->RMBS:LICENSOR-LICENSEE",
+          "source_ticker": "IBM",
+          "target_ticker": "RMBS",
+          "type": "licensor-licensee / Licensed Technology or Software",
+          "product": "RDRAM components / RDRAM technology",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "INTC->AVT:ADVANCED SILICON FABRICATION",
+          "source_ticker": "INTC",
+          "target_ticker": "AVT",
+          "type": "Advanced Silicon Fabrication",
+          "product": "Computer Peripherals, Complete Systems, and Software",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "KPLT->W:REVENUE CONCENTRATION",
+          "source_ticker": "KPLT",
+          "target_ticker": "W",
+          "type": "Revenue Concentration",
+          "product": "Leases for merchant services",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "KRNT->AMZN:REVENUE CONCENTRATION",
+          "source_ticker": "KRNT",
+          "target_ticker": "AMZN",
+          "type": "Revenue Concentration",
+          "product": "Printing solutions and services",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "META->HRB:DATA SHARING FOR TARGETED ADVERTISING",
+          "source_ticker": "META",
+          "target_ticker": "HRB",
+          "type": "Data Sharing for Targeted Advertising",
+          "product": "Tax Preparation Service User Data",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "MSFT->RNG:ENTERPRISE SOFTWARE INTEGRATION",
+          "source_ticker": "MSFT",
+          "target_ticker": "RNG",
+          "type": "Enterprise Software Integration",
+          "product": "Teams",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "SMPL->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "SMPL",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Packaged Foods",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
           "relationship_key": "UBER->DPZ:MARKETPLACE",
           "source_ticker": "UBER",
           "target_ticker": "DPZ",
@@ -30,10 +120,57 @@
           "product": "food delivery service",
           "review_status": "approved",
           "confidence": 0.9833
+        },
+        {
+          "relationship_key": "WMT->HRB:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "WMT",
+          "target_ticker": "HRB",
+          "type": "operational supply-chain dependency / Exclusive Desktop Tax Preparation Software Sales",
+          "product": "Desktop Tax Preparation Software / Software Services",
+          "review_status": "approved",
+          "confidence": 0.975
         }
       ],
-      "removed_links": [],
-      "changed_links": []
+      "removed_links": [
+        {
+          "relationship_key": "IBM->RMBS:LICENSED TECHNOLOGY OR SOFTWARE",
+          "source_ticker": "IBM",
+          "target_ticker": "RMBS",
+          "type": "Licensed Technology or Software",
+          "product": "RDRAM technology",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "WMT->HRB:EXCLUSIVE DESKTOP TAX PREPARATION SOFTWARE SALES",
+          "source_ticker": "WMT",
+          "target_ticker": "HRB",
+          "type": "Exclusive Desktop Tax Preparation Software Sales",
+          "product": "Software Services",
+          "review_status": "approved",
+          "confidence": 0.925
+        }
+      ],
+      "changed_links": [
+        {
+          "relationship_key": "VLO->PBF:RAW MATERIALS",
+          "source_ticker": "VLO",
+          "target_ticker": "PBF",
+          "type": "Raw Materials / Refinery Sale",
+          "product": "Crude Oil / Paulsboro refinery",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "XOM->PBF:RAW MATERIALS",
+          "source_ticker": "XOM",
+          "target_ticker": "PBF",
+          "type": "Raw Materials / Crude Oil Supplier",
+          "product": "Crude Oil",
+          "review_status": "approved",
+          "confidence": 0.975
+        }
+      ]
     },
     {
       "date": "2026-09-11",
