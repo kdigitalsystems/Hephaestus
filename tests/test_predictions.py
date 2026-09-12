@@ -436,3 +436,34 @@ def test_prediction_outputs_are_complete_json_files(tmp_path):
 
     assert json.loads(predictions_path.read_text(encoding="utf-8"))["predictions"][0]["ticker"] == "BASE"
     assert json.loads(history_path.read_text(encoding="utf-8"))[0]["prediction_id"] == "one"
+
+
+def test_scenario_parser_accepts_the_nested_shape_small_models_return():
+    """qwen2.5 often answers {"summary": ..., "key_points": [...]} for each case.
+
+    Rejecting it made every scenario invalid, and with --require-ollama the scheduled
+    prediction run refused to publish (three consecutive weekday failures).
+    """
+    response = json.dumps({
+        "scenario_summary": "AMD sees positive momentum from its TSM supply relationship.",
+        "bull_case": {
+            "summary": "Steady fabrication supports output",
+            "key_points": ["TSM capacity is reserved", "Datacenter demand is firm"],
+        },
+        "bear_case": ["Export controls could bite", "Customer inventories look full"],
+    })
+
+    scenario = parse_ollama_scenario(response)
+
+    assert scenario["scenario_summary"].startswith("AMD sees positive momentum")
+    assert scenario["bull_case"] == "Steady fabrication supports output. TSM capacity is reserved. Datacenter demand is firm."
+    assert scenario["bear_case"] == "Export controls could bite. Customer inventories look full."
+    # The safety rules still apply to the flattened prose.
+    unsafe = json.dumps({
+        "scenario_summary": "ok",
+        "bull_case": {"summary": "Investors should buy the stock"},
+        "bear_case": "ok",
+    })
+    assert parse_ollama_scenario(unsafe) is None
+    # A field that flattens to nothing is still a rejection.
+    assert parse_ollama_scenario(json.dumps({"scenario_summary": "ok", "bull_case": {}, "bear_case": "ok"})) is None

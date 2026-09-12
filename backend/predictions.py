@@ -555,12 +555,42 @@ def iter_json_objects(text: str) -> Iterable[dict[str, Any]]:
         start = text.find("{", end + 1)
 
 
+def flatten_scenario_field(value: Any) -> str:
+    """Accept the shapes a small model actually returns for one prose field.
+
+    qwen2.5 often answers with {"summary": "...", "key_points": [...]} instead of a
+    string. Rejecting that made every scenario invalid, and with --require-ollama the
+    scheduled run then refused to publish at all. The prose is joined into sentences
+    and screened by exactly the same safety rules as a plain string.
+    """
+    if isinstance(value, str):
+        return value.strip()
+    if isinstance(value, (list, dict)):
+        if isinstance(value, dict):
+            lead = ("summary", "text", "description", "case", "narrative")
+            items = [value[key] for key in lead if key in value]
+            items += [item for key, item in value.items() if key not in lead]
+        else:
+            items = list(value)
+        parts = []
+        for item in items:
+            part = flatten_scenario_field(item)
+            if part:
+                # Punctuate each fragment so joined bullet points do not run together.
+                parts.append(part if part.endswith((".", "!", "?")) else f"{part}.")
+        return " ".join(parts)
+    return ""
+
+
 def parse_ollama_scenario(response: str) -> dict[str, str] | None:
     """Accept only small JSON scenario updates; prose stays deterministic otherwise."""
     for payload in iter_json_objects(response):
-        if any(not isinstance(payload.get(key), str) for key in SCENARIO_FIELDS):
+        if any(key not in payload for key in SCENARIO_FIELDS):
             continue
-        scenario = {key: payload[key].strip()[:600] for key in SCENARIO_FIELDS}
+        flattened = {key: flatten_scenario_field(payload[key]) for key in SCENARIO_FIELDS}
+        if any(not value for value in flattened.values()):
+            continue
+        scenario = {key: value[:600] for key, value in flattened.items()}
         # Screen each field on its own, in a fixed order, exactly as the validator does.
         if not all(scenario.values()) or any(contains_unsafe_language(value) for value in scenario.values()):
             return None
@@ -636,7 +666,10 @@ def enhance_scenarios_with_ollama(payload: dict[str, Any], model: str, history: 
                 "You are Hephaestus, an evidence-bound market research assistant. "
                 "Write short scenario prose using only this JSON evidence. Do not give investment advice, "
                 "do not make price targets, and do not change the supplied direction. Return JSON only with "
-                "scenario_summary, bull_case, and bear_case.\n"
+                "scenario_summary, bull_case, and bear_case. Each of the three must be a single "
+                "JSON string of plain prose, not an object or a list. Write about demand, supply, "
+                "production and customers only: never mention stock prices, share prices, trading, "
+                "buying, selling, or holding, and never call anything bullish or bearish.\n"
                 f"Evidence: {json.dumps(evidence, ensure_ascii=True)}"
             )
             # Three short prose fields; cap the output and the wall clock so one
