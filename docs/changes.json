@@ -1,8 +1,40 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-11T09:28:37+00:00",
-  "unique_links": 454,
+  "generated_at": "2026-09-12T09:14:51+00:00",
+  "unique_links": 456,
   "days": [
+    {
+      "date": "2026-09-12",
+      "generated_at": "2026-09-12T09:14:51+00:00",
+      "previous_date": "2026-09-11",
+      "unique_links": 456,
+      "net_change": 2,
+      "new_count": 2,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "DXCM->TNDM:SOFTWARE INTEGRATION",
+          "source_ticker": "DXCM",
+          "target_ticker": "TNDM",
+          "type": "Software Integration",
+          "product": "Continuous glucose monitoring system integration with insulin pumps",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "UBER->DPZ:MARKETPLACE",
+          "source_ticker": "UBER",
+          "target_ticker": "DPZ",
+          "type": "marketplace",
+          "product": "food delivery service",
+          "review_status": "approved",
+          "confidence": 0.9833
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-09-11",
       "generated_at": "2026-09-11T09:28:37+00:00",
@@ -2509,19 +2541,6 @@
       "date": "2026-08-21",
       "generated_at": "2026-08-21T05:09:12+00:00",
       "previous_date": "2026-08-20",
-      "unique_links": 441,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-20",
-      "generated_at": "2026-08-20T05:17:13+00:00",
-      "previous_date": "2026-08-16",
       "unique_links": 441,
       "net_change": 0,
       "new_count": 0,
