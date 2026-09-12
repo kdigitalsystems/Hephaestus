@@ -57,6 +57,11 @@ RESEARCH_COOLDOWN_DAYS = float(os.environ.get("HEPHAESTUS_RESEARCH_COOLDOWN_DAYS
 CONCENTRATION_SWEEP_LIMIT = int(os.environ.get("HEPHAESTUS_CONCENTRATION_SWEEP_LIMIT", "0"))
 CONCENTRATION_SWEEP_MAX_SECONDS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_SWEEP_MAX_SECONDS", "900"))
 CONCENTRATION_RECHECK_DAYS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_RECHECK_DAYS", "120"))
+# LLM discovery stays on companies large enough to have documented supply chains; the
+# filing sweep reaches further down because it costs no GPU and small suppliers are
+# where customer concentration is most acute (one buyer can be half of revenue).
+DISCOVERY_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_MIN_MARKET_CAP", "1000000000"))
+SWEEP_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_SWEEP_MIN_MARKET_CAP", "250000000"))
 IGNORED_SECTORS = ["Financial Services", "Real Estate", "Financial", "Asset Management", "Insurance", "Banks", "Shell Companies"]
 
 
@@ -297,7 +302,7 @@ def sweep_customer_concentration(session, known_names, limit=CONCENTRATION_SWEEP
     cutoff = now - timedelta(days=CONCENTRATION_RECHECK_DAYS)
     companies = (
         session.query(Node)
-        .filter(Node.ticker.is_not(None), Node.market_cap > 1_000_000_000, not_in_ignored_sector())
+        .filter(Node.ticker.is_not(None), Node.market_cap > SWEEP_MIN_MARKET_CAP, not_in_ignored_sector())
         .filter(or_(Node.concentration_checked_at.is_(None), Node.concentration_checked_at < cutoff))
         .order_by(Node.market_cap.desc())
         .limit(limit)
@@ -661,7 +666,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
     try:
         query = session.query(Node).outerjoin(
             Edge, or_(Node.id == Edge.source_id, Node.id == Edge.target_id)
-        ).filter(Node.market_cap > 1_000_000_000)
+        ).filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP)
 
         if not deep_dive:
             query = query.filter(Edge.id.is_(None))
@@ -687,7 +692,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             chosen = {node.id for node in lonely_nodes}
             top_up = (
                 session.query(Node)
-                .filter(Node.market_cap > 1_000_000_000, not_in_ignored_sector())
+                .filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP, not_in_ignored_sector())
                 .filter(or_(Node.last_researched_at.is_(None), Node.last_researched_at < cooldown_cutoff))
                 .filter(Node.id.notin_(chosen) if chosen else True)
             )
