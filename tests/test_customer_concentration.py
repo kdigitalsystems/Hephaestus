@@ -402,3 +402,28 @@ def test_overlapping_universe_names_do_not_cancel_each_other():
     known = {"The Coca-Cola Company": "Coca-Cola", "Coca-Cola Consolidated, Inc.": "Coca-Cola Consolidated"}
     found = extract_disclosures("Sales to Coca-Cola Consolidated accounted for 15% of revenues.", known)
     assert [(d.customer_name, d.share_pct) for d in found] == [("Coca-Cola Consolidated, Inc.", 15.0)]
+
+
+def test_the_sweep_reaches_below_the_llm_discovery_floor(monkeypatch):
+    """The filing sweep costs no GPU, so it covers smaller companies than discovery."""
+    from datetime import datetime, timezone
+
+    now = datetime(2026, 9, 12, tzinfo=timezone.utc)
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    big = Node(name="Big Filer Inc.", ticker="BIG", market_cap=5e9, sector="Technology")
+    small = Node(name="Small Filer Inc.", ticker="SML", market_cap=4e8, sector="Industrials")
+    tiny = Node(name="Tiny Filer Inc.", ticker="TNY", market_cap=5e7, sector="Industrials")
+    session.add_all([big, small, tiny])
+    session.commit()
+
+    fetched = []
+    monkeypatch.setattr(auto_discover_edges, "latest_annual_filing", lambda ticker: (fetched.append(ticker), (None, None))[1])
+    monkeypatch.setattr(auto_discover_edges, "utc_now", lambda: now)
+
+    auto_discover_edges.sweep_customer_concentration(session, {"Apple Inc.": "Apple"}, limit=10, max_seconds=60)
+
+    # $400M is swept, $50M is below the sweep floor, and both are below the LLM floor.
+    assert fetched == ["BIG", "SML"]
+    assert auto_discover_edges.SWEEP_MIN_MARKET_CAP < auto_discover_edges.DISCOVERY_MIN_MARKET_CAP
