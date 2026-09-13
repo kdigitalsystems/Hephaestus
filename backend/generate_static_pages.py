@@ -16,6 +16,8 @@ import re
 from html import escape
 from pathlib import Path
 
+from urllib.parse import quote
+
 from generate_change_feed import SITE_URL, write_text_atomic
 
 
@@ -24,7 +26,10 @@ DOCS_DIR = ROOT / "docs"
 DEFAULT_DASHBOARD_PATH = DOCS_DIR / "dashboard_data.json"
 DEFAULT_OUTPUT_DIR = DOCS_DIR / "company"
 DEFAULT_SITEMAP_PATH = DOCS_DIR / "sitemap.xml"
-STYLESHEET_VERSION = "20260902-static1"
+STYLESHEET_VERSION = "20260913-ui1"
+# Same brand mark as the dashboard; without an icon every page load requested /favicon.ico and got a 404.
+FAVICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#45d0bd"/><text x="32" y="45" text-anchor="middle" font-family="Inter,Arial,Helvetica,sans-serif" font-size="38" font-weight="800" fill="#061311">H</text></svg>'
+FAVICON_HREF = "data:image/svg+xml," + quote(FAVICON_SVG, safe="")
 MAX_EVIDENCE_CHARS = 400
 PLACEHOLDER_VALUES = {"", "n/a", "none", "uncategorized", "pending update", "reviewed relationship endpoint", "linked companies"}
 
@@ -36,6 +41,15 @@ def meaningful(value):
 
 def sentence_name(name):
     return display_name(name).rstrip(".")
+
+
+def sentence_list(links):
+    """Names joined for prose. Only the last loses its period, which the sentence supplies;
+    stripping every one printed "Conagra Brands, Inc, Central Garden..."."""
+    names = [display_name(link.get("name") or link.get("ticker")) for link in links]
+    if names:
+        names[-1] = names[-1].rstrip(".")
+    return ", ".join(names)
 
 
 def page_filename(ticker):
@@ -115,7 +129,8 @@ def render_link(link, side, known_tickers):
         details.append(escape(product))
     details.append(escape(verification_label(link)))
     share = revenue_share_text(link, side)
-    if share:
+    # The product text of a concentration link often already states the share.
+    if share and share.lower() not in product.lower():
         details.append(escape(share))
     # Merged relationships join their members with " / ", so the field can hold several
     # sources; each URL becomes its own link and non-URL tokens are dropped.
@@ -148,8 +163,8 @@ def render_company_page(company, generated_on, known_tickers):
     downstream = company.get("downstream") or []
     sector = meaningful(company.get("sector"))
     industry = meaningful(company.get("industry"))
-    supplier_names = ", ".join(sentence_name(link.get("name") or link.get("ticker")) for link in upstream[:4])
-    customer_names = ", ".join(sentence_name(link.get("name") or link.get("ticker")) for link in downstream[:4])
+    supplier_names = sentence_list(upstream[:4])
+    customer_names = sentence_list(downstream[:4])
     description_parts = [f"{name} ({ticker}) has {len(upstream)} tracked supplier{'s' if len(upstream) != 1 else ''} and {len(downstream)} tracked customer{'s' if len(downstream) != 1 else ''} in the Hephaestus supply-chain graph."]
     if supplier_names:
         description_parts.append(f"Suppliers include {supplier_names}.")
@@ -189,6 +204,7 @@ def render_company_page(company, generated_on, known_tickers):
         f"<link rel=\"canonical\" href=\"{escape(canonical)}\">\n"
         f"{theme_bootstrap()}\n"
         "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Hephaestus supply-chain changes\" href=\"../feed.xml\">\n"
+        f"<link rel=\"icon\" href=\"{FAVICON_HREF}\">\n"
         f"<link rel=\"stylesheet\" href=\"../styles.css?v={STYLESHEET_VERSION}\">\n"
         f"<script type=\"application/ld+json\">{json_ld}</script>\n"
         "</head>\n<body>\n<main class=\"methodology-page static-company\">\n"
@@ -230,6 +246,7 @@ def render_index_page(companies, generated_on):
         f"<meta name=\"description\" content=\"{escape(description)}\">\n"
         f"<link rel=\"canonical\" href=\"{escape(SITE_URL)}company/index.html\">\n"
         f"{theme_bootstrap()}\n"
+        f"<link rel=\"icon\" href=\"{FAVICON_HREF}\">\n"
         f"<link rel=\"stylesheet\" href=\"../styles.css?v={STYLESHEET_VERSION}\">\n"
         "</head>\n<body>\n<main class=\"methodology-page static-company\">\n"
         "<a class=\"back-link\" href=\"../\">&larr; Back to the dashboard</a>\n"

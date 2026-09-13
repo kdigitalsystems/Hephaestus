@@ -107,6 +107,44 @@ const displayCompanyName = (name) => {
 const sentenceEntityName = (name) => displayCompanyName(name).replace(/\.+$/, '');
 
 const relationshipCount = (company) => (company.upstream?.length || 0) + (company.downstream?.length || 0);
+// "1 link", "2 links": counts next to a hardcoded plural read "1 links" and "1 results".
+const pluralize = (count, singular, pluralForm = `${singular}s`) => {
+    const number = Number(count) || 0;
+    return `${number.toLocaleString()} ${number === 1 ? singular : pluralForm}`;
+};
+// One fixed format, in UTC. toLocaleDateString() with no options rendered 9/11/2026 or
+// 11/9/2026 depending on the visitor, and a run that finished at 00:16 UTC showed the
+// previous day to anyone west of Greenwich.
+const formatDisplayDate = (value) => {
+    const date = new Date(value);
+    if (!value || Number.isNaN(date.getTime())) return String(value || '').slice(0, 10);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+};
+// A relationship whose product text already states the revenue share needs no second badge.
+const restatesShare = (dep, share) => Boolean(share) && String(dep?.product || '').toLowerCase().includes(share.toLowerCase());
+const BASE_PAGE_TITLE = 'Hephaestus Supply Chain Intelligence';
+
+function setPageTitle(label) {
+    // Bookmarks, history entries and shared tabs all carried the same generic title.
+    document.title = label ? `${label} | Hephaestus` : BASE_PAGE_TITLE;
+}
+
+function clearRouteNotice() {
+    const view = document.getElementById('view-industries');
+    const host = view && view.parentNode;
+    const existing = host && typeof host.querySelector === 'function' ? host.querySelector('.route-notice') : null;
+    if (existing && typeof existing.remove === 'function') existing.remove();
+}
+
+function showRouteNotice(message) {
+    clearRouteNotice();
+    const view = document.getElementById('view-industries');
+    const host = view && view.parentNode;
+    if (!host || typeof host.insertBefore !== 'function') return;
+    const notice = makeElement('div', 'route-notice', message);
+    notice.setAttribute('role', 'status');
+    host.insertBefore(notice, view);
+}
 const companyMetrics = (company) => company.investor_metrics || {
     upstream_count: company.upstream?.length || 0,
     downstream_count: company.downstream?.length || 0,
@@ -333,10 +371,7 @@ function pipelineStatusLabel(status) {
     if (!status || typeof status !== 'object') return '';
     const parts = [];
     const asOf = status.data_as_of || status.generated_at;
-    if (asOf) {
-        const date = new Date(asOf);
-        parts.push(`Updated ${Number.isNaN(date.getTime()) ? String(asOf).slice(0, 10) : date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}`);
-    }
+    if (asOf) parts.push(`Updated ${formatDisplayDate(asOf)}`);
     const count = (value, singular, plural) => (typeof value === 'number' ? `${value.toLocaleString()} ${value === 1 ? singular : plural}` : null);
     const researched = count(status.companies_researched, 'company researched', 'companies researched');
     const fresh = count(status.new_links, 'new link', 'new links');
@@ -496,6 +531,13 @@ function applyRoute(route) {
         const company = getCompanyByTicker(route.ticker);
         if (company) {
             renderLevel3(company, route.previous || null);
+            return;
+        }
+        if (allCompanies.length) {
+            // A mistyped or delisted ticker rendered the overview under a company URL,
+            // with the Screener tab highlighted and no explanation.
+            setRoute({ view: 'overview' }, false);
+            showRouteNotice(`No company in the dataset matches "${String(route.ticker || '').toUpperCase()}". Showing the overview instead.`);
             return;
         }
         renderLevel1();
@@ -718,7 +760,8 @@ function populateFilters() {
     const sectorFilter = document.getElementById('sector-filter');
     const dependencyFilter = document.getElementById('dependency-filter');
 
-    Object.keys(globalData).sort().forEach(sector => {
+    // Same rule as the sector cards: the synthetic repair bucket is not a filterable sector.
+    Object.keys(globalData).sort().filter(sector => !SYNTHETIC_SECTORS.has(sector)).forEach(sector => {
         const option = makeElement('option', '', sector);
         option.value = sector;
         sectorFilter.appendChild(option);
@@ -740,6 +783,7 @@ function populateFilters() {
 
 function renderLevel1() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setPageTitle('');
     hideAllViews();
     document.getElementById('view-industries').classList.remove('hidden');
 
@@ -747,7 +791,8 @@ function renderLevel1() {
     const grid = document.getElementById('industry-grid');
     clearElement(grid);
 
-    Object.keys(globalData).sort().forEach(sector => {
+    // The repair step's synthetic bucket is not a sector a visitor can explore.
+    Object.keys(globalData).sort().filter(sector => !SYNTHETIC_SECTORS.has(sector)).forEach(sector => {
         const companies = globalData[sector].map(company => ({
             ...company,
             sector,
@@ -759,7 +804,7 @@ function renderLevel1() {
             navigateSector(sector);
         };
         card.appendChild(makeElement('span', 'sector-name', sector));
-        card.appendChild(makeElement('span', 'sector-meta', `${companies.length} equities - ${links} links`));
+        card.appendChild(makeElement('span', 'sector-meta', `${pluralize(companies.length, 'company', 'companies')} · ${pluralize(links, 'link')}`));
         grid.appendChild(card);
     });
 }
@@ -894,11 +939,12 @@ function handleSort(col) {
 
 function renderLevel2() {
     showCompanies();
+    setPageTitle('Screener');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     document.querySelectorAll('.sort-icon').forEach(icon => icon.textContent = '');
-    setText(`sort-${sortCol}`, sortAsc ? '^' : 'v');
-    setText('result-count', `${currentCompaniesList.length} results`);
+    setText(`sort-${sortCol}`, sortAsc ? '↑' : '↓');
+    setText('result-count', pluralize(currentCompaniesList.length, 'result'));
     updateSearchHelper();
 
     const companies = [...currentCompaniesList];
@@ -976,6 +1022,7 @@ function renderLevel3(company, previousRoute = null) {
     document.getElementById('view-details').classList.remove('hidden');
 
     setText('detail-name', displayCompanyName(company.name));
+    setPageTitle(`${displayCompanyName(company.name)} (${company.ticker}) suppliers and customers`);
     setText('detail-ticker', company.ticker || 'N/A');
     setText('detail-industry', company.industry || company.sector || 'Uncategorized');
     updateDetailBackLabel(currentRoute.previous);
@@ -1176,6 +1223,18 @@ function renderMetrics(company) {
     setText('detail-ceo', company.ceo || 'N/A');
     setText('detail-emp', company.employees ? company.employees.toLocaleString() : "N/A");
     setText('detail-summary', company.summary || 'No summary available.');
+    const summaryEl = document.getElementById('detail-summary');
+    if (summaryEl) {
+        // The profile scrolls inside a fixed-height box; fade the bottom edge while more
+        // text is hidden, so the last visible line no longer looks cut off by mistake.
+        const updateClip = () => {
+            const hidden = (summaryEl.scrollHeight || 0) - (summaryEl.scrollTop || 0) - (summaryEl.clientHeight || 0) > 4;
+            summaryEl.classList[hidden ? 'add' : 'remove']('is-clipped');
+        };
+        summaryEl.scrollTop = 0;
+        summaryEl.onscroll = updateClip;
+        updateClip();
+    }
 }
 
 function renderSupplyGraph(company) {
@@ -1215,7 +1274,7 @@ function renderSupplyGraph(company) {
     const center = makeElement('button', 'graph-node graph-center');
     center.type = 'button';
     center.appendChild(makeElement('strong', '', company.ticker || 'N/A'));
-    center.appendChild(makeElement('span', '', `${relationshipCount(company)} links`));
+    center.appendChild(makeElement('span', '', pluralize(relationshipCount(company), 'link')));
     graph.appendChild(center);
 
     graph.appendChild(makeGraphColumn('downstream', 'Downstream', downstream));
@@ -1272,7 +1331,7 @@ function renderXRay(company) {
 
         const meta = makeElement('div', 'relationship-meta');
         const share = revenueShareLabel(dep, directionClass);
-        if (share) meta.appendChild(makeElement('span', 'source-badge revenue-share', share));
+        if (share && !restatesShare(dep, share)) meta.appendChild(makeElement('span', 'source-badge revenue-share', share));
         const confidence = dep.confidence !== undefined && dep.confidence !== null ? `${Math.round(Number(dep.confidence) * 100)}% confidence` : 'Confidence N/A';
         meta.appendChild(makeElement('span', 'source-badge', confidence));
         meta.appendChild(makeElement('span', `source-badge provenance ${hasSourceUrl(dep) ? 'cited' : 'uncited'}`, provenanceLabel(dep)));
@@ -1394,6 +1453,7 @@ function closeEvidenceModal() {
 }
 
 function hideAllViews() {
+    clearRouteNotice();
     ['view-industries', 'view-quality', 'view-companies', 'view-details', 'view-watchlist', 'view-predictions', 'view-compare', 'view-sector', 'view-exposure'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
     });
@@ -1479,13 +1539,15 @@ function renderExposureRow(entry, direction) {
     meta.appendChild(makeElement('span', 'changes-detail', detail));
     if (entry.singleSource) meta.appendChild(makeElement('span', 'exposure-flag', 'single-source language'));
     const share = revenueShareLabel(entry.link, 'upstream');
-    if (share) meta.appendChild(makeElement('span', 'source-badge revenue-share', share));
+    if (share && !restatesShare(entry.link, share)) meta.appendChild(makeElement('span', 'source-badge revenue-share', share));
     if (entry.company && entry.company.sector) meta.appendChild(makeElement('span', 'exposure-sector', entry.company.sector));
     row.appendChild(meta);
     return row;
 }
 
 function renderExposureView(updateRoute = true) {
+    const exposureTitleTicker = String(document.getElementById('exposure-input')?.value || '').trim().toUpperCase();
+    setPageTitle(exposureTitleTicker ? `Exposure: ${exposureTitleTicker}` : 'Exposure');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     hideAllViews();
     document.getElementById('view-exposure').classList.remove('hidden');
@@ -1577,6 +1639,7 @@ function renderWatchlistView() {
     clearElement(grid);
     const companies = [...watchlist].map(getCompanyByTicker).filter(Boolean);
     setText('watchlist-count', `${companies.length} saved`);
+    setPageTitle('Watchlist');
     if (!companies.length) {
         grid.appendChild(makeElement('span', 'empty-state', 'Track companies from a Decision Brief to build a local research queue.'));
         return;
@@ -1611,7 +1674,7 @@ function renderTrackRecord(predictionPayload) {
     let detail = 'There is no meaningful track record yet. Treat these as research prompts, not forecasts.';
     if (record.status === 'established' && record.hit_rate !== null) {
         tone = beatsBaseline ? 'positive' : 'underperforming';
-        headline = `Track record: ${percent(record.hit_rate)} of ${resolved.toLocaleString()} resolved 30-day signals called the direction correctly`;
+        headline = `Track record: ${percent(record.hit_rate)} of ${resolved.toLocaleString()} resolved 30‑day signals called the direction correctly`;
         detail = record.always_up_hit_rate === null
             ? 'The naive baseline will be published with the next run.'
             : beatsBaseline
@@ -1637,6 +1700,7 @@ function renderTrackRecord(predictionPayload) {
 }
 
 function renderPredictionsView() {
+    setPageTitle('Research signals');
     currentRoute = { view: 'predictions' };
     window.scrollTo({ top: 0, behavior: 'smooth' });
     hideAllViews();
@@ -1645,7 +1709,7 @@ function renderPredictionsView() {
     const calibration = predictionData.calibration || {};
     renderTrackRecord(predictionData);
     const generatedAt = predictionData.generated_at ? new Date(predictionData.generated_at) : null;
-    setText('prediction-updated', generatedAt && !Number.isNaN(generatedAt.valueOf()) ? `Updated ${generatedAt.toLocaleDateString()}` : 'Awaiting signal run');
+    setText('prediction-updated', generatedAt && !Number.isNaN(generatedAt.valueOf()) ? `Updated ${formatDisplayDate(predictionData.generated_at)}` : 'Awaiting signal run');
     setText('prediction-disclaimer', predictionData.disclaimer || 'Research signals only. They are not investment advice or trading instructions.');
 
     const calibrationEl = document.getElementById('prediction-calibration');
@@ -1737,7 +1801,8 @@ function renderSectorView(sector) {
     const companies = (globalData[sector] || []).map(company => ({ ...company, sector, connection_count: relationshipCount(company) }));
     const linked = companies.filter(company => relationshipCount(company) > 0);
     setText('sector-title', sector || 'Unknown sector');
-    setText('sector-count', `${companies.length.toLocaleString()} companies`);
+    setPageTitle(sector ? `${sector} sector` : 'Sector');
+    setText('sector-count', pluralize(companies.length, 'company', 'companies'));
     const summary = document.getElementById('sector-summary');
     clearElement(summary);
     const sectorLinks = distinctLinkCount(linked);
@@ -1774,6 +1839,7 @@ function renderCompareView(updateRoute = true) {
     if (updateRoute) updateRouteHash(route, false);
     const companies = [getCompanyByTicker(tickerA), getCompanyByTicker(tickerB)].filter(Boolean);
     setText('compare-count', `${companies.length}/2 selected`);
+    setPageTitle(companies.length === 2 ? `${companies[0].ticker} vs ${companies[1].ticker}` : 'Compare companies');
     const grid = document.getElementById('compare-grid');
     clearElement(grid);
     if (!companies.length) {

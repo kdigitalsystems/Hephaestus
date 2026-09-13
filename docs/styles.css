@@ -19,6 +19,7 @@
     --accent-2: #9fb85f;
     --accent-3: #d18a39;
     --accent-4: #9d8cff;
+    --accent-strong: #6fe3d2;
     --green: #5fcf8b;
     --red: #ff7180;
     --blue: #8db8ff;
@@ -79,13 +80,14 @@
     --text-main: #17211f;
     --text-muted: #5d6c68;
     --text-soft: #33433f;
-    --accent: #087f73;
-    --accent-2: #4f7f1f;
-    --accent-3: #b86b16;
+    --accent: #087a6f;
+    --accent-2: #4a771d;
+    --accent-3: #9f5c13;
     --accent-4: #6b5bd7;
-    --green: #17884d;
-    --red: #c63d4a;
-    --blue: #316fd6;
+    --accent-strong: #06655b;
+    --green: #157b46;
+    --red: #c23946;
+    --blue: #2a68d1;
     --shadow: 0 24px 60px rgba(20, 37, 33, 0.14);
     --shadow-soft: 0 14px 34px rgba(20, 37, 33, 0.1);
     --page-bg:
@@ -703,7 +705,8 @@ h3 {
     color: var(--text-main);
     font-size: 2.05rem;
     font-weight: 950;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .stat-label {
@@ -978,7 +981,7 @@ select {
 .search-submit {
     border-color: transparent;
     background: var(--accent);
-    color: #061018;
+    color: var(--active-text);
 }
 
 .search-submit:hover {
@@ -1312,7 +1315,7 @@ tbody tr:hover {
 }
 
 .link-count-pill.active {
-    color: #ffffff;
+    color: var(--active-text);
     background: var(--accent);
 }
 
@@ -1660,7 +1663,7 @@ tbody tr:hover {
 }
 
 .profile-summary {
-    max-height: 190px;
+    max-height: calc(1.56em * 8);
     overflow-y: auto;
     padding-right: 8px;
     line-height: 1.56;
@@ -2152,12 +2155,12 @@ tbody tr:hover {
 .graph-center {
     border-color: var(--accent);
     background: var(--accent);
-    color: #ffffff;
+    color: var(--active-text);
 }
 
 .graph-center strong,
 .graph-center span {
-    color: #ffffff;
+    color: var(--active-text);
 }
 
 .xray-card {
@@ -2869,8 +2872,7 @@ td.muted {
 }
 
 @media (max-width: 680px) {
-    .prediction-calibration,
-    .prediction-metrics {
+    .prediction-calibration {
         grid-template-columns: 1fr;
     }
 }
@@ -2879,5 +2881,82 @@ td.muted {
 .pipeline-status {
     margin: 0 0 0.75rem;
     font-size: 0.85rem;
-    color: var(--muted, #6b7280);
+    color: var(--text-muted);
+}
+
+/* --- Interface polish (browser audit, Sep 2026) --------------------------------- */
+
+/* Navigation wraps instead of running off-screen between 1051px and 1440px, and a
+   multi-row header no longer stays pinned over a quarter of a phone screen. */
+/* Capped so the brand's one-line width does not claim the space the navigation needs:
+   with a wrapping nav, flexbox otherwise shrinks the nav first and drops a chip onto
+   a second row even at 1440px. */
+.brand-subtitle { max-width: 26ch; text-wrap: balance; }
+.topbar-actions { min-width: 0; flex-wrap: wrap; justify-content: flex-end; }
+
+/* Relationship cards: a long relationship label wraps under the company name instead
+   of squeezing the name to one word per line or widening the card past the screen. */
+.xray-columns > *,
+.xray-list,
+.xray-card,
+.xray-company-line { min-width: 0; }
+.xray-topline { flex-wrap: wrap; }
+.xray-company-line { flex: 1 1 12rem; }
+.xray-topline .dep-pill { max-width: 100%; white-space: normal; text-align: left; }
+
+/* The profile scrolls inside a fixed box; whole lines only, with a fade while more is hidden. */
+.profile-summary { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+.profile-summary.is-clipped {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 2.2em), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 2.2em), transparent);
+}
+@media (min-width: 1051px) {
+    /* Fills the hole beside Sentiment & Yield and gives the profile room to breathe. */
+    .dashboard-grid > .summary-box { grid-column: span 2; }
+}
+
+.changes-panel { margin-bottom: 30px; }
+.changes-ticker { min-height: 24px; }
+.modal-links a { min-height: 24px; display: inline-flex; align-items: center; }
+#modal-title { margin: 0 0 6px; padding-right: 76px; overflow-wrap: anywhere; }
+
+.route-notice {
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--accent-3);
+    border-radius: 8px;
+    background: var(--surface-raised);
+    color: var(--text-soft);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 1050px) {
+    .topbar { position: static; flex-direction: column; align-items: flex-start; }
+    .topbar-actions { width: 100%; justify-content: flex-start; }
+    .control-panel > .primary-search { grid-column: 1 / -1; }
+}
+
+@media (max-width: 680px) {
+    .section-heading { flex-direction: column; align-items: flex-start; gap: 4px; }
+    #overview-stats > * { min-height: 92px; padding: 14px; }
+    #overview-stats strong { font-size: 1.25rem; overflow-wrap: break-word; hyphens: auto; }
+}
+
+@media (max-width: 680px) {
+    /* Four header rows cost a third of the first phone screen. The overview's status line
+       already says when the data was updated, so the sync chip goes, and slightly tighter
+       buttons (still 36px tall) let the navigation fit in two rows. */
+    .topbar .sync-status { display: none; }
+    .topbar-link { padding: 6px 9px; font-size: 0.88rem; }
+    .theme-toggle { padding: 6px 8px; }
+    /* The switch shows the state and keeps its aria-label; the word alone cost a third row. */
+    #theme-toggle-label { display: none; }
+}
+
+@media (max-width: 1120px) {
+    /* The five-column filter bar needs ~1,080px; just above the 1050px breakpoint its
+       last button ran 23px off the page. Switch to two columns with headroom. */
+    .control-panel { grid-template-columns: 1fr 1fr; }
+    .control-panel > .primary-search { grid-column: 1 / -1; }
 }
