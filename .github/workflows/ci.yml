@@ -122,6 +122,7 @@ jobs:
         run: |
           bash -n run_pipeline.sh
           bash -n scripts/rebuild_db.sh
+          bash -n scripts/published_today.sh
 
       - name: Check whitespace
         run: |
