@@ -404,8 +404,8 @@ def test_overlapping_universe_names_do_not_cancel_each_other():
     assert [(d.customer_name, d.share_pct) for d in found] == [("Coca-Cola Consolidated, Inc.", 15.0)]
 
 
-def test_the_sweep_reaches_below_the_llm_discovery_floor(monkeypatch):
-    """The filing sweep costs no GPU, so it covers smaller companies than discovery."""
+def test_the_sweep_reaches_companies_above_its_floor(monkeypatch):
+    """The filing sweep covers companies down to its $250M floor."""
     from datetime import datetime, timezone
 
     now = datetime(2026, 9, 12, tzinfo=timezone.utc)
@@ -424,6 +424,39 @@ def test_the_sweep_reaches_below_the_llm_discovery_floor(monkeypatch):
 
     auto_discover_edges.sweep_customer_concentration(session, {"Apple Inc.": "Apple"}, limit=10, max_seconds=60)
 
-    # $400M is swept, $50M is below the sweep floor, and both are below the LLM floor.
+    # $400M is swept and $50M is below the floor; LLM discovery reaches at least as far.
     assert fetched == ["BIG", "SML"]
-    assert auto_discover_edges.SWEEP_MIN_MARKET_CAP < auto_discover_edges.DISCOVERY_MIN_MARKET_CAP
+    assert auto_discover_edges.DISCOVERY_MIN_MARKET_CAP <= auto_discover_edges.SWEEP_MIN_MARKET_CAP
+
+
+def test_research_queue_reaches_below_one_billion_and_honours_cooldown_and_sectors(monkeypatch):
+    from datetime import datetime, timedelta, timezone
+
+    now = datetime(2026, 9, 13, tzinfo=timezone.utc)
+    monkeypatch.setattr(auto_discover_edges, "RESEARCH_COOLDOWN_DAYS", 30)
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    nodes = {
+        "BIG": Node(name="Big Co", ticker="BIG", market_cap=5e9, sector="Technology"),
+        "MID": Node(name="Mid Co", ticker="MID", market_cap=4e8, sector="Industrials"),
+        "NSC": Node(name="No Sector Co", ticker="NSC", market_cap=3e8, sector=None),
+        "TNY": Node(name="Tiny Co", ticker="TNY", market_cap=5e7, sector="Industrials"),
+        "MBK": Node(name="Mid Bank", ticker="MBK", market_cap=6e8, sector="Banks"),
+        "FRS": Node(name="Fresh Co", ticker="FRS", market_cap=3e9, sector="Technology", last_researched_at=now - timedelta(days=3)),
+        "LNK": Node(name="Linked Co", ticker="LNK", market_cap=2e9, sector="Energy", last_researched_at=now - timedelta(days=45)),
+        "PRT": Node(name="Partner Co", ticker="PRT", market_cap=1e8, sector="Energy"),
+    }
+    session.add_all(nodes.values())
+    session.commit()
+    session.add(Edge(source_id=nodes["LNK"].id, target_id=nodes["PRT"].id, dependency_type="Chips", review_status="approved"))
+    session.commit()
+
+    queue = [node.ticker for node in auto_discover_edges.select_research_queue(session, limit=10, now=now)]
+
+    # Edgeless companies above the $250M floor first (a NULL sector is not an ignored
+    # one), then a linked company whose cooldown expired. Excluded: researched 3 days
+    # ago (FRS), below the floor (TNY, PRT), and an ignored sector (MBK).
+    assert auto_discover_edges.DISCOVERY_MIN_MARKET_CAP < 1e9
+    assert queue == ["BIG", "MID", "NSC", "LNK"]
+    assert [node.ticker for node in auto_discover_edges.select_research_queue(session, limit=2, now=now)] == ["BIG", "MID"]

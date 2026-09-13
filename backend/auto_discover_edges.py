@@ -57,10 +57,11 @@ RESEARCH_COOLDOWN_DAYS = float(os.environ.get("HEPHAESTUS_RESEARCH_COOLDOWN_DAYS
 CONCENTRATION_SWEEP_LIMIT = int(os.environ.get("HEPHAESTUS_CONCENTRATION_SWEEP_LIMIT", "0"))
 CONCENTRATION_SWEEP_MAX_SECONDS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_SWEEP_MAX_SECONDS", "900"))
 CONCENTRATION_RECHECK_DAYS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_RECHECK_DAYS", "120"))
-# LLM discovery stays on companies large enough to have documented supply chains; the
-# filing sweep reaches further down because it costs no GPU and small suppliers are
-# where customer concentration is most acute (one buyer can be half of revenue).
-DISCOVERY_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_MIN_MARKET_CAP", "1000000000"))
+# Both floors sit at $250M. Discovery started at $1B and had researched that whole
+# universe within its cooldown by Sep 13; small suppliers are where one customer is
+# most often a large share of revenue. Below ~$100M the tail is mostly shells with
+# thin filings.
+DISCOVERY_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_MIN_MARKET_CAP", "250000000"))
 SWEEP_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_SWEEP_MIN_MARKET_CAP", "250000000"))
 IGNORED_SECTORS = ["Financial Services", "Real Estate", "Financial", "Asset Management", "Insurance", "Banks", "Shell Companies"]
 
@@ -654,6 +655,55 @@ class IntelGatherer:
             print(f"  [-] Additional sources unavailable for {company.ticker}: {e}")
             return ""
 
+def select_research_queue(session, limit, target_sectors=None, deep_dive=False, now=None):
+    """Companies for this run's LLM research, largest first.
+
+    Edgeless companies come first. Once they are exhausted the queue tops up with
+    already-linked companies whose research cooldown has expired. Both honour the
+    discovery market-cap floor, the sector filter, and the cooldown.
+    """
+    now = now or utc_now()
+    query = session.query(Node).outerjoin(
+        Edge, or_(Node.id == Edge.source_id, Node.id == Edge.target_id)
+    ).filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP)
+
+    if not deep_dive:
+        query = query.filter(Edge.id.is_(None))
+
+    cooldown_cutoff = now - timedelta(days=RESEARCH_COOLDOWN_DAYS or 0)
+    if not deep_dive and RESEARCH_COOLDOWN_DAYS > 0:
+        query = query.filter(or_(Node.last_researched_at.is_(None), Node.last_researched_at < cooldown_cutoff))
+
+    if target_sectors:
+        query = query.filter(Node.sector.in_(target_sectors))
+    else:
+        query = query.filter(not_in_ignored_sector())
+
+    # The edge outer join yields one row per incident edge; without DISTINCT the
+    # limit is consumed by a few well-connected companies in --deep-dive mode.
+    lonely_nodes = query.distinct().order_by(Node.market_cap.desc()).limit(limit).all()
+
+    if not deep_dive and len(lonely_nodes) < limit and RESEARCH_COOLDOWN_DAYS > 0:
+        # The queue is "companies with no edge", but the concentration sweep gives
+        # edges to filers and to big named customers, which would exclude them from
+        # LLM research forever. Once the edgeless companies are exhausted, top up
+        # with the largest companies whose cooldown has expired.
+        chosen = {node.id for node in lonely_nodes}
+        top_up = (
+            session.query(Node)
+            .filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP, not_in_ignored_sector())
+            .filter(or_(Node.last_researched_at.is_(None), Node.last_researched_at < cooldown_cutoff))
+            .filter(Node.id.notin_(chosen) if chosen else True)
+        )
+        if target_sectors:
+            top_up = top_up.filter(Node.sector.in_(target_sectors))
+        extra = top_up.order_by(Node.market_cap.desc()).limit(limit - len(lonely_nodes)).all()
+        if extra:
+            print(f"--- Queue topped up with {len(extra)} already-linked company/companies past the research cooldown ---")
+        lonely_nodes.extend(extra)
+    return lonely_nodes
+
+
 def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
     print(f"--- Starting Refined Titan Queue (Limit: {limit}) ---")
     if target_sectors:
@@ -664,44 +714,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
     session = SessionLocal()
 
     try:
-        query = session.query(Node).outerjoin(
-            Edge, or_(Node.id == Edge.source_id, Node.id == Edge.target_id)
-        ).filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP)
-
-        if not deep_dive:
-            query = query.filter(Edge.id.is_(None))
-
-        cooldown_cutoff = utc_now() - timedelta(days=RESEARCH_COOLDOWN_DAYS or 0)
-        if not deep_dive and RESEARCH_COOLDOWN_DAYS > 0:
-            query = query.filter(or_(Node.last_researched_at.is_(None), Node.last_researched_at < cooldown_cutoff))
-
-        if target_sectors:
-            query = query.filter(Node.sector.in_(target_sectors))
-        else:
-            query = query.filter(not_in_ignored_sector())
-
-        # The edge outer join yields one row per incident edge; without DISTINCT the
-        # limit is consumed by a few well-connected companies in --deep-dive mode.
-        lonely_nodes = query.distinct().order_by(Node.market_cap.desc()).limit(limit).all()
-
-        if not deep_dive and len(lonely_nodes) < limit and RESEARCH_COOLDOWN_DAYS > 0:
-            # The queue is "companies with no edge", but the concentration sweep gives
-            # edges to filers and to big named customers, which would exclude them from
-            # LLM research forever. Once the edgeless companies are exhausted, top up
-            # with the largest companies whose cooldown has expired.
-            chosen = {node.id for node in lonely_nodes}
-            top_up = (
-                session.query(Node)
-                .filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP, not_in_ignored_sector())
-                .filter(or_(Node.last_researched_at.is_(None), Node.last_researched_at < cooldown_cutoff))
-                .filter(Node.id.notin_(chosen) if chosen else True)
-            )
-            if target_sectors:
-                top_up = top_up.filter(Node.sector.in_(target_sectors))
-            extra = top_up.order_by(Node.market_cap.desc()).limit(limit - len(lonely_nodes)).all()
-            if extra:
-                print(f"--- Queue topped up with {len(extra)} already-linked company/companies past the research cooldown ---")
-            lonely_nodes.extend(extra)
+        lonely_nodes = select_research_queue(session, limit, target_sectors, deep_dive)
 
         known_names = known_company_names(session) if USE_CUSTOMER_CONCENTRATION and USE_SEC_SOURCE else {}
         # The filing sweep is independent of the LLM queue and must run even on a day
