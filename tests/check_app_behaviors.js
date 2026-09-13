@@ -566,7 +566,7 @@ vm.runInContext(`
   globalThis.__trackRecordClass = document.getElementById('prediction-track-record').className;
 `, context);
 const trackRecordText = collectText(element("prediction-track-record"));
-["48% of 250 resolved 30-day signals", "would have scored 58%", "not beaten a naive baseline", "up: 50% of 196", "3 matured, awaiting price data", "Last scored 2026-09-02"].forEach((expected) => {
+["48% of 250 resolved 30‑day signals", "would have scored 58%", "not beaten a naive baseline", "up: 50% of 196", "3 matured, awaiting price data", "Last scored 2026-09-02"].forEach((expected) => {
   if (!trackRecordText.includes(expected)) {
     throw new Error(`track record banner missing ${expected}; got ${trackRecordText}`);
   }
@@ -600,4 +600,14 @@ if (context.__routeAfterCompareBack.view !== "compare" || context.__routeAfterCo
 
 if (context.__compareBackLabel !== "Back to compare") {
   throw new Error(`expected compare detail back button label to match destination, got ${context.__compareBackLabel}`);
+}
+
+// Counts agree with their noun, and published dates render in UTC with one format
+// (a run finishing at 00:16 UTC showed the previous day to visitors in the Americas).
+vm.runInContext("globalThis.__plurals = [pluralize(1, 'link'), pluralize(2, 'link'), pluralize(1, 'company', 'companies'), pluralize(0, 'result')].join('|'); globalThis.__utcDate = formatDisplayDate('2026-09-12T00:16:12+00:00'); globalThis.__dateOnly = formatDisplayDate('2026-09-11');", context);
+if (context.__plurals !== "1 link|2 links|1 company|0 results") {
+  throw new Error(`counts must agree with their noun: ${context.__plurals}`);
+}
+if (context.__utcDate !== "Sep 12, 2026" || context.__dateOnly !== "Sep 11, 2026") {
+  throw new Error(`published dates must render in UTC with one format: ${context.__utcDate} / ${context.__dateOnly}`);
 }

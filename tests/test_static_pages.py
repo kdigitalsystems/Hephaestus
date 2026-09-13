@@ -108,3 +108,28 @@ def test_page_filenames_are_safe():
     assert pages.page_filename("brk.b") == "BRK_B.html"
     assert pages.page_filename("BF-B") == "BF-B.html"
     assert pages.page_filename("../x") == "___X.html"
+
+
+def test_prose_keeps_mid_sentence_periods_and_a_restated_share_is_not_repeated():
+    from generate_static_pages import render_company_page
+
+    def dep(ticker, name, product, share):
+        return {
+            "ticker": ticker, "name": name, "type": "Revenue Concentration", "product": product,
+            "revenue_share": share, "review_status": "approved", "review_summary": {"label": "Consensus panel 2/3 models"},
+            "source": "https://www.sec.gov/Archives/edgar/data/1/10k.htm", "source_title": "SEC EDGAR (10-K)",
+            "evidence_excerpt": "Our largest customer accounted for a large share of net sales.",
+        }
+
+    company = {
+        "ticker": "WMT", "name": "Walmart Inc.", "sector": "Consumer Defensive", "industry": "Discount Stores", "market_cap": 8.5e11,
+        "upstream": [dep("CAG", "Conagra Brands, Inc.", "29% of CAG revenue (packaged foods)", 29.0), dep("GIS", "General Mills, Inc.", "Cereal", 22.0)],
+        "downstream": [],
+    }
+
+    page = render_company_page(company, "2026-09-12", {"CAG", "GIS"})
+
+    assert "Suppliers include Conagra Brands, Inc., General Mills, Inc." in page
+    assert page.count("29% of CAG revenue") == 1  # stated once by the product, not again as a badge
+    assert page.count("22% of GIS revenue") == 1  # a share the product does not mention is still shown
+    assert 'rel="icon"' in page
