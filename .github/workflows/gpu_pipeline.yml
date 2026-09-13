@@ -5,6 +5,10 @@ on:
   schedule:
     # Off the top of the hour: '0 3' fired four to five hours late every day.
     - cron: '23 2 * * *'
+    # Retry twelve hours later. The freshness job skips it when the day's data is
+    # already published, so a lost self-hosted runner delays a publish instead of
+    # costing the whole day (server1 dropped mid-job on Sep 8 and Sep 13).
+    - cron: '23 14 * * *'
 
 # Publishing uses the Hephaestus Pipeline Bot app token minted below, which is the
 # only identity allowed to push to main directly; GITHUB_TOKEN needs no write access.
@@ -19,7 +23,32 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  freshness:
+    # A GitHub-hosted machine, so the decision never waits on server1. It runs inside
+    # the shared publisher concurrency group, so a retry that arrives while the morning
+    # run is still going waits for it and then sees its result.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      publish: ${{ steps.check.outputs.publish }}
+    steps:
+      - name: Check out the decision script
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: scripts
+          persist-credentials: false
+
+      - name: Skip if today's data is already published
+        id: check
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/published_today.sh
+
   run-ai-discovery:
+    needs: freshness
+    if: needs.freshness.outputs.publish == 'true'
     # Pinned to one runner: each machine keeps its own SQLite graph, so alternating
     # runners published different days' work out of order. 'hephaestus' is a custom
     # label on server1; if that runner is offline the job waits rather than moving.
