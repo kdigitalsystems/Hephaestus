@@ -1,8 +1,294 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-12T21:01:26+00:00",
-  "unique_links": 465,
+  "generated_at": "2026-09-13T18:30:27+00:00",
+  "unique_links": 490,
   "days": [
+    {
+      "date": "2026-09-13",
+      "generated_at": "2026-09-13T18:30:27+00:00",
+      "previous_date": "2026-09-12",
+      "unique_links": 490,
+      "net_change": 25,
+      "new_count": 27,
+      "removed_count": 2,
+      "changed_count": 1,
+      "new_links": [
+        {
+          "relationship_key": "BKKT->BULL:REVENUE CONCENTRATION",
+          "source_ticker": "BKKT",
+          "target_ticker": "BULL",
+          "type": "Revenue Concentration",
+          "product": "Crypto services revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "CRNC->GM:REVENUE CONCENTRATION",
+          "source_ticker": "CRNC",
+          "target_ticker": "GM",
+          "type": "Revenue Concentration",
+          "product": "Software - Application (specifically for automobile manufacturers)",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "CVEO->SU:REVENUE CONCENTRATION",
+          "source_ticker": "CVEO",
+          "target_ticker": "SU",
+          "type": "Revenue Concentration",
+          "product": "Services for Oil & Gas Operations",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "DBX->MSFT:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "DBX",
+          "target_ticker": "MSFT",
+          "type": "operational supply-chain dependency",
+          "product": "Microsoft Windows",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "HBB->AMZN:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "HBB",
+          "target_ticker": "AMZN",
+          "type": "operational supply chain dependency",
+          "product": "19% of HBB revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "HBB->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "HBB",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Consumer goods (Furnishings, Fixtures & Appliances)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "HLT->HGV:TIMESHARE RESORT MANAGEMENT",
+          "source_ticker": "HLT",
+          "target_ticker": "HGV",
+          "type": "Timeshare Resort Management",
+          "product": "92 properties under Hilton Worldwide timeshare brands",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "IA->LMT:REVENUE CONCENTRATION",
+          "source_ticker": "IA",
+          "target_ticker": "LMT",
+          "type": "Revenue Concentration",
+          "product": "Services for Aerospace & Defense Industry",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "IA->TXT:REVENUE CONCENTRATION",
+          "source_ticker": "IA",
+          "target_ticker": "TXT",
+          "type": "Revenue Concentration",
+          "product": "Services for Aerospace & Defense Industry",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "JAKK->TGT:REVENUE CONCENTRATION",
+          "source_ticker": "JAKK",
+          "target_ticker": "TGT",
+          "type": "Revenue Concentration",
+          "product": "Toys and Games (implied from JAKKS Pacific's business)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "JBSS->TGT:REVENUE CONCENTRATION",
+          "source_ticker": "JBSS",
+          "target_ticker": "TGT",
+          "type": "Revenue Concentration",
+          "product": "Packaged Foods",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "KD->IBM:LEGACY INFRASTRUCTURE SERVICES",
+          "source_ticker": "KD",
+          "target_ticker": "IBM",
+          "type": "Legacy Infrastructure Services",
+          "product": "Infrastructure Services",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "KD->MSFT:DIGITAL TRANSFORMATION SERVICES",
+          "source_ticker": "KD",
+          "target_ticker": "MSFT",
+          "type": "Digital Transformation Services",
+          "product": "Services",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "KMDA->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "KMDA",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "Not specified in the provided context, but likely related to medical products or services given the industry.",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "LPL->AAPL:MANUFACTURING PARTNER",
+          "source_ticker": "LPL",
+          "target_ticker": "AAPL",
+          "type": "Manufacturing Partner / LCD Panels",
+          "product": "LCD panels / 27-inch iMac display, Thunderbolt Display",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "LPL->DELL:MANUFACTURING PARTNER",
+          "source_ticker": "LPL",
+          "target_ticker": "DELL",
+          "type": "Manufacturing Partner / LCD Panels / Supply Relationship",
+          "product": "LCD panels / U2711 LCD Monitor",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MDT->IART:EQUIPMENT/MACHINERY SUPPLIER",
+          "source_ticker": "MDT",
+          "target_ticker": "IART",
+          "type": "equipment/machinery supplier",
+          "product": "instrumentation lines",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "MEC->PCAR:REVENUE CONCENTRATION",
+          "source_ticker": "MEC",
+          "target_ticker": "PCAR",
+          "type": "Revenue Concentration",
+          "product": "Products supplied by Mayville Engineering Company, Inc.",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "MNTK->XOM:REVENUE CONCENTRATION",
+          "source_ticker": "MNTK",
+          "target_ticker": "XOM",
+          "type": "Revenue Concentration",
+          "product": "17.4% of MNTK revenue",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "NVS->LEGN:LICENSING PARTNER",
+          "source_ticker": "NVS",
+          "target_ticker": "LEGN",
+          "type": "Licensing Partner",
+          "product": "Chimeric antigen receptor (CAR-T) therapies targeting DLL3",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "OLED->SONY:PANEL SUPPLIER",
+          "source_ticker": "OLED",
+          "target_ticker": "SONY",
+          "type": "Panel Supplier",
+          "product": "OLED Panels",
+          "review_status": "approved",
+          "confidence": 0.9333
+        },
+        {
+          "relationship_key": "PAMT->GM:REVENUE CONCENTRATION",
+          "source_ticker": "PAMT",
+          "target_ticker": "GM",
+          "type": "Revenue Concentration",
+          "product": "Trucking services",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "STRT->F:SUPPLY CHAIN",
+          "source_ticker": "STRT",
+          "target_ticker": "F",
+          "type": "Supply Chain",
+          "product": "Auto Parts",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "STRT->GM:SUPPLY CHAIN",
+          "source_ticker": "STRT",
+          "target_ticker": "GM",
+          "type": "Supply Chain",
+          "product": "Auto Parts (specifically for General Motors Company)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "STRZ->AMZN:REVENUE CONCENTRATION",
+          "source_ticker": "STRZ",
+          "target_ticker": "AMZN",
+          "type": "Revenue Concentration",
+          "product": "Entertainment content",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "TBPH->VTRS:REVENUE CONCENTRATION",
+          "source_ticker": "TBPH",
+          "target_ticker": "VTRS",
+          "type": "Revenue Concentration",
+          "product": "R&D services, revenue from collaboration agreement",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "WLK->WLKP:LEASE AGREEMENT AND SALES DEPENDENCY",
+          "source_ticker": "WLK",
+          "target_ticker": "WLKP",
+          "type": "lease agreement and sales dependency",
+          "product": "Chemicals",
+          "review_status": "approved",
+          "confidence": 0.9667
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "LPL->AAPL:LCD PANELS",
+          "source_ticker": "LPL",
+          "target_ticker": "AAPL",
+          "type": "LCD Panels",
+          "product": "27-inch iMac display, Thunderbolt Display",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "LPL->DELL:LCD PANELS",
+          "source_ticker": "LPL",
+          "target_ticker": "DELL",
+          "type": "LCD Panels",
+          "product": "U2711 LCD Monitor",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "changed_links": [
+        {
+          "relationship_key": "LPL->SONY:SUPPLY_CHAIN",
+          "source_ticker": "LPL",
+          "target_ticker": "SONY",
+          "type": "supply_chain / Manufacturing Partner / Manufactures/OEMs / OLED Panels",
+          "product": "WOLED panels / OLED panels / OLED panels for TVs",
+          "review_status": "approved",
+          "confidence": 1.0
+        }
+      ]
+    },
     {
       "date": "2026-09-12",
       "generated_at": "2026-09-12T21:01:26+00:00",
@@ -2665,19 +2951,6 @@
       "date": "2026-08-23",
       "generated_at": "2026-08-23T05:08:12+00:00",
       "previous_date": "2026-08-21",
-      "unique_links": 441,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-21",
-      "generated_at": "2026-08-21T05:09:12+00:00",
-      "previous_date": "2026-08-20",
       "unique_links": 441,
       "net_change": 0,
       "new_count": 0,
