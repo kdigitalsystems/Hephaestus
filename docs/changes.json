@@ -1,8 +1,103 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-13T18:30:27+00:00",
-  "unique_links": 490,
+  "generated_at": "2026-09-14T10:05:20+00:00",
+  "unique_links": 499,
   "days": [
+    {
+      "date": "2026-09-14",
+      "generated_at": "2026-09-14T10:05:20+00:00",
+      "previous_date": "2026-09-13",
+      "unique_links": 499,
+      "net_change": 9,
+      "new_count": 9,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "BGS->WMT:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "BGS",
+          "target_ticker": "WMT",
+          "type": "operational supply-chain dependency",
+          "product": "Packaged Foods",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "HUM->AHCO:VALUE-BASED DURABLE MEDICAL EQUIPMENT SERVICES AGREEMENT",
+          "source_ticker": "HUM",
+          "target_ticker": "AHCO",
+          "type": "Value-Based Durable Medical Equipment Services Agreement",
+          "product": "DME Services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "JAKK->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "JAKK",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Toys and Games",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "LMT->FEIM:GOVERNMENT CONTRACTS",
+          "source_ticker": "LMT",
+          "target_ticker": "FEIM",
+          "type": "Government Contracts",
+          "product": "Defense platforms",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "NOC->FEIM:GOVERNMENT CONTRACTS",
+          "source_ticker": "NOC",
+          "target_ticker": "FEIM",
+          "type": "Government Contracts",
+          "product": "Defense platforms",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "PFE->ARVN:DEVELOPMENT PARTNERSHIP",
+          "source_ticker": "PFE",
+          "target_ticker": "ARVN",
+          "type": "Development Partnership",
+          "product": "Vepdegestrant",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "QGEN->SOPH:SOFTWARE INTEGRATION",
+          "source_ticker": "QGEN",
+          "target_ticker": "SOPH",
+          "type": "Software Integration",
+          "product": "somatic variant detection",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "TRVG->EXPE:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "TRVG",
+          "target_ticker": "EXPE",
+          "type": "operational supply-chain dependency",
+          "product": "Referral Revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "TWI->DE:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "TWI",
+          "target_ticker": "DE",
+          "type": "operational supply-chain dependency",
+          "product": "farm & heavy construction machinery tires and components",
+          "review_status": "approved",
+          "confidence": 0.9667
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-09-13",
       "generated_at": "2026-09-13T18:30:27+00:00",
@@ -2938,19 +3033,6 @@
       "date": "2026-08-24",
       "generated_at": "2026-08-24T05:28:16+00:00",
       "previous_date": "2026-08-23",
-      "unique_links": 441,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-23",
-      "generated_at": "2026-08-23T05:08:12+00:00",
-      "previous_date": "2026-08-21",
       "unique_links": 441,
       "net_change": 0,
       "new_count": 0,
