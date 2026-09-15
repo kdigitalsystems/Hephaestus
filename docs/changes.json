@@ -1,8 +1,112 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-14T10:05:20+00:00",
-  "unique_links": 499,
+  "generated_at": "2026-09-15T19:39:11+00:00",
+  "unique_links": 509,
   "days": [
+    {
+      "date": "2026-09-15",
+      "generated_at": "2026-09-15T19:39:11+00:00",
+      "previous_date": "2026-09-14",
+      "unique_links": 509,
+      "net_change": 10,
+      "new_count": 10,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "BA->ASLE:AEROSPACE & DEFENSE PRODUCT PURCHASE",
+          "source_ticker": "BA",
+          "target_ticker": "ASLE",
+          "type": "Aerospace & Defense Product Purchase",
+          "product": "Commercial Jet Aircraft (737-300, 737-400, 747-400)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "DASH->SERV:PARTNERSHIP FOR FOOD DELIVERY",
+          "source_ticker": "DASH",
+          "target_ticker": "SERV",
+          "type": "Partnership for Food Delivery",
+          "product": "Food Delivery Platform",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "KR->NATH:RAW MATERIALS",
+          "source_ticker": "KR",
+          "target_ticker": "NATH",
+          "type": "Raw Materials",
+          "product": "Packaged Nathan\u2019s World Famous Beef Hot Dogs",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "LYFT->EVGO:DISCOUNTED CHARGING RATES OR COMPLIMENTARY CHARGING",
+          "source_ticker": "LYFT",
+          "target_ticker": "EVGO",
+          "type": "Discounted Charging Rates or Complimentary Charging",
+          "product": "Electric Vehicles",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "MCD->BBW:MARKETING PROMOTION PARTNER",
+          "source_ticker": "MCD",
+          "target_ticker": "BBW",
+          "type": "Marketing Promotion Partner",
+          "product": "Happy Meal toys and marketing promotions",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "NATH->TGT:RAW MATERIALS",
+          "source_ticker": "NATH",
+          "target_ticker": "TGT",
+          "type": "Raw Materials",
+          "product": "Packaged Nathan\u2019s World Famous Beef Hot Dogs",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "NATH->WMT:RAW MATERIALS",
+          "source_ticker": "NATH",
+          "target_ticker": "WMT",
+          "type": "Raw Materials",
+          "product": "Packaged Nathan\u2019s World Famous Beef Hot Dogs",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "TLS->AAPL:SUPPLY RELATIONSHIP",
+          "source_ticker": "TLS",
+          "target_ticker": "AAPL",
+          "type": "supply relationship",
+          "product": "FileVision program for the Apple Macintosh",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "UBER->EVGO:DISCOUNTED CHARGING RATES OR COMPLIMENTARY CHARGING",
+          "source_ticker": "UBER",
+          "target_ticker": "EVGO",
+          "type": "Discounted Charging Rates or Complimentary Charging",
+          "product": "Electric Vehicles",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "UBER->SERV:PARENT COMPANY (PRE-2021)",
+          "source_ticker": "UBER",
+          "target_ticker": "SERV",
+          "type": "Parent Company (pre-2021)",
+          "product": "Operating Support",
+          "review_status": "approved",
+          "confidence": 0.875
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-09-14",
       "generated_at": "2026-09-14T10:05:20+00:00",
@@ -3020,19 +3124,6 @@
       "date": "2026-08-25",
       "generated_at": "2026-08-25T06:09:33+00:00",
       "previous_date": "2026-08-24",
-      "unique_links": 441,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-24",
-      "generated_at": "2026-08-24T05:28:16+00:00",
-      "previous_date": "2026-08-23",
       "unique_links": 441,
       "net_change": 0,
       "new_count": 0,
