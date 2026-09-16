@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-09-15T19:39:08.737434+00:00",
+  "exported_at": "2026-09-16T08:09:59.515200+00:00",
   "decisions": [
     {
       "edge_id": 2,
@@ -38607,6 +38607,23 @@
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.95; votes approve:2, reverse:1). Lead rationale from qwen2.5:7b-instruct: Boeing manufactures aircraft which AerSale purchases. In the supply chain, Boeing is the supplier and AerSale is the customer.",
       "reviewed_at": "2026-09-15T19:36:47.807243"
+    },
+    {
+      "edge_id": 2974,
+      "source_ticker": "ADNT",
+      "target_ticker": "VC",
+      "source_name": "Adient plc Ordinary Shares",
+      "target_name": "Visteon Corporation Common Stock",
+      "dependency_type": "TSR Peer Group Member",
+      "product": "Automotive Technology",
+      "confidence_score": 0.925,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "The TSR Peer Group includes the following 17 companies (and Visteon Corporation): Adient PLC...",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.93; votes reject:2, pending:1). Lead rationale from llama3.1:8b: The relationship is based on a peer group membership, not an operational supply-chain dependency.",
+      "reviewed_at": "2026-09-16T08:07:46.240975"
     }
   ]
 }

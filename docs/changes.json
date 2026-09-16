@@ -1,8 +1,21 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-15T19:39:11+00:00",
+  "generated_at": "2026-09-16T08:10:02+00:00",
   "unique_links": 509,
   "days": [
+    {
+      "date": "2026-09-16",
+      "generated_at": "2026-09-16T08:10:02+00:00",
+      "previous_date": "2026-09-15",
+      "unique_links": 509,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-09-15",
       "generated_at": "2026-09-15T19:39:11+00:00",
@@ -3118,19 +3131,6 @@
           "confidence": 0.85
         }
       ],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-25",
-      "generated_at": "2026-08-25T06:09:33+00:00",
-      "previous_date": "2026-08-24",
-      "unique_links": 441,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
       "changed_links": []
     }
   ]
