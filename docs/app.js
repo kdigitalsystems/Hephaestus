@@ -121,7 +121,14 @@ const formatDisplayDate = (value) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
 };
 // A relationship whose product text already states the revenue share needs no second badge.
-const restatesShare = (dep, share) => Boolean(share) && String(dep?.product || '').toLowerCase().includes(share.toLowerCase());
+// The two are worded differently - "81% of revenue" beside "81% of ROKU revenue" - so the
+// figure itself is what has to match, not the whole phrase.
+const restatesShare = (dep, share) => {
+    const figure = String(share || '').match(/\d+(?:\.\d+)?%/);
+    if (!figure) return false;
+    // Whole figures only: "116% of revenue" does not restate "16%".
+    return (String(dep?.product || '').match(/\d+(?:\.\d+)?%/g) || []).includes(figure[0]);
+};
 const BASE_PAGE_TITLE = 'Hephaestus Supply Chain Intelligence';
 
 function setPageTitle(label) {
@@ -129,8 +136,10 @@ function setPageTitle(label) {
     document.title = label ? `${label} | Hephaestus` : BASE_PAGE_TITLE;
 }
 
+const routeNoticeAnchor = () => document.getElementById('view-hero') || document.getElementById('view-industries');
+
 function clearRouteNotice() {
-    const view = document.getElementById('view-industries');
+    const view = routeNoticeAnchor();
     const host = view && view.parentNode;
     const existing = host && typeof host.querySelector === 'function' ? host.querySelector('.route-notice') : null;
     if (existing && typeof existing.remove === 'function') existing.remove();
@@ -138,7 +147,7 @@ function clearRouteNotice() {
 
 function showRouteNotice(message) {
     clearRouteNotice();
-    const view = document.getElementById('view-industries');
+    const view = routeNoticeAnchor();
     const host = view && view.parentNode;
     if (!host || typeof host.insertBefore !== 'function') return;
     const notice = makeElement('div', 'route-notice', message);
@@ -233,11 +242,17 @@ applyTheme(currentTheme);
 
 if (document.addEventListener) {
     document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+            // A modal that only closes with the mouse traps keyboard and screen-reader users.
+            if (isEvidenceModalOpen()) closeEvidenceModal();
+            return;
+        }
         if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey) return;
         const activeTag = document.activeElement?.tagName;
         if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
         const input = document.getElementById('search-input');
-        if (!input || document.getElementById('view-industries')?.classList.contains('hidden')) return;
+        // The panel, not the overview view, is what hides the input.
+        if (!input || document.getElementById('search-panel')?.classList.contains('hidden')) return;
         event.preventDefault();
         input.focus();
     });
@@ -264,7 +279,9 @@ const detailShardCache = {};
 
 const detailShardKey = (ticker) => {
     const first = String(ticker || '').trim().toUpperCase().slice(0, 1);
-    return /^[A-Z0-9]$/.test(first) ? first : '_';
+    // split_dashboard.py names the shard after any alphanumeric first character, including
+    // non-ASCII letters; an ASCII-only test here asked for a shard that was never written.
+    return /^[\p{L}\p{N}]$/u.test(first) ? first : '_';
 };
 
 const needsCompanyDetail = (company) => Boolean(company && company.ticker) && company.summary === undefined;
@@ -402,16 +419,19 @@ function getLastUpdatedLabel() {
         .filter(value => value && value !== 'N/A')
         .sort()
         .reverse();
-    return dates.length ? `Data synced ${dates[0]}` : 'Live Data Synced';
+    return dates.length ? `Data synced ${formatDisplayDate(dates[0])}` : 'Live Data Synced';
 }
 
 function resetDashboard() {
+    window.clearTimeout(searchInputTimer);
     document.getElementById('search-input').value = '';
     document.getElementById('sector-filter').value = '';
     document.getElementById('dependency-filter').value = '';
     document.getElementById('connected-filter').checked = false;
     currentCompaniesList = [];
     renderLevel1();
+    // Without this the helper kept the previous search's result count next to an empty box.
+    updateSearchHelper();
 }
 
 function navigateOverview() {
@@ -593,9 +613,20 @@ function updateActiveNav(route) {
     const activeView = route.view === 'company' || route.view === 'sector' ? 'companies' : route.view;
     // 'exposure' maps to its own nav button.
     document.querySelectorAll('[data-nav]').forEach(button => {
-        button.classList.toggle('active', button.dataset.nav === activeView);
+        const active = button.dataset.nav === activeView;
+        button.classList.toggle('active', active);
+        // The highlight was colour-only; aria-current names the page being viewed.
+        if (active) button.setAttribute('aria-current', 'page');
+        else if (button.removeAttribute) button.removeAttribute('aria-current');
     });
 }
+
+// The company profile fades its bottom edge while text is scrolled out of view; the
+// amount hidden changes with the box size, so a resize has to recompute it.
+let summaryClipUpdate = null;
+let summaryClipObserver = null;
+// Focus returns here when the evidence modal closes.
+let modalReturnFocus = null;
 
 // Back/forward on a hash-only URL fires both popstate and hashchange; routing twice
 // re-renders the whole view (and instantiates a second TradingView widget).
@@ -606,9 +637,16 @@ function handleLocationChange() {
 }
 window.addEventListener('popstate', handleLocationChange);
 window.addEventListener('hashchange', handleLocationChange);
+window.addEventListener('resize', () => {
+    if (summaryClipUpdate) summaryClipUpdate();
+});
 
 function showCompanies() {
     hideAllViews();
+    // The filters stay on screen with the results they produced, so a visitor can narrow a
+    // search or reset it without navigating back to the overview first.
+    const panel = document.getElementById('search-panel');
+    if (panel) panel.classList.remove('hidden');
     document.getElementById('view-companies').classList.remove('hidden');
 }
 
@@ -688,7 +726,7 @@ function renderChangeSummary() {
     const headline = makeElement('div', 'changes-headline');
     const anyChange = newCount || removedCount || changedCount;
     headline.appendChild(makeElement('strong', '', anyChange ? `${signedNumber(summary.net_change)} net supply links` : 'No supply-link changes'));
-    headline.appendChild(makeElement('span', '', `${previousDate ? `since ${previousDate} · ` : ''}${newCount} new, ${removedCount} removed, ${changedCount} updated`));
+    headline.appendChild(makeElement('span', '', `${previousDate ? `since ${formatDisplayDate(previousDate)} · ` : ''}${newCount} new, ${removedCount} removed, ${changedCount} updated`));
     container.appendChild(headline);
 
     [
@@ -714,13 +752,13 @@ function renderChangeSummary() {
         history.forEach((entry, index) => {
             const bar = makeElement('div', 'changes-bar');
             bar.style.height = `${Math.max(6, Math.round((counts[index] / peak) * 44))}px`;
-            bar.title = `${entry.generated_on || ''}: ${counts[index].toLocaleString()} links`;
+            bar.title = `${formatDisplayDate(entry.generated_on)}: ${counts[index].toLocaleString()} links`;
             bars.appendChild(bar);
         });
         trend.appendChild(bars);
         const first = history[0];
         const last = history[history.length - 1];
-        trend.appendChild(makeElement('span', 'changes-trend-label', `${first.generated_on || ''} → ${last.generated_on || ''}: ${counts[0].toLocaleString()} → ${counts[counts.length - 1].toLocaleString()} links`));
+        trend.appendChild(makeElement('span', 'changes-trend-label', `${formatDisplayDate(first.generated_on)} → ${formatDisplayDate(last.generated_on)}: ${counts[0].toLocaleString()} → ${counts[counts.length - 1].toLocaleString()} links`));
         container.appendChild(trend);
     }
 
@@ -785,7 +823,10 @@ function renderLevel1() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setPageTitle('');
     hideAllViews();
-    document.getElementById('view-industries').classList.remove('hidden');
+    ['view-hero', 'search-panel', 'view-industries'].forEach(id => {
+        const section = document.getElementById(id);
+        if (section) section.classList.remove('hidden');
+    });
 
     renderOverviewStats();
     const grid = document.getElementById('industry-grid');
@@ -944,6 +985,11 @@ function renderLevel2() {
 
     document.querySelectorAll('.sort-icon').forEach(icon => icon.textContent = '');
     setText(`sort-${sortCol}`, sortAsc ? '↑' : '↓');
+    // The arrow is invisible to a screen reader; aria-sort is what announces the order.
+    document.querySelectorAll('th[data-sort]').forEach(header => {
+        const active = header.getAttribute('data-sort') === sortCol;
+        header.setAttribute('aria-sort', active ? (sortAsc ? 'ascending' : 'descending') : 'none');
+    });
     setText('result-count', pluralize(currentCompaniesList.length, 'result'));
     updateSearchHelper();
 
@@ -984,7 +1030,18 @@ function renderCompanyTableRow(company) {
 
     const nameCell = makeElement('td', 'company-cell');
     const nameWrap = makeElement('div', 'company-name-wrap');
-    nameWrap.appendChild(makeElement('strong', '', displayCompanyName(company.name)));
+    // The row was mouse-only: no tab stop and no Enter. A real link in the name cell gives
+    // the row a keyboard path, a focus ring and a copyable URL, and keeps the row click.
+    const nameLink = makeElement('a', 'company-link');
+    nameLink.href = routeToHash({ view: 'company', ticker: company.ticker });
+    nameLink.appendChild(makeElement('strong', '', displayCompanyName(company.name)));
+    nameLink.onclick = (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button) return;
+        if (event.preventDefault) event.preventDefault();
+        if (event.stopPropagation) event.stopPropagation();
+        navigateCompany(company.ticker);
+    };
+    nameWrap.appendChild(nameLink);
     nameWrap.appendChild(makeElement('span', '', company.industry || company.sector || 'Uncategorized'));
     nameCell.appendChild(nameWrap);
     nameCell.title = company.name || '';
@@ -1233,6 +1290,12 @@ function renderMetrics(company) {
         };
         summaryEl.scrollTop = 0;
         summaryEl.onscroll = updateClip;
+        summaryClipUpdate = updateClip;
+        if (typeof ResizeObserver === 'function') {
+            if (summaryClipObserver) summaryClipObserver.disconnect();
+            summaryClipObserver = new ResizeObserver(() => updateClip());
+            summaryClipObserver.observe(summaryEl);
+        }
         updateClip();
     }
 }
@@ -1336,7 +1399,7 @@ function renderXRay(company) {
         meta.appendChild(makeElement('span', 'source-badge', confidence));
         meta.appendChild(makeElement('span', `source-badge provenance ${hasSourceUrl(dep) ? 'cited' : 'uncited'}`, provenanceLabel(dep)));
         meta.appendChild(makeElement('span', 'source-badge review', reviewLabel(dep)));
-        meta.appendChild(makeElement('span', 'source-badge', dep.last_verified ? `Verified ${dep.last_verified}` : 'Verification N/A'));
+        meta.appendChild(makeElement('span', 'source-badge', dep.last_verified ? `Verified ${formatDisplayDate(dep.last_verified)}` : 'Verification N/A'));
         card.appendChild(meta);
 
         if (dep.evidence_excerpt) {
@@ -1416,7 +1479,7 @@ function openEvidenceModal(dep, company = {}, direction = '') {
         ['Source', provenanceLabel(dep)],
         ['Source type', dep.source_type || 'N/A'],
         ['Verification', reviewLabel(dep)],
-        ['Last verified', dep.last_verified || 'N/A'],
+        ['Last verified', dep.last_verified ? formatDisplayDate(dep.last_verified) : 'N/A'],
     ].forEach(([label, value]) => {
         const row = makeElement('div', 'modal-row');
         row.appendChild(makeElement('span', '', label));
@@ -1445,17 +1508,64 @@ function openEvidenceModal(dep, company = {}, direction = '') {
     methodology.rel = 'noopener noreferrer';
     links.appendChild(methodology);
     body.appendChild(links);
+    // Remember where focus came from so closing can put it back on the row that opened it.
+    const opener = document.activeElement;
+    modalReturnFocus = opener && typeof opener.focus === 'function' ? opener : null;
     modal.classList.remove('hidden');
+    const dialog = document.getElementById('evidence-dialog');
+    if (dialog && typeof dialog.focus === 'function') dialog.focus();
+}
+
+const isEvidenceModalOpen = () => {
+    const modal = document.getElementById('evidence-modal');
+    return Boolean(modal) && !modal.classList.contains('hidden');
+};
+
+function modalFocusableElements() {
+    const dialog = document.getElementById('evidence-dialog');
+    if (!dialog || typeof dialog.querySelectorAll !== 'function') return [];
+    return [...dialog.querySelectorAll('button, a[href], input, select, textarea')]
+        .filter(node => !node.disabled);
+}
+
+// Tab used to walk out of the open dialog and into the page behind it.
+function handleModalKeydown(event) {
+    if (event.key === 'Escape') {
+        if (event.preventDefault) event.preventDefault();
+        closeEvidenceModal();
+        return;
+    }
+    if (event.key !== 'Tab') return;
+    const focusable = modalFocusableElements();
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+    const atStart = active === first || active === document.getElementById('evidence-dialog');
+    if (event.shiftKey ? atStart : active === last) {
+        if (event.preventDefault) event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+    }
 }
 
 function closeEvidenceModal() {
-    document.getElementById('evidence-modal').classList.add('hidden');
+    const modal = document.getElementById('evidence-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    const target = modalReturnFocus;
+    modalReturnFocus = null;
+    if (target && typeof target.focus === 'function') target.focus();
 }
 
 function hideAllViews() {
     clearRouteNotice();
-    ['view-industries', 'view-quality', 'view-companies', 'view-details', 'view-watchlist', 'view-predictions', 'view-compare', 'view-sector', 'view-exposure'].forEach(id => {
-        document.getElementById(id).classList.add('hidden');
+    // #view-hero and #search-panel are not views: the hero introduces the overview and the
+    // panel holds the search box and filters, which both the overview and the screener show.
+    // While the panel lived inside #view-industries, every debounced re-render hid the input
+    // the visitor was typing into.
+    ['view-hero', 'search-panel', 'view-industries', 'view-quality', 'view-companies', 'view-details', 'view-watchlist', 'view-predictions', 'view-compare', 'view-sector', 'view-exposure'].forEach(id => {
+        const view = document.getElementById(id);
+        if (view) view.classList.add('hidden');
     });
 }
 
@@ -1668,14 +1778,16 @@ function renderTrackRecord(predictionPayload) {
         by_direction: {},
     };
     const resolved = Number(record.resolved || 0);
-    const beatsBaseline = record.hit_rate !== null && record.always_up_hit_rate !== null && record.hit_rate > record.always_up_hit_rate;
+    // A payload that omits the rate entirely must not render as "NaN%" or "0%".
+    const hitRate = record.hit_rate === undefined || record.hit_rate === null ? null : record.hit_rate;
+    const beatsBaseline = hitRate !== null && record.always_up_hit_rate !== null && record.always_up_hit_rate !== undefined && hitRate > record.always_up_hit_rate;
     let tone = 'experimental';
     let headline = `Experimental: ${resolved} of ${record.minimum_resolved || 30} signals resolved`;
     let detail = 'There is no meaningful track record yet. Treat these as research prompts, not forecasts.';
-    if (record.status === 'established' && record.hit_rate !== null) {
+    if (record.status === 'established' && hitRate !== null) {
         tone = beatsBaseline ? 'positive' : 'underperforming';
-        headline = `Track record: ${percent(record.hit_rate)} of ${resolved.toLocaleString()} resolved 30‑day signals called the direction correctly`;
-        detail = record.always_up_hit_rate === null
+        headline = `Track record: ${percent(hitRate)} of ${resolved.toLocaleString()} resolved 30‑day signals called the direction correctly`;
+        detail = record.always_up_hit_rate === null || record.always_up_hit_rate === undefined
             ? 'The naive baseline will be published with the next run.'
             : beatsBaseline
                 ? `Simply saying "up" every time would have scored ${percent(record.always_up_hit_rate)}, so the signals have carried some information so far.`
@@ -1687,14 +1799,18 @@ function renderTrackRecord(predictionPayload) {
     const directions = record.by_direction || {};
     const chips = makeElement('div', 'track-record-chips');
     Object.keys(directions).sort().forEach(direction => {
-        const item = directions[direction];
-        chips.appendChild(makeElement('span', `source-badge ${direction}`, `${direction}: ${percent(item.hit_rate)} of ${item.resolved}`));
+        const item = directions[direction] || {};
+        const directionResolved = Number(item.resolved || 0);
+        chips.appendChild(makeElement('span', `source-badge ${direction}`,
+            item.hit_rate === null || item.hit_rate === undefined
+                ? `${direction}: ${directionResolved} resolved, not scored yet`
+                : `${direction}: ${percent(item.hit_rate)} of ${directionResolved}`));
     });
     if (Number(record.matured_unresolved || 0) > 0) {
         chips.appendChild(makeElement('span', 'source-badge', `${record.matured_unresolved} matured, awaiting price data`));
     }
     if (record.latest_evaluated_on) {
-        chips.appendChild(makeElement('span', 'source-badge', `Last scored ${record.latest_evaluated_on}`));
+        chips.appendChild(makeElement('span', 'source-badge', `Last scored ${formatDisplayDate(record.latest_evaluated_on)}`));
     }
     if (chips.children.length) container.appendChild(chips);
 }
