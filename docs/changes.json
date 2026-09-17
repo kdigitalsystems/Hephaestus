@@ -1,8 +1,509 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-16T08:10:02+00:00",
-  "unique_links": 509,
+  "generated_at": "2026-09-17T08:09:43+00:00",
+  "unique_links": 467,
   "days": [
+    {
+      "date": "2026-09-17",
+      "generated_at": "2026-09-17T08:09:43+00:00",
+      "previous_date": "2026-09-16",
+      "unique_links": 467,
+      "net_change": -42,
+      "new_count": 6,
+      "removed_count": 48,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AMD->SMCI:CPU SUPPLIER",
+          "source_ticker": "AMD",
+          "target_ticker": "SMCI",
+          "type": "CPU Supplier",
+          "product": "Epyc Processors",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "NVDA->SMCI:GPU SUPPLIER",
+          "source_ticker": "NVDA",
+          "target_ticker": "SMCI",
+          "type": "GPU Supplier",
+          "product": "NVIDIA GPU Chips",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "SWKS->AAPL:RADIO FREQUENCY (RF) CHIPS",
+          "source_ticker": "SWKS",
+          "target_ticker": "AAPL",
+          "type": "Radio Frequency (RF) Chips",
+          "product": "GSM Power Amplifier and RF Switch",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "TSM->AMD:FOUNDRY SERVICES",
+          "source_ticker": "TSM",
+          "target_ticker": "AMD",
+          "type": "Foundry Services",
+          "product": "Custom Semiconductor Manufacturing",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "TSM->NVDA:FOUNDRY SERVICES",
+          "source_ticker": "TSM",
+          "target_ticker": "NVDA",
+          "type": "Foundry Services",
+          "product": "Semiconductor Manufacturing",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "UMC->NVDA:MANUFACTURING SERVICES",
+          "source_ticker": "UMC",
+          "target_ticker": "NVDA",
+          "type": "Manufacturing Services",
+          "product": "Integrated Circuits",
+          "review_status": "approved",
+          "confidence": 0.925
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "ALKS->BIIB:LICENSE AND COLLABORATION AGREEMENT",
+          "source_ticker": "ALKS",
+          "target_ticker": "BIIB",
+          "type": "license and collaboration agreement",
+          "product": "Revenues related to this license and collaboration agreement",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMD->DELL:OPERATIONAL SUPPLY CHAIN",
+          "source_ticker": "AMD",
+          "target_ticker": "DELL",
+          "type": "Operational Supply Chain",
+          "product": "Opteron chips",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AMD->SMCI:SERVER PROCESSORS",
+          "source_ticker": "AMD",
+          "target_ticker": "SMCI",
+          "type": "Server Processors / CPU Supplier",
+          "product": "MI-series accelerators and EPYC CPUs / Epyc Processors",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AMRX->CAH:REVENUE CONCENTRATION",
+          "source_ticker": "AMRX",
+          "target_ticker": "CAH",
+          "type": "Revenue Concentration",
+          "product": "70% of AMRX revenue",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "AMRX->COR:REVENUE CONCENTRATION",
+          "source_ticker": "AMRX",
+          "target_ticker": "COR",
+          "type": "Revenue Concentration",
+          "product": "Drug Manufacturers - Specialty & Generic products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ASML->TSM:SEMICONDUCTOR EQUIPMENT",
+          "source_ticker": "ASML",
+          "target_ticker": "TSM",
+          "type": "Semiconductor Equipment",
+          "product": "EUV lithography systems",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "BLDP->PLUG:MANUFACTURER <-> CUSTOMER",
+          "source_ticker": "BLDP",
+          "target_ticker": "PLUG",
+          "type": "manufacturer <-> customer",
+          "product": "Fuel Cells",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "CTS->CMI:REVENUE CONCENTRATION",
+          "source_ticker": "CTS",
+          "target_ticker": "CMI",
+          "type": "Revenue Concentration",
+          "product": "not specified in the provided context, but likely related to electronic components based on CTS Corporation's industry",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "CVS->MDLN:MANUFACTURING PARTNER",
+          "source_ticker": "CVS",
+          "target_ticker": "MDLN",
+          "type": "Manufacturing Partner",
+          "product": "private label wound care products",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "DMC->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "DMC",
+          "target_ticker": "WMT",
+          "type": "operational supply chain dependency",
+          "product": "7% of DMC revenue (farm products)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ELF->TGT:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "ELF",
+          "target_ticker": "TGT",
+          "type": "operational supply-chain dependency",
+          "product": "18% of ELF revenue (presumably cosmetics or personal care products)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ELF->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "ELF",
+          "target_ticker": "WMT",
+          "type": "operational supply chain dependency / Revenue Concentration",
+          "product": "13% of ELF revenue / e.l.f. Beauty products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "GILD->COR:MANUFACTURER -> DISTRIBUTOR",
+          "source_ticker": "GILD",
+          "target_ticker": "COR",
+          "type": "manufacturer -> distributor",
+          "product": "Remdesivir",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "GM->MP:NEODYMIUM-IRON-BORON MAGNETS SUPPLY AGREEMENT",
+          "source_ticker": "GM",
+          "target_ticker": "MP",
+          "type": "Neodymium-Iron-Boron Magnets Supply Agreement",
+          "product": "Neodymium-Iron-Boron Magnets",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "GOOG->MRVL:MANUFACTURER -> MATERIAL PROVIDER",
+          "source_ticker": "GOOG",
+          "target_ticker": "MRVL",
+          "type": "Manufacturer -> Material Provider",
+          "product": "Chromecast SoCs (System on Chip)",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "GRMN->IRDM:DISTRIBUTOR",
+          "source_ticker": "GRMN",
+          "target_ticker": "IRDM",
+          "type": "distributor",
+          "product": "commercial distributors for satellite communication services and products",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "HLIT->CMCSA:REVENUE CONCENTRATION",
+          "source_ticker": "HLIT",
+          "target_ticker": "CMCSA",
+          "type": "Revenue Concentration",
+          "product": "Communication Equipment",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "HLIT->PLUS:REVENUE CONCENTRATION",
+          "source_ticker": "HLIT",
+          "target_ticker": "PLUS",
+          "type": "Revenue Concentration",
+          "product": "Communication Equipment",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "IA->LMT:REVENUE CONCENTRATION",
+          "source_ticker": "IA",
+          "target_ticker": "LMT",
+          "type": "Revenue Concentration",
+          "product": "Services for Aerospace & Defense Industry",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "INTC->DELL:SERVER CPUS",
+          "source_ticker": "INTC",
+          "target_ticker": "DELL",
+          "type": "Server CPUs",
+          "product": "Xeon server processors",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "INTC->TSM:MANUFACTURER -> LOGISTICS PROVIDER",
+          "source_ticker": "INTC",
+          "target_ticker": "TSM",
+          "type": "manufacturer -> logistics provider",
+          "product": "Semiconductors",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "JAKK->TGT:REVENUE CONCENTRATION",
+          "source_ticker": "JAKK",
+          "target_ticker": "TGT",
+          "type": "Revenue Concentration",
+          "product": "Toys and Games (implied from JAKKS Pacific's business)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "MAT->TGT:REVENUE CONCENTRATION",
+          "source_ticker": "MAT",
+          "target_ticker": "TGT",
+          "type": "Revenue Concentration",
+          "product": "Mattel's products sold to Target Corporation",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MCK->ONC:DISTRIBUTION",
+          "source_ticker": "MCK",
+          "target_ticker": "ONC",
+          "type": "distribution",
+          "product": "pharmaceutical products",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MDLN->TGT:SUPPLY RELATIONSHIP",
+          "source_ticker": "MDLN",
+          "target_ticker": "TGT",
+          "type": "Supply Relationship",
+          "product": "Wound Care Products",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MU->AMD:HIGH-BANDWIDTH MEMORY",
+          "source_ticker": "MU",
+          "target_ticker": "AMD",
+          "type": "High-Bandwidth Memory",
+          "product": "HBM3e memory",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "MU->NVDA:HIGH-BANDWIDTH MEMORY",
+          "source_ticker": "MU",
+          "target_ticker": "NVDA",
+          "type": "High-Bandwidth Memory",
+          "product": "HBM3e memory",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "NKTR->AZN:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "NKTR",
+          "target_ticker": "AZN",
+          "type": "operational supply-chain dependency",
+          "product": "Revenue from drug sales",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "NOC->MTSI:COMPONENTS FOR SURVEILLANCE DEVICES",
+          "source_ticker": "NOC",
+          "target_ticker": "MTSI",
+          "type": "Components for Surveillance Devices",
+          "product": "Radar Components",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "NUE->CMC:RAW MATERIALS",
+          "source_ticker": "NUE",
+          "target_ticker": "CMC",
+          "type": "Raw Materials",
+          "product": "Steel",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "NVDA->SMCI:AI ACCELERATOR CHIPS",
+          "source_ticker": "NVDA",
+          "target_ticker": "SMCI",
+          "type": "AI Accelerator Chips / GPU Supplier",
+          "product": "GPU accelerators / NVIDIA GPU Chips",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ONC->COR:PRODUCT DISTRIBUTOR SERVICES",
+          "source_ticker": "ONC",
+          "target_ticker": "COR",
+          "type": "Product Distributor Services",
+          "product": "Distributor Services for Biotechnology Products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "PBA->CNQ:LOGISTICS PARTNER",
+          "source_ticker": "PBA",
+          "target_ticker": "CNQ",
+          "type": "Logistics Partner",
+          "product": "Synthetic Oil Transport",
+          "review_status": "approved",
+          "confidence": 0.85
+        },
+        {
+          "relationship_key": "PCRX->CAH:REVENUE CONCENTRATION",
+          "source_ticker": "PCRX",
+          "target_ticker": "CAH",
+          "type": "Revenue Concentration",
+          "product": "BioSciences products",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "PCRX->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "PCRX",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "BioSciences products (specifically mentioning medical devices or pharmaceuticals)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "RIG->EQNR:REVENUE CONCENTRATION",
+          "source_ticker": "RIG",
+          "target_ticker": "EQNR",
+          "type": "Revenue Concentration",
+          "product": "Oil & Gas Drilling Services",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "ROKU->BBY:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "ROKU",
+          "target_ticker": "BBY",
+          "type": "operational supply chain dependency",
+          "product": "Devices revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ROKU->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "ROKU",
+          "target_ticker": "WMT",
+          "type": "operational supply chain dependency",
+          "product": "Devices revenue (81% of ROKU revenue)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "STRT->F:SUPPLY CHAIN",
+          "source_ticker": "STRT",
+          "target_ticker": "F",
+          "type": "Supply Chain",
+          "product": "Auto Parts",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "STRT->GM:SUPPLY CHAIN",
+          "source_ticker": "STRT",
+          "target_ticker": "GM",
+          "type": "Supply Chain",
+          "product": "Auto Parts (specifically for General Motors Company)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "SWKS->AAPL:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "SWKS",
+          "target_ticker": "AAPL",
+          "type": "operational supply-chain dependency / Radio Frequency (RF) Chips",
+          "product": "wireless connectivity and power management products for Apple's devices / GSM Power Amplifier and RF Switch",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "TS->CVX:SUPPLY CHAIN",
+          "source_ticker": "TS",
+          "target_ticker": "CVX",
+          "type": "Supply Chain",
+          "product": "tubular products and services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "TSM->AAPL:ADVANCED SILICON FABRICATION",
+          "source_ticker": "TSM",
+          "target_ticker": "AAPL",
+          "type": "Advanced Silicon Fabrication",
+          "product": "Advanced process node chip fabrication",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "TSM->AMD:ADVANCED SILICON FABRICATION",
+          "source_ticker": "TSM",
+          "target_ticker": "AMD",
+          "type": "Advanced Silicon Fabrication / Foundry Services",
+          "product": "Advanced process node chip fabrication / Custom Semiconductor Manufacturing",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "TSM->NVDA:ADVANCED SILICON FABRICATION",
+          "source_ticker": "TSM",
+          "target_ticker": "NVDA",
+          "type": "Advanced Silicon Fabrication / Foundry Services",
+          "product": "Advanced process node chip fabrication / Semiconductor Manufacturing",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "UFPT->SYK:REVENUE CONCENTRATION",
+          "source_ticker": "UFPT",
+          "target_ticker": "SYK",
+          "type": "Revenue Concentration",
+          "product": "Medical Devices",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "UMC->NVDA:MANUFACTURER -> CUSTOMER",
+          "source_ticker": "UMC",
+          "target_ticker": "NVDA",
+          "type": "manufacturer -> customer / Manufacturing Services",
+          "product": "Integrated Circuits",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "VRT->NVDA:DATA CENTER COOLING",
+          "source_ticker": "VRT",
+          "target_ticker": "NVDA",
+          "type": "Data Center Cooling",
+          "product": "Liquid cooling infrastructure",
+          "review_status": "approved",
+          "confidence": 1.0
+        }
+      ],
+      "changed_links": []
+    },
     {
       "date": "2026-09-16",
       "generated_at": "2026-09-16T08:10:02+00:00",
@@ -2657,480 +3158,6 @@
       "changed_count": 0,
       "new_links": [],
       "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-08-26",
-      "generated_at": "2026-08-26T04:30:22+00:00",
-      "previous_date": "2026-08-25",
-      "unique_links": 309,
-      "net_change": -132,
-      "new_count": 1,
-      "removed_count": 133,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "TSM->MRVL:FOUNDRY SERVICES",
-          "source_ticker": "TSM",
-          "target_ticker": "MRVL",
-          "type": "Foundry Services",
-          "product": "semiconductor chips",
-          "review_status": "approved",
-          "confidence": 0.95
-        }
-      ],
-      "removed_links": [
-        {
-          "relationship_key": "AA->F:MATERIAL SUPPLIER",
-          "source_ticker": "AA",
-          "target_ticker": "F",
-          "type": "material supplier",
-          "product": "Advanced Aluminum Alloys",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "AA->HWM:RAW MATERIALS",
-          "source_ticker": "AA",
-          "target_ticker": "HWM",
-          "type": "Raw Materials",
-          "product": "Aluminum",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "ADM->BG:GRAIN SUPPLY",
-          "source_ticker": "ADM",
-          "target_ticker": "BG",
-          "type": "Grain Supply",
-          "product": "Agricultural Commodities",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "AKAM->LUMN:CDN SERVICES",
-          "source_ticker": "AKAM",
-          "target_ticker": "LUMN",
-          "type": "CDN services",
-          "product": "Content Delivery Network (CDN) services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "AM->AR:MIDSTREAM OPERATIONS AFFILIATE",
-          "source_ticker": "AM",
-          "target_ticker": "AR",
-          "type": "Midstream Operations Affiliate",
-          "product": "midstream services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "APD->LRCX:RAW MATERIALS",
-          "source_ticker": "APD",
-          "target_ticker": "LRCX",
-          "type": "Raw Materials",
-          "product": "Gases",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "ASPI->TDY:RADIOLOGICAL ISOTOPES",
-          "source_ticker": "ASPI",
-          "target_ticker": "TDY",
-          "type": "Radiological Isotopes",
-          "product": "Radioactive Materials",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "BA->ALK:AIRCRAFT SUPPLIER",
-          "source_ticker": "BA",
-          "target_ticker": "ALK",
-          "type": "Aircraft Supplier",
-          "product": "Commercial Aircraft",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "BA->DAL:COMMERCIAL AIRCRAFT",
-          "source_ticker": "BA",
-          "target_ticker": "DAL",
-          "type": "Commercial Aircraft",
-          "product": "737-800 aircraft",
-          "review_status": "approved",
-          "confidence": 0.975
-        },
-        {
-          "relationship_key": "BA->LUV:MANUFACTURING",
-          "source_ticker": "BA",
-          "target_ticker": "LUV",
-          "type": "Manufacturing",
-          "product": "Aircraft",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "BBY->TMUS:RETAILER OF MOBILE DEVICES",
-          "source_ticker": "BBY",
-          "target_ticker": "TMUS",
-          "type": "Retailer of Mobile Devices",
-          "product": "Cellular Phones/Handsets",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "BHP->FCX:MOLYBDENUM MINING OPERATIONS",
-          "source_ticker": "BHP",
-          "target_ticker": "FCX",
-          "type": "Molybdenum Mining Operations",
-          "product": "Molybdenum Ore",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "BHP->TECK:RAW MATERIALS SUPPLIER",
-          "source_ticker": "BHP",
-          "target_ticker": "TECK",
-          "type": "Raw Materials Supplier",
-          "product": "Coal",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "BHP->VALE:RAW MATERIALS",
-          "source_ticker": "BHP",
-          "target_ticker": "VALE",
-          "type": "Raw Materials",
-          "product": "Iron ore",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "BP->MPC:RAW MATERIALS",
-          "source_ticker": "BP",
-          "target_ticker": "MPC",
-          "type": "Raw Materials",
-          "product": "Crude Oil",
-          "review_status": "approved",
-          "confidence": 0.9167
-        },
-        {
-          "relationship_key": "CAT->ROAD:EQUIPMENT SUPPLIER",
-          "source_ticker": "CAT",
-          "target_ticker": "ROAD",
-          "type": "equipment supplier",
-          "product": "construction equipment",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CCEP->COST:DISTRIBUTION",
-          "source_ticker": "CCEP",
-          "target_ticker": "COST",
-          "type": "distribution",
-          "product": "Non-Alcoholic Beverages - Coca-Cola products",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CDNS->AAPL:CHIP DESIGN TOOLS",
-          "source_ticker": "CDNS",
-          "target_ticker": "AAPL",
-          "type": "Chip Design Tools",
-          "product": "Electronic Design Automation (EDA) Software",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "CE->CTAS:RAW_MATERIAL_SUPPLIER",
-          "source_ticker": "CE",
-          "target_ticker": "CTAS",
-          "type": "raw_material_supplier",
-          "product": "Polycotton fabric blend",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CHRW->HSY:LOGISTICS PROVIDER",
-          "source_ticker": "CHRW",
-          "target_ticker": "HSY",
-          "type": "Logistics Provider",
-          "product": "Freight and Logistics Services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CIEN->T:NETWORK SERVICES",
-          "source_ticker": "CIEN",
-          "target_ticker": "T",
-          "type": "Network Services",
-          "product": "Network Infrastructure Services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CIEN->VZ:SUPPLY RELATIONSHIP",
-          "source_ticker": "CIEN",
-          "target_ticker": "VZ",
-          "type": "Supply Relationship",
-          "product": "Network Infrastructure Equipment",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CLS->IBM:MANUFACTURING SERVICES",
-          "source_ticker": "CLS",
-          "target_ticker": "IBM",
-          "type": "Manufacturing Services",
-          "product": "Manufacturing Services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CP->DE:LOGISTICS PROVIDER/MATERIAL PROVIDER",
-          "source_ticker": "CP",
-          "target_ticker": "DE",
-          "type": "logistics provider/material provider",
-          "product": "rail logistics",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CP->TECK:LOGISTICS",
-          "source_ticker": "CP",
-          "target_ticker": "TECK",
-          "type": "Logistics",
-          "product": "Rail logistics",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CPB->SLGN:PACKAGING SUPPLIER",
-          "source_ticker": "CPB",
-          "target_ticker": "SLGN",
-          "type": "packaging supplier",
-          "product": "food packaging",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CRM->RNG:ENTERPRISE SOFTWARE SUBSCRIPTION",
-          "source_ticker": "CRM",
-          "target_ticker": "RNG",
-          "type": "Enterprise Software Subscription",
-          "product": "Salesforce CRM software",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CSCO->CDW:DISTRIBUTOR",
-          "source_ticker": "CSCO",
-          "target_ticker": "CDW",
-          "type": "distributor",
-          "product": "Networking Hardware",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CSX->JBHT:INTERMODAL SERVICE",
-          "source_ticker": "CSX",
-          "target_ticker": "JBHT",
-          "type": "Intermodal Service",
-          "product": "rail intermodal services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CVS->TGT:PHARMACY OPERATIONS",
-          "source_ticker": "CVS",
-          "target_ticker": "TGT",
-          "type": "Pharmacy Operations",
-          "product": "Pharmacy Services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "CVX->E:RAW MATERIALS",
-          "source_ticker": "CVX",
-          "target_ticker": "E",
-          "type": "Raw Materials",
-          "product": "Crude Oil",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "CVX->ENB:OIL SUPPLY",
-          "source_ticker": "CVX",
-          "target_ticker": "ENB",
-          "type": "Oil Supply",
-          "product": "Crude Oil",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "DAN->F:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
-          "source_ticker": "DAN",
-          "target_ticker": "F",
-          "type": "Operational Supply-Chain Dependency",
-          "product": "Heavy-Duty Chassis and Axle Systems",
-          "review_status": "approved",
-          "confidence": 0.9167
-        },
-        {
-          "relationship_key": "DELL->INTC:MICROPROCESSORS",
-          "source_ticker": "DELL",
-          "target_ticker": "INTC",
-          "type": "Microprocessors",
-          "product": "microprocessors",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "DINO->SHEL:REFINING FACILITIES",
-          "source_ticker": "DINO",
-          "target_ticker": "SHEL",
-          "type": "Refining Facilities",
-          "product": "Anacortes Refinery",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "DOW->LRCX:ADVANCED SILICON FABRICATION",
-          "source_ticker": "DOW",
-          "target_ticker": "LRCX",
-          "type": "Advanced Silicon Fabrication",
-          "product": "Tungsten metal films",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "DOW->WAT:RAW MATERIALS AND MANUFACTURING PARTNER",
-          "source_ticker": "DOW",
-          "target_ticker": "WAT",
-          "type": "Raw Materials and Manufacturing Partner",
-          "product": "Chemicals",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "DOW->WMS:RAW MATERIALS",
-          "source_ticker": "DOW",
-          "target_ticker": "WMS",
-          "type": "Raw Materials",
-          "product": "Plastics and Resins",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "EMR->MKSI:SOLID-STATE RF AND DC PLASMA POWER SUPPLIES, MATCHING NETWORKS AND INSTRUMENTATION",
-          "source_ticker": "EMR",
-          "target_ticker": "MKSI",
-          "type": "Solid-state RF and DC plasma power supplies, matching networks and instrumentation",
-          "product": "Solid-state RF and DC plasma power supplies, matching networks and instrumentation",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "EPD->ENB:PIPELINE PARTNER/LOGISTICS PROVIDER",
-          "source_ticker": "EPD",
-          "target_ticker": "ENB",
-          "type": "Pipeline Partner/Logistics Provider",
-          "product": "Seaway Crude Pipeline",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "ET->ENB:GAS SUPPLY",
-          "source_ticker": "ET",
-          "target_ticker": "ENB",
-          "type": "Gas Supply",
-          "product": "Natural Gas",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "EXPD->UAL:LOGISTICS SERVICES",
-          "source_ticker": "EXPD",
-          "target_ticker": "UAL",
-          "type": "Logistics Services",
-          "product": "Air Freight Logistics",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "FCX->PAAS:RAW MATERIALS",
-          "source_ticker": "FCX",
-          "target_ticker": "PAAS",
-          "type": "Raw Materials",
-          "product": "Copper",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "FDX->FND:LOGISTICS/TRANSPORTATION",
-          "source_ticker": "FDX",
-          "target_ticker": "FND",
-          "type": "Logistics/Transportation",
-          "product": "freight/logistics services",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "FLEX->AAPL:MANUFACTURING PARTNER",
-          "source_ticker": "FLEX",
-          "target_ticker": "AAPL",
-          "type": "Manufacturing Partner",
-          "product": "Mac Pro",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "FTI->BP:MANUFACTURING PARTNER",
-          "source_ticker": "FTI",
-          "target_ticker": "BP",
-          "type": "Manufacturing Partner",
-          "product": "Oil Rig",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "GEHC->HCA:DIAGNOSTIC IMAGING EQUIPMENT SUPPLIER",
-          "source_ticker": "GEHC",
-          "target_ticker": "HCA",
-          "type": "Diagnostic Imaging Equipment Supplier",
-          "product": "Mammography and MRI equipment",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "GFS->IBM:CHIP MANUFACTURING",
-          "source_ticker": "GFS",
-          "target_ticker": "IBM",
-          "type": "chip manufacturing",
-          "product": "semiconductor manufacturing services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "GFS->MRVL:ADVANCED SILICON FABRICATION",
-          "source_ticker": "GFS",
-          "target_ticker": "MRVL",
-          "type": "Advanced Silicon Fabrication",
-          "product": "Semiconductor Manufacturing Services",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "GLW->AAPL:GLASS SUPPLIER",
-          "source_ticker": "GLW",
-          "target_ticker": "AAPL",
-          "type": "Glass Supplier",
-          "product": "Gorilla Glass",
-          "review_status": "approved",
-          "confidence": 0.85
-        }
-      ],
       "changed_links": []
     }
   ]
