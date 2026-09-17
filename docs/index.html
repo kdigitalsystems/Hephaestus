@@ -19,7 +19,7 @@
         }
     </script>
     <link rel="alternate" type="application/rss+xml" title="Hephaestus supply-chain changes" href="feed.xml">
-    <link rel="stylesheet" href="styles.css?v=20260913-ui1">
+    <link rel="stylesheet" href="styles.css?v=20260917-ui2">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js" defer></script>
 </head>
 <body>
@@ -31,7 +31,7 @@
                 <span class="brand-subtitle">Supply chain intelligence for public markets</span>
             </span>
         </button>
-        <div class="topbar-actions" aria-label="Primary navigation">
+        <nav class="topbar-actions" aria-label="Primary navigation">
             <button class="topbar-link" data-nav="overview" onclick="navigateOverview()" title="Dashboard overview">Overview</button>
             <button class="topbar-link" data-nav="companies" onclick="navigateCompanies()" title="Company screener">Screener</button>
             <button class="topbar-link" data-nav="watchlist" onclick="navigateWatchlist()" title="Local watchlist">Watchlist</button>
@@ -46,54 +46,58 @@
                 <span id="theme-toggle-label">Dark</span>
             </button>
             <div id="last-updated" class="sync-status">Updating...</div>
-        </div>
+        </nav>
     </header>
 
     <main class="container">
+        <section class="overview-brief" id="view-hero">
+            <div>
+                <p class="eyebrow">Public Market Supply Chain Map</p>
+                <h1>Find company exposure fast</h1>
+                <p class="overview-copy">Search a ticker, filter by sector or relationship type, and open a company brief for suppliers, customers, market context, and source evidence.</p>
+                <div class="quick-actions" id="quick-actions"></div>
+            </div>
+            <div class="overview-stats" id="overview-stats"></div>
+        </section>
+
+        <!-- Search and filters sit outside the views they drive. While they lived inside
+             #view-industries, applying a filter hid the panel that holds the search input:
+             the debounced render pulled focus out mid-word and left "Reset filters"
+             unreachable until the visitor navigated back to the overview. -->
+        <section class="control-panel" id="search-panel">
+            <div class="search-group primary-search">
+                <div class="field-label-row">
+                    <label for="search-input">Ticker / Company Search</label>
+                    <span class="search-shortcut">Press /</span>
+                </div>
+                <div class="search-shell">
+                    <span class="search-prefix">Ticker</span>
+                    <input type="text" id="search-input" class="search-bar" placeholder="AMD, Nvidia, TSMC, lithium, cloud..." aria-describedby="search-helper" autocomplete="off" spellcheck="false" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)">
+                    <button class="search-submit" type="button" onclick="commitSearch()" aria-label="Search">Search</button>
+                    <button class="search-clear" type="button" onclick="clearSearchInput()" aria-label="Clear search" title="Clear search">Clear</button>
+                </div>
+                <div id="search-helper" class="field-helper" aria-live="polite">Search ticker, company, supplier, customer, product, or sector.</div>
+            </div>
+            <div class="filter-group">
+                <label for="sector-filter">Sector</label>
+                <select id="sector-filter" onchange="applyFilters()">
+                    <option value="">All sectors</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="dependency-filter">Dependency</label>
+                <select id="dependency-filter" onchange="applyFilters()">
+                    <option value="">All dependency types</option>
+                </select>
+            </div>
+            <label class="toggle-filter">
+                <input type="checkbox" id="connected-filter" onchange="applyFilters()">
+                <span>Has supply-chain data</span>
+            </label>
+            <button class="clear-filters" type="button" onclick="clearFilters()">Reset filters</button>
+        </section>
+
         <section id="view-industries">
-            <section class="overview-brief">
-                <div>
-                    <p class="eyebrow">Public Market Supply Chain Map</p>
-                    <h1>Find company exposure fast</h1>
-                    <p class="overview-copy">Search a ticker, filter by sector or relationship type, and open a company brief for suppliers, customers, market context, and source evidence.</p>
-                    <div class="quick-actions" id="quick-actions"></div>
-                </div>
-                <div class="overview-stats" id="overview-stats"></div>
-            </section>
-
-            <section class="control-panel">
-                <div class="search-group primary-search">
-                    <div class="field-label-row">
-                        <label for="search-input">Ticker / Company Search</label>
-                        <span class="search-shortcut">Press /</span>
-                    </div>
-                    <div class="search-shell">
-                        <span class="search-prefix">Ticker</span>
-                        <input type="text" id="search-input" class="search-bar" placeholder="AMD, Nvidia, TSMC, lithium, cloud..." aria-describedby="search-helper" autocomplete="off" spellcheck="false" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)">
-                        <button class="search-submit" type="button" onclick="commitSearch()" aria-label="Search">Search</button>
-                        <button class="search-clear" type="button" onclick="clearSearchInput()" aria-label="Clear search" title="Clear search">Clear</button>
-                    </div>
-                    <div id="search-helper" class="field-helper">Search ticker, company, supplier, customer, product, or sector.</div>
-                </div>
-                <div class="filter-group">
-                    <label for="sector-filter">Sector</label>
-                    <select id="sector-filter" onchange="applyFilters()">
-                        <option value="">All sectors</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="dependency-filter">Dependency</label>
-                    <select id="dependency-filter" onchange="applyFilters()">
-                        <option value="">All dependency types</option>
-                    </select>
-                </div>
-                <label class="toggle-filter">
-                    <input type="checkbox" id="connected-filter" onchange="applyFilters()">
-                    <span>Has supply-chain data</span>
-                </label>
-                <button class="clear-filters" type="button" onclick="clearFilters()">Reset filters</button>
-            </section>
-
             <section class="insight-panel changes-panel">
                 <div class="section-heading">
                     <p class="eyebrow">Recent changes</p>
@@ -227,19 +231,19 @@
                     <p class="eyebrow">Screener</p>
                     <h2 id="current-industry-title">Companies</h2>
                 </div>
-                <span id="result-count" class="result-count">0 results</span>
+                <span id="result-count" class="result-count" aria-live="polite">0 results</span>
             </div>
             <div class="table-wrap">
                 <table>
                     <thead>
                         <tr>
-                            <th onclick="handleSort('name')">Company <span class="sort-icon" id="sort-name"></span></th>
-                            <th onclick="handleSort('ticker')">Symbol <span class="sort-icon" id="sort-ticker"></span></th>
-                            <th onclick="handleSort('price')">Price <span class="sort-icon" id="sort-price"></span></th>
-                            <th onclick="handleSort('change')">% Change <span class="sort-icon" id="sort-change"></span></th>
-                            <th onclick="handleSort('market_cap')">Market Cap <span class="sort-icon" id="sort-market_cap"></span></th>
-                            <th onclick="handleSort('connection_count')">Links <span class="sort-icon" id="sort-connection_count"></span></th>
-                            <th onclick="handleSort('trailing_pe')">P/E <span class="sort-icon" id="sort-trailing_pe"></span></th>
+                            <th scope="col" data-sort="name" aria-sort="none"><button type="button" class="sort-button" onclick="handleSort('name')">Company <span class="sort-icon" id="sort-name"></span></button></th>
+                            <th scope="col" data-sort="ticker" aria-sort="none"><button type="button" class="sort-button" onclick="handleSort('ticker')">Symbol <span class="sort-icon" id="sort-ticker"></span></button></th>
+                            <th scope="col" data-sort="price" aria-sort="none"><button type="button" class="sort-button" onclick="handleSort('price')">Price <span class="sort-icon" id="sort-price"></span></button></th>
+                            <th scope="col" data-sort="change" aria-sort="none"><button type="button" class="sort-button" onclick="handleSort('change')">% Change <span class="sort-icon" id="sort-change"></span></button></th>
+                            <th scope="col" data-sort="market_cap" aria-sort="none"><button type="button" class="sort-button" onclick="handleSort('market_cap')">Market Cap <span class="sort-icon" id="sort-market_cap"></span></button></th>
+                            <th scope="col" data-sort="connection_count" aria-sort="none"><button type="button" class="sort-button" onclick="handleSort('connection_count')">Links <span class="sort-icon" id="sort-connection_count"></span></button></th>
+                            <th scope="col" data-sort="trailing_pe" aria-sort="none"><button type="button" class="sort-button" onclick="handleSort('trailing_pe')">P/E <span class="sort-icon" id="sort-trailing_pe"></span></button></th>
                         </tr>
                     </thead>
                     <tbody id="company-table-body"></tbody>
@@ -351,14 +355,14 @@
     </main>
 
     <div id="evidence-modal" class="modal-backdrop hidden" onclick="closeEvidenceModal()">
-        <section class="evidence-modal" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeEvidenceModal()">Close</button>
+        <section class="evidence-modal" id="evidence-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1" onclick="event.stopPropagation()" onkeydown="handleModalKeydown(event)">
+            <button class="modal-close" id="modal-close" onclick="closeEvidenceModal()">Close</button>
             <p class="eyebrow">Relationship Evidence</p>
             <h2 id="modal-title">Supply-chain link</h2>
             <div id="modal-body" class="modal-body"></div>
         </section>
     </div>
 
-    <script src="app.js?v=20260913-ui1"></script>
+    <script src="app.js?v=20260917-ui2"></script>
 </body>
 </html>

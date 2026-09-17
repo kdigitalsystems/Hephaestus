@@ -26,7 +26,7 @@ DOCS_DIR = ROOT / "docs"
 DEFAULT_DASHBOARD_PATH = DOCS_DIR / "dashboard_data.json"
 DEFAULT_OUTPUT_DIR = DOCS_DIR / "company"
 DEFAULT_SITEMAP_PATH = DOCS_DIR / "sitemap.xml"
-STYLESHEET_VERSION = "20260913-ui1"
+STYLESHEET_VERSION = "20260917-ui2"
 # Same brand mark as the dashboard; without an icon every page load requested /favicon.ico and got a 404.
 FAVICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#45d0bd"/><text x="32" y="45" text-anchor="middle" font-family="Inter,Arial,Helvetica,sans-serif" font-size="38" font-weight="800" fill="#061311">H</text></svg>'
 FAVICON_HREF = "data:image/svg+xml," + quote(FAVICON_SVG, safe="")

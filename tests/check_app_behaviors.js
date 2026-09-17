@@ -51,6 +51,32 @@ if (!htmlSource.includes("onclick=\"commitSearch()\"") || !appSource.includes("f
   throw new Error("ticker search should expose an explicit committed Search action");
 }
 
+// The search box and the filters used to sit inside #view-industries, so every debounced
+// re-render hid the input mid-word and put "Reset filters" out of reach.
+const industriesBlock = htmlSource.slice(
+  htmlSource.indexOf('<section id="view-industries">'),
+  htmlSource.indexOf('<section id="view-sector"'),
+);
+if (industriesBlock.includes('id="search-input"') || industriesBlock.includes('class="control-panel"')) {
+  throw new Error("search and filters must live outside the view they re-render");
+}
+
+if (!htmlSource.includes('id="search-panel"') || !appSource.includes("'view-hero', 'search-panel', 'view-industries'")) {
+  throw new Error("the search panel must be shown and hidden independently of the overview view");
+}
+
+if (htmlSource.includes("<th onclick=") || !htmlSource.includes('data-sort="name"') || !htmlSource.includes('class="sort-button"')) {
+  throw new Error("sortable column headers must be real buttons carrying their sort key");
+}
+
+if (!htmlSource.includes('role="dialog"') || !htmlSource.includes('aria-modal="true"') || !appSource.includes("function handleModalKeydown")) {
+  throw new Error("the evidence modal must be a dialog that can be closed and escaped from the keyboard");
+}
+
+if (!htmlSource.includes('<nav class="topbar-actions"') || !appSource.includes("aria-current")) {
+  throw new Error("primary navigation must be a landmark that marks the current page");
+}
+
 const htmlIds = new Set([...htmlSource.matchAll(/id="([^"]+)"/g)].map((match) => match[1]));
 const appIdRefs = new Set([...appSource.matchAll(/getElementById\('([^']+)'\)/g)].map((match) => match[1]));
 const missingIds = [...appIdRefs].filter((id) => !htmlIds.has(id));
@@ -69,7 +95,22 @@ function mockElement(tag = "div", id = "") {
     style: {},
     children: [],
     parentNode: null,
-    classList: { add() {}, remove() {}, toggle() {} },
+    classes: new Set(),
+    dataset: {},
+    href: "",
+    disabled: false,
+    classList: {
+      add(...names) { names.forEach((name) => node.classes.add(name)); },
+      remove(...names) { names.forEach((name) => node.classes.delete(name)); },
+      toggle(name, force) {
+        const on = force === undefined ? !node.classes.has(name) : Boolean(force);
+        if (on) node.classes.add(name);
+        else node.classes.delete(name);
+        return on;
+      },
+      contains(name) { return node.classes.has(name); },
+    },
+    focus() { context.document.activeElement = node; },
     appendChild(child) {
       child.parentNode = node;
       node.children.push(child);
@@ -94,6 +135,7 @@ function mockElement(tag = "div", id = "") {
     attributes: {},
     setAttribute(name, value) { node.attributes[name] = String(value); },
     getAttribute(name) { return Object.prototype.hasOwnProperty.call(node.attributes, name) ? node.attributes[name] : null; },
+    removeAttribute(name) { delete node.attributes[name]; },
     querySelector() { return null; },
   };
   Object.defineProperty(node, "firstChild", {
@@ -102,6 +144,16 @@ function mockElement(tag = "div", id = "") {
     },
   });
   return node;
+}
+
+const documentHandlers = {};
+const selectorNodes = {};
+
+function dispatchKeydown(init) {
+  const event = Object.assign({ shiftKey: false, ctrlKey: false, metaKey: false, altKey: false, defaultPrevented: false }, init);
+  event.preventDefault = () => { event.defaultPrevented = true; };
+  (documentHandlers.keydown || []).forEach((handler) => handler(event));
+  return event;
 }
 
 function element(id) {
@@ -124,7 +176,11 @@ const context = {
   document: {
     createElement: (tag) => mockElement(tag),
     getElementById: element,
-    querySelectorAll: () => [],
+    querySelectorAll: (selector) => selectorNodes[selector] || [],
+    addEventListener(type, handler) {
+      (documentHandlers[type] = documentHandlers[type] || []).push(handler);
+    },
+    activeElement: null,
   },
   history: {
     pushed: [],
@@ -324,7 +380,7 @@ vm.runInContext(`
   renderOverviewStats();
 `, context);
 const changesText = collectText(element("overview-changes"));
-["+2 net supply links", "since 2026-09-01", "2 new, 1 removed, 0 updated", "New (2)", "Removed (1)", "TSM", "AMD", "Foundry · wafers", "2026-09-01 → 2026-09-02: 10 → 12 links", "RSS", "JSON"].forEach((expected) => {
+["+2 net supply links", "since Sep 1, 2026", "2 new, 1 removed, 0 updated", "New (2)", "Removed (1)", "TSM", "AMD", "Foundry · wafers", "Sep 1, 2026 → Sep 2, 2026: 10 → 12 links", "RSS", "JSON"].forEach((expected) => {
   if (!changesText.includes(expected)) {
     throw new Error(`change panel missing ${expected}; got ${changesText}`);
   }
@@ -335,7 +391,7 @@ vm.runInContext(`
   openEvidenceModal({ ticker: "TSM", name: "Taiwan Semiconductor", type: "Foundry", product: "wafers", confidence: 0.95, source_type: "AI Research", last_verified: "2026-06-01" }, { ticker: "AMD" }, "upstream");
 `, context);
 const modalText = collectText(element("modal-body"));
-["95%", "AI Research", "2026-06-01", "No evidence excerpt was saved for this relationship.", "AI research · no direct citation", "Awaiting review", "How links are verified"].forEach((expected) => {
+["95%", "AI Research", "Jun 1, 2026", "No evidence excerpt was saved for this relationship.", "AI research · no direct citation", "Awaiting review", "How links are verified"].forEach((expected) => {
   if (!modalText.includes(expected)) {
     throw new Error(`details modal missing ${expected}; got ${modalText}`);
   }
@@ -566,7 +622,7 @@ vm.runInContext(`
   globalThis.__trackRecordClass = document.getElementById('prediction-track-record').className;
 `, context);
 const trackRecordText = collectText(element("prediction-track-record"));
-["48% of 250 resolved 30‑day signals", "would have scored 58%", "not beaten a naive baseline", "up: 50% of 196", "3 matured, awaiting price data", "Last scored 2026-09-02"].forEach((expected) => {
+["48% of 250 resolved 30‑day signals", "would have scored 58%", "not beaten a naive baseline", "up: 50% of 196", "3 matured, awaiting price data", "Last scored Sep 2, 2026"].forEach((expected) => {
   if (!trackRecordText.includes(expected)) {
     throw new Error(`track record banner missing ${expected}; got ${trackRecordText}`);
   }
@@ -610,4 +666,123 @@ if (context.__plurals !== "1 link|2 links|1 company|0 results") {
 }
 if (context.__utcDate !== "Sep 12, 2026" || context.__dateOnly !== "Sep 11, 2026") {
   throw new Error(`published dates must render in UTC with one format: ${context.__utcDate} / ${context.__dateOnly}`);
+}
+
+
+// --- Search and filters survive the view they drive ---------------------------------
+// Typing "NVDA" used to leave "NVD" in the box: the debounced render hid #view-industries,
+// which contained the input, so focus dropped to <body> and the last keystroke was lost.
+vm.runInContext(`
+  renderLevel1();
+  globalThis.__panelOnOverview = document.getElementById('search-panel').classList.contains('hidden');
+  document.getElementById('search-input').value = 'taiwan';
+  document.getElementById('search-input').focus();
+  applyFilters(false);
+  globalThis.__panelOnScreener = document.getElementById('search-panel').classList.contains('hidden');
+  globalThis.__heroOnScreener = document.getElementById('view-hero').classList.contains('hidden');
+  globalThis.__focusAfterFilter = document.activeElement && document.activeElement.id;
+`, context);
+
+if (context.__panelOnOverview || context.__panelOnScreener) {
+  throw new Error("search and filters must stay on screen on both the overview and the screener");
+}
+if (!context.__heroOnScreener) {
+  throw new Error("the overview hero should still be hidden once results are shown");
+}
+if (context.__focusAfterFilter !== "search-input") {
+  throw new Error(`filtering must not move focus out of the search box, got ${context.__focusAfterFilter}`);
+}
+
+// '/' focuses the search box wherever the panel is shown, and does nothing where it is not.
+context.document.activeElement = null;
+dispatchKeydown({ key: "/" });
+if (!context.document.activeElement || context.document.activeElement.id !== "search-input") {
+  throw new Error("'/' should focus the search box while the search panel is visible");
+}
+
+vm.runInContext("hideAllViews();", context);
+context.document.activeElement = null;
+dispatchKeydown({ key: "/" });
+if (context.document.activeElement) {
+  throw new Error("'/' must not focus a hidden search box");
+}
+
+// --- The evidence modal is a dialog: Escape closes it and focus comes back -----------
+const modalOpener = mockElement("tr", "opening-row");
+context.document.activeElement = modalOpener;
+vm.runInContext(`
+  openEvidenceModal({ ticker: "TSM", name: "Taiwan Semiconductor", type: "Foundry", product: "wafers", confidence: 0.9 }, { ticker: "AMD" }, "upstream");
+  globalThis.__modalHiddenAfterOpen = document.getElementById('evidence-modal').classList.contains('hidden');
+  globalThis.__focusAfterOpen = document.activeElement && document.activeElement.id;
+`, context);
+
+if (context.__modalHiddenAfterOpen) {
+  throw new Error("opening the evidence modal should show it");
+}
+if (context.__focusAfterOpen !== "evidence-dialog") {
+  throw new Error(`opening the modal should move focus into the dialog, got ${context.__focusAfterOpen}`);
+}
+
+const escapeEvent = dispatchKeydown({ key: "Escape" });
+if (!element("evidence-modal").classList.contains("hidden")) {
+  throw new Error("Escape should close the evidence modal");
+}
+if (context.document.activeElement !== modalOpener) {
+  throw new Error("closing the modal should return focus to whatever opened it");
+}
+if (!escapeEvent) {
+  throw new Error("Escape handling should run through the document keydown listener");
+}
+
+// --- Sorted column announced, not only drawn ----------------------------------------
+selectorNodes["th[data-sort]"] = ["name", "ticker", "price"].map((column) => {
+  const header = mockElement("th");
+  header.setAttribute("data-sort", column);
+  return header;
+});
+vm.runInContext("sortCol = 'name'; sortAsc = true; renderLevel2();", context);
+const [nameHeader, tickerHeader] = selectorNodes["th[data-sort]"];
+if (nameHeader.getAttribute("aria-sort") !== "ascending" || tickerHeader.getAttribute("aria-sort") !== "none") {
+  throw new Error(`aria-sort must track the sorted column, got ${nameHeader.getAttribute("aria-sort")} / ${tickerHeader.getAttribute("aria-sort")}`);
+}
+
+// --- Reset clears the helper line with the box --------------------------------------
+vm.runInContext(`
+  document.getElementById('search-input').value = 'taiwan';
+  applyFilters(false);
+  resetDashboard();
+  globalThis.__helperAfterReset = document.getElementById('search-helper').textContent;
+`, context);
+if (context.__helperAfterReset !== "Search ticker, company, supplier, customer, product, or sector.") {
+  throw new Error(`resetting should clear the search helper, got ${context.__helperAfterReset}`);
+}
+
+// --- A product that already states the share gets no duplicate badge ----------------
+vm.runInContext(`
+  globalThis.__restates = [
+    restatesShare({ product: '81% of ROKU revenue' }, '81% of revenue'),
+    restatesShare({ product: '10.5% of HLIT revenue' }, '10.5% of revenue'),
+    restatesShare({ product: 'Set-top boxes' }, '81% of revenue'),
+    restatesShare({ product: '116% of revenue' }, '16% of revenue'),
+  ];
+  globalThis.__shardKeys = [detailShardKey('AMD'), detailShardKey('\u00c6ON'), detailShardKey('$X'), detailShardKey('')].join('|');
+`, context);
+if (JSON.stringify(context.__restates) !== JSON.stringify([true, true, false, false])) {
+  throw new Error(`share badges must not repeat a share the product already states: ${JSON.stringify(context.__restates)}`);
+}
+if (context.__shardKeys !== "A|Æ|_|_") {
+  throw new Error(`detail shard keys must match the keys split_dashboard.py writes: ${context.__shardKeys}`);
+}
+
+// --- An unscored direction is not a 0% hit rate -------------------------------------
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 40, hit_rate: 0.5 }, track_record: {
+    status: "established", minimum_resolved: 30, resolved: 40, hit_rate: 0.5, always_up_hit_rate: 0.4,
+    matured_unresolved: 0, by_direction: { down: { resolved: 6, hit_rate: null } },
+  } };
+  renderPredictionsView();
+`, context);
+const unscoredText = collectText(element("prediction-track-record"));
+if (!unscoredText.includes("down: 6 resolved, not scored yet") || unscoredText.includes("down: 0%")) {
+  throw new Error(`a direction with no hit rate must not render as 0%; got ${unscoredText}`);
 }
