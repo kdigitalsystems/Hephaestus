@@ -67,6 +67,8 @@ The scheduled pipeline requires the self-hosted GPU runner, Alpaca credentials, 
 
 The GPU pipeline has two daily triggers, 02:23 and 14:23 UTC. Each run starts with a `freshness` job on a GitHub-hosted runner that executes `scripts/published_today.sh`: a scheduled run is skipped when `docs/status.json` on `main` already carries today's UTC date, so the second trigger is a retry that only does work when the first run failed or never started (for example when the self-hosted runner loses communication mid-job). Manual dispatches always run, and an unreadable status file lets the run go ahead. `tests/test_workflow_schedule.py` covers the gating and all four decision cases.
 
+The publish step pushes through `scripts/publish_with_retry.sh`, which retries a failed push (rebasing first) before giving up; a transient `remote: Internal Server Error` discarded a completed run's work on 2026-09-15. `tests/test_publish_retry.py` drives it against real local repositories with a `git` shim that fails a chosen number of pushes.
+
 ## Research Signal Workflow
 
 `.github/workflows/predictions.yml` is intentionally separate from the daily graph-discovery workflow. It runs on the existing self-hosted GPU runner, verifies that Ollama is available, and generates a research-only top-50-company export. Both publishing workflows share a GitHub Actions concurrency group, so they cannot race while writing to `main`:

@@ -122,7 +122,7 @@ jobs:
               echo "Rebase onto origin/main failed; aborted without publishing."
               exit 1
             fi
-            git push origin main
+            bash scripts/publish_with_retry.sh
           else
             echo "No research signal changes to publish."
           fi
