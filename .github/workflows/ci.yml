@@ -123,6 +123,7 @@ jobs:
           bash -n run_pipeline.sh
           bash -n scripts/rebuild_db.sh
           bash -n scripts/published_today.sh
+          bash -n scripts/publish_with_retry.sh
 
       - name: Check whitespace
         run: |
