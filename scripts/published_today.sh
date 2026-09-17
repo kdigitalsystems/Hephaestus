@@ -15,8 +15,14 @@ publish=true
 
 if [ "$event" = "schedule" ]; then
   today="$(date -u +%F)"
-  published="$(gh api "repos/${REPO:?REPO must name the repository}/contents/docs/status.json?ref=main" \
-    -H "Accept: application/vnd.github.raw+json" 2>/dev/null | jq -r '.data_as_of // empty' 2>/dev/null | cut -c1-10 || true)"
+  raw=""
+  if ! raw="$(gh api "repos/${REPO:?REPO must name the repository}/contents/docs/status.json?ref=main" \
+    -H "Accept: application/vnd.github.raw+json" 2>/tmp/published-today.err)"; then
+    # Fail open, but say why: a permanently broken gate would run the four-hour job twice
+    # a day forever without a single signal.
+    echo "Freshness check could not read docs/status.json: $(tr '\n' ' ' </tmp/published-today.err | cut -c1-200)"
+  fi
+  published="$(printf '%s' "$raw" | jq -r '.data_as_of // empty' 2>/dev/null | cut -c1-10 || true)"
   if [ -n "$published" ] && [ "$published" = "$today" ]; then
     publish=false
     echo "Today's data is already published (data_as_of $published); skipping this scheduled run."

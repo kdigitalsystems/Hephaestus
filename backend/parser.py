@@ -135,7 +135,7 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
     items = parsed_data.get("dependencies") if isinstance(parsed_data, dict) else None
     if not isinstance(items, list):
         print("Error during LLM extraction: model output did not contain a dependencies list.")
-        return {"dependencies": []}
+        return {"dependencies": [], "error": "model output did not contain a dependencies list"}
 
     # Validate item by item so one malformed relationship does not discard the rest.
     dependencies = []

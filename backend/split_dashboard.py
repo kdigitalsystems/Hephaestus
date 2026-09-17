@@ -10,6 +10,7 @@ docs/company-data/<first letter>.json and are fetched when a brief opens.
 import json
 import os
 import sys
+import tempfile
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS_DIR = os.path.join(BASE_DIR, "docs")
@@ -94,8 +95,42 @@ def write_split(dashboard_path=DEFAULT_DASHBOARD_PATH, lite_path=DEFAULT_LITE_PA
     return {"lite_bytes": lite_size, "full_bytes": full_size, "shards": len(written), "removed": removed}
 
 
+def check_split(dashboard_path=DEFAULT_DASHBOARD_PATH, lite_path=DEFAULT_LITE_PATH, shard_dir=DEFAULT_SHARD_DIR):
+    """The committed lite file and shards must match a fresh split of the committed export.
+
+    The site loads dashboard_lite.json first and nothing else validates it, so a stale one
+    would serve an old graph while every other check stayed green.
+    """
+    problems = []
+    shard_count = 0
+    with tempfile.TemporaryDirectory() as tmp:
+        fresh_lite = os.path.join(tmp, "dashboard_lite.json")
+        fresh_shards = os.path.join(tmp, "company-data")
+        write_split(dashboard_path, fresh_lite, fresh_shards)
+        if not os.path.exists(lite_path) or open(lite_path, "rb").read() != open(fresh_lite, "rb").read():
+            problems.append(f"{lite_path} does not match a fresh split of {dashboard_path}")
+        expected = sorted(os.listdir(fresh_shards))
+        shard_count = len(expected)
+        published = sorted(os.listdir(shard_dir)) if os.path.isdir(shard_dir) else []
+        for name in sorted(set(expected) | set(published)):
+            fresh_path, live_path = os.path.join(fresh_shards, name), os.path.join(shard_dir, name)
+            if not os.path.exists(live_path):
+                problems.append(f"missing shard {name}")
+            elif not os.path.exists(fresh_path):
+                problems.append(f"stale shard {name}")
+            elif open(live_path, "rb").read() != open(fresh_path, "rb").read():
+                problems.append(f"shard {name} is out of date")
+    for problem in problems:
+        print(f"Dashboard split check: {problem}", file=sys.stderr)
+    if not problems:
+        print(f"Dashboard split check: {lite_path} and {shard_count} shard(s) match {dashboard_path}.")
+    return problems
+
+
 if __name__ == "__main__":
     try:
+        if "--check" in sys.argv:
+            raise SystemExit(1 if check_split() else 0)
         write_split()
     except (OSError, ValueError) as exc:
         print(f"Dashboard split failed: {exc}", file=sys.stderr)

@@ -28,6 +28,7 @@ def load_json(path):
 # The job's own timeout is four hours, so anything older than this belongs to an
 # earlier run: a 24-hour window would still accept yesterday's summary.
 MAX_SUMMARY_AGE_HOURS = 6
+DISCOVERY_FIELDS = ("companies_researched", "companies_deferred", "extraction_failures", "filings_swept", "disclosures_found")
 
 
 def fresh_discovery(discovery, now):
@@ -46,14 +47,14 @@ def fresh_discovery(discovery, now):
     return discovery if 0 <= age_hours <= MAX_SUMMARY_AGE_HOURS else {}
 
 
-def build_status(dashboard, discovery=None, now=None):
+def build_status(dashboard, discovery=None, previous=None, now=None):
     dashboard = dashboard or {}
     now = now or datetime.now(timezone.utc)
     metrics = dashboard.get("investor_metrics") or {}
     change = metrics.get("change_summary") or {}
     discovery = fresh_discovery(discovery, now)
     sweep = discovery.get("concentration_sweep") or {}
-    return {
+    status = {
         "generated_at": now.isoformat(timespec="seconds"),
         "data_as_of": dashboard.get("generated_at"),
         "companies": metrics.get("company_count"),
@@ -67,6 +68,12 @@ def build_status(dashboard, discovery=None, now=None):
         "filings_swept": sweep.get("checked"),
         "disclosures_found": sweep.get("created"),
     }
+    # A run without a discovery step (run_pipeline.sh, or a discovery that crashed) must
+    # not blank the banner: keep the last published numbers for what it did not produce.
+    for key, value in (previous or {}).items():
+        if key in DISCOVERY_FIELDS and status.get(key) is None:
+            status[key] = value
+    return status
 
 
 def write_status(dashboard_path=DEFAULT_DASHBOARD_PATH, summary_path=DEFAULT_SUMMARY_PATH, status_path=DEFAULT_STATUS_PATH):
@@ -74,7 +81,7 @@ def write_status(dashboard_path=DEFAULT_DASHBOARD_PATH, summary_path=DEFAULT_SUM
     if not dashboard:
         print(f"Dashboard data not found at {dashboard_path}; status not written.", file=sys.stderr)
         return None
-    status = build_status(dashboard, load_json(summary_path))
+    status = build_status(dashboard, load_json(summary_path), previous=load_json(status_path))
     tmp_path = f"{status_path}.tmp"
     with open(tmp_path, "w", encoding="utf-8") as handle:
         json.dump(status, handle, indent=2, sort_keys=True)

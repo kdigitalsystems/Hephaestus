@@ -110,15 +110,18 @@ def test_recheck_corrects_published_concentration_shares():
     apple = Node(name="Apple Inc. Common Stock", ticker="AAPL", market_cap=3e12)
     session.add_all([howmet, ge, acme, apple])
     session.commit()
-    wrong = Edge(source_id=howmet.id, target_id=ge.id, dependency_type="Revenue Concentration", product="53% of HWM revenue", revenue_share=53.0, evidence_excerpt=HOWMET, review_status="approved")
-    stale = Edge(source_id=acme.id, target_id=apple.id, dependency_type="Revenue Concentration", product="24% of ACME revenue", revenue_share=24.0, evidence_excerpt="Acme Semiconductor (ACME) 10-K filed 2025-10-31: Our peer group comprised Apple and five others whose revenues exceeded 24% of ours.", review_status="approved")
+    consensus = "Ollama consensus review: Consensus 3/3 for approve."
+    wrong = Edge(source_id=howmet.id, target_id=ge.id, dependency_type="Revenue Concentration", product="53% of HWM revenue", revenue_share=53.0, evidence_excerpt=HOWMET, review_status="approved", review_note=consensus)
+    stale = Edge(source_id=acme.id, target_id=apple.id, dependency_type="Revenue Concentration", product="24% of ACME revenue", revenue_share=24.0, evidence_excerpt="Acme Semiconductor (ACME) 10-K filed 2025-10-31: Our peer group comprised Apple and five others whose revenues exceeded 24% of ours.", review_status="approved", review_note=consensus)
     # A peer list of listed companies: with only the customer's name the recheck would
     # see one name and confirm it; with the whole universe it sees four and rejects it.
     for name, ticker in (("Microsoft Corporation", "MSFT"), ("Amazon.com, Inc.", "AMZN"), ("Walmart Inc.", "WMT")):
         session.add(Node(name=name, ticker=ticker, market_cap=1e12))
     session.commit()
-    peers = Edge(source_id=acme.id, target_id=ge.id, dependency_type="Revenue Concentration", product="30% of ACME revenue", revenue_share=30.0, evidence_excerpt="Acme Semiconductor (ACME) 10-K filed 2025-10-31: Customers in our peer group, GE Aerospace, Microsoft, Amazon.com and Walmart, accounted for 30% of revenues.", review_status="approved")
-    session.add_all([wrong, stale, peers])
+    peers = Edge(source_id=acme.id, target_id=ge.id, dependency_type="Revenue Concentration", product="30% of ACME revenue", revenue_share=30.0, evidence_excerpt="Acme Semiconductor (ACME) 10-K filed 2025-10-31: Customers in our peer group, GE Aerospace, Microsoft, Amazon.com and Walmart, accounted for 30% of revenues.", review_status="approved", review_note=consensus)
+    # A share a human confirmed by hand is never demoted by the nightly recheck.
+    confirmed = Edge(source_id=howmet.id, target_id=apple.id, dependency_type="Revenue Concentration", product="12% of HWM revenue", revenue_share=12.0, evidence_excerpt="Howmet Aerospace (HWM) 10-K filed 2026-02-12: no customer detail.", review_status="approved", review_note="Confirmed against the filing by hand.")
+    session.add_all([wrong, stale, peers, confirmed])
     session.commit()
 
     counts = {}
@@ -127,6 +130,7 @@ def test_recheck_corrects_published_concentration_shares():
 
     assert counts == {"concentration_share_corrected": 1, "concentration_unsupported": 2}
     assert peers.review_status == "pending"
+    assert confirmed.review_status == "approved" and confirmed.revenue_share == 12.0
     assert (wrong.revenue_share, wrong.product, wrong.review_status) == (11.0, "11% of HWM revenue", "approved")
     assert stale.review_status == "pending" and "no longer yields" in stale.review_note
 
@@ -460,3 +464,151 @@ def test_research_queue_reaches_below_one_billion_and_honours_cooldown_and_secto
     assert auto_discover_edges.DISCOVERY_MIN_MARKET_CAP < 1e9
     assert queue == ["BIG", "MID", "NSC", "LNK"]
     assert [node.ticker for node in auto_discover_edges.select_research_queue(session, limit=2, now=now)] == ["BIG", "MID"]
+
+
+def test_a_percentage_is_never_guessed_onto_the_wrong_customer():
+    """Real RIG wording. With one customer missing from the universe, positional pairing
+    handed Shell the first 22% and Equinor the second, instead of Equinor's 12%."""
+    known = {"Shell plc": "Shell plc", "Equinor ASA": "Equinor ASA"}
+    sentence = "Our customers Petrobras, Shell plc and Equinor ASA represented 22 percent, 22 percent and 12 percent of revenues, respectively."
+    assert extract_disclosures(sentence, known) == []
+    # All three present: a clean one-to-one list still pairs.
+    known_all = {**known, "Petroleo Brasileiro": "Petroleo Brasileiro"}
+    found = {(d.customer_name, d.share_pct) for d in extract_disclosures(sentence.replace("Petrobras", "Petroleo Brasileiro"), known_all)}
+    assert found == {("Petroleo Brasileiro", 22.0), ("Shell plc", 22.0), ("Equinor ASA", 12.0)}
+
+
+def test_a_collective_share_stays_collective_even_with_a_prior_year_figure():
+    known = {"Apple Inc.": "Apple", "NVIDIA Corporation": "NVIDIA"}
+    assert extract_disclosures("Our customers Apple and NVIDIA collectively accounted for 30% of revenues in 2025 and 28% of revenues in 2024.", known) == []
+
+
+def test_a_receivables_clause_no_longer_discards_the_revenue_share_beside_it():
+    """Most 10-Ks pair the two figures in one sentence; the whole sentence was dropped."""
+    known = {"Apple Inc.": "Apple"}
+    found = extract_disclosures("One customer, Apple Inc., accounted for 24% of our net sales and 19% of accounts receivable in fiscal 2025.", known)
+    assert [(d.customer_name, d.share_pct) for d in found] == [("Apple Inc.", 24.0)]
+    # A receivables-only sentence is still not a revenue share.
+    assert extract_disclosures("Accounts receivable from our customers Apple and Dell represented 35% and 20% of total accounts receivable.",
+                               {**known, "Dell Technologies Inc.": "Dell"}) == []
+
+
+def test_a_concentration_heading_does_not_blank_the_disclosure_behind_it():
+    known = {"Apple Inc.": "Apple"}
+    found = extract_disclosures("Revenue concentration for fiscal 2025 was as follows: Apple accounted for 24% of our net sales to customers.", known)
+    assert [(d.customer_name, d.share_pct) for d in found] == [("Apple Inc.", 24.0)]
+    # A name trailing the verb is still context, not a customer.
+    assert extract_disclosures("Our customers comprised Boeing and Airbus, whose revenues exceeded 30% of ours.",
+                               {"The Boeing Company": "Boeing", "Airbus SE": "Airbus"}) == []
+
+
+def test_a_sentence_is_not_split_inside_a_company_name():
+    from customer_concentration import split_sentences
+
+    text = 'Petroleo Brasileiro S.A. (together with its affiliates, "Petrobras") accounted for 22% of revenues from customers.'
+    assert len(split_sentences(text)) == 1
+    # Ordinary sentence boundaries still split.
+    assert len(split_sentences("Sales to Apple were strong. Walmart accounted for 12% of revenues.")) == 2
+
+
+def test_company_names_clean_to_something_that_can_match_a_filing():
+    """"Deere & Company" cleaned to "Deere &", which no sentence ever contains."""
+    from auto_discover_edges import clean_company_name
+
+    assert clean_company_name("Deere & Company") == "Deere"
+    assert clean_company_name("The Home Depot, Inc.") == "Home Depot"
+    known = {"Deere & Company": clean_company_name("Deere & Company")}
+    found = extract_disclosures("Sales to Deere accounted for 15% of revenue from customers.", known)
+    assert [(d.customer_name, d.share_pct) for d in found] == [("Deere & Company", 15.0)]
+
+
+def test_the_recheck_covers_shares_the_panel_relabelled():
+    """ROKU's 81% survived because the panel renamed the edge "operational supply chain
+    dependency", and the recheck only looked at edges still typed Revenue Concentration."""
+    from cleanup_reviewed_edges import recheck_concentration_edges
+
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    roku = Node(name="Roku, Inc.", ticker="ROKU", market_cap=1e10)
+    bby = Node(name="Best Buy Co., Inc.", ticker="BBY", market_cap=2e10)
+    session.add_all([roku, bby])
+    session.commit()
+    relabelled = Edge(
+        source_id=roku.id, target_id=bby.id, dependency_type="operational supply chain dependency",
+        product="Devices revenue", revenue_share=81.0, review_status="approved",
+        review_note="Ollama consensus review: Consensus 2/3 for approve.",
+        evidence_excerpt="Roku (ROKU) 10-K filed 2026-02-13: Amazon, Best Buy, Target, and Walmart in total accounted for 81% of our Devices revenue.",
+    )
+    session.add(relabelled)
+    session.commit()
+
+    counts = {}
+    recheck_concentration_edges(session, counts)
+    session.commit()
+
+    assert counts.get("concentration_unsupported") == 1
+    assert relabelled.review_status == "pending"
+
+
+def test_a_supplier_cannot_sell_more_than_all_of_its_revenue():
+    from cleanup_reviewed_edges import hold_impossible_share_totals
+
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    hlit = Node(name="Harmonic Inc.", ticker="HLIT", market_cap=1e9)
+    cmcsa = Node(name="Comcast Corporation", ticker="CMCSA", market_cap=1.5e11)
+    plus = Node(name="ePlus inc.", ticker="PLUS", market_cap=2e9)
+    ok_filer = Node(name="Fine Supplier Inc.", ticker="FINE", market_cap=1e9)
+    session.add_all([hlit, cmcsa, plus, ok_filer])
+    session.commit()
+    consensus = "Ollama consensus review: Consensus 3/3 for approve."
+    over = [
+        Edge(source_id=hlit.id, target_id=cmcsa.id, dependency_type="Revenue Concentration", revenue_share=84.0, review_status="approved", review_note=consensus, evidence_excerpt="x"),
+        Edge(source_id=hlit.id, target_id=plus.id, dependency_type="Revenue Concentration", revenue_share=91.0, review_status="approved", review_note=consensus, evidence_excerpt="x"),
+    ]
+    fine = Edge(source_id=ok_filer.id, target_id=cmcsa.id, dependency_type="Revenue Concentration", revenue_share=40.0, review_status="approved", review_note=consensus, evidence_excerpt="x")
+    session.add_all([*over, fine])
+    session.commit()
+
+    counts = {}
+    hold_impossible_share_totals(session, counts)
+    session.commit()
+
+    assert counts.get("concentration_totals_over_100") == 2
+    assert all(edge.review_status == "pending" for edge in over)
+    assert fine.review_status == "approved"
+
+
+def test_a_link_published_without_evidence_goes_back_for_review(monkeypatch):
+    import cleanup_reviewed_edges as cleanup
+
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    a = Node(name="Alpha Inc.", ticker="ALPH", market_cap=1e10)
+    b = Node(name="Beta Inc.", ticker="BETA", market_cap=1e10)
+    session.add_all([a, b])
+    session.commit()
+    blank = Edge(source_id=a.id, target_id=b.id, dependency_type="Components", confidence_score=1.0,
+                 source_url="https://www.sec.gov/x.htm", evidence_excerpt="   ", review_status="approved")
+    session.add(blank)
+    session.commit()
+    monkeypatch.setattr(cleanup, "SessionLocal", Session)
+
+    cleanup.cleanup_reviewed_edges()
+
+    refreshed = Session().query(Edge).first()
+    assert refreshed.review_status == "pending"
+    assert "without an evidence excerpt" in refreshed.review_note
+
+
+def test_an_arrow_label_is_a_role_label():
+    """The panel's own shorthand ("manufacturer -> logistics provider") reached the site."""
+    from evidence_quality import is_role_label
+
+    assert is_role_label("manufacturer -> logistics provider")
+    assert is_role_label("manufacturer <-> customer")
+    assert not is_role_label("Advanced Silicon Fabrication")

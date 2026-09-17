@@ -1,4 +1,5 @@
 import re
+from collections import defaultdict
 from datetime import datetime, timezone
 
 from audit_data_quality import (
@@ -7,11 +8,12 @@ from audit_data_quality import (
     has_reversed_role_label,
     has_speculative_supply_label,
     has_wrong_direction_review,
-    normalized_evidence,
-    reciprocal_same_evidence_edges,
+    reciprocal_same_evidence_pairs,
 )
 from evidence_quality import is_role_label
 from customer_concentration import describe_share, disclosure_sentence, extract_disclosures, implausible_share
+from sqlalchemy import or_
+
 from database import SessionLocal
 from evidence_quality import unsupported_ai_evidence
 from models import Edge
@@ -34,8 +36,12 @@ def recheck_concentration_edges(session, counts):
     """
     from auto_discover_edges import clean_company_name, known_company_names  # heavy module; import lazily
 
-    # A human's rejection stands; only live edges are rechecked.
-    edges = session.query(Edge).filter(Edge.dependency_type == CONCENTRATION_TYPE, Edge.review_status != "rejected").all()
+    # Any edge carrying a disclosed share, whatever the panel relabelled it to: ROKU's
+    # 81% survived for days as "operational supply chain dependency".
+    edges = session.query(Edge).filter(
+        or_(Edge.dependency_type == CONCENTRATION_TYPE, Edge.revenue_share.is_not(None)),
+        Edge.review_status != "rejected",
+    ).all()
     if not edges:
         return
     # The whole universe, not just this edge's customer: discovery's rules (at most
@@ -57,11 +63,9 @@ def recheck_concentration_edges(session, counts):
             if d.customer_name == customer.name and d.share_pct is not None
         ]
         if not shares:
-            if edge.review_status != "pending":
-                edge.review_status = "pending"
-                edge.review_note = "Automated recheck: the filing sentence no longer yields a revenue share for this customer."
-                edge.reviewed_at = None
-                counts["concentration_unsupported"] = counts.get("concentration_unsupported", 0) + 1
+            if needs_human_confirmation(edge):
+                hold_for_human(edge, counts, "concentration_unsupported",
+                               "the filing sentence no longer yields a revenue share for this customer")
             continue
         share = max(shares)
         if edge.revenue_share != share:
@@ -73,10 +77,39 @@ def recheck_concentration_edges(session, counts):
         if reason and needs_human_confirmation(edge):
             # Held notes are skipped by the consensus review, so a human decides once
             # instead of the models re-approving what this step keeps holding.
-            edge.review_status = "pending"
-            edge.review_note = f"{HELD_NOTE_PREFIX} hold: {reason}; a human must confirm this disclosure."[:1000]
-            edge.reviewed_at = None
-            counts["concentration_held_implausible"] = counts.get("concentration_held_implausible", 0) + 1
+            hold_for_human(edge, counts, "concentration_held_implausible", f"{reason}; a human must confirm this disclosure")
+
+
+def hold_for_human(edge, counts, key, reason):
+    """Send an edge back for review with a note the consensus panel skips."""
+    edge.review_status = "pending"
+    edge.review_note = f"{HELD_NOTE_PREFIX} hold: {reason}."[:1000]
+    edge.reviewed_at = None
+    counts[key] = counts.get(key, 0) + 1
+
+
+def hold_impossible_share_totals(session, counts):
+    """A supplier cannot sell more than all of its revenue.
+
+    ROKU published 81% to both Best Buy and Walmart, HLIT 175% across two customers: a
+    combined figure ("Amazon, Best Buy and Walmart in total accounted for 81%") copied
+    onto each named customer.
+    """
+    totals = defaultdict(list)
+    for edge in session.query(Edge).filter(Edge.revenue_share.is_not(None)).all():
+        if is_published(edge):
+            totals[edge.source_id].append(edge)
+    for group in totals.values():
+        total = sum(edge.revenue_share or 0 for edge in group)
+        if len(group) < 2 or total <= 100:
+            continue
+        for edge in group:
+            if needs_human_confirmation(edge):
+                hold_for_human(
+                    edge, counts, "concentration_totals_over_100",
+                    f"this supplier's disclosed shares total {total:.0f}% of its revenue, "
+                    "which usually means a combined figure was copied onto each customer",
+                )
 
 
 def is_published(edge):
@@ -108,35 +141,21 @@ def direction_rank(edge):
 def resolve_reciprocal_duplicates(session, counts):
     """One fact published in both directions is always wrong; keep one, hold the other.
 
-    Two runners' graphs merged through the decisions file can leave an approved edge
-    and its approved mirror with identical evidence (Broadcom <-> Dell). The audit
-    treats that as a warning and would block the whole publish; a human should
-    decide the direction, so the weaker one goes back to review with a held note.
+    Two runners' graphs merged through the decisions file can leave an approved edge and
+    its approved mirror carrying the same sentence (Broadcom <-> Dell, Google <-> Marvell).
+    A human decides the direction, so the weaker one goes back to review.
     """
     published = [edge for edge in session.query(Edge).all() if is_published(edge)]
-    flagged = reciprocal_same_evidence_edges(published)
-    by_key = {}
-    for edge in flagged:
-        if edge.source_node and edge.target_node:
-            key = (edge.source_id, edge.target_id, normalized_evidence(edge.evidence_excerpt))
-            by_key.setdefault(key, []).append(edge)
-    handled = set()
-    for (source_id, target_id, evidence), edges in by_key.items():
-        mirrors = by_key.get((target_id, source_id, evidence), [])
-        if not mirrors or (target_id, source_id, evidence) in handled:
+    for edge, mirror in reciprocal_same_evidence_pairs(published):
+        keeper = max((edge, mirror), key=direction_rank)
+        loser = mirror if keeper is edge else edge
+        if loser.review_status == "pending":
             continue
-        handled.add((source_id, target_id, evidence))
-        keeper = max(edges + mirrors, key=direction_rank)
-        for edge in edges + mirrors:
-            if edge is keeper or edge.review_status == "pending":
-                continue
-            edge.review_status = "pending"
-            edge.review_note = (
-                f"{HELD_NOTE_PREFIX} hold: the opposite direction is published as edge #{keeper.id} "
-                "with the same evidence; a human must decide which direction is correct."
-            )[:1000]
-            edge.reviewed_at = None
-            counts["reciprocal_held"] = counts.get("reciprocal_held", 0) + 1
+        hold_for_human(
+            loser, counts, "reciprocal_held",
+            f"the opposite direction is published as edge #{keeper.id} with the same evidence; "
+            "a human must decide which direction is correct",
+        )
 
 
 def needs_human_confirmation(edge):
@@ -155,8 +174,14 @@ def cleanup_reviewed_edges():
     try:
         recheck_concentration_edges(session, counts)
         resolve_reciprocal_duplicates(session, counts)
+        hold_impossible_share_totals(session, counts)
         approved_edges = session.query(Edge).filter(Edge.review_status == "approved").all()
         for edge in approved_edges:
+            if not str(edge.evidence_excerpt or "").strip():
+                # Six links were published with a citation but no excerpt at all.
+                hold_for_human(edge, counts, "pending_missing_evidence",
+                               "published without an evidence excerpt; a human must confirm the source")
+                continue
             if unsupported_ai_evidence(edge.source_url, edge.evidence_excerpt):
                 edge.review_status = "rejected"
                 edge.review_note = "Automated cleanup: AI-derived relationship has no usable source excerpt."

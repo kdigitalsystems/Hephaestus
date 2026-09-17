@@ -121,6 +121,9 @@ def clean_company_name(name):
 
     clean_name = clean_name.replace(',', '')
     clean_name = re.sub(r'\s+', ' ', clean_name)
+    clean_name = re.sub(r'^the\s+', '', clean_name, flags=re.IGNORECASE)
+    # A stopword can leave a dangling connective ("Deere & Company" -> "Deere &").
+    clean_name = re.sub(r'[\s&\-]+$', '', clean_name)
     return clean_name.strip()
 
 def is_reversed_role_dependency(dependency_type):
@@ -737,6 +740,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
             return
         extraction_attempts = 0
         extraction_failures = 0
+        no_source_companies = 0
         last_extraction_error = ""
         started = time.monotonic()
         deferred = 0
@@ -768,8 +772,13 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
 
             if len(intel_blob) < 400:
                 print(f"  [-] Insufficient data found for {company.ticker}.")
-                company.last_researched_at = utc_now()
-                session.commit()
+                if intel_blob.strip():
+                    # The sources answered and this company simply has little to read;
+                    # an empty blob means the collectors failed, so it stays in the queue.
+                    company.last_researched_at = utc_now()
+                    session.commit()
+                else:
+                    no_source_companies += 1
                 continue
 
             clean_target_name = clean_company_name(company.name)
@@ -845,12 +854,19 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
         print("\n--- Titan Queue Complete. Refresh your dashboard to see new X-Ray data. ---")
         print(
             f"Extraction summary: {extraction_attempts} companies analyzed, {extraction_failures} extraction failure(s), "
-            f"{deferred} deferred, {time.monotonic() - started:.0f}s elapsed."
+            f"{no_source_companies} with no source text, {deferred} deferred, {time.monotonic() - started:.0f}s elapsed."
         )
+        if no_source_companies and not extraction_attempts:
+            # Every collector returned nothing: an outage, not a quiet day.
+            print(
+                f"  [!] No source text for any of the {no_source_companies} companies researched. "
+                "Check SEC, Wikipedia and Yahoo access; none were marked as researched."
+            )
         write_discovery_summary({
             "generated_at": utc_now().isoformat(timespec="seconds"),
             "companies_analyzed": extraction_attempts,
             "extraction_failures": extraction_failures,
+            "no_source_companies": no_source_companies,
             "deferred": deferred,
             "elapsed_seconds": round(time.monotonic() - started),
             "budget_seconds": DISCOVERY_MAX_SECONDS,

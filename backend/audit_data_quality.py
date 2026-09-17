@@ -12,6 +12,7 @@ from customer_concentration import implausible_share
 from database import SessionLocal
 from models import Edge, Node
 from evidence_quality import has_non_supply_relationship, is_role_label, unsupported_ai_evidence
+from thefuzz import fuzz
 
 INVALID_DEPENDENCY_LABELS = {
     "news",
@@ -89,7 +90,15 @@ def normalized_evidence(value):
     return " ".join(str(value or "").lower().split())
 
 
-def reciprocal_same_evidence_edges(edges):
+RECIPROCAL_EVIDENCE_SIMILARITY = 90
+
+
+def reciprocal_same_evidence_pairs(edges):
+    """(edge, mirror) pairs publishing one fact in both directions.
+
+    Exact equality caught 1 of 9 real cases: the same sentence reaches the two edges with
+    a different trailing clause or punctuation, so near-identical evidence counts too.
+    """
     by_direction = defaultdict(list)
     for edge in edges:
         if not edge.source_node or not edge.target_node:
@@ -101,26 +110,34 @@ def reciprocal_same_evidence_edges(edges):
         target = edge.target_node.ticker or edge.target_node.name
         by_direction[(source, target)].append((edge, evidence))
 
-    flagged = []
-    seen = set()
+    pairs = []
+    paired = set()
     for (source, target), rows in by_direction.items():
-        reverse_key = (target, source)
-        if reverse_key not in by_direction or (target, source, source) in seen:
+        if (target, source) in paired:
             continue
         for edge, evidence in rows:
-            for reverse_edge, reverse_evidence in by_direction[reverse_key]:
-                if evidence == reverse_evidence:
-                    flagged.extend([edge, reverse_edge])
-                    seen.add((source, target, target))
-                    break
+            mirror = next(
+                (
+                    candidate
+                    for candidate, candidate_evidence in by_direction.get((target, source), [])
+                    if candidate_evidence == evidence or fuzz.ratio(evidence, candidate_evidence) >= RECIPROCAL_EVIDENCE_SIMILARITY
+                ),
+                None,
+            )
+            if mirror is not None:
+                pairs.append((edge, mirror))
+                paired.add((source, target))
+                break
+    return pairs
+
+
+def reciprocal_same_evidence_edges(edges):
     unique = []
-    seen_edges = set()
-    for edge in flagged:
-        identity = id(edge)
-        if identity in seen_edges:
-            continue
-        seen_edges.add(identity)
-        unique.append(edge)
+    seen = set()
+    for edge in (side for pair in reciprocal_same_evidence_pairs(edges) for side in pair):
+        if id(edge) not in seen:
+            seen.add(id(edge))
+            unique.append(edge)
     return unique
 
 

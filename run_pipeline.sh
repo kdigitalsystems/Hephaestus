@@ -126,7 +126,7 @@ if ! git diff --cached --quiet; then
   # The scheduled workflow may have published since this run started. Unrelated
   # local edits are stashed around the rebase instead of aborting after the commit.
   git pull --rebase --autostash origin main || { git rebase --abort 2>/dev/null || true; echo "Rebase onto origin/main failed; the commit is local only."; exit 1; }
-  git push origin main
+  bash scripts/publish_with_retry.sh
 else
   echo "No changes to commit."
 fi

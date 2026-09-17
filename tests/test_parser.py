@@ -185,3 +185,14 @@ def test_extract_dependencies_rejects_malformed_source_url(monkeypatch):
     })
 
     assert parser.extract_dependencies("source text") == {"dependencies": []}
+
+
+def test_a_response_without_a_dependencies_list_counts_as_a_failure(monkeypatch):
+    """Without an error the caller treated it as successful research: cooldown stamped,
+    failure uncounted, and the "every extraction failed" alarm suppressed."""
+    monkeypatch.setattr(parser, "ollama_chat", lambda **_kwargs: {"message": {"content": '{"results": []}'}})
+
+    result = parser.extract_dependencies("source text")
+
+    assert result["dependencies"] == []
+    assert "dependencies list" in result["error"]
