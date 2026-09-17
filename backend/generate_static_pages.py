@@ -295,8 +295,9 @@ def generate_static_pages(dashboard_path=DEFAULT_DASHBOARD_PATH, output_dir=DEFA
     removed = 0
     # write_text_atomic leaves ".AMD.html.k3x9.tmp" behind if a run is killed mid-write,
     # and `git add -A docs/company` would then commit it forever.
-    for orphan in list(output_dir.glob("*.tmp")) + list(output_dir.glob(".*.tmp")):
-        orphan.unlink()
+    for orphan in {*output_dir.glob("*.tmp"), *output_dir.glob(".*.tmp")}:
+        # pathlib's "*" matches dotfiles, so a hidden temp appears in both globs.
+        orphan.unlink(missing_ok=True)
         removed += 1
     # A company that lost its last relationship must not keep a stale page.
     for stale in output_dir.glob("*.html"):

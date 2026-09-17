@@ -14,7 +14,8 @@ import tempfile
 from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
-from xml.sax.saxutils import escape
+from urllib.parse import quote
+from xml.sax.saxutils import escape, quoteattr
 
 from export import history_entry_date, load_link_history, publishable_file_mode, write_json_atomic
 
@@ -31,7 +32,9 @@ MAX_LINKS_PER_LIST = 50
 
 
 def company_url(ticker):
-    return f"{SITE_URL}#company?ticker={ticker}"
+    # A name can reach this when a relationship key carried no ticker; percent-encode
+    # so "&" and spaces cannot produce a dead link.
+    return f"{SITE_URL}#company?ticker={quote(str(ticker), safe='.-_')}"
 
 
 def link_summary(key, entry):
@@ -116,8 +119,8 @@ def describe_link(link):
 
 
 def link_html(link):
-    source = f'<a href="{escape(company_url(link["source_ticker"]))}">{escape(link["source_ticker"])}</a>'
-    target = f'<a href="{escape(company_url(link["target_ticker"]))}">{escape(link["target_ticker"])}</a>'
+    source = f'<a href={quoteattr(company_url(link["source_ticker"]))}>{escape(link["source_ticker"])}</a>'
+    target = f'<a href={quoteattr(company_url(link["target_ticker"]))}>{escape(link["target_ticker"])}</a>'
     detail = escape(link["type"])
     if link.get("product") and link["product"] != link["type"]:
         detail += f" ({escape(link['product'])})"

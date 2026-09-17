@@ -109,6 +109,14 @@ def stable_edge_key(edge, supplier_node=None, customer_node=None):
     dependency_type = edge.dependency_type or "Supply Link"
     return f"{supplier}->{customer}:{dependency_type}".upper()
 
+SOURCE_TITLE_PLACEHOLDER = "AI Multi-Source Research"
+
+
+def publishable_product(product):
+    """The collector's fallback source title is not a product ("AI Multi-Source Research")."""
+    return "" if str(product or "").strip() == SOURCE_TITLE_PLACEHOLDER else product
+
+
 def edge_payload(edge, node, supplier_node=None, customer_node=None):
     connected_node = node
     source_url = edge.source_url or "Unknown"
@@ -127,7 +135,7 @@ def edge_payload(edge, node, supplier_node=None, customer_node=None):
         "name": connected_node.name,
         "ticker": connected_node.ticker or "",
         "type": edge.dependency_type,
-        "product": edge.product or edge.dependency_type,
+        "product": publishable_product(edge.product) or edge.dependency_type,
         "confidence": clean_num(edge.confidence_score),
         "source": source_url,
         "source_title": edge.source_title or source_url,
@@ -198,12 +206,16 @@ def merge_relationship_group(relationships):
         if relationship.get("confidence") is not None
     ]
     primary["confidence"] = max(confidences) if confidences else None
-    shares = [
-        relationship.get("revenue_share")
-        for relationship in ranked
-        if isinstance(relationship.get("revenue_share"), (int, float))
-    ]
-    primary["revenue_share"] = max(shares) if shares else None
+    # From the same member that supplied the product and type, so a badge cannot
+    # disagree with the product text beside it (CENT -> HD read 16% next to 37%).
+    primary["revenue_share"] = next(
+        (
+            relationship.get("revenue_share")
+            for relationship in ranked
+            if isinstance(relationship.get("revenue_share"), (int, float))
+        ),
+        None,
+    )
     return primary
 
 def merge_relationships(relationships):
@@ -605,8 +617,8 @@ def annotate_dashboard_data(dashboard_data, history_path=HISTORY_PATH):
                 for company in companies
                 if company.get("investor_metrics", {}).get("total_links", 0) > 0
             ),
-            key=lambda item: item["total_links"],
-            reverse=True,
+            # Ticker breaks ties, so a re-seed cannot silently swap tied companies.
+            key=lambda item: (-item["total_links"], item["ticker"]),
         )[:10],
         "highest_concentration": sorted(
             (
@@ -620,8 +632,7 @@ def annotate_dashboard_data(dashboard_data, history_path=HISTORY_PATH):
                 for company in companies
                 if company.get("investor_metrics", {}).get("total_links", 0) >= 2
             ),
-            key=lambda item: (item["concentration_score"], item["total_links"]),
-            reverse=True,
+            key=lambda item: (-item["concentration_score"], -item["total_links"], item["ticker"]),
         )[:10],
         "sector_exposure": sorted(sector_exposure, key=lambda item: item["relationship_entries"], reverse=True),
         "change_summary": change_summary,
@@ -714,7 +725,7 @@ def review_edge_payload(edge):
         "target_ticker": edge.target_node.ticker if edge.target_node else "",
         "target_name": edge.target_node.name if edge.target_node else "",
         "type": edge.dependency_type,
-        "product": edge.product or edge.dependency_type,
+        "product": publishable_product(edge.product) or edge.dependency_type,
         "confidence": clean_num(edge.confidence_score),
         "source_url": edge.source_url or "",
         "source_title": edge.source_title or edge.source_url or "",

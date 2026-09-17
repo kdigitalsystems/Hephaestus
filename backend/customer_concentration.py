@@ -80,27 +80,44 @@ class ConcentrationDisclosure:
     candidates: list[str] = field(default_factory=list)
 
 
+ABBREVIATION_END = re.compile(r"(?:^|\s)(?:[A-Z]|S\.A|N\.V|A\.G|S\.E|U\.S|U\.K|St|No|Mr|Ms|Dr|vs)\.$")
+
+
 def split_sentences(text):
     normalized = " ".join(str(text or "").split())
-    return [sentence.strip() for sentence in SENTENCE_SPLIT.split(normalized) if sentence.strip()]
+    merged = []
+    for part in SENTENCE_SPLIT.split(normalized):
+        # "Petroleo Brasileiro S.A. (together with...)" is one sentence, and splitting it
+        # left the disclosure without the customer that owns the percentage.
+        if merged and ABBREVIATION_END.search(merged[-1]):
+            merged[-1] = f"{merged[-1]} {part}"
+        else:
+            merged.append(part)
+    return [sentence.strip() for sentence in merged if sentence.strip()]
 
 
 def is_concentration_sentence(sentence):
     if len(sentence) > MAX_SENTENCE_LENGTH:
         return False
-    if RECEIVABLES_PATTERN.search(sentence):
-        # "35% of total accounts receivable" is not a revenue share.
+    if not positioned_percentages(sentence):
+        # Every percentage belonged to a receivables clause.
         return False
-    return bool(PERCENT_PATTERN.search(sentence) and REVENUE_PATTERN.search(sentence) and CONCENTRATION_PATTERN.search(sentence))
+    return bool(REVENUE_PATTERN.search(sentence) and CONCENTRATION_PATTERN.search(sentence))
 
 
 def positioned_percentages(sentence):
-    """(position, value) for every plausible percentage in the sentence, in order."""
+    """(position, value) for every plausible revenue percentage, in order.
+
+    A percentage whose own clause is about receivables is not a revenue share, so it is
+    dropped on its own rather than disqualifying the sentence around it.
+    """
     values = []
     for match in PERCENT_PATTERN.finditer(sentence):
         try:
             value = float(match.group(1))
         except ValueError:
+            continue
+        if RECEIVABLES_PATTERN.search(sentence[match.end():match.end() + 45]):
             continue
         if 0 < value < 100:
             values.append((match.start(), value))
@@ -170,12 +187,14 @@ def subject_names(sentence, positioned_names):
     or right after a sales cue ("sales to Walmart represented 14%"). A company
     mentioned after the verb ("...ahead of Coca-Cola") is context, not a customer.
     """
-    verb = CONCENTRATION_PATTERN.search(sentence)
-    verb_position = verb.start() if verb else len(sentence)
     kept = []
     for position, name in positioned_names:
         before = sentence[max(0, position - 24):position]
-        if position < verb_position or SALES_TO_CUE.search(before):
+        # A customer is the subject of a concentration verb that follows it ("Apple
+        # accounted for 24%"), or the object of a sales cue ("sales to Walmart were").
+        # A name trailing the verb is context: a peer list ("comprised A, B and Walmart,
+        # whose revenues exceeded 30%") or a comparison ("ahead of Target").
+        if CONCENTRATION_PATTERN.search(sentence, position) or SALES_TO_CUE.search(before):
             kept.append((position, name))
     return kept
 
@@ -220,11 +239,15 @@ def pair_names_with_shares(positioned_names, positioned_shares, sentence):
         for share_index, (share_position, value) in enumerate(shares)
         if share_index not in used and share_position > names[-1][0]
     ]
-    if unassigned and len(trailing) < len(unassigned) and COLLECTIVE_CUE.search(sentence):
-        # One figure for several names is the group's share, not each name's.
-        return [(name, assigned.get(name)) for _, name in names]
+    if unassigned and not assigned and COLLECTIVE_CUE.search(sentence):
+        # "A and B collectively accounted for 30% in 2025 and 28% in 2024" is the group's
+        # share twice over, not one share each, however many figures follow.
+        return [(name, None) for _, name in names]
     if unassigned:
-        if len(trailing) >= len(unassigned):
+        if len(trailing) == len(unassigned) and not assigned:
+            # Only a clean one-to-one list pairs positionally. With a spare figure (a
+            # prior-year column, or a customer missing from the universe) the leading
+            # percentages would land on the wrong companies.
             for name, (_, value) in zip(unassigned, trailing):
                 assigned[name] = value
         elif len(trailing) == 1 and " each " in f" {sentence.lower()} ":

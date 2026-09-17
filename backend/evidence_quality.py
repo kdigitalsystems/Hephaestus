@@ -312,6 +312,12 @@ def is_supplier_role_label(dependency_type: object) -> bool:
     return _role_label(dependency_type, SUPPLIER_ROLE_LABELS)
 
 
+ROLE_ARROW = re.compile(r"->|<->|→|←")
+
+
 def is_role_label(dependency_type: object) -> bool:
     """True when a dependency label is just a counterparty role instead of what is supplied."""
+    if ROLE_ARROW.search(str(dependency_type or "")):
+        # "manufacturer -> logistics provider" is the panel's shorthand, not a product.
+        return True
     return is_customer_role_label(dependency_type) or is_supplier_role_label(dependency_type)

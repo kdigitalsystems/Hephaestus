@@ -118,6 +118,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check the published dashboard split
+        run: python3 backend/split_dashboard.py --check
+
       - name: Check shell scripts
         run: |
           bash -n run_pipeline.sh
