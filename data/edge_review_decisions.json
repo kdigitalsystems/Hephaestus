@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-09-17T08:09:40.792549+00:00",
+  "exported_at": "2026-09-18T07:57:32.672308+00:00",
   "decisions": [
     {
       "edge_id": 2,
@@ -85,6 +85,23 @@
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.95; votes approve:3). Lead rationale from mistral:7b-instruct: The provided evidence clearly states that some integrated device manufacturers such as Intel outsource their production to TSMC.",
       "reviewed_at": "2026-09-04T12:11:30.206655"
+    },
+    {
+      "edge_id": 26,
+      "source_ticker": "INTC",
+      "target_ticker": "TSM",
+      "source_name": "Intel Corporation Common Stock",
+      "target_name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+      "dependency_type": "Supply Relationship",
+      "product": "Semiconductors",
+      "confidence_score": 0.925,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "Some integrated device manufacturers that have their own fabrication facilities, such as Intel, NXP, STMicroelectronics, and Texas Instruments, outsource some of their production to TSMC.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reverse:1). Lead rationale from mistral:7b-instruct: The provided evidence states that some integrated device manufacturers outsource their production to TSMC, which indicates a supply-chain relationship between Intel (the manufacturer) and TSMC (the logistics provider).",
+      "reviewed_at": "2026-09-18T07:49:55.890956"
     },
     {
       "edge_id": 27,
@@ -8075,6 +8092,23 @@
       "review_status": "rejected",
       "review_note": "Ollama review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: AIQ Global X Funds Global X Artificial Intelligence & Technology ETF.",
       "reviewed_at": "2026-09-02T07:56:45.099562"
+    },
+    {
+      "edge_id": 760,
+      "source_ticker": "GILD",
+      "target_ticker": "COR",
+      "source_name": "Gilead Sciences, Inc. Common Stock",
+      "target_name": "Cencora, Inc.",
+      "dependency_type": "Supply Relationship",
+      "product": "Remdesivir",
+      "confidence_score": 0.9667,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "HHS agreed to manufacturer Gilead Sciences to distribute remdesivir, the first coronavirus drug, through Cencora Inc.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.97; votes approve:3). Lead rationale from qwen2.5:7b-instruct: The evidence clearly states that Gilead Sciences is manufacturing Remdesivir and HHS has agreed to distribute it through Cencora Inc., which aligns with the supplier-customer relationship in a supply chain.",
+      "reviewed_at": "2026-09-18T07:50:38.967396"
     },
     {
       "edge_id": 761,
@@ -34393,6 +34427,23 @@
       "reviewed_at": "2026-09-08T00:02:47.054056"
     },
     {
+      "edge_id": 2563,
+      "source_ticker": "BLDP",
+      "target_ticker": "PLUG",
+      "source_name": "Ballard Power Systems, Inc. Common Shares",
+      "target_name": "Plug Power, Inc. Common Stock",
+      "dependency_type": "Supply Relationship",
+      "product": "Fuel Cells",
+      "confidence_score": 0.95,
+      "revenue_share": null,
+      "source_url": "https://en.wikipedia.org/wiki/Plug_Power",
+      "source_title": "WIKIPEDIA (Page: Plug Power)",
+      "evidence_excerpt": "Plug Power's GenDrive system integrates fuel cells manufactured by both Plug Power and Ballard Power Systems.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.95; votes approve:2, reverse:1). Lead rationale from mistral:7b-instruct: The source_excerpt states that Plug Power's GenDrive system integrates fuel cells manufactured by Ballard Power Systems, indicating a real operational supply-chain dependency where Ballard is upstream of Plug Power.",
+      "reviewed_at": "2026-09-18T07:49:03.126952"
+    },
+    {
       "edge_id": 2564,
       "source_ticker": "DTE",
       "target_ticker": "PLUG",
@@ -35802,6 +35853,23 @@
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.98; votes approve:3). Lead rationale from llama3.1:8b: The evidence excerpt explicitly mentions UMC as a pure play foundry and AMD as a fabless company, indicating an operational supplier/customer relationship.",
       "reviewed_at": "2026-09-11T09:19:32.858874"
+    },
+    {
+      "edge_id": 2730,
+      "source_ticker": "UMC",
+      "target_ticker": "NVDA",
+      "source_name": "United Microelectronic Corp.",
+      "target_name": "NVIDIA Corporation Common Stock",
+      "dependency_type": "Supply Relationship",
+      "product": "Integrated Circuits",
+      "confidence_score": 0.95,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "examples of pure play foundries are GlobalFoundries, TSMC, and UMC, and examples of fabless companies are AMD, Nvidia, and Qualcomm.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.95; votes approve:3). Lead rationale from mistral:7b-instruct: United Microelectronic Corp. (UMC) is a semiconductor manufacturer and NVIDIA Corporation Common Stock (NVDA) is a semiconductor customer. The evidence excerpt mentions UMC as an example of a pure play foundry, which manufactures chips for other companies like NVIDIA.",
+      "reviewed_at": "2026-09-18T07:49:20.827564"
     },
     {
       "edge_id": 2733,

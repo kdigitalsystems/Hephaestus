@@ -1,8 +1,68 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-17T08:09:43+00:00",
-  "unique_links": 467,
+  "generated_at": "2026-09-18T07:57:35+00:00",
+  "unique_links": 470,
   "days": [
+    {
+      "date": "2026-09-18",
+      "generated_at": "2026-09-18T07:57:35+00:00",
+      "previous_date": "2026-09-17",
+      "unique_links": 470,
+      "net_change": 3,
+      "new_count": 4,
+      "removed_count": 1,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "BLDP->PLUG:SUPPLY RELATIONSHIP",
+          "source_ticker": "BLDP",
+          "target_ticker": "PLUG",
+          "type": "Supply Relationship",
+          "product": "Fuel Cells",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "GILD->COR:SUPPLY RELATIONSHIP",
+          "source_ticker": "GILD",
+          "target_ticker": "COR",
+          "type": "Supply Relationship",
+          "product": "Remdesivir",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "INTC->TSM:SUPPLY RELATIONSHIP",
+          "source_ticker": "INTC",
+          "target_ticker": "TSM",
+          "type": "Supply Relationship",
+          "product": "Semiconductors",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "UMC->NVDA:SUPPLY RELATIONSHIP",
+          "source_ticker": "UMC",
+          "target_ticker": "NVDA",
+          "type": "Supply Relationship / Manufacturing Services",
+          "product": "Integrated Circuits",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "UMC->NVDA:MANUFACTURING SERVICES",
+          "source_ticker": "UMC",
+          "target_ticker": "NVDA",
+          "type": "Manufacturing Services",
+          "product": "Integrated Circuits",
+          "review_status": "approved",
+          "confidence": 0.925
+        }
+      ],
+      "changed_links": []
+    },
     {
       "date": "2026-09-17",
       "generated_at": "2026-09-17T08:09:43+00:00",
@@ -3145,19 +3205,6 @@
           "confidence": 0.95
         }
       ],
-      "changed_links": []
-    },
-    {
-      "date": "2026-09-01",
-      "generated_at": "2026-09-01T09:43:40+00:00",
-      "previous_date": "2026-08-26",
-      "unique_links": 309,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
       "changed_links": []
     }
   ]
