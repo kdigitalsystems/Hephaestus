@@ -1,8 +1,21 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-18T07:57:35+00:00",
+  "generated_at": "2026-09-19T07:54:49+00:00",
   "unique_links": 470,
   "days": [
+    {
+      "date": "2026-09-19",
+      "generated_at": "2026-09-19T07:54:49+00:00",
+      "previous_date": "2026-09-18",
+      "unique_links": 470,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-09-18",
       "generated_at": "2026-09-18T07:57:35+00:00",
@@ -3142,65 +3155,6 @@
           "target_ticker": "YUMC",
           "type": "Trademark License",
           "product": "Branding",
-          "review_status": "approved",
-          "confidence": 0.95
-        }
-      ],
-      "changed_links": []
-    },
-    {
-      "date": "2026-09-02",
-      "generated_at": "2026-09-02T21:16:09+00:00",
-      "previous_date": "2026-09-01",
-      "unique_links": 304,
-      "net_change": -5,
-      "new_count": 0,
-      "removed_count": 5,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [
-        {
-          "relationship_key": "ERIC->VOD:TELECOMMUNICATIONS EQUIPMENT PROVIDER",
-          "source_ticker": "ERIC",
-          "target_ticker": "VOD",
-          "type": "Telecommunications Equipment Provider",
-          "product": "Telecommunications Equipment",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "GSK->MRK:SUPPLY CHAIN DEPENDENCY",
-          "source_ticker": "GSK",
-          "target_ticker": "MRK",
-          "type": "supply chain dependency",
-          "product": "Pneumococcus vaccine (via Pneumovax 23)",
-          "review_status": "approved",
-          "confidence": 0.8667
-        },
-        {
-          "relationship_key": "NVS->MRK:RAW MATERIALS",
-          "source_ticker": "NVS",
-          "target_ticker": "MRK",
-          "type": "Raw Materials",
-          "product": "Rota virus vaccine (RotaTeq)",
-          "review_status": "approved",
-          "confidence": 0.8667
-        },
-        {
-          "relationship_key": "SNY->MRK:RAW MATERIALS",
-          "source_ticker": "SNY",
-          "target_ticker": "MRK",
-          "type": "Raw Materials",
-          "product": "Human Papillomavirus (HPV) vaccine under Gardasil brand name",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "STX->HPQ:HARD DISK DRIVES",
-          "source_ticker": "STX",
-          "target_ticker": "HPQ",
-          "type": "Hard Disk Drives",
-          "product": "Hard Disk Drives",
           "review_status": "approved",
           "confidence": 0.95
         }
