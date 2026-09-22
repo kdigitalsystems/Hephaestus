@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 
 from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +32,25 @@ def test_audit_schema_validation_accepts_initialized_database(monkeypatch):
     monkeypatch.setattr(audit_data_quality, "engine", engine)
 
     audit_data_quality.validate_database_schema()
+
+
+def test_audit_schema_validation_reports_locked_database(monkeypatch):
+    # A second job holding the SQLite file (or a Windows UNC path into WSL) must stop the
+    # audit with an actionable message, not a raw SQLAlchemy traceback.
+    class LockedInspector:
+        def get_table_names(self):
+            raise OperationalError("SELECT name FROM sqlite_master", {}, RuntimeError("database is locked"))
+
+    monkeypatch.setattr(audit_data_quality, "inspect", lambda _engine: LockedInspector())
+
+    try:
+        audit_data_quality.validate_database_schema()
+    except audit_data_quality.DatabaseAccessError as exc:
+        assert "Unable to inspect the Hephaestus database" in str(exc)
+        assert "WSL shell" in str(exc)
+        assert isinstance(exc.__cause__, OperationalError)
+    else:
+        raise AssertionError("a locked database should stop the audit cleanly")
 
 
 def test_audit_flags_ip_theft_as_non_supply_relationship():
