@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-09-22T08:08:43.259057+00:00",
+  "exported_at": "2026-09-23T08:07:58.875937+00:00",
   "decisions": [
     {
       "edge_id": 2,
@@ -37825,6 +37825,23 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.93; votes reject:2, pending:1). Lead rationale from llama3.1:8b: The relationship is based on a peer group membership, not an operational supply-chain dependency.",
       "reviewed_at": "2026-09-16T08:07:46.240975"
+    },
+    {
+      "edge_id": 2980,
+      "source_ticker": "NVDA",
+      "target_ticker": "SVCO",
+      "source_name": "NVIDIA Corporation Common Stock",
+      "target_name": "Silvaco Group, Inc. Common Stock",
+      "dependency_type": "AI and Accelerated Computing",
+      "product": "Physics-Based Digital Twins for Semiconductor Design and Manufacturing",
+      "confidence_score": 0.925,
+      "revenue_share": null,
+      "source_url": "https://silvaco.com",
+      "source_title": "Company IR / Website",
+      "evidence_excerpt": "Silvaco to Accelerate Physics-Based Digital Twins for Semiconductor Design and Manufacturing Using NVIDIA AI and Accelerated Computing",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reject:1). Lead rationale from mistral:7b-instruct: NVIDIA provides AI and accelerated computing technology to Silvaco for semiconductor design and manufacturing, making NVIDIA the supplier.",
+      "reviewed_at": "2026-09-23T08:05:09.947572"
     }
   ]
 }
