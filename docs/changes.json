@@ -1,8 +1,31 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-24T07:56:33+00:00",
-  "unique_links": 471,
+  "generated_at": "2026-09-25T08:17:06+00:00",
+  "unique_links": 472,
   "days": [
+    {
+      "date": "2026-09-25",
+      "generated_at": "2026-09-25T08:17:06+00:00",
+      "previous_date": "2026-09-24",
+      "unique_links": 472,
+      "net_change": 1,
+      "new_count": 1,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "SNX->AAPL:SUPPLY CHAIN",
+          "source_ticker": "SNX",
+          "target_ticker": "AAPL",
+          "type": "Supply Chain",
+          "product": "Electronics & Computer Distribution services",
+          "review_status": "approved",
+          "confidence": 1.0
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-09-24",
       "generated_at": "2026-09-24T07:56:33+00:00",
@@ -1318,138 +1341,6 @@
           "confidence": 0.975
         }
       ]
-    },
-    {
-      "date": "2026-09-11",
-      "generated_at": "2026-09-11T09:28:37+00:00",
-      "previous_date": "2026-09-10",
-      "unique_links": 454,
-      "net_change": 7,
-      "new_count": 10,
-      "removed_count": 3,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "HPE->CLS:PRINTED CIRCUIT ASSEMBLY (PCA) OPERATION",
-          "source_ticker": "HPE",
-          "target_ticker": "CLS",
-          "type": "printed circuit assembly (PCA) operation",
-          "product": "electronic components",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "IBM->CLS:FACILITIES ACQUISITION",
-          "source_ticker": "IBM",
-          "target_ticker": "CLS",
-          "type": "Facilities Acquisition",
-          "product": "Manufacturing facilities",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "LLY->AMPH:SUPPLY RELATIONSHIP",
-          "source_ticker": "LLY",
-          "target_ticker": "AMPH",
-          "type": "Supply Relationship",
-          "product": "Baqsimi",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "MCK->ONC:DISTRIBUTION",
-          "source_ticker": "MCK",
-          "target_ticker": "ONC",
-          "type": "distribution",
-          "product": "pharmaceutical products",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "PODD->DXCM:MANUFACTURING PARTNERSHIP",
-          "source_ticker": "PODD",
-          "target_ticker": "DXCM",
-          "type": "Manufacturing Partnership",
-          "product": "OmniPod Horizon System for automated insulin delivery",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "PSNL->MRNA:REVENUE CONCENTRATION",
-          "source_ticker": "PSNL",
-          "target_ticker": "MRNA",
-          "type": "Revenue Concentration",
-          "product": "Advanced tumor analysis for Natera's MRD testing",
-          "review_status": "approved",
-          "confidence": 0.9167
-        },
-        {
-          "relationship_key": "UMC->AMD:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
-          "source_ticker": "UMC",
-          "target_ticker": "AMD",
-          "type": "operational supply-chain dependency / Manufacturing Services",
-          "product": "Integrated Circuits",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "UMC->NVDA:MANUFACTURER -> CUSTOMER",
-          "source_ticker": "UMC",
-          "target_ticker": "NVDA",
-          "type": "manufacturer -> customer / Manufacturing Services",
-          "product": "Integrated Circuits",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "VALE->TSLA:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
-          "source_ticker": "VALE",
-          "target_ticker": "TSLA",
-          "type": "operational supply-chain dependency / supply-chain dependency",
-          "product": "Low-carbon Class 1 Nickel",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "YUMC->YUM:RESTAURANT OPERATION",
-          "source_ticker": "YUMC",
-          "target_ticker": "YUM",
-          "type": "Restaurant operation",
-          "product": "Restaurant brands in China",
-          "review_status": "approved",
-          "confidence": 0.95
-        }
-      ],
-      "removed_links": [
-        {
-          "relationship_key": "UMC->AMD:MANUFACTURING SERVICES",
-          "source_ticker": "UMC",
-          "target_ticker": "AMD",
-          "type": "Manufacturing Services",
-          "product": "Integrated Circuits",
-          "review_status": "approved",
-          "confidence": 0.975
-        },
-        {
-          "relationship_key": "UMC->NVDA:MANUFACTURING SERVICES",
-          "source_ticker": "UMC",
-          "target_ticker": "NVDA",
-          "type": "Manufacturing Services",
-          "product": "Integrated Circuits",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "VALE->TSLA:SUPPLY-CHAIN DEPENDENCY",
-          "source_ticker": "VALE",
-          "target_ticker": "TSLA",
-          "type": "supply-chain dependency",
-          "product": "Low-carbon Class 1 nickel",
-          "review_status": "approved",
-          "confidence": 0.95
-        }
-      ],
-      "changed_links": []
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-09-24T07:56:30.869758+00:00",
+  "exported_at": "2026-09-25T08:17:03.153979+00:00",
   "decisions": [
     {
       "edge_id": 2,
@@ -37842,6 +37842,23 @@
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reject:1). Lead rationale from mistral:7b-instruct: NVIDIA provides AI and accelerated computing technology to Silvaco for semiconductor design and manufacturing, making NVIDIA the supplier.",
       "reviewed_at": "2026-09-23T08:05:09.947572"
+    },
+    {
+      "edge_id": 2981,
+      "source_ticker": "SNX",
+      "target_ticker": "AAPL",
+      "source_name": "TD SYNNEX Corporation",
+      "target_name": "Apple Inc. Common Stock",
+      "dependency_type": "Supply Chain",
+      "product": "Electronics & Computer Distribution services",
+      "confidence_score": 1.0,
+      "revenue_share": 12.0,
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1177394/000162828026003598/snx-20251130.htm",
+      "source_title": "SEC EDGAR (10-K filed 2026-01-27; customer-concentration disclosure)",
+      "evidence_excerpt": "TD SYNNEX (SNX) 10-K filed 2026-01-27: The following table provides revenue generated from products purchased from vendors that exceeded 10% of our consolidated revenue for the periods indicated (as a percent of consolidated revenue): Twelve Months Ended November 30, 2025 November 30, 2024 November 30, 2023 Apple, Inc. 12 % 12 % 11 % HP Inc. 10 % N/A (1) N/A (1) __________________ (1) Revenue generated from products purchased from this vendor was less than 10% of consolidated revenue during the period presented.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 1.00; votes approve:3). Lead rationale from qwen2.5:7b-instruct: The relationship is a real supply chain dependency, but the direction is backwards. TD SYNNEX Corporation provides distribution services to Apple Inc., making it an upstream supplier.",
+      "reviewed_at": "2026-09-25T08:14:17.583475"
     }
   ]
 }
