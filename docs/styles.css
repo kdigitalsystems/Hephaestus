@@ -3116,6 +3116,26 @@ td.muted {
     min-height: 40px;
 }
 
+.rq-order {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.rq-order select {
+    min-height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--surface-input);
+    color: var(--text-main);
+    font: inherit;
+    font-weight: 600;
+}
+
 .rq-link-button {
     min-height: 36px;
     padding: 0 6px;
@@ -3205,6 +3225,12 @@ td.muted {
 .suggest-approve { color: var(--green); }
 .suggest-reverse { color: var(--blue); }
 .suggest-reject { color: var(--red); }
+
+.rq-size {
+    color: var(--text-muted);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
 
 .rq-edge-id {
     margin-left: auto;

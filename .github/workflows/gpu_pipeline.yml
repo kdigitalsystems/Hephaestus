@@ -60,13 +60,17 @@ jobs:
       HEPHAESTUS_EXTRACTION_MODEL: llama3.1:8b
       HEPHAESTUS_REVIEW_MODELS: qwen2.5:7b-instruct,llama3.1:8b,mistral:7b-instruct
       HEPHAESTUS_REVIEW_LIMIT: "200"
-      # Budget: metrics <= ~35 min, discovery 100 min (+ one bounded extraction),
-      # review 55 min, export/pages/publish ~5 min, inside the 240-minute job timeout.
+      # Budget: metrics <= ~35 min, discovery 100 min including the filing sweep (+ one
+      # bounded extraction), review 55 min, export/pages/publish ~5 min, inside the
+      # 240-minute job timeout.
       HEPHAESTUS_DISCOVERY_MAX_SECONDS: "6000"
-      # Filing sweep for customer-concentration disclosures (no GPU): up to 300 filings
-      # or 15 minutes per run, each company rechecked every 120 days.
-      HEPHAESTUS_CONCENTRATION_SWEEP_LIMIT: "300"
-      HEPHAESTUS_CONCENTRATION_SWEEP_MAX_SECONDS: "900"
+      # Filing sweep (no GPU): customer-concentration disclosures and supplier
+      # statements from every filer's annual report, largest first, up to 1,000 filings
+      # or 45 minutes (of discovery's 100) per run at ~3-5 s a filing; each company is
+      # re-read every 120 days and once after a rules update, so the whole universe is
+      # covered in about a week.
+      HEPHAESTUS_CONCENTRATION_SWEEP_LIMIT: "1000"
+      HEPHAESTUS_CONCENTRATION_SWEEP_MAX_SECONDS: "2700"
       HEPHAESTUS_REVIEW_MAX_SECONDS: "3300"
       HEPHAESTUS_REVIEW_MIN_CONFIDENCE: "0.85"
       HEPHAESTUS_REVIEW_CONSENSUS_MIN_VOTES: "2"

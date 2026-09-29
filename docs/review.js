@@ -121,6 +121,32 @@ function matchesSearch(item, query) {
         .some(value => String(value || '').toLowerCase().includes(needle));
 }
 
+// Largest companies first: their pages are the ones people open, so their links are
+// worth clearing first. A link's size is its larger endpoint's market cap.
+const REVIEW_ORDERS = ['size', 'oldest', 'newest'];
+
+function linkSize(item) {
+    const caps = [item.source_market_cap, item.target_market_cap].filter(value => typeof value === 'number' && value > 0);
+    return caps.length ? Math.max(...caps) : 0;
+}
+
+function sortItems(items, order) {
+    const byId = (a, b) => Number(a.edge_id) - Number(b.edge_id);
+    const compare = {
+        size: (a, b) => linkSize(b) - linkSize(a) || byId(a, b),
+        oldest: byId,
+        newest: (a, b) => byId(b, a),
+    }[order] || byId;
+    return [...items].sort(compare);
+}
+
+function formatMarketCap(value) {
+    if (typeof value !== 'number' || !(value > 0)) return '';
+    const [scale, suffix] = value >= 1e12 ? [1e12, 'T'] : value >= 1e9 ? [1e9, 'B'] : [1e6, 'M'];
+    const scaled = value / scale;
+    return `$${scaled >= 100 ? Math.round(scaled) : scaled.toFixed(1).replace(/\.0$/, '')}${suffix}`;
+}
+
 const isHttpUrl = (value) => /^https?:\/\//i.test(String(value || ''));
 
 // Edge ids are reused after a database rebuild, so a saved decision also remembers
@@ -135,6 +161,7 @@ const reviewState = {
     decisions: {},
     sent: {},
     category: 'all',
+    order: 'size',
     query: '',
     hideDecided: false,
     focusId: null,
@@ -173,11 +200,11 @@ const el = (tag, className, text) => {
 };
 
 function visibleItems() {
-    return reviewState.queue.items.filter(item =>
+    return sortItems(reviewState.queue.items.filter(item =>
         (reviewState.category === 'all' || item.category === reviewState.category)
         && matchesSearch(item, reviewState.query)
         && !(reviewState.hideDecided && reviewState.decisions[item.edge_id])
-    );
+    ), reviewState.order);
 }
 
 // Listing names carry the security type ("Apple Inc. Common Stock"); the company is enough.
@@ -221,6 +248,8 @@ function renderCard(item) {
     if (item.suggestion) {
         top.appendChild(el('span', `rq-suggestion suggest-${item.suggestion.action}`, `Suggested: ${ACTION_LABEL[item.suggestion.action]}`));
     }
+    const size = formatMarketCap(linkSize(item));
+    if (size) top.appendChild(el('span', 'rq-size', `Larger company ${size}`));
     top.appendChild(el('span', 'rq-edge-id', `#${item.edge_id}`));
     card.appendChild(top);
 
@@ -505,6 +534,12 @@ async function startReviewPage() {
 
     document.getElementById('review-search').addEventListener('input', event => { reviewState.query = event.target.value; renderList(); });
     document.getElementById('review-hide-decided').addEventListener('change', event => { reviewState.hideDecided = event.target.checked; renderList(); });
+    const order = document.getElementById('review-order');
+    order.value = reviewState.order;
+    order.addEventListener('change', event => {
+        reviewState.order = REVIEW_ORDERS.includes(event.target.value) ? event.target.value : 'size';
+        renderList();
+    });
     document.getElementById('review-accept-suggestions').addEventListener('click', acceptSuggestions);
     document.getElementById('review-open-pr').addEventListener('click', openPullRequest);
     document.getElementById('review-download').addEventListener('click', downloadFile);

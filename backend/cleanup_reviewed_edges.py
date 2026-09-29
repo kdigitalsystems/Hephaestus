@@ -12,10 +12,10 @@ from audit_data_quality import (  # noqa: F401  (HELD_NOTE_PREFIX is re-exported
     has_invalid_dependency_label,
     has_non_supply_label,
     has_reversed_role_label,
-    has_speculative_supply_label,
     is_published,
     model_verdict,
     needs_human_confirmation,
+    speculative_evidence,
 )
 from customer_concentration import describe_share, disclosure_sentence, extract_disclosures, implausible_share
 from sqlalchemy import or_
@@ -302,7 +302,7 @@ def cleanup_reviewed_edges():
                 counts["pending_role_labels"] += 1
                 continue
 
-            if has_speculative_supply_label(edge.evidence_excerpt, edge.review_note):
+            if speculative_evidence(edge):
                 edge.review_status = "rejected"
                 edge.review_note = "Automated cleanup: relationship evidence is speculative, not verified."
                 edge.reviewed_at = datetime.now(timezone.utc)

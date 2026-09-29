@@ -105,6 +105,24 @@ def test_audit_flags_speculative_relationship_evidence():
     assert audit_data_quality.has_speculative_supply_label("Not found in source text")
 
 
+def test_a_filing_statement_is_judged_speculative_on_the_rationale_alone():
+    from types import SimpleNamespace
+
+    netflix, amazon = SimpleNamespace(ticker="NFLX"), SimpleNamespace(ticker="AMZN")
+    statement = SimpleNamespace(
+        source_node=amazon, target_node=netflix, revenue_share=None,
+        source_title="SEC EDGAR (10-K filed 2026-01-23; supplier-dependence disclosure)",
+        evidence_excerpt="Netflix (NFLX) 10-K filed 2026-01-23: We rely upon Amazon Web Services to operate certain aspects "
+                         "of our service and any disruption ... would impact our operations and our business would be adversely impacted.",
+        review_note="Ollama consensus review: Consensus 2/3 for approve. The text explicitly states that Netflix relies on AWS.",
+    )
+    # Risk-factor wording hedges the consequence, not the relationship.
+    assert not audit_data_quality.speculative_evidence(statement)
+    # A hedging rationale still counts, and the same words from a model's excerpt do too.
+    assert audit_data_quality.speculative_evidence(SimpleNamespace(**{**statement.__dict__, "review_note": "Netflix likely uses AWS."}))
+    assert audit_data_quality.speculative_evidence(SimpleNamespace(**{**statement.__dict__, "source_title": "AI Multi-Source Research"}))
+
+
 def test_audit_flags_wrong_direction_review_rationale():
     assert audit_data_quality.has_wrong_direction_review(
         "Consensus 2/3 for reverse (avg confidence 0.93; votes reverse:2, pending:1).",

@@ -96,6 +96,18 @@ def has_speculative_supply_label(*labels):
     return any(marker in label_text for marker in SPECULATIVE_SUPPLY_MARKERS)
 
 
+def speculative_evidence(edge):
+    """The excerpt or the approving rationale hedges the relationship ("likely", "may be").
+
+    A filing's own statement is judged on the rationale alone: its risk-factor wording
+    ("any disruption of ... Amazon Web Services ... our business would be adversely
+    impacted") hedges the consequence, while the relationship itself is stated as fact.
+    """
+    if filer_documented_direction(edge):
+        return has_speculative_supply_label(edge.review_note)
+    return has_speculative_supply_label(edge.evidence_excerpt, edge.review_note)
+
+
 # "Ollama consensus review: votes reverse:2, approve:1. Lead rationale ..." is the
 # panel reporting how it *fixed* the direction. Matching the tally re-opened the very
 # edges the review step had just corrected, every run, forever.
@@ -387,11 +399,7 @@ def audit_database(fail_on_warnings=False):
                 edge.review_note,
             )
         ]
-        speculative_edges = [
-            edge
-            for edge in published_edges
-            if has_speculative_supply_label(edge.evidence_excerpt, edge.review_note)
-        ]
+        speculative_edges = [edge for edge in published_edges if speculative_evidence(edge)]
         # Each check mirrors a cleanup rule that runs first, so a warning here means the
         # cleanup missed something, never that it deliberately kept a human's verdict.
         wrong_direction_edges = [

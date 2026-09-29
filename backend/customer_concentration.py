@@ -144,23 +144,31 @@ def percentages(sentence):
 EVIDENCE_PREFIX = re.compile(r"^.*? filed \d{4}-\d{2}-\d{2}:\s*")
 FILER_EVIDENCE = re.compile(r"^.{1,200}?\(([A-Z0-9][A-Z0-9.\-]{0,9})\)\s+(?:10-K|10-KT|20-F|40-F)(?:/A)?\s+filed\s+\d{4}-\d{2}-\d{2}:")
 DISCLOSURE_TITLE_MARKER = "customer-concentration disclosure"
+# supplier_dependence.py's links: the filer names its own supplier, so it is the customer.
+SUPPLIER_TITLE_MARKER = "supplier-dependence disclosure"
 
 
 def filer_documented_direction(edge):
-    """True when the supplier's own filing names this customer, which fixes the direction.
+    """True when a party's own filing states this link, which fixes the direction.
 
     A 10-K customer disclosure is written by the supplier about its customers, so the
-    filer is the supplier by construction. The review models still vote "backwards" on
-    these (P&G -> Walmart, Tyson -> Walmart), and that vote must not reverse or hold them.
+    filer is the supplier by construction; a supplier-dependence statement ("We rely on
+    TSMC for all wafers") is written by the customer, so the filer is the customer. The
+    review models still vote "backwards" on these (P&G -> Walmart, Tyson -> Walmart), and
+    that vote must not reverse or hold them.
     """
-    if getattr(edge, "revenue_share", None) is None:
-        return False
-    if DISCLOSURE_TITLE_MARKER not in str(getattr(edge, "source_title", "") or ""):
-        return False
-    source = getattr(edge, "source_node", None)
-    ticker = str(getattr(source, "ticker", "") or "").upper()
+    title = str(getattr(edge, "source_title", "") or "")
     match = FILER_EVIDENCE.match(str(getattr(edge, "evidence_excerpt", "") or ""))
-    return bool(ticker) and bool(match) and match.group(1).upper() == ticker
+    if not match:
+        return False
+    if DISCLOSURE_TITLE_MARKER in title and getattr(edge, "revenue_share", None) is not None:
+        filer = getattr(edge, "source_node", None)
+    elif SUPPLIER_TITLE_MARKER in title:
+        filer = getattr(edge, "target_node", None)
+    else:
+        return False
+    ticker = str(getattr(filer, "ticker", "") or "").upper()
+    return bool(ticker) and match.group(1).upper() == ticker
 
 
 def disclosure_sentence(evidence_excerpt):

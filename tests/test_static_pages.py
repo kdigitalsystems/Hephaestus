@@ -66,8 +66,15 @@ def test_static_pages_are_generated_for_linked_companies_only(tmp_path):
     assert "Market cap: $250.0B" in amd
     assert "Data as of 2026-09-02" in amd
     assert '"@type": "Organization"' in amd
+    # A shared link shows a preview card, and the page is counted when counting is on.
+    assert '<meta property="og:title" content="Advanced Micro Devices, Inc. (AMD) suppliers and customers">' in amd
+    assert '<meta property="og:url" content="https://kdigitalsystems.github.io/Hephaestus/company/AMD.html">' in amd
+    assert '<meta property="og:image" content="https://kdigitalsystems.github.io/Hephaestus/og-image.png">' in amd
+    assert '<meta name="twitter:card" content="summary_large_image">' in amd
+    assert f'<script src="../analytics.js?v={pages.STYLESHEET_VERSION}" defer></script>' in amd
 
     tsm = (output / "TSM.html").read_text(encoding="utf-8")
+    assert '<meta property="og:title" content="Taiwan Semiconductor &lt;Manufacturing&gt; (TSM) suppliers and customers">' in tsm
     assert "12.5% of revenue" in tsm
     assert "Market cap" not in tsm
     assert "Customers include Advanced Micro Devices, Inc." in tsm and "Inc.." not in tsm
@@ -76,6 +83,7 @@ def test_static_pages_are_generated_for_linked_companies_only(tmp_path):
 
     index = (output / "index.html").read_text(encoding="utf-8")
     assert 'href="AMD.html"' in index and 'href="TSM.html"' in index and "LNLY" not in index
+    assert '<meta property="og:url" content="https://kdigitalsystems.github.io/Hephaestus/company/index.html">' in index
 
     root = ET.parse(sitemap).getroot()
     namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
@@ -133,3 +141,26 @@ def test_prose_keeps_mid_sentence_periods_and_a_restated_share_is_not_repeated()
     assert page.count("29% of CAG revenue") == 1  # stated once by the product, not again as a badge
     assert page.count("22% of GIS revenue") == 1  # a share the product does not mention is still shown
     assert 'rel="icon"' in page
+
+
+def test_hand_written_pages_share_as_preview_cards():
+    import re
+    import struct
+
+    docs = Path(__file__).resolve().parents[1] / "docs"
+    png = (docs / "og-image.png").read_bytes()
+    assert png[:8] == b"\x89PNG\r\n\x1a\n" and struct.unpack(">II", png[16:24]) == (1200, 630)
+    assert len(png) < 1_000_000
+    for name, url in (("index.html", pages.SITE_URL), ("methodology.html", f"{pages.SITE_URL}methodology.html")):
+        html = (docs / name).read_text(encoding="utf-8")
+        assert f'<link rel="canonical" href="{url}">' in html, name
+        assert f'<meta property="og:url" content="{url}">' in html, name
+        assert f'<meta property="og:image" content="{pages.SITE_URL}og-image.png">' in html, name
+        assert '<meta name="twitter:card" content="summary_large_image">' in html, name
+        assert re.search(r'<meta property="og:title" content="[^"]{10,}">', html), name
+        assert re.search(r'<meta property="og:description" content="[^"]{40,}">', html), name
+        assert f'<script src="analytics.js?v={pages.STYLESHEET_VERSION}" defer></script>' in html, name
+        assert f'styles.css?v={pages.STYLESHEET_VERSION}"' in html, name
+    # The review page is a tool, not content: never indexed or counted.
+    review = (docs / "review.html").read_text(encoding="utf-8")
+    assert 'content="noindex' in review and "analytics.js" not in review

@@ -17,7 +17,7 @@ function assert(condition, message) {
 }
 
 // The page's controls exist and nothing is rendered through innerHTML.
-["review-list", "review-filters", "review-search", "review-open-pr", "review-download", "review-copy", "review-accept-suggestions", "review-submit"]
+["review-list", "review-filters", "review-search", "review-order", "review-open-pr", "review-download", "review-copy", "review-accept-suggestions", "review-submit"]
   .forEach((id) => assert(html.includes(`id="${id}"`), `review.html is missing #${id}`));
 assert(!/innerHTML|insertAdjacentHTML|document\.write/.test(source), "review.js must build the DOM with textContent only");
 assert(run("uploadUrl()") === "https://github.com/kdigitalsystems/Hephaestus/upload/main/data/human_review", "large sessions upload one file");
@@ -57,6 +57,21 @@ const fallback = run(`normalizeQueue({ quality: { pending_count: 300, review_que
 assert(fallback.items[0].category === "unnamed" && fallback.items[1].category === "awaiting_models", "fallback categories");
 assert(fallback.truncated && !fallback.withSuggestions, "fallback reports truncation and no suggestions");
 assert(run(`matchesSearch({ source_ticker: "AAPL", source_name: "Apple Inc.", target_ticker: "GLW", target_name: "Corning" }, "corn")`), "search matches names");
+
+// Largest company first by default; the dashboard's fallback queue has no sizes and keeps id order.
+context.__sized = [
+  { edge_id: 5, source_market_cap: 5e10, target_market_cap: 1.4e11 },
+  { edge_id: 9, source_market_cap: 4e10, target_market_cap: 3.5e12 },
+  { edge_id: 2, source_market_cap: null, target_market_cap: 6e10 },
+  { edge_id: 7 },
+  { edge_id: 3 },
+];
+const order = (name) => run(`sortItems(__sized, "${name}")`).map((entry) => entry.edge_id).join(",");
+assert(order("size") === "9,5,2,3,7", `size order ${order("size")}`);
+assert(order("oldest") === "2,3,5,7,9" && order("newest") === "9,7,5,3,2", "age orders");
+assert(run("__sized.map(entry => entry.edge_id).join(',')") === "5,9,2,7,3", "sorting does not reorder the queue itself");
+assert(run("formatMarketCap(3.5e12)") === "$3.5T" && run("formatMarketCap(1.4e11)") === "$140B" && run("formatMarketCap(2.5e8)") === "$250M", "market caps read as $3.5T / $140B / $250M");
+assert(run("formatMarketCap(null)") === "" && run("formatMarketCap(0)") === "", "no size, no label");
 
 // The pipeline's validator accepts every file the page writes.
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), "human-review-"));

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--
+  Source of docs/og-image.png, the 1200x630 preview shown when a Hephaestus link is
+  shared (Open Graph / Twitter card). Re-render after editing:
+      node scripts/render_og_image.js
+  The links drawn are real, published relationships.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 1200px; height: 630px; }
+    body {
+        font-family: Inter, "Segoe UI", Arial, Helvetica, sans-serif;
+        background:
+            radial-gradient(circle at 82% 30%, rgba(69, 208, 189, 0.16), transparent 42%),
+            radial-gradient(circle at 10% 100%, rgba(157, 140, 255, 0.10), transparent 40%),
+            #070b10;
+        color: #eef8f5;
+        display: grid;
+        grid-template-columns: 610px 1fr;
+        padding: 64px 64px 56px 72px;
+    }
+    .brand { display: flex; align-items: center; gap: 16px; font-size: 30px; font-weight: 800; letter-spacing: -0.01em; }
+    .mark {
+        width: 56px; height: 56px; border-radius: 14px; background: #45d0bd; color: #061311;
+        display: grid; place-items: center; font-size: 34px; font-weight: 900;
+    }
+    h1 { margin: 58px 0 22px; font-size: 60px; line-height: 1.04; font-weight: 900; letter-spacing: -0.03em; }
+    h1 span { color: #45d0bd; }
+    p { margin: 0; font-size: 25px; line-height: 1.4; color: #c5d8d4; max-width: 540px; }
+    .url { position: absolute; left: 72px; bottom: 52px; font-size: 22px; font-weight: 700; color: #91a8a8; }
+    svg text { font-family: Inter, "Segoe UI", Arial, Helvetica, sans-serif; }
+</style>
+</head>
+<body>
+    <div>
+        <div class="brand"><div class="mark">H</div>Hephaestus</div>
+        <h1>Who supplies whom among <span>public companies</span></h1>
+        <p>Supplier and customer links read from SEC filings, each with the sentence that backs it.</p>
+    </div>
+    <svg width="460" height="500" viewBox="0 0 460 500" aria-hidden="true">
+        <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#45d0bd"/>
+            </marker>
+        </defs>
+        <g stroke="#45d0bd" stroke-width="3" fill="none" marker-end="url(#arrow)" opacity="0.85">
+            <line x1="178" y1="150" x2="318" y2="78"/>
+            <line x1="186" y1="178" x2="326" y2="192"/>
+            <line x1="174" y1="204" x2="312" y2="300"/>
+            <line x1="176" y1="378" x2="316" y2="312"/>
+            <line x1="178" y1="408" x2="316" y2="430"/>
+        </g>
+        <g font-weight="800" text-anchor="middle">
+            <circle cx="130" cy="178" r="54" fill="#101820" stroke="#45d0bd" stroke-width="3"/>
+            <text x="130" y="188" font-size="28" fill="#eef8f5">TSM</text>
+            <circle cx="130" cy="392" r="48" fill="#101820" stroke="#9d8cff" stroke-width="3"/>
+            <text x="130" y="401" font-size="26" fill="#eef8f5">ARM</text>
+            <g font-size="22" fill="#eef8f5">
+                <rect x="322" y="50" width="120" height="52" rx="12" fill="#131e27" stroke="rgba(126,154,158,0.4)"/>
+                <text x="382" y="84">AMD</text>
+                <rect x="330" y="170" width="120" height="52" rx="12" fill="#131e27" stroke="rgba(126,154,158,0.4)"/>
+                <text x="390" y="204">QCOM</text>
+                <rect x="318" y="282" width="120" height="52" rx="12" fill="#131e27" stroke="rgba(126,154,158,0.4)"/>
+                <text x="378" y="316">INTC</text>
+                <rect x="320" y="408" width="120" height="52" rx="12" fill="#131e27" stroke="rgba(126,154,158,0.4)"/>
+                <text x="380" y="442">AAPL</text>
+            </g>
+        </g>
+        <g font-size="17" font-weight="700" fill="#91a8a8" text-anchor="middle">
+            <text x="130" y="258">foundry</text>
+            <text x="130" y="466">IP licensing</text>
+        </g>
+    </svg>
+    <div class="url">kdigitalsystems.github.io/Hephaestus</div>
+</body>
+</html>

@@ -138,3 +138,27 @@ def test_the_queue_lists_why_each_link_waits_and_what_the_evidence_suggests(db):
     assert "GLW supplies AAPL" in items[backwards.id]["suggestion"]["reason"]
     assert items[backwards.id]["mirror_edge_ids"] == [published_mirror.id]
     assert items[fresh.id]["category"] == "awaiting_models"
+
+
+def test_the_queue_puts_the_largest_companies_first(db):
+    from review_queue import build_review_queue
+
+    session, nodes = db
+    nodes["AAPL"].market_cap, nodes["GLW"].market_cap = 3.5e12, 4e10
+    nodes["VALE"].market_cap, nodes["BHP"].market_cap = 5e10, 1.4e11
+    nodes["MSI"].market_cap, nodes["URI"].market_cap = None, 6e10
+    session.commit()
+    small = edge(session, nodes, "VALE", "BHP", "Iron Ore")
+    unpriced = edge(session, nodes, "MSI", "URI", "Radios")
+    apple = edge(session, nodes, "GLW", "AAPL", "Cover glass")
+
+    queue = build_review_queue(session)
+    # The larger endpoint decides: Apple's link first, then BHP's, then United Rentals'.
+    assert [item["edge_id"] for item in queue["items"]] == [apple.id, small.id, unpriced.id]
+    first = queue["items"][0]
+    assert (first["source_market_cap"], first["target_market_cap"]) == (4e10, 3.5e12)
+    assert queue["items"][2]["source_market_cap"] is None
+
+    # A truncated queue keeps the largest links, not the oldest.
+    truncated = build_review_queue(session, limit=1)
+    assert truncated["truncated"] and [item["edge_id"] for item in truncated["items"]] == [apple.id]
