@@ -499,6 +499,7 @@ SUPPLY_WORDS = re.compile(r"\bsuppl(?:y|ies|ied|ier|iers)\b|\bcustomers?\b|\bcli
 # Availability, integrations, ecosystems and rivals are not supply.
 NON_SUPPLY_CUES = re.compile(
     r"\bavailable\s+on\b|\bintegrat\w*\s+(?:\w+\s+){0,3}with\b|\becosystem\b|\balong\s+with\b|\bcompetitors?\b|\bcompetes?\b|\brivals?\b"
+    r"|\bin\s+collaboration\s+with\b|\bapps?\s+for\b"
     r"|\breplaced\s+[\w&.,' ]{1,60}(?:inc|corp|corporation|group|company)\b",
     re.IGNORECASE,
 )
@@ -533,6 +534,74 @@ def is_stale(text: str) -> bool:
     return bool(HISTORICAL_CUES.search(text)) or (bool(years) and max(years) < STALE_BEFORE_YEAR)
 
 
+# --- Two companies named side by side is not a relationship between them -------------
+#
+# "Big Tech ... Alphabet (Google), Amazon, Apple, Meta (Facebook), Microsoft, and Nvidia"
+# was published as Meta -> Nvidia; "Phillips 66, Kinder Morgan and HF Sinclair Announce
+# ..." as Phillips 66 -> Kinder Morgan. Valid list sentences keep one company outside the
+# list and a verb linking the list to it ("IDMs such as Intel, NXP ... outsource some of
+# their production to TSMC"), so only companies that appear *solely* as list items count.
+# A capitalised run of words; "In May 2024," and similar lead-ins are not list items.
+_LEAD_IN = r"(?:In|On|At|As|By|For|From|Since|After|Before|During|Until|Of|With|Through|Following|Over|Under|When|While)\b"
+_NAME = rf"(?!{_LEAD_IN})(?:[A-Z0-9][\w&'’.\-]*)(?:\s+(?:[A-Z0-9][\w&'’.\-]*|of|the|de|du|&))*(?:\s*\([^()]{{1,40}}\))?"
+_GLUE = r"(?:\s*,\s*(?:and\s+|or\s+)?|\s+and\s+|\s+or\s+|\s*&\s*|\s*;\s*)"
+ENUMERATION = re.compile(rf"{_NAME}(?:{_GLUE}{_NAME})+")
+# Wording that relates the listed companies to each other; with it, a list can be a
+# genuine relationship ("Dell and AMD signed a supply agreement").
+PAIR_SUPPLY_WORDS = re.compile(
+    r"\bsuppl\w*|\bcustomers?\b|\bclients?\b|\bmanufactur\w*|\bprovid(?:e|es|ed|ing)\b|\bsells?\b|\bsold\b|\bselling\b|\bpurchas\w*"
+    r"|\bcontract\w*|\bvendors?\b|\blicens\w*|\boutsourc\w*|\buses?\b|\bused\b|\busing\b|\bpowered\s+by\b|\bdeliver\w*",
+    re.IGNORECASE,
+)
+
+
+def company_mentions(text: str, node: object) -> list[tuple[int, int]]:
+    """Character spans where the excerpt names the company."""
+    spans = []
+    words = cleaned_company_name(node).split()
+    aliases = set(strong_aliases(node))
+    if words and len(words[0]) >= 4 and words[0] not in GENERIC_NAME_WORDS:
+        aliases.add(words[0])
+    ticker = str(getattr(node, "ticker", "") or "").strip().lower()
+    if len(ticker) >= 2:
+        aliases.add(ticker)
+    for alias in aliases:
+        # Aliases are punctuation-collapsed ("coca cola", "amazon com"); allow any
+        # punctuation between their words in the original text.
+        pattern = r"(?<![A-Za-z0-9])" + r"[\W_]+".join(re.escape(part) for part in alias.split()) + r"(?![A-Za-z0-9])"
+        spans.extend(match.span() for match in re.finditer(pattern, text, re.IGNORECASE))
+    return spans
+
+
+# Dates are capitalised too: "In May 2024, Netflix announced ..." is not the list
+# "May 2024, Netflix". They are blanked (keeping positions) before lists are found.
+DATE_PHRASE = re.compile(
+    r"\b(?:(?:in|on|as\s+of|by|since|during|until|from|through)\s+)?(?:(?:early|late|mid)[\s-]+)?"
+    r"(?:(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s+(?:\d{1,2},?\s+)?\d{4}|\d{4})\b,?",
+    re.IGNORECASE,
+)
+
+
+def listed_only_together(text: str, source_node: object, target_node: object) -> bool:
+    """Both companies appear only as items of name lists, with nothing relating them."""
+    if PAIR_SUPPLY_WORDS.search(text):
+        return False
+    masked = DATE_PHRASE.sub(lambda match: " " * len(match.group(0)), text)
+    lists = [match.span() for match in ENUMERATION.finditer(masked)]
+    if not lists:
+        return False
+    for node in (source_node, target_node):
+        mentions = company_mentions(text, node)
+        if not mentions or not all(any(start <= a and b <= end for start, end in lists) for a, b in mentions):
+            return False
+    return True
+
+
+# Scraped page furniture - a live quote widget beside a menu of customers ("... Lockheed
+# Martin Northrop Grumman +Approved Primes NASDAQ: FEIM LIVE $69.74 +1.01%") - is not prose.
+PAGE_CHROME = re.compile(r"\b(?:NASDAQ|NYSE|NYSE\s+American|OTC)\s*:\s*[A-Z.]{1,6}\s+(?:LIVE\s+)?\$\d")
+
+
 def evidence_support(evidence: object, source_node: object, target_node: object) -> tuple[str, str]:
     """How an excerpt supports source -> target, for excerpts that do not name both companies.
 
@@ -546,8 +615,14 @@ def evidence_support(evidence: object, source_node: object, target_node: object)
                     past or non-supply relationship, or is otherwise not evidence for it
     """
     text = " ".join(str(evidence or "").split())
+    if PAGE_CHROME.search(text):
+        return "unsupported", "the excerpt is scraped page navigation, not a statement"
     named_source, named_target = names_company(text, source_node), names_company(text, target_node)
     if named_source and named_target:
+        if listed_only_together(text, source_node, target_node):
+            return "unsupported", "the companies are only listed side by side; nothing relates them"
+        if NON_SUPPLY_CUES.search(text) and not PAIR_SUPPLY_WORDS.search(text):
+            return "unsupported", "the excerpt describes an integration, collaboration, availability or rivalry, not supply"
         return "named", ""
     if is_stale(text):
         return "unsupported", "the excerpt describes a past relationship"

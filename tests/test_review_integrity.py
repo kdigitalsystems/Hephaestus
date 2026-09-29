@@ -390,3 +390,47 @@ def test_cleanup_rejects_junk_and_holds_the_doubtful(pipeline_db):
     held = check.get(Edge, backwards.id)
     assert held.review_status == "pending" and held.review_note.startswith(HELD_NOTE_PREFIX)
     assert check.get(Edge, human.id).review_status == "approved", "a human's verdict is never overruled"
+
+
+# --- companies merely listed side by side --------------------------------------------------
+
+@pytest.mark.parametrize("source, target, evidence", [
+    (company("META", "Meta Platforms, Inc."), company("NVDA", "NVIDIA Corporation"),
+     "Big Tech, which refers to the largest six tech companies in the United States, Alphabet (Google), Amazon, Apple, Meta (Facebook), Microsoft, and Nvidia..."),
+    (company("PSX", "Phillips 66"), company("KMI", "Kinder Morgan, Inc."),
+     "Phillips 66, Kinder Morgan and HF Sinclair Announce Final Investment Decision for Western Gateway Pipeline"),
+    (company("UMC", "United Microelectronics Corporation"), company("AMD", "Advanced Micro Devices, Inc."),
+     "examples of pure play foundries are GlobalFoundries, TSMC, and UMC, and examples of fabless companies are AMD, Nvidia, and Qualcomm."),
+    (company("PFE", "Pfizer Inc."), company("ARVN", "Arvinas, Inc."), "Vepdegestrant was developed by Arvinas and Pfizer."),
+    (company("ORCL", "Oracle Corporation"), company("BL", "BlackLine, Inc."),
+     "BlackLine integrates with over 30 leading ERP systems, including SAP SE, Oracle Corporation..."),
+    (company("GE", "GE Aerospace"), company("BETA", "BETA Technologies"),
+     "In collaboration with NASA, BETA Technologies, and Boeing, GE Aerospace conducted the first hybrid electric flight above 30,000 feet."),
+    (company("LMT", "Lockheed Martin Corp."), company("FEIM", "Frequency Electronics, Inc."),
+     "Air Force Army Navy Space Force Lockheed Martin Northrop Grumman +Approved Primes NASDAQ: FEIM LIVE $69.74 +1.01%"),
+])
+def test_companies_merely_listed_together_are_not_a_relationship(source, target, evidence):
+    from evidence_quality import evidence_support
+
+    assert evidence_support(evidence, source, target)[0] == "unsupported"
+
+
+@pytest.mark.parametrize("source, target, evidence", [
+    # One company outside the list, and a verb relating the list to it.
+    (company("TSM", "Taiwan Semiconductor Manufacturing Company Ltd."), company("INTC", "Intel Corporation"),
+     "Some integrated device manufacturers that have their own fabrication facilities, such as Intel, NXP, STMicroelectronics, and Texas Instruments, outsource some of their production to TSMC."),
+    (company("LPL", "LG Display Co., Ltd."), company("DELL", "Dell Technologies Inc."),
+     "Some examples of products that use LCD panels from LG display are Apple's 2009 27-inch iMac, Apple's Thunderbolt Display, and Dell's U2711 LCD Monitor."),
+    (company("TMUS", "T-Mobile US, Inc."), company("BBY", "Best Buy Co., Inc."),
+     "Best Buy sells cellular phones from Verizon Wireless, AT&T Mobility, T-Mobile, Boost Mobile and Ting Mobile in the United States."),
+    # Both in one coordination, but one is also the subject elsewhere and supply is stated.
+    (company("BLDP", "Ballard Power Systems Inc."), company("PLUG", "Plug Power Inc."),
+     "Plug Power's GenDrive system integrates fuel cells manufactured by both Plug Power and Ballard Power Systems."),
+    # A leading date is not a list item.
+    (company("MGNI", "Magnite, Inc."), company("NFLX", "Netflix, Inc."),
+     "In May 2024, Netflix announced its first expansion of its advertising partnerships to include Magnite, The Trade Desk and Google DV360."),
+])
+def test_list_sentences_that_relate_the_companies_are_kept(source, target, evidence):
+    from evidence_quality import evidence_support
+
+    assert evidence_support(evidence, source, target)[0] == "named"
