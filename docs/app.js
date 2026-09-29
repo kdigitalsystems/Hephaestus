@@ -129,7 +129,7 @@ const restatesShare = (dep, share) => {
     // Whole figures only: "116% of revenue" does not restate "16%".
     return (String(dep?.product || '').match(/\d+(?:\.\d+)?%/g) || []).includes(figure[0]);
 };
-const BASE_PAGE_TITLE = 'Hephaestus Supply Chain Intelligence';
+const BASE_PAGE_TITLE = 'Hephaestus: supplier and customer map of public companies';
 
 function setPageTitle(label) {
     // Bookmarks, history entries and shared tabs all carried the same generic title.

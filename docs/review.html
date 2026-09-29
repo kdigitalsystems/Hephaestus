@@ -17,7 +17,7 @@
             document.documentElement.dataset.theme = 'dark';
         }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260929-ui8">
+    <link rel="stylesheet" href="styles.css?v=20260929-ui9">
 </head>
 <body>
     <main class="rq-page" id="review-app">
@@ -29,6 +29,7 @@
                 Approve a link, reverse its direction, or reject it. Decisions are kept in this browser until you send them:
                 <strong>Open pull request</strong> opens GitHub with your decisions filled in, and the next pipeline run applies
                 them after the pull request is merged. Suggestions come from the evidence rules and are only suggestions.
+                Links to the largest companies come first, because their pages get the most visits.
             </p>
             <p class="rq-status" id="review-status" aria-live="polite">Loading the queue&hellip;</p>
         </header>
@@ -39,6 +40,14 @@
                 <label class="rq-search">
                     <span class="visually-hidden">Filter by company or ticker</span>
                     <input type="search" id="review-search" placeholder="Filter by company or ticker" autocomplete="off" spellcheck="false">
+                </label>
+                <label class="rq-order">
+                    <span>Order</span>
+                    <select id="review-order">
+                        <option value="size">Largest company first</option>
+                        <option value="oldest">Oldest first</option>
+                        <option value="newest">Newest first</option>
+                    </select>
                 </label>
                 <label class="toggle-filter rq-toggle">
                     <input type="checkbox" id="review-hide-decided">
@@ -72,6 +81,6 @@
         <div class="rq-pr-links" id="review-pr-links" hidden></div>
     </aside>
 
-    <script src="review.js?v=20260929-ui8"></script>
+    <script src="review.js?v=20260929-ui9"></script>
 </body>
 </html>

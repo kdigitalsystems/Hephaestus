@@ -76,6 +76,8 @@ jobs:
           node tests/check_app_link_count.js
           node tests/check_app_behaviors.js
           node tests/check_review_page.js
+          node tests/check_analytics.js
+          node --check docs/analytics.js
           node tests/check_sanitize_review_decisions.js
 
       - name: Check committed review decisions are sanitized

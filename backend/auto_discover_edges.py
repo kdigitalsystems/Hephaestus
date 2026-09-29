@@ -17,7 +17,8 @@ from parser import extract_dependencies
 from yahooquery import search as yq_search, Ticker
 from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_text, latest_annual_filing
 from additional_sources import get_additional_supply_chain_text
-from customer_concentration import describe_share, extract_disclosures
+from customer_concentration import SUPPLIER_TITLE_MARKER, describe_share, extract_disclosures
+from supplier_dependence import NameIndex, extract_supplier_dependencies
 from evidence_quality import (
     GENERIC_NAME_WORDS,
     has_non_supply_relationship,
@@ -37,6 +38,10 @@ USE_ADDITIONAL_SOURCES = os.environ.get("HEPHAESTUS_USE_ADDITIONAL_SOURCES", "1"
 # Deterministic extraction of "customers >= 10% of revenue" disclosures from annual reports.
 USE_CUSTOMER_CONCENTRATION = os.environ.get("HEPHAESTUS_USE_CUSTOMER_CONCENTRATION", "1") != "0"
 CONCENTRATION_CONFIDENCE = 0.9
+# The same annual filing also names the filer's own critical suppliers ("We rely on TSMC
+# for all wafers"); see supplier_dependence.py.
+USE_SUPPLIER_STATEMENTS = os.environ.get("HEPHAESTUS_USE_SUPPLIER_STATEMENTS", "1") != "0"
+SUPPLIER_STATEMENT_CONFIDENCE = 0.85
 CONTEXT_MAX_CHARS = int(os.environ.get("HEPHAESTUS_CONTEXT_MAX_CHARS", "15000"))
 # Wall-clock budget for the discovery loop (0 = unlimited). The scheduled job has
 # a fixed timeout, and a queue that does not fit in it starves the review, export,
@@ -55,17 +60,23 @@ def write_discovery_summary(summary, path=DISCOVERY_SUMMARY_PATH):
 # A company whose sources yielded nothing stays edgeless, and without a cooldown it
 # would be researched again every single day while the rest of the queue waits.
 RESEARCH_COOLDOWN_DAYS = float(os.environ.get("HEPHAESTUS_RESEARCH_COOLDOWN_DAYS", "30"))
-# Customer-concentration disclosures come from the annual filing and need no GPU, so
-# they are swept over the whole universe independently of the LLM queue.
+# Customer-concentration disclosures and supplier statements come from the annual filing
+# and need no GPU, so they are swept over the whole universe independently of the LLM queue.
 CONCENTRATION_SWEEP_LIMIT = int(os.environ.get("HEPHAESTUS_CONCENTRATION_SWEEP_LIMIT", "0"))
 CONCENTRATION_SWEEP_MAX_SECONDS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_SWEEP_MAX_SECONDS", "900"))
 CONCENTRATION_RECHECK_DAYS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_RECHECK_DAYS", "120"))
-# Both floors sit at $250M. Discovery started at $1B and had researched that whole
-# universe within its cooldown by Sep 13; small suppliers are where one customer is
-# most often a large share of revenue. Below ~$100M the tail is mostly shells with
-# thin filings.
+# A filing read before this moment was read by older rules (no supplier statements), so
+# it is due again once, largest companies first, whatever its recheck interval says.
+SWEEP_RULES_UPDATED = datetime.fromisoformat(
+    os.environ.get("HEPHAESTUS_SWEEP_RULES_UPDATED", "2026-09-29T12:00:00+00:00")
+)
+# Discovery starts at $250M: it had researched the whole $1B+ universe within its
+# cooldown by Sep 13, and below ~$100M the tail is mostly shells with thin filings. The
+# filing sweep has no floor. It is cheap (one document, no model), a small company is
+# where one customer is most often a large share of revenue, and a small company's own
+# filing is often the only public record of who supplies it.
 DISCOVERY_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_MIN_MARKET_CAP", "250000000"))
-SWEEP_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_SWEEP_MIN_MARKET_CAP", "250000000"))
+SWEEP_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_SWEEP_MIN_MARKET_CAP", "0"))
 IGNORED_SECTORS = ["Financial Services", "Real Estate", "Financial", "Asset Management", "Insurance", "Banks", "Shell Companies"]
 
 
@@ -86,6 +97,21 @@ def is_due(checked_at, every_days, now=None):
     if checked_at.tzinfo is None:
         checked_at = checked_at.replace(tzinfo=timezone.utc)
     return checked_at < now - timedelta(days=every_days)
+
+
+def concentration_recheck_cutoff(now=None):
+    """Filings read before this are due again: the recheck interval, or a rules update."""
+    now = now or utc_now()
+    cutoff = now - timedelta(days=CONCENTRATION_RECHECK_DAYS)
+    return max(cutoff, SWEEP_RULES_UPDATED) if SWEEP_RULES_UPDATED <= now else cutoff
+
+
+def filing_due(checked_at, now=None):
+    if checked_at is None:
+        return True
+    if checked_at.tzinfo is None:
+        checked_at = checked_at.replace(tzinfo=timezone.utc)
+    return checked_at < concentration_recheck_cutoff(now)
 
 
 def budget_exhausted(started, max_seconds, now=None):
@@ -251,11 +277,13 @@ def known_company_names(session):
     return names
 
 
-def discover_customer_concentration(session, company, known_names):
-    """Create pending edges from the filer's own 10% customer disclosures.
+def discover_customer_concentration(session, company, known_names, supplier_index=None):
+    """Create pending edges from what the filer's own annual report says.
 
-    The filer is the supplier and the named customer the receiver; the disclosed
-    share of revenue is stored on the edge so the dashboard can show magnitude.
+    Two kinds of statement, both fixing the direction: 10% customer disclosures (the
+    filer is the supplier and the named customer the receiver, with the disclosed share
+    of revenue stored on the edge), and, when `supplier_index` is given, the suppliers
+    the filer says it depends on (the filer is the customer).
     """
     if not USE_CUSTOMER_CONCENTRATION:
         return 0
@@ -278,11 +306,11 @@ def discover_customer_concentration(session, company, known_names):
 
     created = 0
     filer_aliases = (company.name, clean_company_name(company.name or ""), company.ticker)
+    label = f"{filing['form']} filed {filing.get('filing_date') or 'unknown date'}"
     for disclosure in extract_disclosures(text, known_names, filer_aliases):
         customer = resolve_counterparty(session, None, disclosure.customer_name)
         if not customer or customer.id == company.id:
             continue
-        label = f"{filing['form']} filed {filing.get('filing_date') or 'unknown date'}"
         dep = {
             "dependency_type": "Revenue Concentration",
             "product": describe_share(disclosure.share_pct, company.ticker),
@@ -298,19 +326,73 @@ def discover_customer_concentration(session, company, known_names):
         if was_created:
             created += 1
             print(f"  [+] CUSTOMER CONCENTRATION: {company.ticker} -> {customer.ticker} ({dep['product']})")
+    if supplier_index is not None and USE_SUPPLIER_STATEMENTS:
+        created += discover_supplier_statements(session, company, filing, text, supplier_index)
     return created
 
 
-def sweep_customer_concentration(session, known_names, limit=CONCENTRATION_SWEEP_LIMIT, max_seconds=CONCENTRATION_SWEEP_MAX_SECONDS):
-    """Check the annual filings of the largest companies not checked recently."""
+def node_named(session, display_name):
+    """The listed company a NameIndex match stands for (its exact display name)."""
+    node = session.query(Node).filter(Node.name == display_name, Node.ticker.is_not(None)).first()
+    return node or resolve_counterparty(session, None, display_name)
+
+
+def supplier_link_known(session, supplier, customer):
+    """True when this supplier -> customer link needs nothing from a new statement.
+
+    A live edge in the same direction already carries it (whatever its label), and a
+    person who rejected the pair, or approved the opposite direction, has decided it.
+    """
+    same_direction = session.query(Edge).filter(Edge.source_id == supplier.id, Edge.target_id == customer.id).all()
+    if any(edge.review_status != "rejected" or str(edge.review_note or "").startswith("Human review") for edge in same_direction):
+        return True
+    opposite = session.query(Edge).filter(
+        Edge.source_id == customer.id, Edge.target_id == supplier.id, Edge.review_status == "approved"
+    ).all()
+    return any(str(edge.review_note or "").startswith("Human review") for edge in opposite)
+
+
+def discover_supplier_statements(session, company, filing, text, supplier_index):
+    """Pending supplier -> filer edges from the suppliers the filer says it depends on."""
+    created = 0
+    filer_aliases = (company.name, clean_company_name(company.name or ""), company.ticker)
+    label = f"{filing['form']} filed {filing.get('filing_date') or 'unknown date'}"
+    for statement in extract_supplier_dependencies(text, supplier_index, filer_aliases):
+        supplier = node_named(session, statement.supplier_name)
+        if not supplier or supplier.id == company.id or supplier_link_known(session, supplier, company):
+            continue
+        if not mentions_company(statement.sentence, supplier):
+            # The review step must see the supplier named too, or it holds the link for a
+            # person: "Embraer" is not a strong alias of "Embraer S.A. American
+            # Depositary Shares (Each representing Four Common Shares)".
+            continue
+        dep = {
+            "dependency_type": statement.dependency_type,
+            "product": f"Supplier named in {company.ticker}'s {filing['form']}",
+            "confidence_score": SUPPLIER_STATEMENT_CONFIDENCE,
+            "evidence_excerpt": f"{clean_company_name(company.name or '')} ({company.ticker}) {label}: {statement.sentence}",
+            "evidence_source_url": filing["url"],
+            "evidence_source_title": f"SEC EDGAR ({label}; {SUPPLIER_TITLE_MARKER})",
+        }
+        _edge, was_created = upsert_pending_edge(session, supplier, company, dep)
+        session.flush()  # the next statement's supplier_link_known must see this edge
+        if was_created:
+            created += 1
+            print(f"  [+] SUPPLIER STATEMENT: {supplier.ticker} -> {company.ticker} ({statement.dependency_type})")
+    return created
+
+
+def sweep_customer_concentration(
+    session, known_names, limit=CONCENTRATION_SWEEP_LIMIT, max_seconds=CONCENTRATION_SWEEP_MAX_SECONDS, supplier_index=None
+):
+    """Read the annual filings of the largest companies not read recently (or since a rules update)."""
     if limit <= 0 or not known_names:
         return {"checked": 0, "created": 0}
-    now = utc_now()
-    cutoff = now - timedelta(days=CONCENTRATION_RECHECK_DAYS)
+    query = session.query(Node).filter(Node.ticker.is_not(None), not_in_ignored_sector())
+    if SWEEP_MIN_MARKET_CAP > 0:
+        query = query.filter(Node.market_cap > SWEEP_MIN_MARKET_CAP)
     companies = (
-        session.query(Node)
-        .filter(Node.ticker.is_not(None), Node.market_cap > SWEEP_MIN_MARKET_CAP, not_in_ignored_sector())
-        .filter(or_(Node.concentration_checked_at.is_(None), Node.concentration_checked_at < cutoff))
+        query.filter(or_(Node.concentration_checked_at.is_(None), Node.concentration_checked_at < concentration_recheck_cutoff()))
         .order_by(Node.market_cap.desc())
         .limit(limit)
         .all()
@@ -320,10 +402,10 @@ def sweep_customer_concentration(session, known_names, limit=CONCENTRATION_SWEEP
     for company in companies:
         if budget_exhausted(started, max_seconds):
             break
-        created += discover_customer_concentration(session, company, known_names)
+        created += discover_customer_concentration(session, company, known_names, supplier_index)
         checked += 1
         session.commit()
-    print(f"Concentration sweep: {checked} filing(s) checked, {created} disclosure edge(s) created, {time.monotonic() - started:.0f}s elapsed.")
+    print(f"Filing sweep: {checked} filing(s) checked, {created} edge(s) created, {time.monotonic() - started:.0f}s elapsed.")
     return {"checked": checked, "created": created}
 
 
@@ -778,9 +860,13 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
         lonely_nodes = select_research_queue(session, limit, target_sectors, deep_dive)
 
         known_names = known_company_names(session) if USE_CUSTOMER_CONCENTRATION and USE_SEC_SOURCE else {}
+        supplier_index = NameIndex(known_names) if known_names and USE_SUPPLIER_STATEMENTS else None
+        # The discovery budget covers the whole step, sweep included, so a long sweep
+        # shortens the LLM queue (the rest is deferred) instead of the job's timeout.
+        started = time.monotonic()
         # The filing sweep is independent of the LLM queue and must run even on a day
         # the queue is empty.
-        sweep = sweep_customer_concentration(session, known_names)
+        sweep = sweep_customer_concentration(session, known_names, supplier_index=supplier_index)
 
         if not lonely_nodes:
             print("No actionable companies found in queue!")
@@ -800,7 +886,6 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
         extraction_failures = 0
         no_source_companies = 0
         last_extraction_error = ""
-        started = time.monotonic()
         deferred = 0
 
         for index, company in enumerate(lonely_nodes):
@@ -813,8 +898,8 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                 break
             print(f"\n[->] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
 
-            if known_names and is_due(company.concentration_checked_at, CONCENTRATION_RECHECK_DAYS):
-                concentration_edges = discover_customer_concentration(session, company, known_names)
+            if known_names and filing_due(company.concentration_checked_at):
+                concentration_edges = discover_customer_concentration(session, company, known_names, supplier_index)
                 if concentration_edges:
                     session.commit()
 

@@ -369,6 +369,10 @@ KNOWN_ALIASES = {
     # "Elasticsearch technology is used by eBay, ..." names Elastic; a general prefix
     # rule would also read "Applebee's" as Apple, so product names are listed here.
     "ESTC": ("elasticsearch",),
+    # Cloud services named in filings instead of the company ("We rely upon Amazon Web
+    # Services", "hosted on Microsoft Azure"); supplier_dependence.py reads the same names.
+    "AMZN": ("amazon web services", "aws"),
+    "MSFT": ("azure",),
 }
 
 

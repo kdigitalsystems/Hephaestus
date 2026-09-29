@@ -427,8 +427,8 @@ def test_overlapping_universe_names_do_not_cancel_each_other():
     assert [(d.customer_name, d.share_pct) for d in found] == [("Coca-Cola Consolidated, Inc.", 15.0)]
 
 
-def test_the_sweep_reaches_companies_above_its_floor(monkeypatch):
-    """The filing sweep covers companies down to its $250M floor."""
+def test_the_sweep_reads_every_filer_largest_first(monkeypatch):
+    """The filing sweep has no market-cap floor; LLM discovery keeps its $250M floor."""
     from datetime import datetime, timezone
 
     now = datetime(2026, 9, 12, tzinfo=timezone.utc)
@@ -438,7 +438,8 @@ def test_the_sweep_reaches_companies_above_its_floor(monkeypatch):
     big = Node(name="Big Filer Inc.", ticker="BIG", market_cap=5e9, sector="Technology")
     small = Node(name="Small Filer Inc.", ticker="SML", market_cap=4e8, sector="Industrials")
     tiny = Node(name="Tiny Filer Inc.", ticker="TNY", market_cap=5e7, sector="Industrials")
-    session.add_all([big, small, tiny])
+    unpriced = Node(name="Unpriced Filer Inc.", ticker="UNP", market_cap=None, sector="Industrials")
+    session.add_all([tiny, unpriced, big, small])
     session.commit()
 
     fetched = []
@@ -447,9 +448,28 @@ def test_the_sweep_reaches_companies_above_its_floor(monkeypatch):
 
     auto_discover_edges.sweep_customer_concentration(session, {"Apple Inc.": "Apple"}, limit=10, max_seconds=60)
 
-    # $400M is swept and $50M is below the floor; LLM discovery reaches at least as far.
-    assert fetched == ["BIG", "SML"]
-    assert auto_discover_edges.DISCOVERY_MIN_MARKET_CAP <= auto_discover_edges.SWEEP_MIN_MARKET_CAP
+    assert fetched == ["BIG", "SML", "TNY", "UNP"]
+    assert auto_discover_edges.SWEEP_MIN_MARKET_CAP == 0
+    assert auto_discover_edges.DISCOVERY_MIN_MARKET_CAP == 250_000_000
+
+
+def test_a_rules_update_makes_every_filing_due_once(monkeypatch):
+    from datetime import datetime, timedelta, timezone
+
+    rules = datetime(2026, 9, 29, 12, tzinfo=timezone.utc)
+    monkeypatch.setattr(auto_discover_edges, "SWEEP_RULES_UPDATED", rules)
+    monkeypatch.setattr(auto_discover_edges, "CONCENTRATION_RECHECK_DAYS", 120)
+    after = rules + timedelta(days=1)
+    # Read by the old rules a week ago: due again. Read after the update: not due.
+    assert auto_discover_edges.filing_due(rules - timedelta(days=7), after) is True
+    assert auto_discover_edges.filing_due(rules + timedelta(hours=1), after) is False
+    assert auto_discover_edges.filing_due(None, after) is True
+    # Before the update's moment the plain interval applies (runs dated in the past).
+    before = rules - timedelta(days=2)
+    assert auto_discover_edges.filing_due(before - timedelta(days=3), before) is False
+    assert auto_discover_edges.filing_due(before - timedelta(days=121), before) is True
+    # SQLite hands back naive datetimes.
+    assert auto_discover_edges.filing_due((rules - timedelta(days=7)).replace(tzinfo=None), after) is True
 
 
 def test_research_queue_reaches_below_one_billion_and_honours_cooldown_and_sectors(monkeypatch):

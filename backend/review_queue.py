@@ -3,6 +3,10 @@
 Every pending edge is listed with why it is waiting (from its review note), a
 suggested action read from its evidence excerpt, and the edges that run the other
 way between the same two companies, so a reviewer can settle a two-way pair at once.
+
+Largest companies first: a link to NVIDIA or Walmart is on pages people actually open,
+so clearing it first does the most for the site. Size is the larger endpoint's market
+cap; the page can re-sort by age.
 """
 import json
 import os
@@ -79,6 +83,16 @@ def suggestion(edge):
     return None
 
 
+def market_cap(node):
+    value = getattr(node, "market_cap", None)
+    return float(value) if isinstance(value, (int, float)) and value > 0 else None
+
+
+def reach(edge):
+    """The larger endpoint's market cap: how much traffic the link's pages see."""
+    return max(market_cap(edge.source_node) or 0.0, market_cap(edge.target_node) or 0.0)
+
+
 def queue_item(edge, mirrors):
     category = categorize(edge.review_note)
     return {
@@ -87,6 +101,8 @@ def queue_item(edge, mirrors):
         "source_name": getattr(edge.source_node, "name", "") or "",
         "target_ticker": ticker(edge.target_node),
         "target_name": getattr(edge.target_node, "name", "") or "",
+        "source_market_cap": market_cap(edge.source_node),
+        "target_market_cap": market_cap(edge.target_node),
         "type": edge.dependency_type or "",
         "product": edge.product or "",
         "revenue_share": edge.revenue_share,
@@ -104,13 +120,10 @@ def queue_item(edge, mirrors):
 
 def build_review_queue(session, limit=REVIEW_QUEUE_MAX_ITEMS, now=None):
     register_company_names(session.query(Node.ticker, Node.name).filter(Node.ticker.is_not(None)).all())
-    pending = (
-        session.query(Edge)
-        .filter(Edge.review_status == "pending")
-        .order_by(Edge.id.asc())
-        .limit(limit)
-        .all()
-    )
+    pending = sorted(
+        session.query(Edge).filter(Edge.review_status == "pending").all(),
+        key=lambda edge: (-reach(edge), edge.id),
+    )[:limit]
     # Opposite-direction edges that are still live (published or waiting). One pass
     # over the live edges; an OR per pair overflows SQLite's expression depth.
     reverse_ids = {}

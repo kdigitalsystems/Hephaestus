@@ -26,7 +26,7 @@ DOCS_DIR = ROOT / "docs"
 DEFAULT_DASHBOARD_PATH = DOCS_DIR / "dashboard_data.json"
 DEFAULT_OUTPUT_DIR = DOCS_DIR / "company"
 DEFAULT_SITEMAP_PATH = DOCS_DIR / "sitemap.xml"
-STYLESHEET_VERSION = "20260929-ui8"
+STYLESHEET_VERSION = "20260929-ui9"
 # Same brand mark as the dashboard; without an icon every page load requested /favicon.ico and got a 404.
 FAVICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#45d0bd"/><text x="32" y="45" text-anchor="middle" font-family="Inter,Arial,Helvetica,sans-serif" font-size="38" font-weight="800" fill="#061311">H</text></svg>'
 FAVICON_HREF = "data:image/svg+xml," + quote(FAVICON_SVG, safe="")
@@ -149,6 +149,27 @@ def render_link(link, side, known_tickers):
     return f"<li><p>{heading}<br><small>{' · '.join(details)}</small></p>{quote}</li>"
 
 
+def social_meta(title, description, url):
+    """Link-preview tags: without them a shared page shows as a bare URL."""
+    image = f"{SITE_URL}og-image.png"
+    tags = (
+        ("property", "og:type", "website"),
+        ("property", "og:site_name", "Hephaestus"),
+        ("property", "og:title", title),
+        ("property", "og:description", description),
+        ("property", "og:url", url),
+        ("property", "og:image", image),
+        ("property", "og:image:width", "1200"),
+        ("property", "og:image:height", "630"),
+        ("property", "og:image:alt", "Hephaestus: who supplies whom among public companies, from SEC filings"),
+        ("name", "twitter:card", "summary_large_image"),
+        ("name", "twitter:title", title),
+        ("name", "twitter:description", description),
+        ("name", "twitter:image", image),
+    )
+    return "".join(f"<meta {kind}=\"{key}\" content=\"{escape(value)}\">\n" for kind, key, value in tags)
+
+
 def theme_bootstrap():
     return (
         "<script>try{document.documentElement.dataset.theme=localStorage.getItem('hephaestus_theme')==='light'?'light':'dark';}"
@@ -202,10 +223,12 @@ def render_company_page(company, generated_on, known_tickers):
         f"<title>{escape(name)} ({escape(ticker)}) suppliers and customers | Hephaestus</title>\n"
         f"<meta name=\"description\" content=\"{escape(description)}\">\n"
         f"<link rel=\"canonical\" href=\"{escape(canonical)}\">\n"
+        f"{social_meta(f'{name} ({ticker}) suppliers and customers', description, canonical)}"
         f"{theme_bootstrap()}\n"
         "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Hephaestus supply-chain changes\" href=\"../feed.xml\">\n"
         f"<link rel=\"icon\" href=\"{FAVICON_HREF}\">\n"
         f"<link rel=\"stylesheet\" href=\"../styles.css?v={STYLESHEET_VERSION}\">\n"
+        f"<script src=\"../analytics.js?v={STYLESHEET_VERSION}\" defer></script>\n"
         f"<script type=\"application/ld+json\">{json_ld}</script>\n"
         "</head>\n<body>\n<main class=\"methodology-page static-company\">\n"
         f"<a class=\"back-link\" href=\"../#company?ticker={escape(ticker)}\">&larr; Open the interactive brief for {escape(ticker)}</a>\n"
@@ -245,9 +268,11 @@ def render_index_page(companies, generated_on):
         "<title>Companies with tracked supply-chain relationships | Hephaestus</title>\n"
         f"<meta name=\"description\" content=\"{escape(description)}\">\n"
         f"<link rel=\"canonical\" href=\"{escape(SITE_URL)}company/index.html\">\n"
+        f"{social_meta('Companies with tracked supply-chain relationships', description, f'{SITE_URL}company/index.html')}"
         f"{theme_bootstrap()}\n"
         f"<link rel=\"icon\" href=\"{FAVICON_HREF}\">\n"
         f"<link rel=\"stylesheet\" href=\"../styles.css?v={STYLESHEET_VERSION}\">\n"
+        f"<script src=\"../analytics.js?v={STYLESHEET_VERSION}\" defer></script>\n"
         "</head>\n<body>\n<main class=\"methodology-page static-company\">\n"
         "<a class=\"back-link\" href=\"../\">&larr; Back to the dashboard</a>\n"
         "<p class=\"eyebrow\">Company index</p>\n<h1>Companies with tracked supply-chain relationships</h1>\n"
