@@ -18,6 +18,7 @@ from evidence_quality import (
     has_non_supply_relationship,
     is_endpoint_label,
     is_role_label,
+    register_company_names,
     requires_source_evidence,
     unsupported_ai_evidence,
 )
@@ -355,6 +356,7 @@ def audit_database(fail_on_warnings=False):
     validate_database_schema()
     session = SessionLocal()
     try:
+        register_company_names(session.query(Node.ticker, Node.name).filter(Node.ticker.is_not(None)).all())
         tickers = [ticker for (ticker,) in session.query(Node.ticker).filter(Node.ticker.is_not(None)).all()]
         duplicate_tickers = [ticker for ticker, count in Counter(tickers).items() if count > 1]
 

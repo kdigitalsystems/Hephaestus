@@ -21,8 +21,8 @@ from customer_concentration import describe_share, disclosure_sentence, extract_
 from sqlalchemy import or_
 
 from database import SessionLocal
-from evidence_quality import unsupported_ai_evidence
-from models import Edge
+from evidence_quality import register_company_names, unsupported_ai_evidence
+from models import Edge, Node
 
 CONCENTRATION_TYPE = "Revenue Concentration"
 
@@ -188,6 +188,7 @@ def cleanup_reviewed_edges():
     session = SessionLocal()
     counts = {"rejected_non_supply": 0, "rejected_unsupported_ai": 0, "pending_role_labels": 0}
     try:
+        register_company_names(session.query(Node.ticker, Node.name).filter(Node.ticker.is_not(None)).all())
         # Direction first: the reciprocal check must see the corrected foundry edges.
         correct_foundry_direction(session, counts)
         recheck_concentration_edges(session, counts)

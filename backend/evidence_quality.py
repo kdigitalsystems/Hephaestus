@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import re
+from types import SimpleNamespace
+from datetime import datetime, timezone
 
 
 # Phrases that mark an excerpt as model commentary rather than a quote from the
@@ -418,6 +420,7 @@ def mentions_company(text, node):
     return any(
         re.search(r"(?<![a-z0-9])" + re.escape(alias) + r"(?![a-z0-9])", lowered)
         for alias in strong_aliases(node)
+        if not owned_by_another(alias, node)
     )
 
 
@@ -505,8 +508,21 @@ NON_SUPPLY_CUES = re.compile(
 )
 # A relationship evidenced only by events before 2010, or described as past, is not a
 # current supply chain: "adopted IBM mainframes in 1979", "used to be the largest producer".
-HISTORICAL_CUES = re.compile(r"\bused\s+to\b|\bformerly\b|\bformer\b|\bpreviously\b|\bat\s+the\s+time\b|\bonce\s+was\b", re.IGNORECASE)
+HISTORICAL_CUES = re.compile(r"\bused\s+to\b|\bformerly\b|\bformer\b|\bpreviously\b|\bat\s+the\s+time\b|\bonce\s+was\b|\bhistorically\b", re.IGNORECASE)
 YEAR = re.compile(r"\b(1[89]\d\d|20\d\d)s?\b")
+# Only a year that dates an event counts: "In 1984, Logitech won a contract", "throughout
+# the 1980s". "Apple's 2009 27-inch iMac" names a product model, and the panel supplier
+# still supplies Apple.
+EVENT_YEAR = re.compile(
+    r"\b(?:in|on|since|until|through|throughout|by|from|during|circa|as\s+of)\s+(?:the\s+)?(?:(?:early|late|mid)[\s-]+)?"
+    r"(?:(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s+(?:\d{1,2},?\s+)?|fall\s+of\s+|spring\s+of\s+|summer\s+of\s+|winter\s+of\s+)?"
+    r"(1[89]\d\d|20\d\d)s?\b"
+    r"|(?:^|[.;]\s+)(?:(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s+(?:\d{1,2},?\s+)?)?(1[89]\d\d|20\d\d),",
+    re.IGNORECASE,
+)
+# An end date in the past ("Until 2021, ...", "through December 2011") ends the relationship.
+ENDED = re.compile(r"\b(?:until|through)\s+(?:(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s+)?(\d{4})\b", re.IGNORECASE)
+ONGOING = re.compile(r"\bsince\b|\bcurrently\b|\bcontinues?\b|\bcontinued\s+to\b|\bremains?\b|\bstill\b|\bnow\b|\btoday\b|\bongoing\b", re.IGNORECASE)
 STALE_BEFORE_YEAR = 2010
 # "companies such as AMD... are customers of TSMC": the excerpt was cut inside the list
 # that probably named the missing company, so it cannot be judged either way.
@@ -521,17 +537,24 @@ def names_company(text: object, node: object) -> bool:
         return True
     lowered = normalize_for_alias_match(text)
     ticker = str(getattr(node, "ticker", "") or "").strip().lower()
-    if len(ticker) >= 2 and re.search(r"(?<![a-z0-9])" + re.escape(ticker) + r"(?![a-z0-9])", lowered):
+    if len(ticker) >= 2 and not owned_by_another(ticker, node) and re.search(r"(?<![a-z0-9])" + re.escape(ticker) + r"(?![a-z0-9])", lowered):
         return True
     words = cleaned_company_name(node).split()
-    return bool(words) and len(words[0]) >= 4 and words[0] not in GENERIC_NAME_WORDS and bool(
+    return bool(words) and len(words[0]) >= 4 and words[0] not in GENERIC_NAME_WORDS and not owned_by_another(words[0], node) and bool(
         re.search(r"(?<![a-z0-9])" + re.escape(words[0]) + r"(?![a-z0-9])", lowered)
     )
 
 
 def is_stale(text: str) -> bool:
-    years = [int(year) for year in YEAR.findall(text)]
-    return bool(HISTORICAL_CUES.search(text)) or (bool(years) and max(years) < STALE_BEFORE_YEAR)
+    if HISTORICAL_CUES.search(text):
+        return True
+    this_year = datetime.now(timezone.utc).year
+    if any(int(year) < this_year for year in ENDED.findall(text)):
+        return True
+    if ONGOING.search(text):
+        return False
+    years = [int(first or second) for first, second in EVENT_YEAR.findall(text)]
+    return bool(years) and max(years) < STALE_BEFORE_YEAR
 
 
 # --- Two companies named side by side is not a relationship between them -------------
@@ -565,6 +588,7 @@ def company_mentions(text: str, node: object) -> list[tuple[int, int]]:
     ticker = str(getattr(node, "ticker", "") or "").strip().lower()
     if len(ticker) >= 2:
         aliases.add(ticker)
+    aliases = {alias for alias in aliases if not owned_by_another(alias, node)}
     for alias in aliases:
         # Aliases are punctuation-collapsed ("coca cola", "amazon com"); allow any
         # punctuation between their words in the original text.
@@ -597,6 +621,44 @@ def listed_only_together(text: str, source_node: object, target_node: object) ->
     return True
 
 
+# Events that are not a supply relationship, read from the excerpt only (never from a
+# model's rationale, which may mention a spin-off while describing real supply).
+_ASSET = (
+    r"(?:stake|interests?|operations?|business(?:es)?|divisions?|units?|product\s+lines|lines|subsidiar(?:y|ies)|assets|"
+    r"plants?|facilit(?:y|ies)|refiner(?:y|ies)|mines?|brands?|rights|segments?)\b"
+)
+_TOKENS = r"(?:[\w\-&.%$,]+(?:'s|’s|')?\s+){0,8}?"
+# Noun phrases ("purchase of", "sale of") only count business-type assets: "Meta's purchase
+# of power from Vistra's nuclear plants" is supply.
+_BUSINESS = r"(?:stake|interests?|business(?:es)?|divisions?|units?|subsidiar(?:y|ies)|brands?|rights|segments?|operations?)\b"
+_PROPER = r"(?-i:[A-Z])[\w\-&.'’]*(?:\s+(?-i:[A-Z])[\w\-&.'’]*){0,3}"
+NON_SUPPLY_EVENTS = re.compile(
+    "|".join((
+        # Sales, mergers, spin-offs and joint ventures.
+        rf"\b(?:purchased|bought|acquiring|acquires|sold(?:\s+off)?\s+(?:its|their|the|a|an|our|\d+))\s+{_TOKENS}{_ASSET}",
+        rf"\b(?:purchase|acquisition|sale)\s+of\s+{_TOKENS}{_BUSINESS}",
+        # "MKS purchased Granville-Phillips from Azenta for $87 million": a named business,
+        # not "purchased 100 aircraft from Boeing for $12 billion".
+        rf"\b(?:purchased|bought)\s+{_PROPER}\s+from\b[^.;]{{1,60}}?(?:\bfor\s+(?:about\s+|approximately\s+|over\s+|more\s+than\s+)?(?:US)?\$|\bin\s+a\s+deal\b)",
+        rf"\bacquired\s+(?:{_PROPER}\s+)?from\s+(?-i:[A-Z])",
+        rf"\bmerge\w*\s+(?:its|their|the)\s+{_TOKENS}{_ASSET}",
+        r"\bto\s+form\s+(?:a|an)\s+(?:[\w\-]+\s+){0,5}?(?:joint\s+venture|venture|operation|company)\b",
+        r"\bspun\s+(?:off|out)\b|\bspin-?off\b|\bspinning\s+(?:off|out)\b",
+        r"\b(?:it|which|freight|business|segment|unit|division|plant|subsidiary)\s+was\s+sold\s+to\b",
+        rf"\bacquisition\s+of\s+{_PROPER}\s+by\b",
+        # Fines, hires, investigations, data sharing, brand licensing, speculation.
+        r"\bfined\b|\bantitrust\b",
+        r"\bhired\b[^.;]{0,60}\b(?:previously|formerly)\s+(?:of|at|with)\b|\bhired\s+a\s+team\s+from\b",
+        r"\binvestigated\b",
+        r"\bshares?\s+(?:\w+\s+){0,2}data\s+with\b",
+        r"\bbrand\s+licens\w*|\bunder\s+license\s+with\b|\bout-licens\w*",
+        r"\bsuggests?\s+that\b|\b(?:may|might|could)\s+(?:use|buy|purchase|source)\b",
+        r"\bsupport\s+(?:was\s+|is\s+|has\s+been\s+)?(?:broadened|extended|expanded)\b",
+    )),
+    re.IGNORECASE,
+)
+
+
 # Scraped page furniture - a live quote widget beside a menu of customers ("... Lockheed
 # Martin Northrop Grumman +Approved Primes NASDAQ: FEIM LIVE $69.74 +1.01%") - is not prose.
 PAGE_CHROME = re.compile(r"\b(?:NASDAQ|NYSE|NYSE\s+American|OTC)\s*:\s*[A-Z.]{1,6}\s+(?:LIVE\s+)?\$\d")
@@ -618,7 +680,19 @@ def evidence_support(evidence: object, source_node: object, target_node: object)
     if PAGE_CHROME.search(text):
         return "unsupported", "the excerpt is scraped page navigation, not a statement"
     named_source, named_target = names_company(text, source_node), names_company(text, target_node)
+    event = NON_SUPPLY_EVENTS.search(text)
+    if event:
+        return "unsupported", f'the excerpt describes a sale, spin-off, fine, hire or similar event, not supply ("{event.group(0)[:60]}")'
     if named_source and named_target:
+        # Judge only the sentences about these companies: a filing excerpt that says
+        # "Moderna accounted for 22% ... We previously derived revenue from Natera" is
+        # current for Moderna.
+        relevant = " ".join(
+            sentence for sentence in re.split(r"(?<=[.!?])\s+(?=[A-Z0-9\"(])", text)
+            if names_company(sentence, source_node) or names_company(sentence, target_node)
+        )
+        if is_stale(relevant or text):
+            return "unsupported", "the excerpt describes a past relationship"
         if listed_only_together(text, source_node, target_node):
             return "unsupported", "the companies are only listed side by side; nothing relates them"
         if NON_SUPPLY_CUES.search(text) and not PAIR_SUPPLY_WORDS.search(text):
@@ -710,6 +784,7 @@ def mention_pattern(node: object) -> str | None:
     ticker = str(getattr(node, "ticker", "") or "").strip().lower()
     if len(ticker) >= 2:
         aliases.add(ticker)
+    aliases = {alias for alias in aliases if not owned_by_another(alias, node)}
     parts = [r"[\W_]+".join(re.escape(word) for word in alias.split()) for alias in sorted(aliases, key=len, reverse=True)]
     if not parts:
         return None
@@ -735,3 +810,28 @@ def evidence_direction(evidence: object, source_node: object, target_node: objec
         return None, ""
     direction, (_strength, phrase) = ranked[0]
     return direction, phrase
+
+
+
+# --- A short alias that is another company's whole name belongs to that company ---------
+#
+# Helmerich & Payne trades as HP, so every "HP announced new notebooks ..." named the
+# drilling company; Apple Hospitality REIT's first word is Apple. When the universe of
+# listed names is registered, an alias equal to another company's full cleaned name
+# stops counting as a mention of this one.
+_NAME_OWNERS: dict[str, set[str]] = {}
+
+
+def register_company_names(rows) -> None:
+    """rows: (ticker, name) for every listed company."""
+    _NAME_OWNERS.clear()
+    for ticker, name in rows:
+        cleaned = cleaned_company_name(SimpleNamespace(name=name, ticker=ticker))
+        if cleaned:
+            _NAME_OWNERS.setdefault(cleaned, set()).add(str(ticker or "").upper())
+
+
+def owned_by_another(alias: str, node: object) -> bool:
+    owners = _NAME_OWNERS.get(alias)
+    ticker = str(getattr(node, "ticker", "") or "").upper()
+    return bool(owners) and ticker not in owners and alias != cleaned_company_name(node)
