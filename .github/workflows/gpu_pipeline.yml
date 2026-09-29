@@ -175,6 +175,9 @@ jobs:
           echo "Reapplying persisted edge review decisions..."
           venv/bin/python backend/edge_review_decisions.py apply
 
+          echo "Applying decisions from the review page..."
+          venv/bin/python backend/apply_human_review.py
+
           echo "Reviewing pending AI edges with local Ollama model consensus..."
           venv/bin/python backend/review_edges_with_ollama.py \
             --models "$HEPHAESTUS_REVIEW_MODELS" \
@@ -244,7 +247,7 @@ jobs:
           git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
           git add docs/changes.json docs/feed.xml docs/status.json
           git add -A docs/company docs/sitemap.xml
-          git add docs/dashboard_lite.json
+          git add docs/dashboard_lite.json docs/review_queue.json
           git add -A docs/company-data
 
           if ! git diff --cached --quiet; then

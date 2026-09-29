@@ -321,6 +321,16 @@ The risk scores are intentionally simple and explainable:
 
 The website's Supply Links number counts unique stable relationship keys. Relationship rows appear from both sides of a connection, so the raw number of upstream/downstream rows is usually about twice the unique link count.
 
+## Reviewing Held Links
+
+Links the pipeline cannot settle on its own (a reversed direction, a relationship published both ways, an unclear excerpt) wait in the review queue. Review them at https://kdigitalsystems.github.io/Hephaestus/review.html (not linked from the site, and not indexed):
+
+1. Each link shows its evidence, why it is waiting, and a suggested action read from the evidence ("The excerpt says GLW supplies AAPL"). Approve, reverse or reject it with a click, or with `a` / `r` / `x` (`j` / `k` to move, `s` to take the suggestion, `u` to undo). **Accept suggestions** decides every suggested link in the current filter at once.
+2. Decisions stay in the browser until **Open pull request** sends them: GitHub opens its new-file editor with a file under `data/human_review/` filled in; choose "Create a new branch ... and start a pull request" and merge it. A session too large for one link downloads the file and opens GitHub's upload page instead.
+3. The next pipeline run applies the file with `backend/apply_human_review.py` as a human verdict (which no automated rule overrides) and records it in `data/edge_review_decisions.json`. Re-applying a file changes nothing.
+
+`backend/review_queue.py` writes the page's data, `docs/review_queue.json`, during export: every pending link with its category, suggestion, and any link running the other way between the same two companies. Held links whose excerpt the evidence rules classify as junk are rejected during cleanup, so the queue holds only what needs a person.
+
 ## Graph-Aware Research Signals
 
 Hephaestus also publishes a bounded research-signal view for the 50 largest exported companies by market capitalization. It is research tooling, not investment advice, a price target, or a recommendation to trade.

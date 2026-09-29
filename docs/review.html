@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review queue | Hephaestus</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Approve, reverse or reject the supply-chain links waiting for a person, and send the decisions to the pipeline as a pull request.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2345d0bd%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2245%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2CHelvetica%2Csans-serif%22%20font-size%3D%2238%22%20font-weight%3D%22800%22%20fill%3D%22%23061311%22%3EH%3C%2Ftext%3E%3C%2Fsvg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        try {
+            document.documentElement.dataset.theme = localStorage.getItem('hephaestus_theme') === 'light' ? 'light' : 'dark';
+        } catch (_error) {
+            document.documentElement.dataset.theme = 'dark';
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css?v=20260929-ui8">
+</head>
+<body>
+    <main class="rq-page" id="review-app">
+        <header class="rq-header">
+            <a class="back-link" href="./">&larr; Back to the dashboard</a>
+            <p class="eyebrow">Review queue</p>
+            <h1>Links waiting for a person</h1>
+            <p class="rq-intro">
+                Approve a link, reverse its direction, or reject it. Decisions are kept in this browser until you send them:
+                <strong>Open pull request</strong> opens GitHub with your decisions filled in, and the next pipeline run applies
+                them after the pull request is merged. Suggestions come from the evidence rules and are only suggestions.
+            </p>
+            <p class="rq-status" id="review-status" aria-live="polite">Loading the queue&hellip;</p>
+        </header>
+
+        <section class="rq-toolbar" aria-label="Filters">
+            <div class="rq-filters" id="review-filters" role="group" aria-label="Why the link is waiting"></div>
+            <div class="rq-toolbar-row">
+                <label class="rq-search">
+                    <span class="visually-hidden">Filter by company or ticker</span>
+                    <input type="search" id="review-search" placeholder="Filter by company or ticker" autocomplete="off" spellcheck="false">
+                </label>
+                <label class="toggle-filter rq-toggle">
+                    <input type="checkbox" id="review-hide-decided">
+                    <span>Hide decided</span>
+                </label>
+                <button type="button" class="rq-button" id="review-accept-suggestions" disabled>Accept suggestions</button>
+                <button type="button" class="rq-link-button" id="review-shortcuts-toggle" aria-expanded="false" aria-controls="review-shortcuts">Keyboard shortcuts</button>
+            </div>
+            <dl class="rq-shortcuts" id="review-shortcuts" hidden>
+                <div><dt>j / k</dt><dd>next / previous link</dd></div>
+                <div><dt>a</dt><dd>approve</dd></div>
+                <div><dt>r</dt><dd>reverse</dd></div>
+                <div><dt>x</dt><dd>reject</dd></div>
+                <div><dt>s</dt><dd>take the suggestion</dd></div>
+                <div><dt>u</dt><dd>undo</dd></div>
+            </dl>
+        </section>
+
+        <ol class="rq-list" id="review-list" aria-label="Links waiting for review"></ol>
+        <p class="rq-empty" id="review-empty" hidden>Nothing matches these filters.</p>
+    </main>
+
+    <aside class="rq-submit" id="review-submit" aria-label="Your decisions" hidden>
+        <p class="rq-submit-summary" id="review-submit-summary" aria-live="polite"></p>
+        <div class="rq-submit-actions">
+            <button type="button" class="rq-button primary" id="review-open-pr">Open pull request</button>
+            <button type="button" class="rq-button" id="review-download">Download file</button>
+            <button type="button" class="rq-button" id="review-copy">Copy</button>
+            <button type="button" class="rq-link-button" id="review-clear">Clear all</button>
+        </div>
+        <div class="rq-pr-links" id="review-pr-links" hidden></div>
+    </aside>
+
+    <script src="review.js?v=20260929-ui8"></script>
+</body>
+</html>

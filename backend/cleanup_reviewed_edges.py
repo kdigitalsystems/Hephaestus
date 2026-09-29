@@ -21,7 +21,14 @@ from customer_concentration import describe_share, disclosure_sentence, extract_
 from sqlalchemy import or_
 
 from database import SessionLocal
-from evidence_quality import register_company_names, unsupported_ai_evidence
+from customer_concentration import filer_documented_direction
+from evidence_quality import (
+    evidence_support,
+    has_usable_evidence,
+    register_company_names,
+    requires_source_evidence,
+    unsupported_ai_evidence,
+)
 from models import Edge, Node
 
 CONCENTRATION_TYPE = "Revenue Concentration"
@@ -184,6 +191,33 @@ def resolve_reciprocal_duplicates(session, counts):
         )
 
 
+def reject_held_junk(session, counts):
+    """Links waiting for a person whose excerpt the evidence rules call junk.
+
+    Hundreds of links were held before those rules existed ("Evidence excerpt does not
+    name both companies"); the ones that are plainly junk should not cost a person a
+    click. Anything the rules find doubtful stays in the queue.
+    """
+    # The pipeline's session does not autoflush; without this the query cannot see the
+    # holds made earlier in this same run.
+    session.flush()
+    held = session.query(Edge).filter(
+        Edge.review_status == "pending",
+        Edge.review_note.like(f"{HELD_NOTE_PREFIX}%"),
+    ).all()
+    for edge in held:
+        if not requires_source_evidence(edge.source_url) or filer_documented_direction(edge):
+            continue
+        if not has_usable_evidence(edge.evidence_excerpt):
+            continue  # missing evidence is not junk evidence; a person can find a source
+        verdict, reason = evidence_support(edge.evidence_excerpt, edge.source_node, edge.target_node)
+        if verdict == "unsupported":
+            edge.review_status = "rejected"
+            edge.review_note = f"Automated cleanup: the evidence excerpt does not support this link ({reason})."[:1000]
+            edge.reviewed_at = datetime.now(timezone.utc)
+            counts["rejected_held_junk"] = counts.get("rejected_held_junk", 0) + 1
+
+
 def cleanup_reviewed_edges():
     session = SessionLocal()
     counts = {"rejected_non_supply": 0, "rejected_unsupported_ai": 0, "pending_role_labels": 0}
@@ -266,6 +300,7 @@ def cleanup_reviewed_edges():
                 else:
                     hold_for_human(edge, counts, f"pending_excerpt_{verdict}", reason)
 
+        reject_held_junk(session, counts)
         session.commit()
         print("Reviewed edge cleanup:", counts)
     finally:

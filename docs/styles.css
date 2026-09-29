@@ -2994,3 +2994,426 @@ td.muted {
     .control-panel { grid-template-columns: 1fr 1fr; }
     .control-panel > .primary-search { grid-column: 1 / -1; }
 }
+
+/* --- Review queue (review.html) ------------------------------------------------------ */
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.rq-page {
+    width: min(980px, 100%);
+    margin: 0 auto;
+    padding: 36px 20px 160px;
+}
+
+.rq-page .back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: var(--accent);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.rq-page h1 {
+    margin: 0 0 12px;
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    line-height: 1.1;
+}
+
+.rq-intro,
+.rq-status {
+    max-width: 760px;
+    margin: 0 0 12px;
+    color: var(--text-soft);
+    line-height: 1.55;
+}
+
+.rq-status {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+}
+
+.rq-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    margin: 18px 0 16px;
+    padding: 14px 0;
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.rq-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 4px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.rq-chip {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    background: var(--surface-raised);
+    color: var(--text-soft);
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.rq-chip[aria-pressed="true"] {
+    border-color: var(--accent);
+    color: var(--text-main);
+    box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.rq-chip-count {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.rq-toolbar-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.rq-search {
+    flex: 1 1 240px;
+}
+
+.rq-search input,
+.rq-note {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--surface-input);
+    color: var(--text-main);
+    font: inherit;
+}
+
+.rq-toggle {
+    width: auto;
+    min-height: 40px;
+}
+
+.rq-link-button {
+    min-height: 36px;
+    padding: 0 6px;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.rq-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: 12px 0 0;
+    color: var(--text-muted);
+    font-size: 0.86rem;
+}
+
+.rq-shortcuts[hidden] {
+    display: none;
+}
+
+.rq-shortcuts div {
+    display: flex;
+    gap: 6px;
+}
+
+.rq-shortcuts dt {
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.rq-shortcuts dd {
+    margin: 0;
+}
+
+.rq-list {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.rq-card {
+    padding: 18px 18px 16px;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--surface-raised);
+    outline: none;
+}
+
+.rq-card:focus-visible,
+.rq-card:focus-within {
+    box-shadow: 0 0 0 2px var(--accent);
+}
+
+.rq-card.decided-approve { border-left-color: var(--green); }
+.rq-card.decided-reverse { border-left-color: var(--blue); }
+.rq-card.decided-reject { border-left-color: var(--red); }
+
+.rq-card-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.rq-category {
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.rq-suggestion {
+    padding: 2px 8px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+}
+
+.suggest-approve { color: var(--green); }
+.suggest-reverse { color: var(--blue); }
+.suggest-reject { color: var(--red); }
+
+.rq-edge-id {
+    margin-left: auto;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.rq-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 6px;
+    margin: 0 0 6px;
+    font-size: 1.12rem;
+    line-height: 1.3;
+}
+
+.rq-ticker {
+    margin-left: 4px;
+    color: var(--accent);
+    font-size: 0.86rem;
+    font-weight: 900;
+}
+
+.rq-arrow {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.rq-meta {
+    margin: 0 0 10px;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    overflow-wrap: anywhere;
+}
+
+.rq-evidence {
+    margin: 0 0 10px;
+    padding: 10px 14px;
+    border-left: 3px solid var(--border-strong);
+    border-radius: 4px;
+    background: var(--surface-input);
+    color: var(--text-soft);
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.rq-suggestion-reason,
+.rq-mirror {
+    margin: 0 0 10px;
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+}
+
+.rq-mirror a {
+    color: var(--accent);
+    font-weight: 800;
+}
+
+.rq-why {
+    margin: 0 0 12px;
+    color: var(--text-muted);
+    font-size: 0.86rem;
+}
+
+.rq-why summary {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.rq-why p {
+    margin: 6px 0 0;
+    overflow-wrap: anywhere;
+}
+
+.rq-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.rq-action {
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--surface-input);
+    color: var(--text-main);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.rq-action.suggested {
+    border-style: dashed;
+    border-color: var(--accent);
+}
+
+/* --active-text is dark on the dark theme's light fills and white on the light theme's dark fills. */
+.rq-action.action-approve[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: var(--active-text); }
+.rq-action.action-reverse[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: var(--active-text); }
+.rq-action.action-reject[aria-pressed="true"] { background: var(--red); border-color: var(--red); color: var(--active-text); }
+
+.rq-decision {
+    margin: 12px 0 8px;
+    font-weight: 800;
+}
+
+.rq-empty {
+    color: var(--text-muted);
+}
+
+.rq-submit {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    z-index: 10;
+    width: min(948px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 14px 16px;
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-soft);
+}
+
+.rq-submit-summary {
+    margin: 0 0 10px;
+    font-weight: 800;
+}
+
+.rq-submit-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.rq-button {
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--surface-input);
+    color: var(--accent);
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.rq-button.primary {
+    border-color: transparent;
+    background: var(--accent);
+    color: var(--active-text);
+}
+
+.rq-button:disabled {
+    cursor: default;
+    opacity: 0.55;
+}
+
+.rq-pr-links details {
+    margin-top: 4px;
+}
+
+.rq-pr-links summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.rq-pr-links {
+    margin-top: 10px;
+    color: var(--text-soft);
+    font-size: 0.9rem;
+}
+
+.rq-pr-links p {
+    margin: 0 0 6px;
+}
+
+@media (max-width: 640px) {
+    .rq-page {
+        padding: 24px 16px 200px;
+    }
+
+    .rq-action {
+        flex: 1 1 100%;
+    }
+
+    .rq-toolbar {
+        position: static;
+    }
+
+    .rq-submit {
+        padding: 10px 12px;
+    }
+
+    .rq-submit-summary {
+        margin-bottom: 8px;
+        font-size: 0.92rem;
+    }
+
+    .rq-pr-links {
+        max-height: 30vh;
+        overflow-y: auto;
+    }
+}
