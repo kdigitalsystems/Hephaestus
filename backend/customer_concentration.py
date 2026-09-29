@@ -61,6 +61,16 @@ SALES_TO_CUE = re.compile(r"\b(?:sales|revenue|revenues|shipments|billings)\s+(?
 # "Amazon, Best Buy and Walmart collectively accounted for 81%" is a group figure;
 # it belongs to none of the names individually (Roku's retailers were each published at 81%).
 COLLECTIVE_CUE = re.compile(r"\b(?:collectively|combined|together|in\s+(?:the\s+)?aggregate|as\s+a\s+group|in\s+total)\b", re.IGNORECASE)
+# Vendor concentration is the opposite relationship: TD SYNNEX's 10-K table of revenue
+# "generated from products purchased from vendors" named Apple at 12%, and Apple was
+# published as a customer of its own distributor.
+VENDOR_CONCENTRATION = re.compile(
+    r"\b(?:purchased|purchases|sourced|procured|bought)\s+from\b"
+    r"|\b(?:vendors?|suppliers?)\s+(?:that|which|who)\b"
+    r"|\bfrom\s+(?:(?:our|its|this|these|such|a|one|two|three)\s+)?(?:(?:largest|principal|major|key)\s+)?(?:vendors?|suppliers?)\b"
+    r"|\b(?:vendor|supplier)\s+concentration\b",
+    re.IGNORECASE,
+)
 # A rating agency named next to "rating" is not a customer (Sabesp -> S&P Global 50%).
 RATING_CONTEXT = re.compile(r"\b(?:credit\s+)?ratings?\b|\brated\b|\bmoody|\bfitch\b", re.IGNORECASE)
 # Shares outside these bounds are usually a mispaired percentage and need a human look:
@@ -102,6 +112,8 @@ def is_concentration_sentence(sentence):
     if not positioned_percentages(sentence):
         # Every percentage belonged to a receivables clause.
         return False
+    if VENDOR_CONCENTRATION.search(sentence):
+        return False
     return bool(REVENUE_PATTERN.search(sentence) and CONCENTRATION_PATTERN.search(sentence))
 
 
@@ -130,6 +142,25 @@ def percentages(sentence):
 
 # Discovery stores the disclosure as "{filer} ({ticker}) {form} filed {date}: {sentence}".
 EVIDENCE_PREFIX = re.compile(r"^.*? filed \d{4}-\d{2}-\d{2}:\s*")
+FILER_EVIDENCE = re.compile(r"^.{1,200}?\(([A-Z0-9][A-Z0-9.\-]{0,9})\)\s+(?:10-K|10-KT|20-F|40-F)(?:/A)?\s+filed\s+\d{4}-\d{2}-\d{2}:")
+DISCLOSURE_TITLE_MARKER = "customer-concentration disclosure"
+
+
+def filer_documented_direction(edge):
+    """True when the supplier's own filing names this customer, which fixes the direction.
+
+    A 10-K customer disclosure is written by the supplier about its customers, so the
+    filer is the supplier by construction. The review models still vote "backwards" on
+    these (P&G -> Walmart, Tyson -> Walmart), and that vote must not reverse or hold them.
+    """
+    if getattr(edge, "revenue_share", None) is None:
+        return False
+    if DISCLOSURE_TITLE_MARKER not in str(getattr(edge, "source_title", "") or ""):
+        return False
+    source = getattr(edge, "source_node", None)
+    ticker = str(getattr(source, "ticker", "") or "").upper()
+    match = FILER_EVIDENCE.match(str(getattr(edge, "evidence_excerpt", "") or ""))
+    return bool(ticker) and bool(match) and match.group(1).upper() == ticker
 
 
 def disclosure_sentence(evidence_excerpt):

@@ -30,7 +30,7 @@ def build_graph(session):
     session.add_all([
         Edge(source_id=tsm.id, target_id=amd.id, dependency_type="Advanced Silicon Fabrication", product="chips", confidence_score=1.0, source_url="Manual System Jumpstart", review_status="approved"),
         Edge(source_id=tsm.id, target_id=amd.id, dependency_type="Foundry Services", product="wafers", confidence_score=0.9, source_url="https://www.sec.gov/x", review_status="approved", evidence_excerpt="TSMC provides foundry services to AMD under a long-term agreement."),
-        # Stored backwards; export must canonicalize TSM as the foundry supplier.
+        # Stored backwards; cleanup corrects it in the database before export.
         Edge(source_id=nvda.id, target_id=tsm.id, dependency_type="Advanced Silicon Fabrication", product="semiconductor chips", confidence_score=0.9, source_url="AI Multi-Source Research", review_status="approved", evidence_excerpt="TSMC manufactures advanced semiconductor chips used by NVIDIA."),
         Edge(source_id=micron.id, target_id=nvda.id, dependency_type="High-Bandwidth Memory", product="HBM3e", confidence_score=0.95, source_url="AI Multi-Source Research", review_status="approved", evidence_excerpt="Micron supplies HBM3e memory to NVIDIA for its accelerators."),
         Edge(source_id=amd.id, target_id=nvda.id, dependency_type="Competitor", product="GPUs", confidence_score=0.9, source_url="AI Multi-Source Research", review_status="rejected", evidence_excerpt="AMD competes with NVIDIA in GPUs for data centers."),
@@ -48,6 +48,11 @@ def test_export_to_json_end_to_end(tmp_path, monkeypatch):
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     build_graph(Session())
+    from cleanup_reviewed_edges import correct_foundry_direction
+    session = Session()
+    correct_foundry_direction(session, counts := {})
+    session.commit()
+    assert counts == {"foundry_direction_corrected": 1}
 
     dashboard_path = tmp_path / "dashboard_data.json"
     history_path = tmp_path / "link_history.json"

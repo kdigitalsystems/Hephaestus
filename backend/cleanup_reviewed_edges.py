@@ -1,16 +1,21 @@
-import re
 from collections import defaultdict
 from datetime import datetime, timezone
 
-from audit_data_quality import (
-    has_non_supply_label,
+from audit_data_quality import (  # noqa: F401  (HELD_NOTE_PREFIX is re-exported for callers)
+    HELD_NOTE_PREFIX,
+    backwards_foundry_edge,
+    contested_reciprocal_edges,
+    direction_contested,
+    endpoint_label_as_product,
+    generic_word_entity_edge,
     has_invalid_dependency_label,
+    has_non_supply_label,
     has_reversed_role_label,
     has_speculative_supply_label,
-    has_wrong_direction_review,
-    reciprocal_same_evidence_pairs,
+    is_published,
+    model_verdict,
+    needs_human_confirmation,
 )
-from evidence_quality import is_role_label
 from customer_concentration import describe_share, disclosure_sentence, extract_disclosures, implausible_share
 from sqlalchemy import or_
 
@@ -19,9 +24,6 @@ from evidence_quality import unsupported_ai_evidence
 from models import Edge
 
 CONCENTRATION_TYPE = "Revenue Concentration"
-# Must match review_edges_with_ollama.HELD_NOTE_PREFIX; importing that module pulls in
-# the Ollama client, which this cleanup step does not need.
-HELD_NOTE_PREFIX = "Ollama consensus review"
 
 
 def recheck_concentration_edges(session, counts):
@@ -112,67 +114,83 @@ def hold_impossible_share_totals(session, counts):
                 )
 
 
-def is_published(edge):
-    return edge.review_status != "rejected" and (edge.review_status == "approved" or "Manual" in (edge.source_url or ""))
+def correct_foundry_direction(session, counts):
+    """Store TSMC's foundry work as TSM -> customer, in the database itself.
+
+    The export used to flip these while publishing, which hid the fix from the audit,
+    produced INTC <-> TSM in both directions, and also flipped ASML's lithography
+    machines into TSM -> ASML. Correcting the stored edge lets every later check see it.
+    """
+    for edge in session.query(Edge).filter(Edge.review_status != "rejected").all():
+        if not backwards_foundry_edge(edge):
+            continue
+        mirror = (
+            session.query(Edge)
+            .filter(
+                Edge.source_id == edge.target_id,
+                Edge.target_id == edge.source_id,
+                Edge.dependency_type == edge.dependency_type,
+                Edge.id != edge.id,
+            )
+            .first()
+        )
+        if mirror is not None:
+            # TSM -> X under this label already exists (and a human may have rejected
+            # it); the backwards copy adds nothing either way.
+            edge.review_status = "rejected"
+            edge.review_note = f"Automated cleanup: backwards duplicate of TSMC foundry edge #{mirror.id}."
+            edge.reviewed_at = datetime.now(timezone.utc)
+            counts["foundry_duplicates_rejected"] = counts.get("foundry_duplicates_rejected", 0) + 1
+            continue
+        edge.source_id, edge.target_id = edge.target_id, edge.source_id
+        counts["foundry_direction_corrected"] = counts.get("foundry_direction_corrected", 0) + 1
+    session.flush()
+    # The relationships still point at the old nodes until they are reloaded.
+    session.expire_all()
 
 
-ROLE_WORDS = {"manufacturer", "customer", "customers", "supplier", "suppliers", "vendor", "buyer", "client", "provider", "partner", "distributor", "reseller", "receiver"}
-
-
-def looks_like_role_label(label):
-    """'Customer', 'manufacturer -> customer', 'supplier/customer': roles, not a dependency."""
-    if is_role_label(label):
-        return True
-    text = str(label or "").lower()
-    if "->" in text or "→" in text:
-        return True
-    words = [word for word in re.split(r"[^a-z]+", text) if word]
-    return bool(words) and all(word in ROLE_WORDS or word in {"and", "of", "to", "the", "a"} for word in words)
-
-
-def direction_rank(edge):
-    """Higher keeps: a real dependency label over a role label, a human verdict over a
-    model's, then the older edge."""
-    note = str(edge.review_note or "")
-    human = edge.review_status == "approved" and not note.startswith("Ollama consensus") and not note.startswith("Automated")
-    return (0 if looks_like_role_label(edge.dependency_type) else 1, 1 if human else 0, -(edge.id or 0))
+def repair_endpoint_products(session, counts):
+    """An endpoint's industry is not a product (36 links read "Auto Parts", "Semiconductors")."""
+    for edge in session.query(Edge).filter(Edge.review_status != "rejected").all():
+        if not endpoint_label_as_product(edge):
+            continue
+        if edge.revenue_share is not None and edge.source_node is not None:
+            edge.product = describe_share(edge.revenue_share, edge.source_node.ticker)
+        else:
+            # The frontend hides a product equal to the relationship type, so the
+            # misleading line disappears instead of being replaced by a guess.
+            edge.product = edge.dependency_type
+        counts["industry_products_cleared"] = counts.get("industry_products_cleared", 0) + 1
 
 
 def resolve_reciprocal_duplicates(session, counts):
-    """One fact published in both directions is always wrong; keep one, hold the other.
+    """One relationship published in both directions goes to a human.
 
-    Two runners' graphs merged through the decisions file can leave an approved edge and
-    its approved mirror carrying the same sentence (Broadcom <-> Dell, Google <-> Marvell).
-    A human decides the direction, so the weaker one goes back to review.
+    See audit_data_quality.contested_reciprocal_edges for which side is kept.
     """
     published = [edge for edge in session.query(Edge).all() if is_published(edge)]
-    for edge, mirror in reciprocal_same_evidence_pairs(published):
-        keeper = max((edge, mirror), key=direction_rank)
-        loser = mirror if keeper is edge else edge
-        if loser.review_status == "pending":
+    for edge in contested_reciprocal_edges(published):
+        if edge.review_status != "approved":
             continue
+        mirror = next(
+            (other for other in published if other.source_id == edge.target_id and other.target_id == edge.source_id),
+            None,
+        )
         hold_for_human(
-            loser, counts, "reciprocal_held",
-            f"the opposite direction is published as edge #{keeper.id} with the same evidence; "
+            edge, counts, "reciprocal_held",
+            f"the opposite direction is also published (edge #{getattr(mirror, 'id', '?')}); "
             "a human must decide which direction is correct",
         )
-
-
-def needs_human_confirmation(edge):
-    """Fresh or model-approved edges go to a human; a human's own verdict stands."""
-    note = str(edge.review_note or "")
-    if edge.review_status == "pending":
-        return not note.startswith(HELD_NOTE_PREFIX)
-    if edge.review_status == "approved":
-        return note.startswith("Ollama consensus")
-    return False
 
 
 def cleanup_reviewed_edges():
     session = SessionLocal()
     counts = {"rejected_non_supply": 0, "rejected_unsupported_ai": 0, "pending_role_labels": 0}
     try:
+        # Direction first: the reciprocal check must see the corrected foundry edges.
+        correct_foundry_direction(session, counts)
         recheck_concentration_edges(session, counts)
+        repair_endpoint_products(session, counts)
         resolve_reciprocal_duplicates(session, counts)
         hold_impossible_share_totals(session, counts)
         approved_edges = session.query(Edge).filter(Edge.review_status == "approved").all()
@@ -222,12 +240,17 @@ def cleanup_reviewed_edges():
                 counts["rejected_speculative"] += 1
                 continue
 
-            if has_wrong_direction_review(edge.evidence_excerpt, edge.review_note):
-                edge.review_status = "pending"
-                edge.review_note = "Automated cleanup: review rationale indicates the relationship direction needs human review."
-                edge.reviewed_at = None
-                counts.setdefault("pending_wrong_direction", 0)
-                counts["pending_wrong_direction"] += 1
+            if direction_contested(edge) and model_verdict(edge):
+                # Held, not merely pending: an "Automated cleanup" note put the edge back
+                # in the review queue, the panel approved it again, and this step demoted
+                # it again - the same four edges, every day.
+                hold_for_human(edge, counts, "pending_wrong_direction",
+                               "the approving model's own rationale says the direction is backwards")
+                continue
+
+            if generic_word_entity_edge(edge) and model_verdict(edge):
+                hold_for_human(edge, counts, "pending_generic_entity",
+                               "a company was matched from a place or generic word in the excerpt, not its name")
 
         session.commit()
         print("Reviewed edge cleanup:", counts)

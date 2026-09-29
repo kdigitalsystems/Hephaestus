@@ -8,10 +8,17 @@ from sqlalchemy import inspect
 from sqlalchemy.exc import SQLAlchemyError
 
 from database import engine
-from customer_concentration import implausible_share
+from customer_concentration import filer_documented_direction, implausible_share
 from database import SessionLocal
 from models import Edge, Node
-from evidence_quality import has_non_supply_relationship, is_role_label, unsupported_ai_evidence
+from evidence_quality import (
+    bound_by_generic_word,
+    has_non_supply_relationship,
+    is_endpoint_label,
+    is_role_label,
+    requires_source_evidence,
+    unsupported_ai_evidence,
+)
 from thefuzz import fuzz
 
 INVALID_DEPENDENCY_LABELS = {
@@ -40,6 +47,21 @@ WRONG_DIRECTION_REVIEW_MARKERS = (
     "source is a customer",
     "target is the supplier",
     "target) supplies",
+    # The panel's usual wording. Only the four phrasings above were matched, so 65 of
+    # 344 consensus-approved links were published with a rationale saying "the
+    # direction is backwards" / "should be reversed".
+    "is backwards",
+    "has the relationship backwards",
+    "relationship backwards",
+    "should be reversed",
+    "direction is reversed",
+    "direction should be reversed",
+    "direction is wrong",
+    "direction is incorrect",
+    "wrong direction",
+    "opposite direction",
+    "reverse the direction",
+    "reverse the edge",
 )
 
 REQUIRED_TABLES = ("nodes", "edges")
@@ -131,6 +153,154 @@ def reciprocal_same_evidence_pairs(edges):
     return pairs
 
 
+# Must match review_edges_with_ollama.HELD_NOTE_PREFIX; importing that module pulls in
+# the Ollama client, which neither the audit nor the cleanup step needs.
+HELD_NOTE_PREFIX = "Ollama consensus review"
+
+
+# Every automated reviewer's note starts with one of these. "Ollama review:" (the older
+# single-model reviewer) was once missing, so ~80 model verdicts counted as human ones
+# and were exempt from every safeguard that sends model approvals to a person.
+MODEL_NOTE_PREFIXES = ("ollama consensus", "ollama review", "ollama report review")
+
+
+def is_model_note(note):
+    return str(note or "").strip().lower().startswith(MODEL_NOTE_PREFIXES)
+
+
+def needs_human_confirmation(edge):
+    """Fresh or model-approved edges go to a human; a human's own verdict stands."""
+    note = str(edge.review_note or "")
+    if edge.review_status == "pending":
+        return not note.startswith(HELD_NOTE_PREFIX)
+    if edge.review_status == "approved":
+        return is_model_note(note)
+    return False
+
+
+def is_published(edge):
+    return edge.review_status != "rejected" and (edge.review_status == "approved" or "Manual" in (edge.source_url or ""))
+
+
+def direction_contested(edge):
+    """The model that approved this edge said, in its own rationale, that it is backwards.
+
+    A supplier's own customer disclosure fixes the direction, so its edges are exempt:
+    the panel says "backwards" about P&G -> Walmart as readily as about TSM -> ASML.
+    """
+    if filer_documented_direction(edge):
+        return False
+    return has_wrong_direction_review(edge.evidence_excerpt, edge.review_note)
+
+
+def model_verdict(edge):
+    """Published on a model's say-so alone: not a human verdict and not a curated seed.
+
+    Curated seeds stay published whatever their review status, so holding one would
+    change nothing and its warning would fail every run.
+    """
+    return needs_human_confirmation(edge) and requires_source_evidence(edge.source_url)
+
+
+def direction_settled(edge):
+    """A filing, a human or a curated seed fixed this edge's direction."""
+    return filer_documented_direction(edge) or not model_verdict(edge)
+
+
+def contested_reciprocal_edges(edges):
+    """Published edges whose opposite direction is also published, and that need a human.
+
+    One relationship published both ways is nearly always one fact read twice: VEEV <->
+    LLY, PWR <-> XEL, INTC <-> TSM. The old test required near-identical evidence, and
+    reworded excerpts slipped through (15 pairs). Within a pair, a side whose direction a
+    filing, a human or a curated seed settled is kept. When neither side is settled, a
+    side labelled with a real product beats one labelled with a bare role
+    ("manufacturer -> customer"); otherwise both go to a human, because the models'
+    own direction calls are what produced the pair.
+    """
+    by_pair = defaultdict(list)
+    for edge in edges:
+        if edge.source_id is None or edge.target_id is None or edge.source_id == edge.target_id:
+            continue
+        by_pair[(edge.source_id, edge.target_id)].append(edge)
+    contested = []
+    for (source_id, target_id), forward in by_pair.items():
+        backward = by_pair.get((target_id, source_id))
+        if not backward:
+            continue
+        if any(direction_settled(edge) for edge in forward) and any(direction_settled(edge) for edge in backward):
+            continue  # both directions confirmed independently: a genuine two-way relationship
+        if any(direction_settled(edge) for edge in backward):
+            contested.extend(edge for edge in forward if not direction_settled(edge))
+            continue
+        if any(direction_settled(edge) for edge in forward):
+            continue  # the backward side is collected when its own key is visited
+        forward_labelled = any(not is_role_label(edge.dependency_type) for edge in forward)
+        backward_labelled = any(not is_role_label(edge.dependency_type) for edge in backward)
+        if forward_labelled and not backward_labelled:
+            continue  # the role-labelled backward side is collected on its own visit
+        contested.extend(forward)
+    return contested
+
+
+# TSMC is the foundry for the companies that name it; a model that reads "X's chips are
+# made by TSMC" often writes X -> TSM. Its own suppliers (ASML's lithography, gases,
+# power) are the opposite and must keep their direction: the old export-time flip
+# published ASML's EUV machines as TSM -> ASML.
+FOUNDRY_SERVICE_TERMS = (
+    "advanced silicon fabrication",
+    "advanced manufacturing services",
+    "chip fabrication",
+    "chip manufacturing",
+    "chip production",
+    "contract manufacturing",
+    "foundry",
+    "outsourced production",
+    "semiconductor chips",
+    "semiconductor manufacturing",
+    "silicon fabrication",
+)
+FAB_INPUT_TERMS = (
+    "lithography", "euv", "equipment", "tool", "machine", "material", "chemical", "gas",
+    "photoresist", "substrate", "silicon wafers", "electricity", "power", "water",
+    "construction", "cleanroom", "software", "design automation", "intellectual property",
+)
+FOUNDRY_CUSTOMER_EVIDENCE = re.compile(
+    r"\b(?:customers?\s+of|outsourc\w*\s+(?:\w+\s+){0,4}?production\s+to|manufactured\s+by|fabricated\s+by)\s+"
+    r"(?:tsmc|taiwan\s+semiconductor)",
+    re.IGNORECASE,
+)
+
+
+def backwards_foundry_edge(edge):
+    """X -> TSM describing TSMC's foundry work for X, which is really TSM -> X."""
+    target = getattr(edge, "target_node", None)
+    if str(getattr(target, "ticker", "") or "").upper() != "TSM":
+        return False
+    described = f"{edge.dependency_type or ''} {edge.product or ''}".lower()
+    if any(term in described for term in FAB_INPUT_TERMS):
+        return False
+    return any(term in described for term in FOUNDRY_SERVICE_TERMS) or bool(
+        FOUNDRY_CUSTOMER_EVIDENCE.search(str(edge.evidence_excerpt or ""))
+    )
+
+
+def endpoint_label_as_product(edge):
+    """The published product is just an endpoint's industry or sector name.
+
+    The review prompt shows each company's industry and the models copied it back as
+    the product: "Auto Parts", "Semiconductors", "Drug Manufacturers - Specialty & Generic".
+    """
+    return is_endpoint_label(edge.product, edge.source_node, edge.target_node)
+
+
+def generic_word_entity_edge(edge):
+    """An endpoint was bound from a place or generic word in the excerpt, not its name."""
+    if not requires_source_evidence(edge.source_url):
+        return False
+    return any(bound_by_generic_word(edge.evidence_excerpt, node) for node in (edge.source_node, edge.target_node))
+
+
 def reciprocal_same_evidence_edges(edges):
     unique = []
     seen = set()
@@ -197,12 +367,20 @@ def audit_database(fail_on_warnings=False):
             for edge in published_edges
             if has_speculative_supply_label(edge.evidence_excerpt, edge.review_note)
         ]
+        # Each check mirrors a cleanup rule that runs first, so a warning here means the
+        # cleanup missed something, never that it deliberately kept a human's verdict.
         wrong_direction_edges = [
             edge
             for edge in published_edges
-            if has_wrong_direction_review(edge.evidence_excerpt, edge.review_note)
+            if direction_contested(edge) and model_verdict(edge)
         ]
-        reciprocal_duplicate_edges = reciprocal_same_evidence_edges(published_edges)
+        reciprocal_duplicate_edges = contested_reciprocal_edges(published_edges)
+        foundry_direction_edges = [edge for edge in published_edges if backwards_foundry_edge(edge)]
+        industry_product_edges = [edge for edge in published_edges if endpoint_label_as_product(edge)]
+        generic_entity_edges = [
+            edge for edge in published_edges
+            if generic_word_entity_edge(edge) and model_verdict(edge)
+        ]
         self_edges = [edge for edge in published_edges if edge.source_id == edge.target_id]
         unsupported_ai_edges = [
             edge for edge in published_edges
@@ -231,7 +409,10 @@ def audit_database(fail_on_warnings=False):
         print(f"Non-supply relationship warnings: {len(non_supply_edges)}")
         print(f"Speculative relationship warnings: {len(speculative_edges)}")
         print(f"Wrong-direction review warnings: {len(wrong_direction_edges)}")
-        print(f"Reciprocal duplicate evidence warnings: {len(reciprocal_duplicate_edges)}")
+        print(f"Reciprocal direction warnings: {len(reciprocal_duplicate_edges)}")
+        print(f"Backwards TSMC foundry warnings: {len(foundry_direction_edges)}")
+        print(f"Industry-as-product warnings: {len(industry_product_edges)}")
+        print(f"Generic-word entity warnings: {len(generic_entity_edges)}")
         print(f"Self-edge warnings: {len(self_edges)}")
         print(f"Unsupported AI evidence warnings: {len(unsupported_ai_edges)}")
         print(f"Implausible revenue-share warnings: {len(implausible_share_edges)}")
@@ -244,7 +425,10 @@ def audit_database(fail_on_warnings=False):
             ("Non-supply", non_supply_edges),
             ("Speculative", speculative_edges),
             ("Wrong-direction", wrong_direction_edges),
-            ("Reciprocal duplicate evidence", reciprocal_duplicate_edges),
+            ("Reciprocal direction", reciprocal_duplicate_edges),
+            ("Backwards TSMC foundry", foundry_direction_edges),
+            ("Industry as product", industry_product_edges),
+            ("Generic-word entity", generic_entity_edges),
             ("Self-edge", self_edges),
             ("Unsupported AI evidence", unsupported_ai_edges),
             ("Implausible revenue share", implausible_share_edges),
@@ -265,6 +449,9 @@ def audit_database(fail_on_warnings=False):
             + len(speculative_edges)
             + len(wrong_direction_edges)
             + len(reciprocal_duplicate_edges)
+            + len(foundry_direction_edges)
+            + len(industry_product_edges)
+            + len(generic_entity_edges)
             + len(self_edges)
             + len(unsupported_ai_edges)
             + len(implausible_share_edges)

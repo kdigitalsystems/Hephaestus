@@ -126,16 +126,56 @@ def test_track_record_reports_baseline_and_status():
     record = track_record(history, now)
 
     assert record["status"] == "experimental" and record["minimum_resolved"] == MIN_RESOLVED_FOR_TRACK_RECORD
-    assert record["resolved"] == 3 and record["hits"] == 1
-    assert abs(record["hit_rate"] - 1 / 3) < 1e-3
-    assert abs(record["always_up_hit_rate"] - 2 / 3) < 1e-3
+    # A neutral signal is an abstention: it is counted, never scored.
+    assert record["resolved"] == 2 and record["hits"] == 1 and record["no_calls"] == 1
+    assert abs(record["hit_rate"] - 0.5) < 1e-3
+    assert abs(record["always_up_hit_rate"] - 0.5) < 1e-3
     assert record["matured_unresolved"] == 1
-    assert record["by_direction"] == {"neutral": {"resolved": 1, "hit_rate": 0.0}, "up": {"resolved": 2, "hit_rate": 0.5}}
-    assert record["latest_evaluated_on"] == "2026-09-02"
-
-    established = track_record([dict(history[0]) for _ in range(MIN_RESOLVED_FOR_TRACK_RECORD)], now)
-    assert established["status"] == "established" and established["hit_rate"] == 1.0
+    assert record["by_direction"] == {"up": {"resolved": 2, "hit_rate": 0.5}}
+    assert record["latest_evaluated_on"] == "2026-09-01"
     assert track_record([], now)["hit_rate"] is None
+
+
+def test_track_record_counts_each_company_once_per_window():
+    """Daily predictions for one company re-score almost the same 30-day return."""
+    from predictions import MIN_INDEPENDENT_PERIODS, MIN_RESOLVED_FOR_TRACK_RECORD, track_record
+
+    now = datetime(2026, 12, 31, tzinfo=timezone.utc)
+
+    def scored(ticker, day, outcome="correct"):
+        generated = datetime(2026, 7, 1, 12, tzinfo=timezone.utc) + timedelta(days=day)
+        return {"ticker": ticker, "direction": "up", "outcome": outcome, "realized_return_pct": 2.0 if outcome == "correct" else -2.0,
+                "generated_at": generated.isoformat(), "evaluated_at": (generated + timedelta(days=30)).isoformat(), "horizon_days": 30}
+
+    # 13 consecutive days for 50 companies: 650 entries, but one window.
+    overlapping = [scored(f"T{index}", day) for day in range(13) for index in range(50)]
+    record = track_record(overlapping, now)
+    assert record["resolved_with_overlap"] == 650
+    assert record["resolved"] == 50 and record["independent_periods"] == 1
+    assert record["status"] == "experimental"
+
+    # Three non-overlapping windows with enough companies establish a record.
+    spaced = [scored(f"T{index}", day) for day in (0, 31, 62) for index in range(12)]
+    record = track_record(spaced, now)
+    assert record["independent_periods"] == MIN_INDEPENDENT_PERIODS
+    assert record["resolved"] == 36 >= MIN_RESOLVED_FOR_TRACK_RECORD
+    assert record["status"] == "established" and record["hit_rate"] == 1.0
+
+
+def test_neutral_signals_are_no_calls_not_misses():
+    from predictions import NO_CALL_OUTCOME, evaluate_history
+
+    now = datetime(2026, 9, 2, tzinfo=timezone.utc)
+    history = [
+        {"ticker": "AAA", "direction": "neutral", "starting_price": 100, "generated_at": "2026-07-27T12:00:00+00:00", "horizon_days": 30},
+        {"ticker": "BBB", "direction": "neutral", "outcome": "incorrect", "realized_return_pct": 7.0, "generated_at": "2026-07-20T12:00:00+00:00"},
+        {"ticker": "CCC", "direction": "up", "starting_price": 100, "generated_at": "2026-07-27T12:00:00+00:00", "horizon_days": 30},
+    ]
+    evaluated = evaluate_history(history, {}, now, price_lookup=lambda ticker, when: (107.0, "yahoo_historical_close:2026-08-26"))
+
+    assert evaluated[0]["outcome"] == NO_CALL_OUTCOME and evaluated[0]["realized_return_pct"] == 7.0
+    assert evaluated[1]["outcome"] == NO_CALL_OUTCOME, "an abstention graded under the old +/-2% rule is re-graded"
+    assert evaluated[2]["outcome"] == "correct"
 
 
 def test_generated_payload_includes_track_record():

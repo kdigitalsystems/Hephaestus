@@ -3,7 +3,6 @@ from pathlib import Path
 
 from export import (
     FALLBACK_LINKED_SECTOR,
-    FOUNDRY_TERMS,
     annotate_dashboard_data,
     merge_relationships,
     publish_dashboard,
@@ -19,26 +18,6 @@ DECISIONS_PATH = ROOT / "data" / "edge_review_decisions.json"
 
 def relationship_key(source_ticker, target_ticker, dependency_type):
     return f"{source_ticker}->{target_ticker}:{dependency_type or 'Supply Link'}".upper()
-
-
-def looks_like_tsm_foundry_decision(decision):
-    text = " ".join(
-        str(decision.get(field) or "")
-        for field in ("dependency_type", "product", "evidence_excerpt", "review_note")
-    ).lower()
-    return any(term in text for term in FOUNDRY_TERMS)
-
-
-def canonical_decision_direction(decision):
-    target_ticker = decision.get("target_ticker") or ""
-    if target_ticker == "TSM" and looks_like_tsm_foundry_decision(decision):
-        decision = dict(decision)
-        for left, right in (
-            ("source_ticker", "target_ticker"),
-            ("source_name", "target_name"),
-        ):
-            decision[left], decision[right] = decision.get(right), decision.get(left)
-    return decision
 
 
 def source_type(source_url):
@@ -157,7 +136,9 @@ def repair_dashboard_from_decisions(dashboard_path=DASHBOARD_PATH, decisions_pat
             continue
         if id(raw_decision) in unsupported_approvals:
             continue
-        decision = canonical_decision_direction(raw_decision)
+        # Directions are corrected in the database before the decisions are exported;
+        # flipping them again here published ASML's EUV machines as TSM -> ASML.
+        decision = raw_decision
         source = ensure_company(decision.get("source_ticker"), decision.get("source_name"))
         target = ensure_company(decision.get("target_ticker"), decision.get("target_name"))
         if not source or not target or source.get("ticker") == target.get("ticker"):

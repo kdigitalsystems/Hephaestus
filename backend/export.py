@@ -17,20 +17,6 @@ IGNORED_SECTORS = ["Shell Companies", "Financial Services", "Real Estate"]
 FALLBACK_LINKED_SECTOR = "Linked Companies"
 EXPORT_AI_RESEARCH = os.environ.get("HEPHAESTUS_EXPORT_AI_RESEARCH", "0") == "1"
 REVIEW_QUEUE_LIMIT = int(os.environ.get("HEPHAESTUS_REVIEW_QUEUE_LIMIT", "250"))
-FOUNDRY_TERMS = (
-    "advanced silicon fabrication",
-    "advanced manufacturing services",
-    "chip fabrication",
-    "chip manufacturing",
-    "chip production",
-    "contract manufacturing",
-    "foundry",
-    "outsourced production",
-    "semiconductor chips",
-    "semiconductor manufacturing",
-    "silicon fabrication",
-    "silicon wafers",
-)
 
 def clean_num(val):
     if val is None:
@@ -689,34 +675,6 @@ def should_export_edge(edge):
         return True
     return False
 
-def looks_like_tsm_foundry_edge(edge):
-    text = " ".join(
-        str(value or "")
-        for value in (
-            edge.dependency_type,
-            edge.product,
-            edge.evidence_excerpt,
-            edge.review_note,
-        )
-    ).lower()
-    return any(term in text for term in FOUNDRY_TERMS)
-
-def canonical_edge_nodes(edge):
-    """Return supplier, customer after correcting known foundry direction errors."""
-    source = edge.source_node
-    target = edge.target_node
-    if not source or not target:
-        return source, target
-
-    target_ticker = target.ticker or ""
-    if (
-        target_ticker == "TSM"
-        and looks_like_tsm_foundry_edge(edge)
-    ):
-        return target, source
-
-    return source, target
-
 def review_edge_payload(edge):
     return {
         "edge_id": edge.id,
@@ -743,7 +701,8 @@ def export_to_json():
         for edge in session.query(Edge).all():
             if not should_export_edge(edge):
                 continue
-            supplier_node, customer_node = canonical_edge_nodes(edge)
+            # Stored direction is authoritative; cleanup_reviewed_edges fixes it in the database.
+            supplier_node, customer_node = edge.source_node, edge.target_node
             if should_export_node(supplier_node, require_market_data=False) and should_export_node(customer_node, require_market_data=False):
                 exportable_node_ids.add(supplier_node.id)
                 exportable_node_ids.add(customer_node.id)
@@ -784,7 +743,7 @@ def export_to_json():
                     continue
                 seen_edges.add(edge.id)
 
-                supplier_node, customer_node = canonical_edge_nodes(edge)
+                supplier_node, customer_node = edge.source_node, edge.target_node
                 if supplier_node is None or customer_node is None:
                     # SQLite does not enforce foreign keys here, so an orphaned edge
                     # must be skipped rather than crash the whole export.

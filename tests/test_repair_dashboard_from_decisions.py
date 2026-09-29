@@ -80,7 +80,7 @@ def test_repair_adds_approved_missing_endpoint_and_stable_relationship_key(tmp_p
     assert repaired["investor_metrics"]["unique_links"] == 1
 
 
-def test_repair_canonicalizes_tsm_foundry_direction(tmp_path):
+def test_repair_publishes_the_stored_direction_unchanged(tmp_path):
     dashboard_path = tmp_path / "dashboard_data.json"
     decisions_path = tmp_path / "edge_review_decisions.json"
 
@@ -129,15 +129,15 @@ def test_repair_canonicalizes_tsm_foundry_direction(tmp_path):
                 "decisions": [
                     {
                         "edge_id": 7,
-                        "source_ticker": "NVDA",
+                        "source_ticker": "ASML",
                         "target_ticker": "TSM",
-                        "source_name": "NVIDIA",
+                        "source_name": "ASML Holding",
                         "target_name": "Taiwan Semiconductor Manufacturing Company",
                         "dependency_type": "Advanced Silicon Fabrication",
-                        "product": "semiconductor chips",
+                        "product": "Extreme Ultraviolet (EUV) lithography technology",
                         "confidence_score": 0.95,
                         "source_url": "AI Multi-Source Research",
-                        "evidence_excerpt": "TSMC manufactures advanced semiconductor chips used by NVIDIA.",
+                        "evidence_excerpt": "TSMC was the first to commercialise ASML's extreme ultraviolet (EUV) lithography technology in high volume.",
                         "review_status": "approved",
                     }
                 ]
@@ -150,10 +150,11 @@ def test_repair_canonicalizes_tsm_foundry_direction(tmp_path):
     companies = [company for sector in repaired["industries"].values() for company in sector]
     by_ticker = {company["ticker"]: company for company in companies}
 
-    assert any(edge["ticker"] == "NVDA" for edge in by_ticker["TSM"]["downstream"])
-    assert any(edge["ticker"] == "TSM" for edge in by_ticker["NVDA"]["upstream"])
-    assert not any(edge["ticker"] == "NVDA" for edge in by_ticker["TSM"]["upstream"])
-    assert by_ticker["TSM"]["investor_metrics"]["downstream_count"] == 1
+    # The old repair-time flip published ASML's EUV machines as TSM -> ASML. Directions
+    # are corrected in the database now, so repair must not second-guess them.
+    assert any(edge["ticker"] == "ASML" for edge in by_ticker["TSM"]["upstream"])
+    assert not any(edge["ticker"] == "ASML" for edge in by_ticker["TSM"]["downstream"])
+    assert by_ticker["TSM"]["investor_metrics"]["upstream_count"] == 1
 
 
 def test_repair_excludes_ai_approval_without_source_evidence(tmp_path):

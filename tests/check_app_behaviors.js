@@ -786,3 +786,19 @@ const unscoredText = collectText(element("prediction-track-record"));
 if (!unscoredText.includes("down: 6 resolved, not scored yet") || unscoredText.includes("down: 0%")) {
   throw new Error(`a direction with no hit rate must not render as 0%; got ${unscoredText}`);
 }
+
+// --- Track record counts independent windows and leaves neutral calls unscored -------
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 650, hit_rate: 0.45 }, track_record: {
+    status: "experimental", minimum_resolved: 30, minimum_periods: 3, independent_periods: 1, resolved: 142,
+    resolved_with_overlap: 650, no_calls: 166, hits: 70, hit_rate: 0.493, always_up_hit_rate: 0.542,
+    matured_unresolved: 0, by_direction: { up: { resolved: 142, hit_rate: 0.493 } }, latest_evaluated_on: "2026-09-28",
+  } };
+  renderPredictionsView();
+`, context);
+const independentText = collectText(element("prediction-track-record"));
+["Experimental: 1 independent 30‑day period of 3 scored so far", "650 daily signals, 142 counted once per company per window", "166 neutral signals not scored (no call)"].forEach((expected) => {
+  if (!independentText.includes(expected)) {
+    throw new Error(`track record must explain overlap and abstentions; missing ${expected}; got ${independentText}`);
+  }
+});

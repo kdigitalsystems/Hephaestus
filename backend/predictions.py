@@ -35,9 +35,17 @@ MIN_RESOLVED_HISTORY = 500
 # Unresolved predictions older than this can no longer be evaluated meaningfully.
 UNRESOLVED_RETENTION_MULTIPLIER = 4
 RESOLVED_OUTCOMES = frozenset({"correct", "incorrect"})
+# "Neutral" means the graph had no decisive signal: an abstention, not a forecast that
+# the price stays within 2%. Grading it that way scored neutral calls right 19.9% of
+# the time and dragged the published hit rate under the always-up baseline.
+NO_CALL_OUTCOME = "no_call"
+EVALUATED_OUTCOMES = RESOLVED_OUTCOMES | {NO_CALL_OUTCOME}
 VALID_DIRECTIONS = frozenset({"up", "down", "neutral"})
 # Below this many resolved signals the track record is too small to mean anything.
 MIN_RESOLVED_FOR_TRACK_RECORD = 30
+# Predictions are made daily for the same companies, so consecutive 30-day windows
+# share 29 days of returns. "650 resolved" was really about two independent periods.
+MIN_INDEPENDENT_PERIODS = 3
 # Fixed field order: the generator and the validator must inspect exactly the same text.
 SCENARIO_FIELDS = ("scenario_summary", "bull_case", "bear_case")
 SCENARIO_MAX_TOKENS = int(os.environ.get("HEPHAESTUS_SCENARIO_MAX_TOKENS", "800"))
@@ -326,6 +334,9 @@ def price_date_from_source(source: str, fallback: datetime) -> str:
 
 def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str, dict[str, Any]], now: datetime, price_lookup: PriceLookup | None = None) -> list[dict[str, Any]]:
     for entry in history:
+        if entry.get("direction") == "neutral" and entry.get("outcome") in RESOLVED_OUTCOMES:
+            # Re-grade abstentions scored under the old +/-2% rule.
+            entry["outcome"] = NO_CALL_OUTCOME
         if entry.get("outcome"):
             continue
         generated = parse_generated_at(entry)
@@ -374,7 +385,10 @@ def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str,
         entry["outcome_price_date"] = price_date_from_source(source, target_at)
         entry["outcome_price"] = round(end, 4)
         entry["outcome_price_source"] = source
-        entry["outcome"] = "correct" if (direction == "up" and return_pct > 0) or (direction == "down" and return_pct < 0) or (direction == "neutral" and abs(return_pct) <= 2) else "incorrect"
+        if direction == "neutral":
+            entry["outcome"] = NO_CALL_OUTCOME
+        else:
+            entry["outcome"] = "correct" if (direction == "up" and return_pct > 0) or (direction == "down" and return_pct < 0) else "incorrect"
     return history
 
 
@@ -389,32 +403,91 @@ def entry_has_matured(entry: dict[str, Any], now: datetime) -> bool:
     return now >= generated + timedelta(days=horizon_days)
 
 
+def entry_horizon_days(entry: dict[str, Any]) -> int:
+    try:
+        return max(1, int(entry.get("horizon_days") or HORIZON_DAYS))
+    except (TypeError, ValueError):
+        return HORIZON_DAYS
+
+
+def independent_outcomes(resolved: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """At most one scored prediction per company per horizon window.
+
+    A daily prediction for the same company re-scores almost the same 30-day return;
+    counting each one inflated 13 generation days into "650 resolved signals".
+    """
+    ordered = sorted(
+        enumerate(resolved),
+        key=lambda item: (parse_generated_at(item[1]) or datetime.min.replace(tzinfo=timezone.utc), item[0]),
+    )
+    last_kept: dict[str, datetime] = {}
+    kept = []
+    for index, entry in ordered:
+        generated = parse_generated_at(entry)
+        key = str(entry.get("ticker") or f"#{index}").upper()
+        previous = last_kept.get(key)
+        if generated is None or previous is None or generated >= previous + timedelta(days=entry_horizon_days(entry)):
+            kept.append(entry)
+            if generated is not None:
+                last_kept[key] = generated
+    return kept
+
+
+def independent_periods(resolved: list[dict[str, Any]]) -> int:
+    """How many non-overlapping horizon windows the scored predictions span."""
+    periods = 0
+    window_end = None
+    for generated, horizon in sorted(
+        (parse_generated_at(entry), entry_horizon_days(entry)) for entry in resolved if parse_generated_at(entry)
+    ):
+        if window_end is None or generated >= window_end:
+            periods += 1
+            window_end = generated + timedelta(days=horizon)
+    return periods
+
+
 def track_record(history: list[dict[str, Any]], now: datetime) -> dict[str, Any]:
     """Publish how the signals have actually performed, with the baseline they must beat.
 
     A hit rate on its own flatters a model in a rising market; "always say up" is
     the comparison a reader needs to judge whether the signals carry information.
+    Only directional calls are scored, and only once per company per window.
     """
-    resolved = [entry for entry in history if entry.get("outcome") in RESOLVED_OUTCOMES]
+    scored = [
+        entry for entry in history
+        if entry.get("outcome") in RESOLVED_OUTCOMES and entry.get("direction") != "neutral"
+    ]
+    resolved = independent_outcomes(scored)
+    periods = independent_periods(scored)
+    no_calls = sum(
+        1 for entry in history
+        if entry.get("outcome") == NO_CALL_OUTCOME
+        or (entry.get("direction") == "neutral" and entry.get("outcome") in RESOLVED_OUTCOMES)
+    )
     matured_unresolved = sum(
         1 for entry in history
-        if entry.get("outcome") not in RESOLVED_OUTCOMES and entry_has_matured(entry, now)
+        if not entry.get("outcome") and entry_has_matured(entry, now)
     )
     hits = sum(1 for entry in resolved if entry.get("outcome") == "correct")
     always_up_hits = sum(1 for entry in resolved if as_number(entry.get("realized_return_pct")) > 0)
     by_direction = {}
-    for direction in sorted(VALID_DIRECTIONS):
+    for direction in ("down", "up"):
         subset = [entry for entry in resolved if entry.get("direction") == direction]
         if subset:
             by_direction[direction] = {
                 "resolved": len(subset),
                 "hit_rate": round(sum(1 for entry in subset if entry.get("outcome") == "correct") / len(subset), 3),
             }
-    evaluated_dates = sorted(str(entry.get("evaluated_at") or "")[:10] for entry in resolved if entry.get("evaluated_at"))
+    evaluated_dates = sorted(str(entry.get("evaluated_at") or "")[:10] for entry in scored if entry.get("evaluated_at"))
+    established = len(resolved) >= MIN_RESOLVED_FOR_TRACK_RECORD and periods >= MIN_INDEPENDENT_PERIODS
     return {
-        "status": "established" if len(resolved) >= MIN_RESOLVED_FOR_TRACK_RECORD else "experimental",
+        "status": "established" if established else "experimental",
         "minimum_resolved": MIN_RESOLVED_FOR_TRACK_RECORD,
+        "minimum_periods": MIN_INDEPENDENT_PERIODS,
+        "independent_periods": periods,
         "resolved": len(resolved),
+        "resolved_with_overlap": len(scored),
+        "no_calls": no_calls,
         "hits": hits,
         "hit_rate": round(hits / len(resolved), 3) if resolved else None,
         "always_up_hit_rate": round(always_up_hits / len(resolved), 3) if resolved else None,
@@ -428,7 +501,7 @@ def prune_history(history: list[dict[str, Any]], now: datetime) -> list[dict[str
     """Bound the history file without ever dropping a prediction that can still mature."""
     retained = []
     for entry in history:
-        if entry.get("outcome") in RESOLVED_OUTCOMES:
+        if entry.get("outcome") in EVALUATED_OUTCOMES:
             retained.append(entry)
             continue
         generated = parse_generated_at(entry)
@@ -447,13 +520,19 @@ def prune_history(history: list[dict[str, Any]], now: datetime) -> list[dict[str
     # Drop the oldest resolved entries first, but keep a calibration corpus; unresolved
     # entries always survive, even if that leaves the file over the soft limit.
     resolved_count = sum(1 for entry in retained if entry.get("outcome") in RESOLVED_OUTCOMES)
-    droppable = max(0, resolved_count - MIN_RESOLVED_HISTORY)
-    overflow = min(overflow, droppable)
+    no_call_count = sum(1 for entry in retained if entry.get("outcome") == NO_CALL_OUTCOME)
+    scored_droppable = max(0, resolved_count - MIN_RESOLVED_HISTORY)
+    overflow = min(overflow, no_call_count + scored_droppable)
     bounded = []
     dropped = 0
+    dropped_scored = 0
     for entry in retained:
-        if dropped < overflow and entry.get("outcome") in RESOLVED_OUTCOMES:
+        outcome = entry.get("outcome")
+        if dropped < overflow and (
+            outcome == NO_CALL_OUTCOME or (outcome in RESOLVED_OUTCOMES and dropped_scored < scored_droppable)
+        ):
             dropped += 1
+            dropped_scored += outcome in RESOLVED_OUTCOMES
             continue
         bounded.append(entry)
     return bounded
