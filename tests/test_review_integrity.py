@@ -508,3 +508,98 @@ def test_cleanup_holds_a_backwards_link_and_the_gate_agrees(pipeline_db):
     assert held.review_status == "pending" and held.review_note.startswith(HELD_NOTE_PREFIX)
     assert "other way" in held.review_note
     assert check.get(Edge, forward.id).review_status == "approved"
+
+
+# --- past events, sales and other non-supply events ------------------------------------------
+
+@pytest.mark.parametrize("evidence, stale", [
+    ("In 1984, Logitech won a contract to supply Hewlett-Packard with computer mice.", True),
+    ("VNET provided the main email backbone for the company throughout the 1980s and 1990s.", True),
+    ("Historically, Domino's menu offered Coca-Cola as the only soft drink option.", True),
+    ("Until 2021, this segment also included UPS Freight.", True),
+    ("Tesla signed a production contract with Group Lotus to produce gliders through December 2011.", True),
+    # A product's model year is not the date of the relationship.
+    ("Some examples of products that use LCD panels from LG display are Apple's 2009 27-inch iMac.", False),
+    # A start date with "since" is an ongoing relationship.
+    ("Corning is one of the main suppliers to Apple Inc. since working with Steve Jobs in 2007 to develop the iPhone.", False),
+    ("In May 2022, Vale said that it had signed a long-term deal of supplying nickel for Tesla.", False),
+])
+def test_only_event_dates_make_a_relationship_past(evidence, stale):
+    from evidence_quality import is_stale
+
+    assert is_stale(evidence) is stale
+
+
+@pytest.mark.parametrize("evidence, event", [
+    ("In 2010, MKS purchased Granville-Phillips from Azenta for $87 million.", True),
+    ("In April 2023, Amphastar Pharmaceuticals bought Baqsimi from Eli Lilly in a deal worth over $1bn.", True),
+    ("In December 2021, 3M announced that it would merge its food-safety business with Neogen.", True),
+    ("Cardinal Health would partner with CVS Caremark to form a generic drug sourcing operation.", True),
+    ("Kyndryl was created from the spin-off of IBM's infrastructure services.", True),
+    ("Korea Fair Trade Commission fined Intel US$25.4 million for giving Samsung rebates.", True),
+    ("Roblox had hired Dan Williams (previously of Dropbox) to move Roblox to a proprietary cloud.", True),
+    ("Google's Project Zero investigated Broadcom's SoC WiFi stack.", True),
+    ("H&R Block's tax preparation service shares user data with Facebook.", True),
+    ("Dole has a brand licensing arrangement with The Walt Disney Company.", True),
+    ("The applications suggests that Cadence may use Synopsys' EDA software.", True),
+    # Supply that merely looks like a sale.
+    ("The company acquired raw materials from Albemarle under a long-term agreement.", False),
+    ("Ryanair purchased 100 aircraft from Boeing for $12 billion.", False),
+    ("Meta's purchase of power from Vistra's nuclear plants supports its data centers.", False),
+    ("Walmart sold our products in all its stores and accounted for 17% of revenue.", False),
+])
+def test_sales_and_other_events_are_not_supply(evidence, event):
+    from evidence_quality import NON_SUPPLY_EVENTS
+
+    assert bool(NON_SUPPLY_EVENTS.search(evidence)) is event
+
+
+def test_a_multi_sentence_filing_is_judged_on_the_sentences_about_the_pair():
+    from evidence_quality import evidence_support
+
+    evidence = ("Personalis (PSNL) 10-K filed 2026-02-26: Moderna accounted for 22% and 28% of our revenue for the years "
+                "ended December 31, 2025 and 2024. 8 Table of Contents We previously derived revenue from Natera.")
+    assert evidence_support(evidence, company("PSNL", "Personalis, Inc."), company("MRNA", "Moderna, Inc."))[0] == "named"
+
+
+def test_an_alias_that_is_another_companys_name_belongs_to_that_company():
+    """Helmerich & Payne trades as HP, so every "HP announced ..." named the drilling company."""
+    import evidence_quality
+    from evidence_quality import evidence_support, register_company_names
+
+    helmerich, amd = company("HP", "Helmerich & Payne, Inc."), company("AMD", "Advanced Micro Devices, Inc.")
+    evidence = "In June 2011, HP announced new notebooks equipped with the latest versions of AMD APUs."
+    try:
+        register_company_names([("HP", "Helmerich & Payne, Inc."), ("HPQ", "HP Inc."), ("AMD", "Advanced Micro Devices, Inc."),
+                                ("APLE", "Apple Hospitality REIT, Inc."), ("AAPL", "Apple Inc.")])
+        assert evidence_support(evidence, amd, helmerich)[0] == "unsupported"
+        assert evidence_support(evidence, amd, company("HPQ", "HP Inc."))[0] in {"named", "supported"}
+        assert not evidence_quality.names_company("Apple supplies ...", company("APLE", "Apple Hospitality REIT, Inc."))
+    finally:
+        register_company_names([])
+
+
+def test_discovery_resolves_an_acronym_to_the_company_named_by_it(monkeypatch):
+    import auto_discover_edges
+
+    _, Session = memory_session()
+    session = Session()
+    session.add_all([Node(name="Helmerich & Payne, Inc.", ticker="HP", market_cap=3e9),
+                     Node(name="HP Inc. Common Stock", ticker="HPQ", market_cap=3e10)])
+    session.commit()
+    monkeypatch.setattr(auto_discover_edges, "yq_search", lambda *_a, **_k: {"quotes": []})
+
+    assert auto_discover_edges.EntityResolver.resolve(session, "HP").ticker == "HPQ"
+
+
+def test_the_reviewer_rejects_junk_that_names_both_companies():
+    from review_edges_with_ollama import deterministic_review
+
+    edge = SimpleNamespace(
+        id=1, source_id=1, target_id=2, source_url="AI Multi-Source Research", dependency_type="Supply", product="",
+        confidence_score=0.9, revenue_share=None, source_title="AI Multi-Source Research",
+        evidence_excerpt="In April 2023, Amphastar Pharmaceuticals bought Baqsimi from Eli Lilly in a deal worth over $1bn.",
+        source_node=SimpleNamespace(ticker="LLY", name="Eli Lilly and Company", sector="Healthcare", industry="Drugs", supplies_to=[]),
+        target_node=SimpleNamespace(ticker="AMPH", name="Amphastar Pharmaceuticals, Inc.", sector="Healthcare", industry="Drugs", supplies_to=[]),
+    )
+    assert deterministic_review(edge)["action"] == "reject"

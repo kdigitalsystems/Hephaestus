@@ -520,6 +520,16 @@ class EntityResolver:
         search_val = str(name_or_ticker).strip()
         search_upper = search_val.upper()
 
+        if search_val.isupper() and 2 <= len(search_val) <= 6:
+            # "HP" is HP Inc. (ticker HPQ), not Helmerich & Payne (ticker HP): a company
+            # whose name is the acronym wins over one whose ticker merely spells it.
+            named = [
+                node for node in session.query(Node).filter(Node.name.ilike(f"{search_val} %")).all()
+                if clean_company_name(node.name or "").upper() == search_upper
+            ]
+            if len(named) == 1:
+                return named[0]
+
         node = session.query(Node).filter(Node.ticker == search_upper).first()
         if node:
             return node
