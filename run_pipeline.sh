@@ -44,6 +44,9 @@ python3 backend/update_metrics.py "${LIMIT_ARG[@]}"
 echo "Reapplying persisted edge review decisions..."
 python3 backend/edge_review_decisions.py apply
 
+echo "Applying decisions from the review page..."
+python3 backend/apply_human_review.py
+
 if [ "$RUN_OLLAMA_REVIEW" = "1" ]; then
   if command -v ollama >/dev/null 2>&1; then
     # Probe the daemon once. Without this, an unreachable daemon looks identical to
@@ -119,7 +122,7 @@ echo "Checking for dashboard changes..."
 git add docs/dashboard_data.json docs/link_history.json data/edge_review_decisions.json
 git add docs/changes.json docs/feed.xml docs/status.json
 git add -A docs/company docs/sitemap.xml
-git add docs/dashboard_lite.json
+git add docs/dashboard_lite.json docs/review_queue.json
 git add -A docs/company-data
 if ! git diff --cached --quiet; then
   git commit -m "Automated dashboard update: $(date +'%Y-%m-%d')"

@@ -789,6 +789,9 @@ def export_to_json():
         annotate_dashboard_data(dashboard_data, HISTORY_PATH)
         # Pass the module-level paths explicitly so they are read at call time.
         publish_dashboard(dashboard_data, EXPORT_PATH, HISTORY_PATH)
+        # The full queue for docs/review.html; the dashboard itself keeps only the top rows.
+        from review_queue import write_review_queue
+        write_review_queue(os.path.join(os.path.dirname(EXPORT_PATH), "review_queue.json"), session=session)
 
         mode = "manual plus AI research" if EXPORT_AI_RESEARCH else "reviewed/manual only"
         print(f"Export Complete with Supply Chain X-Ray metrics included ({mode}).")

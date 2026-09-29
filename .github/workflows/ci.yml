@@ -75,6 +75,7 @@ jobs:
           node --check docs/app.js
           node tests/check_app_link_count.js
           node tests/check_app_behaviors.js
+          node tests/check_review_page.js
           node tests/check_sanitize_review_decisions.js
 
       - name: Check committed review decisions are sanitized
@@ -120,6 +121,9 @@ jobs:
 
       - name: Check the published dashboard split
         run: python3 backend/split_dashboard.py --check
+
+      - name: Check decisions submitted from the review page
+        run: python3 backend/apply_human_review.py --check
 
       - name: Check shell scripts
         run: |

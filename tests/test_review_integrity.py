@@ -22,7 +22,9 @@ CONSENSUS = "Ollama consensus review: Consensus 3/3 for approve (avg confidence 
 def memory_session():
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
-    return engine, sessionmaker(bind=engine)
+    # autoflush=False like database.SessionLocal: a test with autoflush on missed that
+    # cleanup's queries could not see changes made earlier in the same run.
+    return engine, sessionmaker(bind=engine, autoflush=False)
 
 
 # --- votes -----------------------------------------------------------------------------
@@ -200,7 +202,7 @@ def test_cleanup_leaves_nothing_for_the_publish_gate_to_fail_on(pipeline_db):
     foundry = approved(nvda, tsm, "Foundry Services", "Most fabless companies such as NVIDIA are customers of TSMC.", product="chips")
     litho = approved(asml, tsm, "Lithography Systems", "ASML supplies EUV lithography systems to TSMC.", product="EUV lithography")
     place = approved(lng, tsm, "LNG Supplier", "Cheniere Energy signed an agreement with CPC Corporation, Taiwan to supply LNG.")
-    backwards = approved(msft, rng, "Enterprise Software Integration", "RingCentral for Teams integrates with Microsoft Teams.",
+    backwards = approved(msft, rng, "Cloud Phone System", "RingCentral sells its cloud phone system to Microsoft for its sales teams.",
                          note=CONSENSUS + "The proposed direction is backwards. RingCentral is the supplier.")
     pair_a = approved(veev, lly, "Cloud Computing Software", "Veeva provides cloud computing software for Eli Lilly.")
     pair_b = approved(lly, veev, "Software Subscription", "The company has 1,552 customers including Eli Lilly and Company.",
@@ -216,14 +218,16 @@ def test_cleanup_leaves_nothing_for_the_publish_gate_to_fail_on(pipeline_db):
     get = lambda row: check.get(Edge, row.id)  # noqa: E731
     assert (get(foundry).source_id, get(foundry).target_id) == (tsm.id, nvda.id)
     assert (get(litho).source_id, get(litho).target_id) == (asml.id, tsm.id)
-    for row in (place, backwards, pair_a, pair_b):
+    for row in (backwards, pair_a, pair_b):
         assert get(row).review_status == "pending" and get(row).review_note.startswith(HELD_NOTE_PREFIX), get(row).dependency_type
+    # "CPC Corporation, Taiwan" is not TSMC: held as a place-word match, then rejected as junk.
+    assert get(place).review_status == "rejected"
     assert get(deal).review_status == "rejected"
     assert get(industry).product == "Manufacturing Supplier"
 
     # Held edges leave the nightly review queue: no approve-then-demote loop.
     args = Namespace(status="pending", include_held=False, source=None, target=None, edge_id=None, limit=100)
-    assert {edge.id for edge in selected_edges(check, args)} & {place.id, backwards.id, pair_a.id, pair_b.id} == set()
+    assert {edge.id for edge in selected_edges(check, args)} & {backwards.id, pair_a.id, pair_b.id} == set()
 
 
 def test_an_industry_product_is_replaced_by_the_filings_figure(pipeline_db):
