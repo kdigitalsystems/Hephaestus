@@ -1,4 +1,5 @@
 import json
+import math
 import os
 import time
 import re
@@ -18,7 +19,9 @@ from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_
 from additional_sources import get_additional_supply_chain_text
 from customer_concentration import describe_share, extract_disclosures
 from evidence_quality import (
+    GENERIC_NAME_WORDS,
     has_non_supply_relationship,
+    mentions_company,
     has_usable_evidence,
     is_customer_role_label,
     is_role_label,
@@ -324,17 +327,6 @@ def sweep_customer_concentration(session, known_names, limit=CONCENTRATION_SWEEP
     return {"checked": checked, "created": created}
 
 
-# First words that name a category, a place, or a virtue rather than a company.
-GENERIC_NAME_WORDS = {
-    "general", "american", "united", "national", "international", "first", "global", "standard",
-    "advanced", "universal", "allied", "consolidated", "digital", "energy", "capital", "financial",
-    "north", "south", "west", "east", "royal", "pacific", "atlantic", "central", "western", "eastern",
-    "southern", "northern", "alpha", "beta", "delta", "gamma", "omega", "apex", "summit", "pioneer",
-    "liberty", "freedom", "great", "best", "premier", "prime", "super", "world", "texas", "california",
-    "china", "japan", "taiwan", "boston", "chicago", "new", "old", "mid", "trans", "inter",
-}
-
-
 def loosely_mentions_company(text, node):
     """Does the excerpt name the company by any reasonable handle?
 
@@ -345,8 +337,6 @@ def loosely_mentions_company(text, node):
     more letters, or a distinctive first word, also counts; the review step still
     applies the strict test before anything is published.
     """
-    from review_edges_with_ollama import mentions_company  # lazy: that module is the review CLI
-
     if mentions_company(text, node):
         return True
     lowered = " ".join(str(text or "").lower().split())
@@ -480,8 +470,26 @@ def name_consistent(node, company_name):
     return False
 
 
+TRAILING_TICKER = re.compile(r"^(.*\S)\s*\(([A-Z][A-Z0-9.\-]{0,9})\)\s*$")
+
+
+def split_trailing_ticker(company_name):
+    """ "TD SYNNEX Corporation (SNX)" -> ("TD SYNNEX Corporation", "SNX").
+
+    The extraction prompt names the researched company as "{name} ({ticker})" and the
+    model echoes it verbatim; no stored name contains "(SNX)", so the company being
+    researched failed to resolve and about half of all extractions were thrown away.
+    """
+    match = TRAILING_TICKER.match(str(company_name or "").strip())
+    if not match:
+        return company_name, None
+    return match.group(1), match.group(2)
+
+
 def resolve_counterparty(session, ticker, company_name):
     """Resolve a model-supplied (ticker, name) pair without trusting a hallucinated ticker."""
+    company_name, suffix_ticker = split_trailing_ticker(company_name)
+    ticker = ticker or suffix_ticker
     if ticker:
         node = EntityResolver.resolve_ticker(session, ticker)
         if node and name_consistent(node, company_name):
@@ -609,19 +617,30 @@ class IntelGatherer:
         except Exception:
             return ""
 
+    # yahooquery's news endpoint now answers ['error'] for every ticker; iterating that
+    # raised "'str' object has no attribute 'get'" once per company, every run, and the
+    # source had been silently dead. After the first unusable answer the run stops asking.
+    yahoo_news_disabled = False
+
     @staticmethod
     def get_yahoo_news(ticker):
+        if IntelGatherer.yahoo_news_disabled:
+            return ""
         try:
-            t = Ticker(ticker)
-            news = t.news(count=5)
-            blob = ""
-            for article in news:
-                article_url = article.get('link') or article.get('url') or ''
-                blob += f"SOURCE: RECENT NEWS ({article.get('title')}; {article_url})\nDATA:\n{article.get('summary')}\n"
-            return blob
+            news = Ticker(ticker).news(count=5)
         except Exception as e:
             print(f"  [-] Yahoo news unavailable for {ticker}: {e}")
             return ""
+        articles = [article for article in news if isinstance(article, dict)] if isinstance(news, list) else []
+        if not articles:
+            IntelGatherer.yahoo_news_disabled = True
+            print(f"  [-] Yahoo news returned no usable articles ({str(news)[:80]!r}); skipping it for the rest of this run.")
+            return ""
+        blob = ""
+        for article in articles:
+            article_url = article.get('link') or article.get('url') or ''
+            blob += f"SOURCE: RECENT NEWS ({article.get('title')}; {article_url})\nDATA:\n{article.get('summary')}\n"
+        return blob
 
     @staticmethod
     def get_sec_data(company_name, ticker):
@@ -658,6 +677,31 @@ class IntelGatherer:
             print(f"  [-] Additional sources unavailable for {company.ticker}: {e}")
             return ""
 
+# Never-researched companies first, then the longest-overdue, then the largest. Pure
+# market-cap order let the whole universe expire in the same few days every cooldown.
+RESEARCH_PRIORITY = (Node.last_researched_at.is_not(None), Node.last_researched_at.asc(), Node.market_cap.desc())
+# 0 means "the eligible universe divided by the cooldown": each company is researched
+# about once per cooldown period, spread evenly instead of in bursts.
+RESEARCH_DAILY_QUOTA = int(os.environ.get("HEPHAESTUS_RESEARCH_DAILY_QUOTA", "0"))
+MIN_RESEARCH_DAILY_QUOTA = 25
+
+
+def research_quota(session):
+    """How many companies one daily run should research.
+
+    With a 30-day cooldown and a 500-company limit, the ~2,650 eligible companies were
+    all researched within a few days and then all sat in cooldown together: runs
+    researched 0-13 companies for weeks, then burst again. Pacing at eligible/cooldown
+    per run keeps the GPU busy every day and staggers the cooldowns permanently.
+    """
+    if RESEARCH_DAILY_QUOTA > 0:
+        return RESEARCH_DAILY_QUOTA
+    if RESEARCH_COOLDOWN_DAYS <= 0:
+        return None
+    eligible = session.query(Node).filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP, not_in_ignored_sector()).count()
+    return max(MIN_RESEARCH_DAILY_QUOTA, math.ceil(eligible / RESEARCH_COOLDOWN_DAYS))
+
+
 def select_research_queue(session, limit, target_sectors=None, deep_dive=False, now=None):
     """Companies for this run's LLM research, largest first.
 
@@ -684,7 +728,7 @@ def select_research_queue(session, limit, target_sectors=None, deep_dive=False, 
 
     # The edge outer join yields one row per incident edge; without DISTINCT the
     # limit is consumed by a few well-connected companies in --deep-dive mode.
-    lonely_nodes = query.distinct().order_by(Node.market_cap.desc()).limit(limit).all()
+    lonely_nodes = query.distinct().order_by(*RESEARCH_PRIORITY).limit(limit).all()
 
     if not deep_dive and len(lonely_nodes) < limit and RESEARCH_COOLDOWN_DAYS > 0:
         # The queue is "companies with no edge", but the concentration sweep gives
@@ -700,7 +744,7 @@ def select_research_queue(session, limit, target_sectors=None, deep_dive=False, 
         )
         if target_sectors:
             top_up = top_up.filter(Node.sector.in_(target_sectors))
-        extra = top_up.order_by(Node.market_cap.desc()).limit(limit - len(lonely_nodes)).all()
+        extra = top_up.order_by(*RESEARCH_PRIORITY).limit(limit - len(lonely_nodes)).all()
         if extra:
             print(f"--- Queue topped up with {len(extra)} already-linked company/companies past the research cooldown ---")
         lonely_nodes.extend(extra)
@@ -717,6 +761,10 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
     session = SessionLocal()
 
     try:
+        quota = None if deep_dive or target_sectors else research_quota(session)
+        if quota is not None and quota < limit:
+            print(f"--- Paced to {quota} companies (eligible universe / {RESEARCH_COOLDOWN_DAYS:g}-day cooldown) ---")
+            limit = quota
         lonely_nodes = select_research_queue(session, limit, target_sectors, deep_dive)
 
         known_names = known_company_names(session) if USE_CUSTOMER_CONCENTRATION and USE_SEC_SOURCE else {}

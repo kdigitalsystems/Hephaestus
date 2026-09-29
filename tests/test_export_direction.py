@@ -25,44 +25,58 @@ def edge(source, target, dependency_type, product="", review_note=""):
     )
 
 
-def test_tsm_foundry_edges_are_supplier_to_nvidia_and_amd():
+def test_tsm_foundry_edges_are_recognised_as_backwards():
+    from audit_data_quality import backwards_foundry_edge
+
     tsm = node(1, "TSM")
     nvda = node(2, "NVDA")
-    amd = node(3, "AMD")
+    intel = node(3, "INTC")
+    asml = node(4, "ASML")
 
-    reversed_nvda_edge = edge(
-        nvda,
-        tsm,
-        "Advanced Silicon Fabrication",
-        "semiconductor chips",
-        "TSM is the manufacturer that produces semiconductor chips for NVIDIA.",
-    )
-    reversed_amd_edge = edge(
-        amd,
-        tsm,
-        "Advanced Silicon Fabrication",
-        "advanced process node chip fabrication",
-        "TSMC manufactures chips for AMD.",
-    )
-
-    assert export.canonical_edge_nodes(reversed_nvda_edge) == (tsm, nvda)
-    assert export.canonical_edge_nodes(reversed_amd_edge) == (tsm, amd)
+    assert backwards_foundry_edge(edge(nvda, tsm, "Advanced Silicon Fabrication", "semiconductor chips"))
+    assert backwards_foundry_edge(edge(intel, tsm, "outsourced production", "advanced manufacturing services"))
+    # Evidence alone identifies it when the label is vague ("Supply Relationship").
+    vague = edge(intel, tsm, "Supply Relationship", "Semiconductors")
+    vague.evidence_excerpt = "Integrated device manufacturers such as Intel outsource some of their production to TSMC."
+    assert backwards_foundry_edge(vague)
+    # TSMC's own suppliers keep their direction: the old export flip published
+    # ASML's EUV machines as TSM -> ASML.
+    assert not backwards_foundry_edge(edge(asml, tsm, "Advanced Silicon Fabrication", "Extreme Ultraviolet (EUV) lithography technology"))
+    assert not backwards_foundry_edge(edge(nvda, tsm, "Technology Partnership", "joint development"))
+    assert not backwards_foundry_edge(edge(tsm, nvda, "Foundry Services", "wafers"))
 
 
-def test_tsm_outsourced_production_edges_are_supplier_to_customer():
-    tsm = node(1, "TSM")
-    intel = node(2, "INTC")
-    reversed_edge = edge(intel, tsm, "outsourced production", "advanced manufacturing services")
+def test_cleanup_corrects_foundry_direction_in_the_database():
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
 
-    assert export.canonical_edge_nodes(reversed_edge) == (tsm, intel)
+    from cleanup_reviewed_edges import correct_foundry_direction
+    from models import Base, Edge, Node
 
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    tsm, nvda, amd, asml = (Node(name=name, ticker=ticker) for name, ticker in (
+        ("Taiwan Semiconductor Manufacturing", "TSM"), ("NVIDIA", "NVDA"), ("AMD", "AMD"), ("ASML Holding", "ASML")))
+    session.add_all([tsm, nvda, amd, asml])
+    session.commit()
+    backwards = Edge(source_id=nvda.id, target_id=tsm.id, dependency_type="Foundry Services", product="chips", review_status="approved")
+    correct = Edge(source_id=tsm.id, target_id=amd.id, dependency_type="Foundry Services", product="wafers", review_status="approved")
+    duplicate = Edge(source_id=amd.id, target_id=tsm.id, dependency_type="Foundry Services", product="wafers", review_status="approved")
+    lithography = Edge(source_id=asml.id, target_id=tsm.id, dependency_type="Advanced Silicon Fabrication",
+                       product="Extreme Ultraviolet (EUV) lithography technology", review_status="approved")
+    session.add_all([backwards, correct, duplicate, lithography])
+    session.commit()
 
-def test_non_foundry_edges_keep_original_direction():
-    tsm = node(1, "TSM")
-    amd = node(2, "AMD")
-    partnership_edge = edge(amd, tsm, "Technology Partnership", "joint development")
+    correct_foundry_direction(session, counts := {})
+    session.commit()
 
-    assert export.canonical_edge_nodes(partnership_edge) == (amd, tsm)
+    assert counts == {"foundry_direction_corrected": 1, "foundry_duplicates_rejected": 1}
+    assert (backwards.source_id, backwards.target_id) == (tsm.id, nvda.id)
+    assert duplicate.review_status == "rejected" and f"#{correct.id}" in duplicate.review_note
+    assert (lithography.source_id, lithography.target_id) == (asml.id, tsm.id)
+    correct_foundry_direction(session, counts := {})
+    assert counts == {}, "a second pass finds nothing left to correct"
 
 
 def test_dashboard_data_shows_tsm_as_supplier_to_nvidia_and_amd():

@@ -320,32 +320,51 @@ def test_discovery_holds_are_applied_before_an_edge_is_created():
     assert "opposite direction already approved" in auto_discover_edges.discovery_hold_reason(session, tsmc, apple, "TSMC fabricates the A-series chips for Apple.")
 
 
-def test_reciprocal_duplicates_keep_the_real_label_and_hold_the_mirror():
+def test_reciprocal_pairs_go_to_a_human_unless_one_direction_is_settled():
     from cleanup_reviewed_edges import HELD_NOTE_PREFIX, resolve_reciprocal_duplicates
 
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)()
-    avgo = Node(name="Broadcom Inc.", ticker="AVGO", market_cap=1e12)
-    dell = Node(name="Dell Technologies Inc.", ticker="DELL", market_cap=1e11)
-    session.add_all([avgo, dell])
+    tickers = ["AVGO", "DELL", "VEEV", "LLY", "PWR", "XEL", "PG", "WMT"]
+    nodes = {ticker: Node(name=f"{ticker} Inc.", ticker=ticker, market_cap=1e11) for ticker in tickers}
+    session.add_all(nodes.values())
     session.commit()
-    evidence = "Broadcom supplies Ethernet port adapters used in Dell PowerEdge servers."
-    real = Edge(source_id=avgo.id, target_id=dell.id, dependency_type="Raw Materials (Ethernet port adapters)", evidence_excerpt=evidence, review_status="approved", review_note="Ollama consensus review: supplier to customer.")
-    mirror = Edge(source_id=dell.id, target_id=avgo.id, dependency_type="manufacturer -> customer", evidence_excerpt=evidence, review_status="approved", review_note="Ollama consensus review: fine.")
-    unrelated = Edge(source_id=dell.id, target_id=avgo.id, dependency_type="Servers", evidence_excerpt="Dell sells servers to Broadcom's data centers.", review_status="approved")
-    session.add_all([real, mirror, unrelated])
+
+    def add(source, target, label, note="Ollama consensus review: Consensus 3/3 for approve.", **extra):
+        row = Edge(source_id=nodes[source].id, target_id=nodes[target].id, dependency_type=label,
+                   evidence_excerpt=f"{source} and {target}", review_status="approved", review_note=note,
+                   source_url="https://example.com/filing", **extra)
+        session.add(row)
+        return row
+
+    # Neither side settled, both labelled: one fact read twice, and nobody knows which way.
+    veev_lly = add("VEEV", "LLY", "Cloud Computing Software")
+    lly_veev = add("LLY", "VEEV", "Software Subscription", note="Ollama review: Veeva provides the platform.")
+    # Neither side settled, one side a bare role label: the labelled side stays.
+    avgo_dell = add("AVGO", "DELL", "Ethernet port adapters")
+    dell_avgo_role = add("DELL", "AVGO", "manufacturer -> customer")
+    # A human settled one direction: the model's opposite goes to a human.
+    xel_pwr = add("XEL", "PWR", "Transmission Line Construction Management")
+    pwr_xel = add("PWR", "XEL", "Construction Management Services", note="Confirmed by hand from the 10-K.")
+    # The supplier's own 10-K settles PG -> WMT; a human settled WMT -> PG: both stand.
+    pg_wmt = add("PG", "WMT", "Revenue Concentration", revenue_share=16.0,
+                 source_title="SEC EDGAR (10-K filed 2026-08-01; customer-concentration disclosure)")
+    pg_wmt.evidence_excerpt = "Procter & Gamble (PG) 10-K filed 2026-08-01: Walmart accounted for 16% of net sales."
+    wmt_pg = add("WMT", "PG", "Retail Media Services", note="Confirmed by hand.")
     session.commit()
 
     counts = {}
     resolve_reciprocal_duplicates(session, counts)
     session.commit()
 
-    assert counts == {"reciprocal_held": 1}
-    assert real.review_status == "approved"
-    assert mirror.review_status == "pending" and mirror.review_note.startswith(HELD_NOTE_PREFIX) and f"#{real.id}" in mirror.review_note
-    assert unrelated.review_status == "approved"
-    # Idempotent: the held mirror is no longer published, so nothing else changes.
+    held = {edge.id for edge in (veev_lly, lly_veev, dell_avgo_role, xel_pwr)}
+    assert counts == {"reciprocal_held": len(held)}
+    for edge in (veev_lly, lly_veev, dell_avgo_role, xel_pwr):
+        assert edge.review_status == "pending" and edge.review_note.startswith(HELD_NOTE_PREFIX), edge.dependency_type
+    for edge in (avgo_dell, pwr_xel, pg_wmt, wmt_pg):
+        assert edge.review_status == "approved", edge.dependency_type
+    # Idempotent: the held edges are no longer published, so nothing else changes.
     resolve_reciprocal_duplicates(session, counts := {})
     assert counts == {}
 

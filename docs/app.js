@@ -1782,7 +1782,12 @@ function renderTrackRecord(predictionPayload) {
     const hitRate = record.hit_rate === undefined || record.hit_rate === null ? null : record.hit_rate;
     const beatsBaseline = hitRate !== null && record.always_up_hit_rate !== null && record.always_up_hit_rate !== undefined && hitRate > record.always_up_hit_rate;
     let tone = 'experimental';
-    let headline = `Experimental: ${resolved} of ${record.minimum_resolved || 30} signals resolved`;
+    // Daily signals for the same company overlap 29 of 30 days, so the record counts
+    // independent windows; older payloads only carry a resolved count.
+    const periods = record.independent_periods;
+    let headline = periods === undefined || periods === null
+        ? `Experimental: ${resolved} of ${record.minimum_resolved || 30} signals resolved`
+        : `Experimental: ${pluralize(periods, 'independent 30‑day period')} of ${record.minimum_periods || 3} scored so far`;
     let detail = 'There is no meaningful track record yet. Treat these as research prompts, not forecasts.';
     if (record.status === 'established' && hitRate !== null) {
         tone = beatsBaseline ? 'positive' : 'underperforming';
@@ -1806,6 +1811,13 @@ function renderTrackRecord(predictionPayload) {
                 ? `${direction}: ${directionResolved} resolved, not scored yet`
                 : `${direction}: ${percent(item.hit_rate)} of ${directionResolved}`));
     });
+    const overlapping = Number(record.resolved_with_overlap || 0);
+    if (overlapping > resolved) {
+        chips.appendChild(makeElement('span', 'source-badge', `${overlapping.toLocaleString()} daily signals, ${resolved.toLocaleString()} counted once per company per window`));
+    }
+    if (Number(record.no_calls || 0) > 0) {
+        chips.appendChild(makeElement('span', 'source-badge', `${pluralize(record.no_calls, 'neutral signal')} not scored (no call)`));
+    }
     if (Number(record.matured_unresolved || 0) > 0) {
         chips.appendChild(makeElement('span', 'source-badge', `${record.matured_unresolved} matured, awaiting price data`));
     }

@@ -9,14 +9,21 @@ from datetime import datetime, timezone
 import ollama
 from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import object_session
 
 from database import SessionLocal
-from evidence_quality import (
+from evidence_quality import (  # noqa: F401  (mentions_company is re-exported for callers)
+    KNOWN_ALIASES,
     has_non_supply_relationship,
+    is_endpoint_label,
+    mentions_company,
+    normalize_for_alias_match,
+    strong_aliases,
     is_role_label,
     requires_source_evidence,
     unsupported_ai_evidence,
 )
+from customer_concentration import filer_documented_direction
 from models import Edge, Node
 
 
@@ -119,89 +126,7 @@ def node_label(node):
     return " | ".join(parts)
 
 
-def node_aliases(node):
-    if not node:
-        return []
-    aliases = []
-    if node.ticker:
-        aliases.append(node.ticker.lower())
-    if node.name:
-        cleaned = re.sub(r"\b(common stock|class a|class b|inc\.?|corporation|corp\.?|company|co\.?|ltd\.?|plc|n\.v\.)\b", "", node.name, flags=re.I)
-        cleaned = re.sub(r"[^a-z0-9 ]+", " ", cleaned.lower())
-        cleaned = re.sub(r"\s+", " ", cleaned).strip()
-        if cleaned:
-            aliases.append(cleaned)
-            words = cleaned.split()
-            if words and len(words[0]) >= 4:
-                aliases.append(words[0])
-            if len(words) >= 2:
-                aliases.append(" ".join(words[:2]))
-    return [alias for alias in dict.fromkeys(aliases) if len(alias) >= 2]
-
-
-def has_alias(text, aliases):
-    return any(alias in text for alias in aliases)
-
-
-# Trade names that never appear in the listed company name.
-KNOWN_ALIASES = {
-    "TSM": ("tsmc",),
-    "GOOG": ("google",),
-    "GOOGL": ("google",),
-    "META": ("facebook",),
-    "MMM": ("3m",),
-    "HNHPF": ("foxconn",),
-}
 HELD_NOTE_PREFIX = "Ollama consensus review"
-
-
-def strong_aliases(node):
-    """Aliases that identify a company unambiguously in prose.
-
-    A ticker of three or more letters, the cleaned full name, its first two words,
-    and known trade names. Single first words ("Boston", "Taiwan", "Alaska") are
-    deliberately excluded: they are how place names get matched to companies.
-    """
-    if not node:
-        return []
-    aliases = []
-    ticker = str(node.ticker or "").strip().lower()
-    if len(ticker) >= 3:
-        aliases.append(ticker)
-    cleaned = re.sub(
-        r"\b(common stock|ordinary shares|american depositary shares|class a|class b|incorporated|inc\.?|corporation|corp\.?|company|co\.?|limited|ltd\.?|plc|holdings?|group|n\.?v\.?|s\.?a\.?|a\.?g\.?|s\.?e\.?|the)\b",
-        "",
-        node.name or "",
-        flags=re.I,
-    )
-    cleaned = re.sub(r"[^a-z0-9& ]+", " ", cleaned.lower())
-    cleaned = re.sub(r"\s+", " ", cleaned).strip()
-    if cleaned:
-        aliases.append(cleaned)
-        words = cleaned.split()
-        if len(words) >= 2:
-            aliases.append(" ".join(words[:2]))
-    aliases.extend(KNOWN_ALIASES.get(str(node.ticker or "").upper(), ()))
-    return [alias for alias in dict.fromkeys(aliases) if len(alias) >= 2]
-
-
-def normalize_for_alias_match(text):
-    """Aliases are built with punctuation collapsed to spaces, so the text must be too.
-
-    Without this, "Amazon.com" never matched the alias "amazon com", "Coca-Cola" never
-    matched "coca cola", and "Lowe's" never matched "lowe s" - so the review step held
-    the pipeline's best evidence (named customers in 10-K disclosures) forever.
-    """
-    lowered = re.sub(r"[^a-z0-9& ]+", " ", str(text or "").lower())
-    return " ".join(lowered.split())
-
-
-def mentions_company(text, node):
-    lowered = normalize_for_alias_match(text)
-    return any(
-        re.search(r"(?<![a-z0-9])" + re.escape(alias) + r"(?![a-z0-9])", lowered)
-        for alias in strong_aliases(node)
-    )
 
 
 def approved_mirror_edge(edge):
@@ -229,22 +154,28 @@ def held_review(edge, reason):
     }
 
 
-def alias_before_terms(text, aliases, terms):
-    positions = [text.find(alias) for alias in aliases if alias in text]
-    if not positions:
-        return False
-    first_alias = min(positions)
-    window = text[first_alias:first_alias + 180]
-    return any(term in window for term in terms)
+# Phrases in which a model says the proposed direction is wrong, and ones in which it
+# says the direction is right. A vote whose own words disagree with it is not a vote.
+BACKWARDS_REASON = re.compile(
+    r"backwards|should be reversed|direction (?:is|was) (?:reversed|wrong|incorrect|inverted)"
+    r"|direction should be reversed|reverse the (?:edge|direction)|wrong direction|opposite direction"
+    r"|not the other way around",
+    re.IGNORECASE,
+)
+FORWARDS_REASON = re.compile(r"direction is (?:correct|right)|correct direction|edge is correct as proposed", re.IGNORECASE)
 
 
 def correct_review_for_reason(edge, review):
+    """Screen one model vote against its own rationale.
+
+    This used to *flip* votes: a "reverse" became "approve" whenever a supply verb
+    appeared within 180 characters of the source's name, which is almost always.
+    "TSMC manufactures the processors Apple uses ... the edge is backwards" came out as
+    approve, and 65 of 344 consensus-approved links carried a rationale calling them
+    backwards. A vote that contradicts itself now counts as no vote (pending); nothing
+    here ever changes a vote's direction.
+    """
     reason = review["reason"].lower()
-    source_aliases = node_aliases(edge.source_node)
-    target_aliases = node_aliases(edge.target_node)
-    # "X is supplied by Y" makes X the customer, so "supplied by" is a customer cue only.
-    supplier_terms = [" supplies ", " supplies", " provides ", " provides", " manufactures ", " produces ", " supplier "]
-    customer_terms = [" uses ", " purchases ", " buys ", " customer of ", " supplied by "]
 
     if any(marker in reason for marker in ["do not have a direct", "does not have a direct", "not a direct", "no direct"]):
         review["action"] = "reject"
@@ -252,26 +183,12 @@ def correct_review_for_reason(edge, review):
         review["customer_side"] = "neither"
         return review
 
-    if review["action"] == "approve":
-        source_is_customer = alias_before_terms(reason, source_aliases, customer_terms)
-        target_is_supplier = alias_before_terms(reason, target_aliases, supplier_terms)
-        target_then_source = has_alias(reason, target_aliases) and has_alias(reason, source_aliases) and (
-            target_is_supplier or "not the other way around" in reason
-        )
-        if source_is_customer and target_then_source:
-            review["action"] = "reverse"
-            review["supplier_side"] = "target"
-            review["customer_side"] = "source"
-            return review
-
-    if review["action"] == "reverse":
-        source_is_supplier = alias_before_terms(reason, source_aliases, supplier_terms + [" upstream of "])
-        target_is_customer = alias_before_terms(reason, target_aliases, [" customer ", " customer of ", " uses ", " buys ", " purchases "])
-        if source_is_supplier and (target_is_customer or has_alias(reason, target_aliases)):
-            review["action"] = "approve"
-            review["supplier_side"] = "source"
-            review["customer_side"] = "target"
-
+    if review.get("direction_fixed"):
+        return review
+    if review["action"] == "approve" and BACKWARDS_REASON.search(reason):
+        review["action"] = "pending"
+    elif review["action"] == "reverse" and FORWARDS_REASON.search(reason):
+        review["action"] = "pending"
     return review
 
 
@@ -390,7 +307,15 @@ def parse_json_response(content):
         return json.loads(match.group(0))
 
 
-def normalize_review(raw):
+def normalize_review(raw, fixed_direction=False):
+    """One model's vote, reconciled from its side fields and its stated action.
+
+    The side fields used to override the action outright, so a model answering
+    action "reverse" with sides (source, target) was recorded as an approval. When the
+    two disagree the vote now counts as "pending". With `fixed_direction` (the supplier's
+    own filing named the customer) only "is this relationship real" is being asked, so
+    a direction vote of either kind counts as confirming it.
+    """
     supplier_side = str(raw.get("supplier_side", "unknown")).strip().lower()
     customer_side = str(raw.get("customer_side", "unknown")).strip().lower()
     if supplier_side not in {"source", "target", "neither", "unknown"}:
@@ -399,15 +324,30 @@ def normalize_review(raw):
         customer_side = "unknown"
 
     if supplier_side == "source" and customer_side == "target":
-        action = "approve"
+        side_action = "approve"
     elif supplier_side == "target" and customer_side == "source":
-        action = "reverse"
+        side_action = "reverse"
     elif supplier_side == "neither" or customer_side == "neither":
-        action = "reject"
+        side_action = "reject"
     else:
-        action = str(raw.get("action", "pending")).strip().lower()
-        if action not in VALID_ACTIONS:
+        side_action = None
+    stated_action = str(raw.get("action", "")).strip().lower()
+    if stated_action not in VALID_ACTIONS:
+        stated_action = None
+
+    if fixed_direction:
+        votes = {side_action, stated_action} - {None, "pending"}
+        if votes and votes <= {"approve", "reverse"}:
+            action = "approve"
+            supplier_side, customer_side = "source", "target"
+        elif votes == {"reject"}:
+            action = "reject"
+        else:
             action = "pending"
+    elif side_action and stated_action and stated_action != "pending" and side_action != stated_action:
+        action = "pending"
+    else:
+        action = side_action or stated_action or "pending"
 
     reason = str(raw.get("reason") or "").strip()
     reason_lower = reason.lower()
@@ -433,6 +373,7 @@ def normalize_review(raw):
         "relationship_type": relationship_type,
         "product": product,
         "reason": reason,
+        "direction_fixed": bool(fixed_direction),
     }
 
 
@@ -452,7 +393,7 @@ def review_edge_with_model(edge, model):
         format=REVIEW_SCHEMA,
         options={"temperature": 0, "num_predict": REVIEW_MAX_TOKENS},
     )
-    review = normalize_review(parse_json_response(response["message"]["content"]))
+    review = normalize_review(parse_json_response(response["message"]["content"]), filer_documented_direction(edge))
     review = correct_review_for_reason(edge, review)
     review["model"] = model
     return review
@@ -583,19 +524,51 @@ def decision_allowed(review, args):
     if action == "reject":
         return confidence >= args.min_reject
     if action == "reverse":
-        return confidence >= args.min_reverse
+        # The panel's direction calls are the least reliable thing it produces (it calls
+        # P&G -> Walmart backwards as readily as TSM -> ASML), so a reversal is held for a
+        # human unless a run opts in explicitly.
+        return getattr(args, "apply_reversals", False) and confidence >= args.min_reverse
     return False
+
+
+def label_taken(edge, label):
+    """Another edge between the same two companies already uses this label.
+
+    Renaming into it violates uq_edge_dependency: the commit failed, was rolled back
+    without a note, and the same 18 verdicts were re-run and lost every night.
+    """
+    try:
+        session = object_session(edge)
+    except Exception:  # a plain object in tests, or an edge not attached to a session
+        return False
+    if session is None or edge.source_id is None or edge.target_id is None:
+        return False
+    with session.no_autoflush:
+        return session.query(Edge.id).filter(
+            Edge.source_id == edge.source_id,
+            Edge.target_id == edge.target_id,
+            Edge.dependency_type == label,
+            Edge.id != edge.id,
+        ).first() is not None
+
+
+def echoes_endpoint_label(edge, product):
+    """The prompt shows each company's industry and sector; models copy them back as the product."""
+    return is_endpoint_label(product, getattr(edge, "source_node", None), getattr(edge, "target_node", None))
 
 
 def update_metadata(edge, review):
     relationship_type = review["relationship_type"]
     if relationship_type and not is_role_label(relationship_type):
-        edge.dependency_type = relationship_type[:255]
-    elif is_role_label(edge.dependency_type):
+        if relationship_type[:255] != edge.dependency_type and not label_taken(edge, relationship_type[:255]):
+            edge.dependency_type = relationship_type[:255]
+    elif is_role_label(edge.dependency_type) and not label_taken(edge, "Supply Relationship"):
         # Never leave a bare role label ("Supplier") as the published dependency
         # type, or the next cleanup demotes the edge and the panel re-reviews it.
         edge.dependency_type = "Supply Relationship"
-    if review["product"]:
+    # "11% of VTRS revenue" became "Drug Manufacturers - Specialty & Generic": the prompt
+    # shows each company's industry, and a model copying it back is not describing a product.
+    if review["product"] and not echoes_endpoint_label(edge, review["product"]):
         edge.product = review["product"][:255]
     edge.confidence_score = review["confidence"]
     edge.review_note = f"Ollama consensus review: {review['reason']}"[:1000]
@@ -708,6 +681,8 @@ def main():
     parser.add_argument("--min-approve", type=float, default=0.82)
     parser.add_argument("--min-reject", type=float, default=0.86)
     parser.add_argument("--min-reverse", type=float, default=0.88)
+    parser.add_argument("--apply-reversals", action="store_true",
+                        help="Apply reverse verdicts. Off by default: reversals are held for a human.")
     parser.add_argument("--consensus-min-votes", type=int, default=2)
     parser.add_argument("--consensus-min-ratio", type=float, default=0.66)
     parser.add_argument("--sleep", type=float, default=0.0)
@@ -752,6 +727,13 @@ def main():
                         session.rollback()
                         review["action"] = "pending"
                         result = "held_integrity_conflict"
+                        # Without a held note the edge stays at the head of the queue and
+                        # the same verdict is recomputed and lost on every run.
+                        edge.review_note = (
+                            f"{HELD_NOTE_PREFIX} hold: the verdict could not be saved (it conflicts with "
+                            f"another edge between these companies). {review['reason']}"
+                        )[:1000]
+                        session.commit()
                     if result.startswith("held"):
                         counts["held"] += 1
                     else:
