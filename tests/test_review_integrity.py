@@ -311,3 +311,82 @@ def test_research_is_paced_across_the_cooldown(monkeypatch):
     assert auto_discover_edges.research_quota(session) == 30
     monkeypatch.setattr(auto_discover_edges, "RESEARCH_DAILY_QUOTA", 120)
     assert auto_discover_edges.research_quota(session) == 120
+
+
+# --- does an excerpt that names one company support the link? ---------------------------
+
+def company(ticker, name):
+    return SimpleNamespace(ticker=ticker, name=name)
+
+
+SITIME, MSFT = company("SITM", "SiTime Corporation Common Stock"), company("MSFT", "Microsoft Corporation")
+
+
+@pytest.mark.parametrize("source, target, evidence, verdict", [
+    # The unnamed company is the excerpt's subject and the verb puts it on the right side.
+    (SITIME, MSFT, "It also reported its top customers as Apple, Fitbit, Garmin, Samsung, Google, Microsoft, Dell.", "supported"),
+    (company("NE", "Noble Corporation plc"), company("SHEL", "Shell plc"), "In 2020, 21.7% of revenues were from Shell.", "supported"),
+    (company("CIEN", "Ciena Corporation"), company("KT", "KT Corp."), "Customers include AT&T, Deutsche Telekom, KT Corporation and Verizon Communications.", "supported"),
+    (company("MSFT", "Microsoft Corporation"), company("SNOW", "Snowflake Inc."),
+     "The platform allows organizations to unify data warehousing into a single service on public cloud infrastructure such as Amazon Web Services (AWS), Microsoft Azure, and Google Cloud Platform (GCP).", "supported"),
+    # Trade names and trademarks identify the company.
+    (company("NVDA", "NVIDIA Corporation"), company("SMCI", "Super Micro Computer, Inc."),
+     "In June 2023, Supermicro saw increased demand for its large language model optimized AI systems, featuring NVIDIA chips.", "named"),
+    # Right relationship, published the wrong way round.
+    (company("F", "Ford Motor Company"), company("TKR", "The Timken Company"),
+     "the company's wheel bearings were used on Ford Motor Company's F-150 Lightning", "backwards"),
+    (company("TM", "Toyota Motor Corporation"), company("MGA", "Magna International"),
+     "It produces automotive systems, assemblies, modules, and components, which are supplied to Toyota...", "backwards"),
+    # Cut off inside the list that would have named the company.
+    (company("TSM", "Taiwan Semiconductor Manufacturing Company Ltd."), company("NVDA", "NVIDIA Corporation"),
+     "Most fabless semiconductor companies such as AMD... are customers of TSMC,", "unclear"),
+    # Junk: never refers to a company, a past event, a rival, an integration.
+    (company("VALE", "VALE S.A."), company("BHP", "BHP Group Limited"), "The company's iron ore mines are primarily in Brazil.", "unsupported"),
+    (company("IBM", "International Business Machines"), company("CHRW", "C.H. Robinson Worldwide, Inc."), "The company adopted IBM mainframes in 1979.", "unsupported"),
+    (company("CMC", "Commercial Metals Company"), company("NUE", "Nucor Corporation"),
+     "Along with Commercial Metals Company, it is one of two primary suppliers of rebar used to reinforce concrete.", "unsupported"),
+    (company("CRM", "Salesforce, Inc."), company("ZM", "Zoom Communications, Inc."),
+     "Over the course of 2015 and 2016, the company integrated its software with Slack, Salesforce, and Skype for Business.", "unsupported"),
+    (company("KEX", "Kirby Corporation"), company("FDXF", "FedEx Freight Holding Company"),
+     "Effective October 30, 2012, Kirby Corp. replaced Overseas Shipholding Group, Inc.", "unsupported"),
+])
+def test_evidence_support(source, target, evidence, verdict):
+    from evidence_quality import evidence_support
+
+    assert evidence_support(evidence, source, target)[0] == verdict
+
+
+def test_cleanup_rejects_junk_and_holds_the_doubtful(pipeline_db):
+    from audit_data_quality import audit_database
+    from cleanup_reviewed_edges import HELD_NOTE_PREFIX, cleanup_reviewed_edges
+
+    session = pipeline_db()
+    nodes = {ticker: Node(name=name, ticker=ticker, market_cap=1e10) for ticker, name in (
+        ("SITM", "SiTime Corporation Common Stock"), ("MSFT", "Microsoft Corporation"),
+        ("VALE", "VALE S.A."), ("BHP", "BHP Group Limited"),
+        ("F", "Ford Motor Company"), ("TKR", "The Timken Company"))}
+    session.add_all(nodes.values())
+    session.commit()
+
+    def approved(source, target, evidence, note=CONSENSUS + "ok"):
+        row = Edge(source_id=nodes[source].id, target_id=nodes[target].id, dependency_type="Components",
+                   evidence_excerpt=evidence, review_status="approved", review_note=note, source_url="AI Multi-Source Research")
+        session.add(row)
+        return row
+
+    valid = approved("SITM", "MSFT", "It also reported its top customers as Apple, Google, Microsoft and Dell.")
+    junk = approved("VALE", "BHP", "The company's iron ore mines are primarily in Brazil.")
+    backwards = approved("F", "TKR", "the company's wheel bearings were used on Ford Motor Company's F-150 Lightning")
+    human = approved("VALE", "MSFT", "The company's iron ore mines are primarily in Brazil.", note="Confirmed by hand.")
+    session.commit()
+
+    cleanup_reviewed_edges()
+    audit_database(fail_on_warnings=True)
+
+    check = pipeline_db()
+    assert check.get(Edge, valid.id).review_status == "approved"
+    assert check.get(Edge, junk.id).review_status == "rejected"
+    assert "does not support this link" in check.get(Edge, junk.id).review_note
+    held = check.get(Edge, backwards.id)
+    assert held.review_status == "pending" and held.review_note.startswith(HELD_NOTE_PREFIX)
+    assert check.get(Edge, human.id).review_status == "approved", "a human's verdict is never overruled"

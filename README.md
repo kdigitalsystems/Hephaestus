@@ -474,6 +474,8 @@ python3 backend/validate_dashboard_data.py
 
 AI-discovered relationships require a substantive excerpt from the collected source text. The discovery, review, cleanup, repair, and published-data validation stages all reject missing or placeholder evidence; explicitly curated manual seeds remain supported. Discovery also checks that the excerpt actually appears in the text the collectors gathered (minor rewording is tolerated), trusts a model-supplied ticker only when it names the extracted company, and keeps `evidence_source_url` only when it is one of the URLs Hephaestus itself fetched.
 
+An excerpt that does not name both companies is judged by `evidence_quality.evidence_support`: it supports the link only when the unnamed company is plainly the excerpt's subject ("It also reported its top customers as ... Microsoft", "In 2020, 21.7% of revenues were from Shell") and the wording places it on the correct side. Excerpts that never refer to one company, describe a past relationship ("used to", events before 2010), or describe availability, integrations, ecosystems or rivals are rejected; backwards or ambiguous ones are held for a person. Measured against a hand-labelled set of 131 such links, it kept no junk and rejected no valid link.
+
 Non-supply keywords such as "acquisition", "partnership", or "collaboration" only disqualify a relationship when they appear in the relationship label itself; product names and verbatim filing excerpts are screened only for explicit non-supply phrases, so a "Collaboration software" product or "we acquired components from" excerpt is not rejected automatically.
 - `reviewed_at`
 

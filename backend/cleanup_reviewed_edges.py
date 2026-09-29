@@ -7,6 +7,7 @@ from audit_data_quality import (  # noqa: F401  (HELD_NOTE_PREFIX is re-exported
     contested_reciprocal_edges,
     direction_contested,
     endpoint_label_as_product,
+    evidence_problem,
     generic_word_entity_edge,
     has_invalid_dependency_label,
     has_non_supply_label,
@@ -251,6 +252,18 @@ def cleanup_reviewed_edges():
             if generic_word_entity_edge(edge) and model_verdict(edge):
                 hold_for_human(edge, counts, "pending_generic_entity",
                                "a company was matched from a place or generic word in the excerpt, not its name")
+                continue
+
+            problem = evidence_problem(edge)
+            if problem:
+                verdict, reason = problem
+                if verdict == "unsupported":
+                    edge.review_status = "rejected"
+                    edge.review_note = f"Automated cleanup: the evidence excerpt does not support this link ({reason})."[:1000]
+                    edge.reviewed_at = datetime.now(timezone.utc)
+                    counts["rejected_unsupported_excerpt"] = counts.get("rejected_unsupported_excerpt", 0) + 1
+                else:
+                    hold_for_human(edge, counts, f"pending_excerpt_{verdict}", reason)
 
         session.commit()
         print("Reviewed edge cleanup:", counts)

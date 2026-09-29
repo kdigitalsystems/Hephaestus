@@ -14,6 +14,7 @@ from sqlalchemy.orm import object_session
 from database import SessionLocal
 from evidence_quality import (  # noqa: F401  (mentions_company is re-exported for callers)
     KNOWN_ALIASES,
+    evidence_support,
     has_non_supply_relationship,
     is_endpoint_label,
     mentions_company,
@@ -268,6 +269,18 @@ def deterministic_review(edge):
     ):
         # Entity resolution can bind "Boston" to Boston Scientific or "MSA" storage to
         # Mine Safety; an excerpt that does not name both companies cannot support the edge.
+        verdict, reason = evidence_support(edge.evidence_excerpt, edge.source_node, edge.target_node)
+        if verdict == "unsupported" and not filer_documented_direction(edge):
+            # Seven in ten of these were junk; a human should not have to reject each one.
+            return {
+                "action": "reject",
+                "supplier_side": "neither",
+                "customer_side": "neither",
+                "confidence": 1.0,
+                "relationship_type": edge.dependency_type or "Unsupported relationship",
+                "product": edge.product or "",
+                "reason": f"The evidence excerpt does not support this link: {reason}.",
+            }
         return held_review(edge, "Evidence excerpt does not name both companies; held for human review.")
 
     bad_nodes = [node for node in (edge.source_node, edge.target_node) if is_non_operating_vehicle(node)]

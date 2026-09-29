@@ -85,7 +85,7 @@ session.add_all([
          source_title="SEC EDGAR (10-K filed 2025-10-31; customer-concentration disclosure)",
          evidence_excerpt="Delta Freight (DLTF) 10-K filed 2025-10-31: Our largest customer, Echo Retail, accounted for 24% of net sales.",
          review_status="pending"),
-    # Pending with an excerpt that names neither company: must be held, never published.
+    # Pending with an excerpt that never refers to either company: junk, rejected and never published.
     Edge(source_id=delta.id, target_id=bolt.id, dependency_type="Logistics", product="Freight",
          confidence_score=0.8, source_url="https://example.com/news", source_title="Recent news",
          evidence_excerpt="The carrier moves finished vehicles from the plant to dealers every week.",
@@ -128,7 +128,7 @@ def test_publish_chain_runs_end_to_end_on_a_fixture_graph(workspace):
         "--min-approve", "0.85", "--min-reverse", "0.85", "--min-reject", "0.85",
         "--consensus-min-votes", "2", "--consensus-min-ratio", "0.66", "--report", "reports/review.csv",
     )
-    assert "'approve': 2" in review and "'held': 1" in review, review[-1500:]
+    assert "'approve': 2" in review and "'reject': 1" in review, review[-1500:]
 
     run("cleanup", root, env, "backend/cleanup_reviewed_edges.py")
     run("export decisions", root, env, "backend/edge_review_decisions.py", "export")
@@ -146,7 +146,7 @@ def test_publish_chain_runs_end_to_end_on_a_fixture_graph(workspace):
     assert by_pair[("COBF", "ACME")]["review_status"] == "approved"
     assert by_pair[("ACME", "BOLT")]["review_status"] == "approved"
     assert by_pair[("DLTF", "ECHO")]["review_status"] == "approved" and by_pair[("DLTF", "ECHO")]["revenue_share"] == 24.0
-    assert ("DLTF", "BOLT") not in by_pair, "a held edge is pending and must not be persisted as a decision"
+    assert by_pair[("DLTF", "BOLT")]["review_status"] == "rejected", "an excerpt about neither company is junk"
 
     dashboard = json.loads((root / "docs" / "dashboard_data.json").read_text())
     metrics = dashboard["investor_metrics"]

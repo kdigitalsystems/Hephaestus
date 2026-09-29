@@ -13,6 +13,7 @@ from database import SessionLocal
 from models import Edge, Node
 from evidence_quality import (
     bound_by_generic_word,
+    evidence_support,
     has_non_supply_relationship,
     is_endpoint_label,
     is_role_label,
@@ -301,6 +302,19 @@ def generic_word_entity_edge(edge):
     return any(bound_by_generic_word(edge.evidence_excerpt, node) for node in (edge.source_node, edge.target_node))
 
 
+def evidence_problem(edge):
+    """(verdict, reason) when a model-approved edge's excerpt does not support it, else None.
+
+    131 approved links had an excerpt that never named one of the two companies. About a
+    quarter are fine ("It also reported its top customers as ... Microsoft"); the rest
+    were trivia, other companies, rivals or asset sales. See evidence_support.
+    """
+    if not model_verdict(edge) or filer_documented_direction(edge):
+        return None
+    verdict, reason = evidence_support(edge.evidence_excerpt, edge.source_node, edge.target_node)
+    return (verdict, reason) if verdict in {"unsupported", "backwards", "unclear"} else None
+
+
 def reciprocal_same_evidence_edges(edges):
     unique = []
     seen = set()
@@ -381,6 +395,7 @@ def audit_database(fail_on_warnings=False):
             edge for edge in published_edges
             if generic_word_entity_edge(edge) and model_verdict(edge)
         ]
+        unsupported_evidence_edges = [edge for edge in published_edges if evidence_problem(edge)]
         self_edges = [edge for edge in published_edges if edge.source_id == edge.target_id]
         unsupported_ai_edges = [
             edge for edge in published_edges
@@ -413,6 +428,7 @@ def audit_database(fail_on_warnings=False):
         print(f"Backwards TSMC foundry warnings: {len(foundry_direction_edges)}")
         print(f"Industry-as-product warnings: {len(industry_product_edges)}")
         print(f"Generic-word entity warnings: {len(generic_entity_edges)}")
+        print(f"Excerpt-does-not-support-edge warnings: {len(unsupported_evidence_edges)}")
         print(f"Self-edge warnings: {len(self_edges)}")
         print(f"Unsupported AI evidence warnings: {len(unsupported_ai_edges)}")
         print(f"Implausible revenue-share warnings: {len(implausible_share_edges)}")
@@ -429,6 +445,7 @@ def audit_database(fail_on_warnings=False):
             ("Backwards TSMC foundry", foundry_direction_edges),
             ("Industry as product", industry_product_edges),
             ("Generic-word entity", generic_entity_edges),
+            ("Excerpt does not support edge", unsupported_evidence_edges),
             ("Self-edge", self_edges),
             ("Unsupported AI evidence", unsupported_ai_edges),
             ("Implausible revenue share", implausible_share_edges),
@@ -452,6 +469,7 @@ def audit_database(fail_on_warnings=False):
             + len(foundry_direction_edges)
             + len(industry_product_edges)
             + len(generic_entity_edges)
+            + len(unsupported_evidence_edges)
             + len(self_edges)
             + len(unsupported_ai_edges)
             + len(implausible_share_edges)

@@ -87,14 +87,16 @@ def candidate_edge(source, target, evidence, source_url="AI Multi-Source Researc
     )
 
 
-def test_evidence_that_names_neither_company_is_held_for_a_human():
+def test_evidence_that_does_not_name_both_companies_is_held_or_rejected():
     vale_bhp = candidate_edge(("VALE", "Vale S.A."), ("BHP", "BHP Group Limited"), "The company's iron ore mines are primarily in Brazil.")
     boston = candidate_edge(("BSX", "Boston Scientific Corporation"), ("IOT", "Samsara Inc."), "Samsara works with the cities of Boston and Chicago on fleet telematics.")
     corning = candidate_edge(("GLW", "Corning Incorporated"), ("AAPL", "Apple Inc."), "Corning is one of the main suppliers of cover glass to Apple Inc.")
     tsmc = candidate_edge(("TSM", "Taiwan Semiconductor Manufacturing Company Ltd."), ("AMD", "Advanced Micro Devices, Inc."), "TSMC fabricates the advanced node processors sold by AMD.")
 
-    assert deterministic_review(vale_bhp)["action"] == "pending"
-    assert deterministic_review(boston)["action"] == "pending"
+    # About neither company: junk, rejected without spending a human's time on it.
+    assert deterministic_review(vale_bhp)["action"] == "reject"
+    # "Boston" is the city: Boston Scientific is never referred to.
+    assert deterministic_review(boston)["action"] == "reject"
     assert deterministic_review(corning) is None
     assert deterministic_review(tsmc) is None
 
