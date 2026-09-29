@@ -13,6 +13,7 @@ from database import SessionLocal
 from models import Edge, Node
 from evidence_quality import (
     bound_by_generic_word,
+    evidence_direction,
     evidence_support,
     has_non_supply_relationship,
     is_endpoint_label,
@@ -312,6 +313,14 @@ def evidence_problem(edge):
     if not model_verdict(edge) or filer_documented_direction(edge):
         return None
     verdict, reason = evidence_support(edge.evidence_excerpt, edge.source_node, edge.target_node)
+    if verdict == "named":
+        # Both named: does the wording say the supply runs the other way? 36 of 203 such
+        # links were published backwards ("Corning is one of the main suppliers to Apple"
+        # as Apple -> Corning). Held, not reversed: the same reading flags some junk.
+        direction, phrase = evidence_direction(edge.evidence_excerpt, edge.source_node, edge.target_node)
+        if direction == "backward":
+            return "backwards", f'the excerpt says the supply runs the other way ("{phrase[:150]}")'
+        return None
     return (verdict, reason) if verdict in {"unsupported", "backwards", "unclear"} else None
 
 

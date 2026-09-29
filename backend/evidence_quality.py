@@ -655,3 +655,83 @@ def evidence_support(evidence: object, source_node: object, target_node: object)
     if SUPPLY_WORDS.search(text):
         return "unclear", "the excerpt mentions supply but not who supplies whom"
     return "unsupported", "the excerpt does not describe a supply relationship between these companies"
+
+
+
+# --- Which way does the excerpt say the supply runs? -------------------------------------
+#
+# 36 of 203 approved links naming both companies were published backwards with
+# consistent model reasoning: "Ambarella chips were used in ... encoders from Harmonic"
+# became HLIT -> AMBA, "Corning is one of the main suppliers to Apple" AAPL -> GLW. Each
+# pattern below places {S} as the supplier and {C} as the customer; it is tried both
+# ways round, and only an answer that holds one way and not the other is used.
+_GAP = r"[^.;!?]{0,160}?"
+_SHORT = r"[^.;!?]{0,45}?"
+_SUPPLIER_VERBS = (
+    r"(?:supplies|supplied|supply|supplying|provides|provided|provide|providing|sells|sold|sell|selling|delivers|delivered|"
+    r"deliver|ships|shipped|licenses|licensed|manufactures|manufactured|manufacture|manufacturing|produces|produced|makes|made)"
+)
+# Inflected forms only ("purchase agreement" is a noun), and never passive: "Arm
+# processors are used ... like the Apple iPod" does not mean Arm uses Apple.
+_NOT_PASSIVE = r"(?<!\bis\s)(?<!\bare\s)(?<!\bwas\s)(?<!\bwere\s)(?<!\bbeen\s)(?<!\bbe\s)(?<!\bbeing\s)"
+_CUSTOMER_VERBS = (
+    rf"{_NOT_PASSIVE}(?:uses|used|using|(?<!\bthe\s)(?<!\ba\s)(?<!\bits\s)(?<!\btheir\s)(?<!\bto\s)(?<!\bfor\s)(?<!\bin\s)use(?!\s+of\b)|"
+    r"utilizes|utilized|buys|bought|purchases|purchased|sources|sourced|sourcing|"
+    r"leases|leased|reserved|ordered|relies\s+on|relied\s+on|depends\s+on|adopted|selected|chose|commissioned|contracted|hired|engaged)"
+)
+# (template, strength). When both directions match, a stronger, more explicit phrase
+# decides; equal strength means the excerpt is ambiguous and gives no answer.
+DIRECTION_TEMPLATES = (
+    (rf"{{S}}{_GAP}\b{_SUPPLIER_VERBS}\b{_GAP}\b(?:to|for)\b{_SHORT}{{C}}", 2),
+    (rf"{{C}}{_GAP}\b{_CUSTOMER_VERBS}\b{_GAP}{{S}}", 1),
+    (rf"{{C}}{_GAP}\boutsourc\w*{_GAP}\bto\s+{{S}}", 2),
+    (rf"{{S}}{_GAP}\b(?:used|utilized|featured|integrated|deployed|installed|incorporated|appeared|adopted)\s+(?:in|into|on|by|across)\b{_GAP}{{C}}", 2),
+    (rf"{{C}}{_GAP}\b(?:powered\s+by|built\s+on|based\s+on|running\s+on|runs\s+on|featuring|equipped\s+with)\b{_SHORT}{{S}}", 2),
+    (rf"\b(?:controlled|powered|supplied|manufactured|produced|designed)\s+by\s+{{S}}{_GAP}\b(?:include|includes|included|including)\b{_GAP}{{C}}", 2),
+    (rf"{{S}}{_GAP}\b(?:customers|clients|licensees)\b{_GAP}\b(?:include|included|including|like|such\s+as)\b{_GAP}{{C}}", 3),
+    (rf"\b(?:customers|clients|licensees)\s+of\s+{{S}}{_GAP}{{C}}", 3),
+    (rf"{{C}}{_SHORT}\b(?:is|are|was|were|became|as)\b{_SHORT}\b(?:customer|client|licensee|distributor|dealer|reseller|retailer)s?\s+(?:of|for)\b{_SHORT}{{S}}", 3),
+    (rf"{{S}}{_SHORT}\b(?:is|are|was|were|became|as)\b{_SHORT}\b(?:supplier|provider|manufacturer|vendor|licensor|maker)s?\b{_SHORT}\b(?:of|to|for)\b{_GAP}{{C}}", 3),
+    (rf"{{S}}{_SHORT}\b(?:is|are|was|were|became)\b{_SHORT}\b(?:official|exclusive|preferred|recommended|approved)\b{_SHORT}\bfor\b{_SHORT}{{C}}", 3),
+    (rf"{{S}}{_SHORT}\b(?:chosen|selected|hired|contracted|commissioned|awarded|picked|tapped)\s+by\b{_SHORT}{{C}}", 3),
+    (rf"\b(?:made|manufactured|produced)\s+for\b{_GAP}{{C}}{_GAP}\bby\b{_SHORT}{{S}}", 3),
+    (rf"{{C}}{_GAP}\b(?:sells|sold|selling|offers|offered|offering|carries|carried|stocks)\b{_GAP}(?:\bfrom\b{_SHORT}{{S}}|{{S}}(?:'s|’s))", 2),
+    (rf"{{S}}{_GAP}\b(?:sold|available|distributed)\s+(?:at|in|by|through)\b{_GAP}{{C}}", 2),
+)
+_ABBREVIATION = re.compile(r"\b(?:Inc|Corp|Co|Ltd|Jr|Sr|St|No|U\.S|S\.A|N\.V|L\.P|p\.l\.c)\.", re.IGNORECASE)
+
+
+def mention_pattern(node: object) -> str | None:
+    """A regex alternation matching the company's mentions, possessive included."""
+    words = cleaned_company_name(node).split()
+    aliases = set(strong_aliases(node))
+    if words and len(words[0]) >= 4 and words[0] not in GENERIC_NAME_WORDS:
+        aliases.add(words[0])
+    ticker = str(getattr(node, "ticker", "") or "").strip().lower()
+    if len(ticker) >= 2:
+        aliases.add(ticker)
+    parts = [r"[\W_]+".join(re.escape(word) for word in alias.split()) for alias in sorted(aliases, key=len, reverse=True)]
+    if not parts:
+        return None
+    return r"(?<![A-Za-z0-9])(?:" + "|".join(parts) + r")(?:'s|’s)?(?![A-Za-z0-9])"
+
+
+def evidence_direction(evidence: object, source_node: object, target_node: object) -> tuple[str | None, str]:
+    """("forward" | "backward" | None, matched phrase) for an excerpt naming both companies."""
+    text = _ABBREVIATION.sub(lambda match: match.group(0)[:-1], " ".join(str(evidence or "").split()))
+    source, target = mention_pattern(source_node), mention_pattern(target_node)
+    if not source or not target:
+        return None, ""
+    found = {}
+    for direction, supplier, customer in (("forward", source, target), ("backward", target, source)):
+        for template, strength in DIRECTION_TEMPLATES:
+            match = re.search(template.replace("{S}", supplier).replace("{C}", customer), text, re.IGNORECASE)
+            if match and strength > found.get(direction, (0, ""))[0]:
+                found[direction] = (strength, match.group(0))
+    if not found:
+        return None, ""
+    ranked = sorted(found.items(), key=lambda item: item[1][0], reverse=True)
+    if len(ranked) == 2 and ranked[0][1][0] == ranked[1][1][0]:
+        return None, ""
+    direction, (_strength, phrase) = ranked[0]
+    return direction, phrase
