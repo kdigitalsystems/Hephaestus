@@ -434,3 +434,77 @@ def test_list_sentences_that_relate_the_companies_are_kept(source, target, evide
     from evidence_quality import evidence_support
 
     assert evidence_support(evidence, source, target)[0] == "named"
+
+
+# --- links published the wrong way round ---------------------------------------------------
+
+@pytest.mark.parametrize("source, target, evidence", [
+    (company("AAPL", "Apple Inc."), company("GLW", "Corning Incorporated"),
+     "Corning is one of the main suppliers to Apple Inc. since working with Steve Jobs in 2007 to develop the iPhone."),
+    (company("HLIT", "Harmonic Inc."), company("AMBA", "Ambarella, Inc."),
+     "In professional markets, Ambarella chips were used in high-end broadcasting encoders such as from Harmonic Inc, and in IP cameras."),
+    (company("AAPL", "Apple Inc."), company("AVGO", "Broadcom Inc."),
+     "Other vendors such as Apple, Hewlett Packard Enterprise, and Raspberry Pi also use Broadcom NICs."),
+    (company("URI", "United Rentals, Inc."), company("MSI", "Motorola Solutions, Inc."),
+     "United Rentals is an authorized dealer for Motorola and can provide a variety of handheld and portable radio solutions."),
+    (company("GE", "GE Aerospace"), company("SARO", "StandardAero, Inc."),
+     "StandardAero Chosen by GE Aerospace to Build, Maintain and Overhaul CT7-2E1 Engines for UK's New Medium Helicopter Fleet."),
+    (company("INTC", "Intel Corporation"), company("PDFS", "PDF Solutions, Inc."),
+     "According to PDF Solutions the company currently serves more than 500 clients in 36 countries, including brands like TSMC, Intel, Analog Devices and Qualcomm."),
+    (company("AMZN", "Amazon.com, Inc."), company("SMTC", "Semtech Corporation"),
+     "Semtech's chips were utilized in products using the Amazon Sidewalk protocol."),
+])
+def test_backwards_links_are_recognised(source, target, evidence):
+    from evidence_quality import evidence_direction
+
+    assert evidence_direction(evidence, source, target)[0] == "backward"
+
+
+@pytest.mark.parametrize("source, target, evidence", [
+    (company("TSM", "Taiwan Semiconductor Manufacturing Company Ltd."), company("INTC", "Intel Corporation"),
+     "Some integrated device manufacturers that have their own fabrication facilities, such as Intel, NXP, STMicroelectronics, and Texas Instruments, outsource some of their production to TSMC."),
+    (company("HAL", "Halliburton Company"), company("DVN", "Devon Energy Corporation"), "Devon uses Halliburton's drilling services."),
+    (company("MRVL", "Marvell Technology, Inc."), company("GOOG", "Alphabet Inc."), "Google's Chromecast products are powered by Marvell SoCs"),
+    (company("JHX", "James Hardie Industries plc"), company("BCC", "Boise Cascade Company"),
+     "Boise Cascade is now the sole nationwide distributor for James Hardie's complete portfolio of exterior building products."),
+    # Passive voice is not the buyer: this used to read as "Arm uses Apple".
+    (company("ARM", "Arm Holdings plc"), company("AAPL", "Apple Inc."),
+     "Arm processors are used as the main CPU for most mobile phones many PDAs and handhelds, like the Apple iPod and iPad."),
+    # "Purchase agreement" is a noun, not Boeing purchasing from Copa.
+    (company("BA", "The Boeing Company"), company("CPA", "Copa Holdings, S.A."),
+     "BOEING PROPRIETARY PURCHASE AGREEMENT NO. PA-05596 between THE BOEING COMPANY and COPA HOLDINGS S.A."),
+])
+def test_correctly_directed_links_are_never_read_as_backwards(source, target, evidence):
+    from evidence_quality import evidence_direction
+
+    assert evidence_direction(evidence, source, target)[0] != "backward"
+
+
+def test_cleanup_holds_a_backwards_link_and_the_gate_agrees(pipeline_db):
+    from audit_data_quality import audit_database
+    from cleanup_reviewed_edges import HELD_NOTE_PREFIX, cleanup_reviewed_edges
+
+    session = pipeline_db()
+    apple = Node(name="Apple Inc.", ticker="AAPL", market_cap=3e12)
+    corning = Node(name="Corning Incorporated", ticker="GLW", market_cap=4e10)
+    devon = Node(name="Devon Energy Corporation", ticker="DVN", market_cap=3e10)
+    halliburton = Node(name="Halliburton Company", ticker="HAL", market_cap=3e10)
+    session.add_all([apple, corning, devon, halliburton])
+    session.commit()
+    backwards = Edge(source_id=apple.id, target_id=corning.id, dependency_type="Cover glass", review_status="approved",
+                     review_note=CONSENSUS + "ok", source_url="AI Multi-Source Research",
+                     evidence_excerpt="Corning is one of the main suppliers to Apple Inc. for iPhone cover glass.")
+    forward = Edge(source_id=halliburton.id, target_id=devon.id, dependency_type="Drilling services", review_status="approved",
+                   review_note=CONSENSUS + "ok", source_url="AI Multi-Source Research",
+                   evidence_excerpt="Devon uses Halliburton's drilling services.")
+    session.add_all([backwards, forward])
+    session.commit()
+
+    cleanup_reviewed_edges()
+    audit_database(fail_on_warnings=True)
+
+    check = pipeline_db()
+    held = check.get(Edge, backwards.id)
+    assert held.review_status == "pending" and held.review_note.startswith(HELD_NOTE_PREFIX)
+    assert "other way" in held.review_note
+    assert check.get(Edge, forward.id).review_status == "approved"

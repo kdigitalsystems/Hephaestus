@@ -14,6 +14,7 @@ from sqlalchemy.orm import object_session
 from database import SessionLocal
 from evidence_quality import (  # noqa: F401  (mentions_company is re-exported for callers)
     KNOWN_ALIASES,
+    evidence_direction,
     evidence_support,
     has_non_supply_relationship,
     is_endpoint_label,
@@ -282,6 +283,12 @@ def deterministic_review(edge):
                 "reason": f"The evidence excerpt does not support this link: {reason}.",
             }
         return held_review(edge, "Evidence excerpt does not name both companies; held for human review.")
+
+    if requires_source_evidence(edge.source_url) and not filer_documented_direction(edge):
+        direction, phrase = evidence_direction(edge.evidence_excerpt, edge.source_node, edge.target_node)
+        if direction == "backward":
+            # The models approve these with consistent reasoning; the wording says otherwise.
+            return held_review(edge, f'The excerpt describes the opposite direction ("{phrase[:150]}"); held for a human to reverse.')
 
     bad_nodes = [node for node in (edge.source_node, edge.target_node) if is_non_operating_vehicle(node)]
     if bad_nodes:
