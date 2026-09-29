@@ -24,6 +24,7 @@ REVIEW_QUEUE_MAX_ITEMS = int(os.environ.get("HEPHAESTUS_REVIEW_PAGE_LIMIT", "300
 CATEGORIES = (
     ("backwards_evidence", "Excerpt says the direction is reversed",
      r"supply runs the other way|excerpt describes the opposite direction"),
+    ("reopened", "Reopened after a rule fix", r"reopened after an evidence-rule fix"),
     ("two_way", "Published in both directions", r"opposite direction (?:is also published|is already approved)"),
     ("model_backwards", "Its approving model called it backwards",
      r"own rationale says the direction is backwards|rationale indicates the relationship direction"),

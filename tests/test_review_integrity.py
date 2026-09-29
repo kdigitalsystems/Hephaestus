@@ -607,3 +607,85 @@ def test_the_reviewer_rejects_junk_that_names_both_companies():
         target_node=SimpleNamespace(ticker="AMPH", name="Amphastar Pharmaceuticals, Inc.", sector="Healthcare", industry="Drugs", supplies_to=[]),
     )
     assert deterministic_review(edge)["action"] == "reject"
+
+
+# --- rule gaps found in the first live run -------------------------------------------------
+
+@pytest.mark.parametrize("name, query", [
+    ("High Tide Inc. Common Shares", "High Tide"),
+    ("Medtronic plc Ordinary Shares", "Medtronic"),
+    ("Koninklijke Philips N.V. American Depositary Shares", "Koninklijke Philips"),
+    ("Alphabet Inc. Class C Capital Stock", "Alphabet"),
+    ("Grupo Aeroportuario del Pacifico S.A.B. de C.V. Amer. Dep. Shares", "Grupo Aeroportuario del Pacifico"),
+    ("Boston Scientific Corporation", "Boston Scientific"),
+])
+def test_registry_queries_use_the_company_not_the_security(name, query):
+    """openFDA returned 404 for "High Tide Common Shares" and 200 for the company name."""
+    from additional_sources import clean_company_query
+
+    assert clean_company_query(name) == query
+
+
+def test_a_product_name_and_an_implicit_seller_are_read():
+    from evidence_quality import evidence_direction, evidence_support
+
+    estc, ebay = company("ESTC", "Elastic N.V."), company("EBAY", "eBay Inc.")
+    evidence = "Elasticsearch technology is used by eBay, Wikipedia, Yelp, Uber, Lyft, Tinder, and Netflix."
+    assert evidence_support(evidence, estc, ebay)[0] == "named"
+    assert evidence_direction(evidence, estc, ebay)[0] == "forward"
+
+    bmo, ssrm = company("BMO", "Bank of Montreal"), company("SSRM", "SSR Mining Inc.")
+    evidence = "During 2022, sales of gold doré accounted for 82% of revenue, with 16% sold to Bank of Montreal."
+    assert evidence_support(evidence, bmo, ssrm)[0] == "backwards"  # held to be reversed, not rejected
+    assert evidence_support(evidence, ssrm, bmo)[0] == "supported"
+
+
+@pytest.mark.parametrize("evidence, event", [
+    ("It is approximately 45% owned by Brookfield Asset Management.", True),
+    ("Marathon owns a 20.4% interest in MPLX, which transports and stores crude oil.", True),
+    ("Brookfield Renewables Partners Open link menu Brookfield Renewables Partners BEP BEPC", True),
+    ("Ameren Illinois, a wholly owned subsidiary of Ameren, buys natural gas from Enbridge.", False),
+])
+def test_ownership_stakes_and_menus_are_not_supply(evidence, event):
+    from evidence_quality import NON_SUPPLY_EVENTS, PAGE_CHROME
+
+    assert bool(NON_SUPPLY_EVENTS.search(evidence) or PAGE_CHROME.search(evidence)) is event
+
+
+def test_a_rejection_the_rules_no_longer_support_goes_back_to_a_person(pipeline_db):
+    from cleanup_reviewed_edges import EXCERPT_REJECTION_NOTE, HELD_NOTE_PREFIX, cleanup_reviewed_edges
+    from review_queue import build_review_queue
+
+    session = pipeline_db()
+    nodes = {ticker: Node(name=name, ticker=ticker, market_cap=1e10) for ticker, name in (
+        ("ESTC", "Elastic N.V."), ("EBAY", "eBay Inc."), ("BMO", "Bank of Montreal"), ("SSRM", "SSR Mining Inc."),
+        ("VALE", "VALE S.A."), ("BHP", "BHP Group Limited"))}
+    session.add_all(nodes.values())
+    session.commit()
+
+    def rejected(source, target, evidence, note=f"{EXCERPT_REJECTION_NOTE} (the excerpt never refers to it)."):
+        row = Edge(source_id=nodes[source].id, target_id=nodes[target].id, dependency_type="Supply", evidence_excerpt=evidence,
+                   review_status="rejected", review_note=note, source_url="AI Multi-Source Research")
+        session.add(row)
+        return row
+
+    elastic = rejected("ESTC", "EBAY", "Elasticsearch technology is used by eBay, Wikipedia, Yelp, Uber, Lyft, Tinder, and Netflix.")
+    bank = rejected("BMO", "SSRM", "During 2022, sales of gold doré accounted for 82% of revenue, with 16% sold to Bank of Montreal.")
+    junk = rejected("VALE", "BHP", "The company's iron ore mines are primarily in Brazil.")
+    human = rejected("ESTC", "BHP", "Elasticsearch technology is used by BHP.", note="Human review (2026-09-29): rejected.")
+    session.commit()
+
+    cleanup_reviewed_edges()
+    cleanup_reviewed_edges()  # stable: reopened links are not rejected again, nothing flips
+
+    check = pipeline_db()
+    for row in (elastic, bank):
+        reopened = check.get(Edge, row.id)
+        assert reopened.review_status == "pending" and reopened.review_note.startswith(HELD_NOTE_PREFIX), reopened.review_note
+    assert "supply runs the other way" in check.get(Edge, bank.id).review_note
+    assert check.get(Edge, junk.id).review_status == "rejected"
+    assert check.get(Edge, human.id).review_status == "rejected", "a person's rejection is never reopened"
+
+    categories = {item["edge_id"]: (item["category"], (item["suggestion"] or {}).get("action")) for item in build_review_queue(check)["items"]}
+    assert categories[bank.id] == ("backwards_evidence", "reverse")
+    assert categories[elastic.id] == ("reopened", "approve")

@@ -23,6 +23,7 @@ from sqlalchemy import or_
 from database import SessionLocal
 from customer_concentration import filer_documented_direction
 from evidence_quality import (
+    evidence_direction,
     evidence_support,
     has_usable_evidence,
     register_company_names,
@@ -191,6 +192,37 @@ def resolve_reciprocal_duplicates(session, counts):
         )
 
 
+EXCERPT_REJECTION_NOTE = "Automated cleanup: the evidence excerpt does not support this link"
+
+
+def reopen_cleared_rejections(session, counts):
+    """Send an automated evidence rejection back to a person once the rules clear it.
+
+    The evidence rules get better; a link rejected under an older version (Elastic ->
+    eBay, before "Elasticsearch" named Elastic; SSR Mining -> Bank of Montreal, before
+    "16% sold to Bank of Montreal" was read) should not stay rejected when the current
+    rules would keep it. It goes back to the review queue, never straight to the site,
+    and a person's own rejection is never reopened.
+    """
+    rejected = session.query(Edge).filter(
+        Edge.review_status == "rejected",
+        Edge.review_note.like(f"{EXCERPT_REJECTION_NOTE}%"),
+    ).all()
+    for edge in rejected:
+        verdict, reason = evidence_support(edge.evidence_excerpt, edge.source_node, edge.target_node)
+        if verdict == "unsupported":
+            continue
+        if verdict == "backwards":
+            reason = "the excerpt says the supply runs the other way"
+        elif verdict == "named":
+            direction, phrase = evidence_direction(edge.evidence_excerpt, edge.source_node, edge.target_node)
+            reason = (
+                f'the excerpt says the supply runs the other way ("{phrase[:150]}")' if direction == "backward"
+                else "the current evidence rules no longer reject it"
+            )
+        hold_for_human(edge, counts, "reopened_after_rule_fix", f"reopened after an evidence-rule fix: {reason}")
+
+
 def reject_held_junk(session, counts):
     """Links waiting for a person whose excerpt the evidence rules call junk.
 
@@ -223,6 +255,8 @@ def cleanup_reviewed_edges():
     counts = {"rejected_non_supply": 0, "rejected_unsupported_ai": 0, "pending_role_labels": 0}
     try:
         register_company_names(session.query(Node.ticker, Node.name).filter(Node.ticker.is_not(None)).all())
+        reopen_cleared_rejections(session, counts)
+        session.flush()
         # Direction first: the reciprocal check must see the corrected foundry edges.
         correct_foundry_direction(session, counts)
         recheck_concentration_edges(session, counts)
