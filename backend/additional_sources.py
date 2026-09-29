@@ -111,10 +111,23 @@ def normalize_ticker(value):
     return str(value or "").strip().upper()
 
 
+# Listing names carry the security type ("High Tide Inc. Common Shares"). Registries
+# such as openFDA search for the company, so a query including it matched nothing and
+# every lookup came back 404.
+SECURITY_TYPE = re.compile(
+    r"\s+(?:common\s+(?:stock|shares)|ordinary\s+shares|(?:american\s+)?depositary\s+(?:shares|receipts)|"
+    r"amer\.?\s+dep\.?\s+shares|new\s+york\s+registry\s+shares|class\s+[a-c]\b|ads\b|adr\b|units?\b|warrants?\b|"
+    r"subordinate\s+voting|non-?voting|voting\s+shares).*$",
+    re.IGNORECASE,
+)
+
+
 def clean_company_query(name):
     name = re.sub(r"\(.*?\)", "", str(name or ""))
+    name = SECURITY_TYPE.sub("", name)
     name = re.sub(
-        r"\b(inc|corp|corporation|company|co|plc|ltd|llc|holdings|holding|group|sa|ag)\b\.?",
+        r"\b(inc|incorporated|corp|corporation|company|co|plc|ltd|limited|llc|lp|holdings|holding|group|sa|ag|se)\b\.?"
+        r"|\bs\.a\.b\.?\s+de\s+c\.v\.?|\b(?:n\.v|s\.a|a\.g|l\.p|s\.e)\.?(?=\s|,|$)",
         "",
         name,
         flags=re.IGNORECASE,

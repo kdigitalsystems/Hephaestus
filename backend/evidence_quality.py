@@ -366,6 +366,9 @@ KNOWN_ALIASES = {
     "AMD": ("epyc", "ryzen", "radeon"),
     "AAPL": ("iphone", "ipad", "macbook"),
     "ON": ("onsemi",),
+    # "Elasticsearch technology is used by eBay, ..." names Elastic; a general prefix
+    # rule would also read "Applebee's" as Apple, so product names are listed here.
+    "ESTC": ("elasticsearch",),
 }
 
 
@@ -478,6 +481,12 @@ ANAPHOR = re.compile(r"(?:^|[.;:]\s+|\(\s*)(?:the\s+company(?:'s)?|the\s+firm(?:
 BOTH_ANAPHOR = re.compile(r"\bthe\s+(?:two\s+)?companies\s+(?:have|had|are|were|will|jointly|co-)", re.IGNORECASE)
 # Sentences whose subject is left implicit: "Customers include AT&T, ...",
 # "In 2020, 21.7% of revenues were from Shell."
+# "Sales of gold dore accounted for 82% of revenue, with 16% sold to Bank of Montreal":
+# a share of the (unnamed) filer's own sales, so the filer supplies the named buyer.
+IMPLICIT_SUPPLIER_SHARE = re.compile(
+    r"\d+(?:\.\d+)?\s*%\s+(?:of\s+(?:our\s+|its\s+)?\w+(?:\s+\w+)?\s+)?(?:was\s+|were\s+)?sold\s+to\b",
+    re.IGNORECASE,
+)
 IMPLICIT_SUBJECT = re.compile(
     r"^(?:in\s+\d{4},?\s+)?(?:\d+(?:\.\d+)?\s*%\s+of\s+(?:its\s+|our\s+)?(?:revenues?|sales)\s+(?:were|was|came)\s+from"
     r"|(?:major\s+|key\s+|top\s+)?customers\s+(?:include|included|such\s+as))",
@@ -486,7 +495,7 @@ IMPLICIT_SUBJECT = re.compile(
 # The subject sells to the named company.
 SUBJECT_SUPPLIES = re.compile(
     r"customers?\s+(?:as|include|included|including|such\s+as)|clients?\s+(?:like|such\s+as|including|include)"
-    r"|serves\s+(?:\w+\s+){0,2}(?:customers|clients)|supplied\s+to|suppliers?\s+(?:to|of)\b"
+    r"|serves\s+(?:\w+\s+){0,2}(?:customers|clients)|supplied\s+to|sold\s+to|suppliers?\s+(?:to|of)\b"
     r"|manufactur\w*\s+(?:[\w\-&.,']+\s+){0,8}?for\b|(?:were|was|are|is)\s+used\s+(?:on|in|by)\b"
     r"|consumed\s+by|added\s+to\s+the\s+(?:\w+\s+){0,2}supply\s+chain\s+of|%\s+of\s+(?:its\s+|our\s+)?(?:revenues?|sales)\s+(?:were|was|came)\s+from"
     r"|performed\s+(?:\w+\s+){0,3}work\s+(?:on|for)|sells?\s+(?:[\w\-&.,']+\s+){0,6}?to\b|provid\w+\s+(?:[\w\-&.,']+\s+){0,8}?(?:to|for)\b",
@@ -648,6 +657,11 @@ NON_SUPPLY_EVENTS = re.compile(
         rf"\bacquisition\s+of\s+{_PROPER}\s+by\b",
         # Fines, hires, investigations, data sharing, brand licensing, speculation.
         r"\bfined\b|\bantitrust\b",
+        # Ownership stakes: "It is approximately 45% owned by Brookfield Asset Management",
+        # "Marathon owns a 20.4% interest in MPLX". Percentages only, so "a wholly owned
+        # subsidiary of X supplies Y" still reads as supply.
+        r"\b\d+(?:\.\d+)?\s*%\s+owned\s+by\b|\bowns\s+(?:a\s+|an\s+)?(?:approximately\s+|about\s+|roughly\s+)?\d+(?:\.\d+)?\s*%"
+        r"|\bmajority[\s-]owner\b|\b\d+(?:\.\d+)?\s*%\s+(?:stake|interest)\s+in\b",
         r"\bhired\b[^.;]{0,60}\b(?:previously|formerly)\s+(?:of|at|with)\b|\bhired\s+a\s+team\s+from\b",
         r"\binvestigated\b",
         r"\bshares?\s+(?:\w+\s+){0,2}data\s+with\b",
@@ -661,7 +675,10 @@ NON_SUPPLY_EVENTS = re.compile(
 
 # Scraped page furniture - a live quote widget beside a menu of customers ("... Lockheed
 # Martin Northrop Grumman +Approved Primes NASDAQ: FEIM LIVE $69.74 +1.01%") - is not prose.
-PAGE_CHROME = re.compile(r"\b(?:NASDAQ|NYSE|NYSE\s+American|OTC)\s*:\s*[A-Z.]{1,6}\s+(?:LIVE\s+)?\$\d")
+PAGE_CHROME = re.compile(
+    r"\b(?:NASDAQ|NYSE|NYSE\s+American|OTC)\s*:\s*[A-Z.]{1,6}\s+(?:LIVE\s+)?\$\d"
+    r"|\bOpen\s+link\s+menu\b|\bSkip\s+to\s+(?:main\s+)?content\b|\bToggle\s+navigation\b"
+)
 
 
 def evidence_support(evidence: object, source_node: object, target_node: object) -> tuple[str, str]:
@@ -706,7 +723,7 @@ def evidence_support(evidence: object, source_node: object, target_node: object)
     subject = None
     if BOTH_ANAPHOR.search(text) and not named_source and not named_target:
         subject = "both"
-    elif named_source != named_target and (ANAPHOR.search(text) or IMPLICIT_SUBJECT.search(text)):
+    elif named_source != named_target and (ANAPHOR.search(text) or IMPLICIT_SUBJECT.search(text) or IMPLICIT_SUPPLIER_SHARE.search(text)):
         subject = "source" if not named_source else "target"
     if subject is None:
         if TRUNCATED_LIST.search(text):
