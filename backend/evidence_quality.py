@@ -358,6 +358,12 @@ KNOWN_ALIASES = {
     "META": ("facebook",),
     "MMM": ("3m",),
     "HNHPF": ("foxconn",),
+    # Trade names and trademarks unique to one company; excerpts use them instead of
+    # the listed name ("Supermicro", "servers based on 2nd gen Epyc", "used in the iPhone 15").
+    "SMCI": ("supermicro",),
+    "AMD": ("epyc", "ryzen", "radeon"),
+    "AAPL": ("iphone", "ipad", "macbook"),
+    "ON": ("onsemi",),
 }
 
 
@@ -456,3 +462,121 @@ def is_endpoint_label(product: object, *nodes: object) -> bool:
             if label and label not in {"uncategorized", "unknown"} and value == label:
                 return True
     return False
+
+
+
+# --- Does an excerpt that names only one company still support the edge? -------------
+#
+# Excerpts cut from a company's own profile call it "the company" or "it": "It also
+# reported its top customers as Apple, ... Microsoft" supports SiTime -> Microsoft
+# without ever naming SiTime. Excerpts that never refer to a company at all ("The
+# company's iron ore mines are primarily in Brazil" for Vale -> BHP) are junk.
+ANAPHOR = re.compile(r"(?:^|[.;:]\s+|\(\s*)(?:the\s+company(?:'s)?|the\s+firm(?:'s)?|the\s+platform|the\s+service|the\s+airline|it|its|we|our)\b|\b(?:subsidiaries|segment|division)\s+of\s+the\s+company\b|\bthe\s+company(?:'s)?\b", re.IGNORECASE)
+BOTH_ANAPHOR = re.compile(r"\bthe\s+(?:two\s+)?companies\s+(?:have|had|are|were|will|jointly|co-)", re.IGNORECASE)
+# Sentences whose subject is left implicit: "Customers include AT&T, ...",
+# "In 2020, 21.7% of revenues were from Shell."
+IMPLICIT_SUBJECT = re.compile(
+    r"^(?:in\s+\d{4},?\s+)?(?:\d+(?:\.\d+)?\s*%\s+of\s+(?:its\s+|our\s+)?(?:revenues?|sales)\s+(?:were|was|came)\s+from"
+    r"|(?:major\s+|key\s+|top\s+)?customers\s+(?:include|included|such\s+as))",
+    re.IGNORECASE,
+)
+# The subject sells to the named company.
+SUBJECT_SUPPLIES = re.compile(
+    r"customers?\s+(?:as|include|included|including|such\s+as)|clients?\s+(?:like|such\s+as|including|include)"
+    r"|serves\s+(?:\w+\s+){0,2}(?:customers|clients)|supplied\s+to|suppliers?\s+(?:to|of)\b"
+    r"|manufactur\w*\s+(?:[\w\-&.,']+\s+){0,8}?for\b|(?:were|was|are|is)\s+used\s+(?:on|in|by)\b"
+    r"|consumed\s+by|added\s+to\s+the\s+(?:\w+\s+){0,2}supply\s+chain\s+of|%\s+of\s+(?:its\s+|our\s+)?(?:revenues?|sales)\s+(?:were|was|came)\s+from"
+    r"|performed\s+(?:\w+\s+){0,3}work\s+(?:on|for)|sells?\s+(?:[\w\-&.,']+\s+){0,6}?to\b|provid\w+\s+(?:[\w\-&.,']+\s+){0,8}?(?:to|for)\b",
+    re.IGNORECASE,
+)
+# The subject buys from, or runs on, the named company.
+SUBJECT_BUYS = re.compile(
+    r"infrastructure\s+such\s+as|(?:runs|built|hosted|deployed)\s+on\b|(?:uses|purchases|buys|sources)\s+(?:[\w\-&.,']+\s+){0,6}?from\b"
+    r"|supplied\s+by|manufactured\s+by|customer\s+of",
+    re.IGNORECASE,
+)
+SUPPLY_WORDS = re.compile(r"\bsuppl(?:y|ies|ied|ier|iers)\b|\bcustomers?\b|\bclients?\b|\bmanufactur|\bprovid|\bsells?\b|\bpurchas|\bcontract", re.IGNORECASE)
+# Availability, integrations, ecosystems and rivals are not supply.
+NON_SUPPLY_CUES = re.compile(
+    r"\bavailable\s+on\b|\bintegrat\w*\s+(?:\w+\s+){0,3}with\b|\becosystem\b|\balong\s+with\b|\bcompetitors?\b|\bcompetes?\b|\brivals?\b"
+    r"|\breplaced\s+[\w&.,' ]{1,60}(?:inc|corp|corporation|group|company)\b",
+    re.IGNORECASE,
+)
+# A relationship evidenced only by events before 2010, or described as past, is not a
+# current supply chain: "adopted IBM mainframes in 1979", "used to be the largest producer".
+HISTORICAL_CUES = re.compile(r"\bused\s+to\b|\bformerly\b|\bformer\b|\bpreviously\b|\bat\s+the\s+time\b|\bonce\s+was\b", re.IGNORECASE)
+YEAR = re.compile(r"\b(1[89]\d\d|20\d\d)s?\b")
+STALE_BEFORE_YEAR = 2010
+# "companies such as AMD... are customers of TSMC": the excerpt was cut inside the list
+# that probably named the missing company, so it cannot be judged either way.
+TRUNCATED_LIST = re.compile(r"\b(?:such\s+as|including|include[sd]?)\s+[^.]{0,60}?(?:\.\.\.|…)", re.IGNORECASE)
+
+
+def names_company(text: object, node: object) -> bool:
+    """The excerpt names the company by a strong alias, a ticker, or a distinctive first word."""
+    if not node:
+        return False
+    if mentions_company(text, node):
+        return True
+    lowered = normalize_for_alias_match(text)
+    ticker = str(getattr(node, "ticker", "") or "").strip().lower()
+    if len(ticker) >= 2 and re.search(r"(?<![a-z0-9])" + re.escape(ticker) + r"(?![a-z0-9])", lowered):
+        return True
+    words = cleaned_company_name(node).split()
+    return bool(words) and len(words[0]) >= 4 and words[0] not in GENERIC_NAME_WORDS and bool(
+        re.search(r"(?<![a-z0-9])" + re.escape(words[0]) + r"(?![a-z0-9])", lowered)
+    )
+
+
+def is_stale(text: str) -> bool:
+    years = [int(year) for year in YEAR.findall(text)]
+    return bool(HISTORICAL_CUES.search(text)) or (bool(years) and max(years) < STALE_BEFORE_YEAR)
+
+
+def evidence_support(evidence: object, source_node: object, target_node: object) -> tuple[str, str]:
+    """How an excerpt supports source -> target, for excerpts that do not name both companies.
+
+    Returns (verdict, reason) where verdict is one of:
+      "named"       both companies are named; this check has nothing to add
+      "supported"   one company is the excerpt's subject ("It ...", "The company's ...")
+                    and a verb places it on the edge's side of the relationship
+      "backwards"   the same, but the verb places it on the other side
+      "unclear"     both are identified, but the excerpt does not say who supplies whom
+      "unsupported" the excerpt never refers to one of the companies, describes a
+                    past or non-supply relationship, or is otherwise not evidence for it
+    """
+    text = " ".join(str(evidence or "").split())
+    named_source, named_target = names_company(text, source_node), names_company(text, target_node)
+    if named_source and named_target:
+        return "named", ""
+    if is_stale(text):
+        return "unsupported", "the excerpt describes a past relationship"
+    if NON_SUPPLY_CUES.search(text):
+        return "unsupported", "the excerpt describes availability, an integration, an ecosystem or a rival, not supply"
+
+    subject = None
+    if BOTH_ANAPHOR.search(text) and not named_source and not named_target:
+        subject = "both"
+    elif named_source != named_target and (ANAPHOR.search(text) or IMPLICIT_SUBJECT.search(text)):
+        subject = "source" if not named_source else "target"
+    if subject is None:
+        if TRUNCATED_LIST.search(text):
+            return "unclear", "the excerpt was cut off inside the list that may name the company"
+        missing = source_node if not named_source else target_node
+        return "unsupported", f"the excerpt never refers to {getattr(missing, 'ticker', None) or 'one of the companies'}"
+
+    if subject != "both":
+        if SUBJECT_SUPPLIES.search(text):
+            subject_role = "supplier"
+        elif SUBJECT_BUYS.search(text):
+            subject_role = "customer"
+        else:
+            subject_role = None
+        if subject_role:
+            expected = "supplier" if subject == "source" else "customer"
+            if subject_role == expected:
+                return "supported", "the company is the excerpt's subject and the excerpt says how it trades with the other"
+            return "backwards", "the excerpt describes the opposite direction"
+    if SUPPLY_WORDS.search(text):
+        return "unclear", "the excerpt mentions supply but not who supplies whom"
+    return "unsupported", "the excerpt does not describe a supply relationship between these companies"
