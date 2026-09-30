@@ -1,8 +1,509 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-09-29T08:55:56+00:00",
-  "unique_links": 210,
+  "generated_at": "2026-09-30T10:28:50+00:00",
+  "unique_links": 364,
   "days": [
+    {
+      "date": "2026-09-30",
+      "generated_at": "2026-09-30T10:28:50+00:00",
+      "previous_date": "2026-09-29",
+      "unique_links": 364,
+      "net_change": 154,
+      "new_count": 158,
+      "removed_count": 4,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AAOI->ORCL:REVENUE CONCENTRATION",
+          "source_ticker": "AAOI",
+          "target_ticker": "ORCL",
+          "type": "Revenue Concentration",
+          "product": "Revenue from sales to customers",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "AM->AR:SUPPLY RELATIONSHIP",
+          "source_ticker": "AM",
+          "target_ticker": "AR",
+          "type": "Supply Relationship",
+          "product": "Pipelines and facilities services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMD->HPE:SUPPLY RELATIONSHIP",
+          "source_ticker": "AMD",
+          "target_ticker": "HPE",
+          "type": "Supply Relationship",
+          "product": "certain x86 processors, Graphics Processing Units",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "AMD->HPQ:SUPPLY RELATIONSHIP",
+          "source_ticker": "AMD",
+          "target_ticker": "HPQ",
+          "type": "supply relationship",
+          "product": "processors for PCs and workstations",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AMKR->LSCC:CONTRACT MANUFACTURING",
+          "source_ticker": "AMKR",
+          "target_ticker": "LSCC",
+          "type": "Contract Manufacturing",
+          "product": "packaging and test of products",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AMZN->ABNB:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "AMZN",
+          "target_ticker": "ABNB",
+          "type": "operational supply chain dependency",
+          "product": "cloud hosting services",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AMZN->ADSK:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "AMZN",
+          "target_ticker": "ADSK",
+          "type": "operational supply-chain dependency",
+          "product": "operational and technical services (AWS)",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AMZN->AUR:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "AUR",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS hosting services",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AMZN->CHKP:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "CHKP",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Third-party technology, third-party servers, cloud service providers (e.g., AWS), and other third-party hardware, software, and infrastructure.",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "AMZN->CHWY:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "CHWY",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS (Amazon Web Services)",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "AMZN->CPNG:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "CPNG",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Virtual cloud infrastructure and data centers",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "AMZN->CRWD:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "CRWD",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services (AWS) cloud services",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "AMZN->DASH:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "DASH",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services (AWS)",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "AMZN->DBX:SUPPLY RELATIONSHIP",
+          "source_ticker": "AMZN",
+          "target_ticker": "DBX",
+          "type": "Supply Relationship",
+          "product": "Services provided by Amazon Web Services",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "AMZN->DKNG:TECHNOLOGY AND SERVICES",
+          "source_ticker": "AMZN",
+          "target_ticker": "DKNG",
+          "type": "Technology and Services",
+          "product": "Amazon Web Services (AWS) cloud services",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AMZN->DUOL:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "DUOL",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services (AWS)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->EXPE:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "EXPE",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services (AWS)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->FIG:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "FIG",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services (AWS)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AMZN->FTNT:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "FTNT",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services (AWS)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->GDDY:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "GDDY",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->INTU:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "INTU",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services (AWS)",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "AMZN->IONQ:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "IONQ",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Quantum Cloud Services (QCaaS)",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "AMZN->IOT:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "IOT",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS web hosting",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->MBLY:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "MBLY",
+          "type": "cloud infrastructure provider",
+          "product": "cloud services for REM mapping system, Roadbook, and AMaaS solutions including Moovit platform",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AMZN->MELI:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "MELI",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services (cloud services)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->MTCH:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "MTCH",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Cloud and Other Services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->NFLX:TECHNOLOGY AND SERVICES",
+          "source_ticker": "AMZN",
+          "target_ticker": "NFLX",
+          "type": "Technology and Services",
+          "product": "Amazon Web Services (AWS)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AMZN->NTRA:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "NTRA",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS HealthOmics (backup for DNANexus)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->OKTA:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "OKTA",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Virtual cloud infrastructure hosted in AWS or other cloud services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->OSCR:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "OSCR",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Cloud Computing services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->PCOR:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "PCOR",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services (AWS)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->PINS:TECHNOLOGY AND SERVICES",
+          "source_ticker": "AMZN",
+          "target_ticker": "PINS",
+          "type": "Technology and Services",
+          "product": "Compute, storage, data transfer services (AWS)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AMZN->PLTR:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "PLTR",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Software-as-a-Service offerings, including Palantir Cloud (as defined in the section titled \u2018Item 7.\u2019)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->RBLX:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "RBLX",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Cloud infrastructure services (AWS)",
+          "review_status": "approved",
+          "confidence": 0.9333
+        },
+        {
+          "relationship_key": "AMZN->RBRK:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "RBRK",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Public Cloud Infrastructure (Amazon Web Services)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->RIVN:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "RIVN",
+          "type": "Cloud Infrastructure Provider",
+          "product": "cloud computing and storage needs",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AMZN->ROP:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "ROP",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->S:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "S",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Third-party cloud hosting services (AWS)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->SAIL:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "SAIL",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Virtual cloud infrastructure hosted in AWS",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->SNAP:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "SNAP",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Computing, storage, bandwidth, and other services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->SNOW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "SNOW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Amazon Web Services (AWS)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->TEAM:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "TEAM",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Cloud computing platform services (Amazon Web Services)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->TOST:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "TOST",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS cloud infrastructure services",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AMZN->TYL:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "TYL",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Hosting services and other technology-related services needed to deliver certain of our cloud solutions and other functionality.",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->UI:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "UI",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Google Cloud and Amazon Web Services (AWS) services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->VEEV:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "VEEV",
+          "type": "Cloud Infrastructure Provider",
+          "product": "computing infrastructure, secure network connectivity, and other technology-related services needed to deliver our cloud solutions",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->WSE:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "WSE",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Primary payment processing hosted in Amazon Web Services\u2019s Frankfurt region",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "AVGO->ANET:SUPPLY RELATIONSHIP",
+          "source_ticker": "AVGO",
+          "target_ticker": "ANET",
+          "type": "Supply Relationship",
+          "product": "switching chips",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AVGO->GEN:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "AVGO",
+          "target_ticker": "GEN",
+          "type": "operational supply-chain dependency",
+          "product": "engineering and threat response services",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AVGO->HPE:SUPPLY RELATIONSHIP",
+          "source_ticker": "AVGO",
+          "target_ticker": "HPE",
+          "type": "Supply Relationship",
+          "product": "Industry standard Application-Specific Standard Product, Graphics Processing Units",
+          "review_status": "approved",
+          "confidence": 0.9167
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "COKE->KR:REVENUE CONCENTRATION",
+          "source_ticker": "COKE",
+          "target_ticker": "KR",
+          "type": "Revenue Concentration",
+          "product": "29% of COKE revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "COKE->WMT:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "COKE",
+          "target_ticker": "WMT",
+          "type": "operational supply-chain dependency",
+          "product": "bottle/can sales volume to retail customers and net sales",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "DOX->T:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "DOX",
+          "target_ticker": "T",
+          "type": "operational supply-chain dependency",
+          "product": "25.9% of DOX revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "DTM->EXE:FINANCIAL DEPENDENCY",
+          "source_ticker": "DTM",
+          "target_ticker": "EXE",
+          "type": "financial dependency",
+          "product": "45% of DTM revenue",
+          "review_status": "approved",
+          "confidence": 0.9667
+        }
+      ],
+      "changed_links": []
+    },
     {
       "date": "2026-09-29",
       "generated_at": "2026-09-29T08:55:56+00:00",
@@ -1240,19 +1741,6 @@
           "confidence": 1.0
         }
       ],
-      "changed_links": []
-    },
-    {
-      "date": "2026-09-16",
-      "generated_at": "2026-09-16T08:10:02+00:00",
-      "previous_date": "2026-09-15",
-      "unique_links": 509,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
       "changed_links": []
     }
   ]
