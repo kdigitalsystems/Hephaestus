@@ -1,8 +1,220 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-03T10:00:22+00:00",
-  "unique_links": 788,
+  "generated_at": "2026-10-04T08:54:02+00:00",
+  "unique_links": 810,
   "days": [
+    {
+      "date": "2026-10-04",
+      "generated_at": "2026-10-04T08:54:02+00:00",
+      "previous_date": "2026-10-03",
+      "unique_links": 810,
+      "net_change": 22,
+      "new_count": 22,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AMZN->CSAI:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "CSAI",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Cloud services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->MNYWW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "MNYWW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS cloud services for hosting websites and data",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AMZN->TNMG:CLOUD INFRASTRUCTURE CONSUMER",
+          "source_ticker": "AMZN",
+          "target_ticker": "TNMG",
+          "type": "Cloud Infrastructure Consumer",
+          "product": "Compute, storage, data transfer services",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "BA->LTM:SUPPLY RELATIONSHIP",
+          "source_ticker": "BA",
+          "target_ticker": "LTM",
+          "type": "Supply Relationship",
+          "product": "Aerospace & Defense products (aircraft)",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "FDX->DBGI:SUPPLY RELATIONSHIP",
+          "source_ticker": "FDX",
+          "target_ticker": "DBGI",
+          "type": "Supply Relationship",
+          "product": "Logistics Services",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "FDX->NEXR:SUPPLY RELATIONSHIP",
+          "source_ticker": "FDX",
+          "target_ticker": "NEXR",
+          "type": "Supply Relationship",
+          "product": "Logistics services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "FDX->NEXRW:SUPPLY RELATIONSHIP",
+          "source_ticker": "FDX",
+          "target_ticker": "NEXRW",
+          "type": "Supply Relationship",
+          "product": "Logistics services",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "FDX->SPRC:SUPPLY RELATIONSHIP",
+          "source_ticker": "FDX",
+          "target_ticker": "SPRC",
+          "type": "Supply Relationship",
+          "product": "Logistics services",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "INGM->ORKT:SUPPLY RELATIONSHIP",
+          "source_ticker": "INGM",
+          "target_ticker": "ORKT",
+          "type": "Supply Relationship",
+          "product": "Ingram Micro Asia Marketplace services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "INTC->FCUV:SUPPLY RELATIONSHIP",
+          "source_ticker": "INTC",
+          "target_ticker": "FCUV",
+          "type": "Supply Relationship",
+          "product": "major components",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "IQV->CINGW:SUPPLY RELATIONSHIP",
+          "source_ticker": "IQV",
+          "target_ticker": "CINGW",
+          "type": "Supply Relationship",
+          "product": "Services provided by IQVIA Holdings Inc.",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "LFMD->LFMDP:FINANCIAL DEPENDENCY",
+          "source_ticker": "LFMD",
+          "target_ticker": "LFMDP",
+          "type": "financial dependency",
+          "product": "Healthcare consultations and services through their platform",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "LH->ONCO:SUPPLY RELATIONSHIP",
+          "source_ticker": "LH",
+          "target_ticker": "ONCO",
+          "type": "supply relationship",
+          "product": "third party services for product development, marketing, distribution and sales",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MCHPP->ARW:REVENUE CONCENTRATION",
+          "source_ticker": "MCHPP",
+          "target_ticker": "ARW",
+          "type": "Revenue Concentration",
+          "product": "Electronics Distribution Services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MHLA->MHNC:SUPPLY RELATIONSHIP",
+          "source_ticker": "MHLA",
+          "target_ticker": "MHNC",
+          "type": "Supply Relationship",
+          "product": "Dividends and other permitted payments",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "MOBXW->LDOS:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "MOBXW",
+          "target_ticker": "LDOS",
+          "type": "operational supply-chain dependency",
+          "product": "50% of MOBXW revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "MSFT->OLB:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "MSFT",
+          "target_ticker": "OLB",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Microsoft Azure",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "MSFT->SCKT:SUPPLY RELATIONSHIP",
+          "source_ticker": "MSFT",
+          "target_ticker": "SCKT",
+          "type": "Supply Relationship",
+          "product": "CaptureSDK updates supporting latest operating system updates provided by Microsoft (OS updates)",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "MSFT->SVRE:SUPPLY RELATIONSHIP",
+          "source_ticker": "MSFT",
+          "target_ticker": "SVRE",
+          "type": "Supply Relationship",
+          "product": "Microsoft 365 security platform",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "ODC->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "ODC",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "Specialty Chemicals (specific product not mentioned)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "TTC->RBNE:SUPPLY RELATIONSHIP",
+          "source_ticker": "TTC",
+          "target_ticker": "RBNE",
+          "type": "Supply Relationship",
+          "product": "Cash for additional working capital and the gross proceeds from equity offerings",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "WWD->JAGX:SUPPLY RELATIONSHIP",
+          "source_ticker": "WWD",
+          "target_ticker": "JAGX",
+          "type": "Supply Relationship",
+          "product": "Manufacturing and Supply Agreement with Woodward",
+          "review_status": "approved",
+          "confidence": 0.9667
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-03",
       "generated_at": "2026-10-03T10:00:22+00:00",
@@ -2595,19 +2807,6 @@
       "date": "2026-09-21",
       "generated_at": "2026-09-21T08:31:27+00:00",
       "previous_date": "2026-09-20",
-      "unique_links": 470,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-09-20",
-      "generated_at": "2026-09-20T08:17:14+00:00",
-      "previous_date": "2026-09-19",
       "unique_links": 470,
       "net_change": 0,
       "new_count": 0,
