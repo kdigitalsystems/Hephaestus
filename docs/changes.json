@@ -1,8 +1,49 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-04T08:54:02+00:00",
-  "unique_links": 810,
+  "generated_at": "2026-10-05T09:51:46+00:00",
+  "unique_links": 813,
   "days": [
+    {
+      "date": "2026-10-05",
+      "generated_at": "2026-10-05T09:51:46+00:00",
+      "previous_date": "2026-10-04",
+      "unique_links": 813,
+      "net_change": 3,
+      "new_count": 3,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AMZN->BULLW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "BULLW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "cloud infrastructure services",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AMZN->KDKRW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "KDKRW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "KO->KOF:SUPPLY RELATIONSHIP",
+          "source_ticker": "KO",
+          "target_ticker": "KOF",
+          "type": "Supply Relationship",
+          "product": "Supplier named in KOF's 20-F",
+          "review_status": "approved",
+          "confidence": 1.0
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-04",
       "generated_at": "2026-10-04T08:54:02+00:00",
@@ -2794,19 +2835,6 @@
       "date": "2026-09-22",
       "generated_at": "2026-09-22T08:08:46+00:00",
       "previous_date": "2026-09-21",
-      "unique_links": 470,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-09-21",
-      "generated_at": "2026-09-21T08:31:27+00:00",
-      "previous_date": "2026-09-20",
       "unique_links": 470,
       "net_change": 0,
       "new_count": 0,
