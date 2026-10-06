@@ -1,8 +1,103 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-05T09:51:46+00:00",
-  "unique_links": 813,
+  "generated_at": "2026-10-06T09:23:54+00:00",
+  "unique_links": 822,
   "days": [
+    {
+      "date": "2026-10-06",
+      "generated_at": "2026-10-06T09:23:54+00:00",
+      "previous_date": "2026-10-05",
+      "unique_links": 822,
+      "net_change": 9,
+      "new_count": 9,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AEP->GSM:SUPPLY RELATIONSHIP",
+          "source_ticker": "AEP",
+          "target_ticker": "GSM",
+          "type": "Supply Relationship",
+          "product": "Electrical power for manufacturing facilities",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "AMZN->GRRRW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "GRRRW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Software-as-a-Service offerings, including AWS services",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "AMZN->HSCSW:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "AMZN",
+          "target_ticker": "HSCSW",
+          "type": "Operational Supply Chain Dependency",
+          "product": "Amazon Web Services (AWS) services",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "BEP->GSM:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "BEP",
+          "target_ticker": "GSM",
+          "type": "operational supply-chain dependency",
+          "product": "electrical power",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "CVI->UAN:SUPPLY RELATIONSHIP",
+          "source_ticker": "CVI",
+          "target_ticker": "UAN",
+          "type": "Supply Relationship",
+          "product": "pet coke",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "GOOGL->HPAIW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "GOOGL",
+          "target_ticker": "HPAIW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "IaaS and PaaS platforms",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "MDT->ICUCW:SUPPLY RELATIONSHIP",
+          "source_ticker": "MDT",
+          "target_ticker": "ICUCW",
+          "type": "Supply Relationship",
+          "product": "tubing sets",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MSFT->HPAIW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "MSFT",
+          "target_ticker": "HPAIW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Supplier named in HPAIW's 20-F",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "TX->SO:REVENUE CONCENTRATION",
+          "source_ticker": "TX",
+          "target_ticker": "SO",
+          "type": "Revenue Concentration",
+          "product": "16% of TX revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-05",
       "generated_at": "2026-10-05T09:51:46+00:00",
@@ -2828,19 +2923,6 @@
           "confidence": 0.925
         }
       ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-09-22",
-      "generated_at": "2026-09-22T08:08:46+00:00",
-      "previous_date": "2026-09-21",
-      "unique_links": 470,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
       "removed_links": [],
       "changed_links": []
     }
