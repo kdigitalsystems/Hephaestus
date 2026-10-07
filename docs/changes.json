@@ -1,8 +1,40 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-06T09:23:54+00:00",
-  "unique_links": 822,
+  "generated_at": "2026-10-07T09:07:39+00:00",
+  "unique_links": 824,
   "days": [
+    {
+      "date": "2026-10-07",
+      "generated_at": "2026-10-07T09:07:39+00:00",
+      "previous_date": "2026-10-06",
+      "unique_links": 824,
+      "net_change": 2,
+      "new_count": 2,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AVGO->GENVR:SUPPLY RELATIONSHIP",
+          "source_ticker": "AVGO",
+          "target_ticker": "GENVR",
+          "type": "Supply Relationship",
+          "product": "engineering and threat response services",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "MSFT->SVREW:SUPPLY RELATIONSHIP",
+          "source_ticker": "MSFT",
+          "target_ticker": "SVREW",
+          "type": "Supply Relationship",
+          "product": "Microsoft 365 security platform",
+          "review_status": "approved",
+          "confidence": 0.975
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-06",
       "generated_at": "2026-10-06T09:23:54+00:00",
@@ -2900,29 +2932,6 @@
       "removed_count": 0,
       "changed_count": 0,
       "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-09-23",
-      "generated_at": "2026-09-23T08:08:01+00:00",
-      "previous_date": "2026-09-22",
-      "unique_links": 471,
-      "net_change": 1,
-      "new_count": 1,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "NVDA->SVCO:AI AND ACCELERATED COMPUTING",
-          "source_ticker": "NVDA",
-          "target_ticker": "SVCO",
-          "type": "AI and Accelerated Computing",
-          "product": "Physics-Based Digital Twins for Semiconductor Design and Manufacturing",
-          "review_status": "approved",
-          "confidence": 0.925
-        }
-      ],
       "removed_links": [],
       "changed_links": []
     }
