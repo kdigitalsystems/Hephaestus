@@ -8,7 +8,7 @@ from sqlalchemy import inspect
 from sqlalchemy.exc import SQLAlchemyError
 
 from database import engine
-from customer_concentration import filer_documented_direction, implausible_share
+from customer_concentration import SUPPLIER_TITLE_MARKER, filer_documented_direction, implausible_share
 from database import SessionLocal
 from models import Edge, Node
 from evidence_quality import (
@@ -22,6 +22,7 @@ from evidence_quality import (
     requires_source_evidence,
     unsupported_ai_evidence,
 )
+from supplier_dependence import company_key, is_non_common_security, same_company
 from thefuzz import fuzz
 
 INVALID_DEPENDENCY_LABELS = {
@@ -215,6 +216,49 @@ def model_verdict(edge):
     change nothing and its warning would fail every run.
     """
     return needs_human_confirmation(edge) and requires_source_evidence(edge.source_url)
+
+
+def non_company_reason(edge):
+    """Why an endpoint is not a company, or None: a warrant, preferred or rights line (the
+    sweep read its parent's annual report again), or the company's own other listing."""
+    source, target = edge.source_node, edge.target_node
+    if source is None or target is None:
+        return None
+    for node in (source, target):
+        if is_non_common_security(node.name):
+            return f"{node.ticker} ({node.name}) is a warrant, preferred or rights line, not a company"
+    if source.id != target.id and same_company(source.name, target.name):
+        return f"{source.ticker} and {target.ticker} are two listings of one company"
+    return None
+
+
+def share_class_duplicates(edges):
+    """(duplicate, kept) for links that repeat another link through a sibling listing.
+
+    GOOG -> SNOW and GOOGL -> SNOW are one fact. The pair a person settled is kept, else
+    the oldest; only links that need a person's say-so are returned.
+    """
+    groups = defaultdict(lambda: defaultdict(list))
+    for edge in edges:
+        source, target = edge.source_node, edge.target_node
+        if source is None or target is None or edge.source_id == edge.target_id:
+            continue
+        key = (company_key(source.name), company_key(target.name))
+        if all(key):
+            groups[key][(edge.source_id, edge.target_id)].append(edge)
+    duplicates = []
+    for pairs in groups.values():
+        if len(pairs) < 2:
+            continue
+        keep = min(
+            pairs,
+            key=lambda pair: (all(needs_human_confirmation(edge) for edge in pairs[pair]), min(edge.id or 0 for edge in pairs[pair])),
+        )
+        kept = min(pairs[keep], key=lambda edge: edge.id or 0)
+        for pair, pair_edges in pairs.items():
+            if pair != keep:
+                duplicates.extend((edge, kept) for edge in pair_edges if needs_human_confirmation(edge))
+    return duplicates
 
 
 def direction_settled(edge):
@@ -416,6 +460,22 @@ def audit_database(fail_on_warnings=False):
         ]
         unsupported_evidence_edges = [edge for edge in published_edges if evidence_problem(edge)]
         self_edges = [edge for edge in published_edges if edge.source_id == edge.target_id]
+        non_company_edges = [edge for edge in published_edges if needs_human_confirmation(edge) and non_company_reason(edge)]
+        share_class_duplicate_edges = [edge for edge, _kept in share_class_duplicates(published_edges)]
+        supplier_edges = [
+            edge for edge in published_edges
+            if SUPPLIER_TITLE_MARKER in str(edge.source_title or "") and needs_human_confirmation(edge)
+        ]
+        unsupported_supplier_edges = []
+        if supplier_edges:
+            # The sweep's own reader, run on each stored sentence (heavy import, so only here).
+            from auto_discover_edges import clean_company_name, known_company_caps, known_company_names
+            from supplier_dependence import NameIndex, supplier_statement_problem
+
+            index = NameIndex(known_company_names(session), known_company_caps(session))
+            unsupported_supplier_edges = [
+                edge for edge in supplier_edges if supplier_statement_problem(edge, index, clean_company_name)
+            ]
         unsupported_ai_edges = [
             edge for edge in published_edges
             if unsupported_ai_evidence(edge.source_url, edge.evidence_excerpt)
@@ -451,6 +511,9 @@ def audit_database(fail_on_warnings=False):
         print(f"Self-edge warnings: {len(self_edges)}")
         print(f"Unsupported AI evidence warnings: {len(unsupported_ai_edges)}")
         print(f"Implausible revenue-share warnings: {len(implausible_share_edges)}")
+        print(f"Warrant, preferred or same-company link warnings: {len(non_company_edges)}")
+        print(f"Share-class duplicate link warnings: {len(share_class_duplicate_edges)}")
+        print(f"Unsupported supplier-statement warnings: {len(unsupported_supplier_edges)}")
 
         if duplicate_tickers:
             print("Duplicate ticker examples:", ", ".join(duplicate_tickers[:10]))
@@ -468,6 +531,9 @@ def audit_database(fail_on_warnings=False):
             ("Self-edge", self_edges),
             ("Unsupported AI evidence", unsupported_ai_edges),
             ("Implausible revenue share", implausible_share_edges),
+            ("Warrant, preferred or same company", non_company_edges),
+            ("Share-class duplicate", share_class_duplicate_edges),
+            ("Unsupported supplier statement", unsupported_supplier_edges),
         ):
             for edge in flagged_edges[:10]:
                 source = edge.source_node.ticker if edge.source_node else edge.source_id
@@ -492,6 +558,9 @@ def audit_database(fail_on_warnings=False):
             + len(self_edges)
             + len(unsupported_ai_edges)
             + len(implausible_share_edges)
+            + len(non_company_edges)
+            + len(share_class_duplicate_edges)
+            + len(unsupported_supplier_edges)
         )
         if fail_on_warnings and warning_count:
             raise SystemExit(1)
