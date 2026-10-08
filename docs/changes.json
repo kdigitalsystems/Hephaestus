@@ -1,8 +1,49 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-07T09:07:39+00:00",
-  "unique_links": 824,
+  "generated_at": "2026-10-08T09:54:31+00:00",
+  "unique_links": 827,
   "days": [
+    {
+      "date": "2026-10-08",
+      "generated_at": "2026-10-08T09:54:31+00:00",
+      "previous_date": "2026-10-07",
+      "unique_links": 827,
+      "net_change": 3,
+      "new_count": 3,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "CAH->SCLXW:SUPPLY RELATIONSHIP",
+          "source_ticker": "CAH",
+          "target_ticker": "SCLXW",
+          "type": "Supply Relationship",
+          "product": "title model services",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "PLXS->BZAIW:FOUNDRY SERVICES",
+          "source_ticker": "PLXS",
+          "target_ticker": "BZAIW",
+          "type": "foundry services",
+          "product": "AI chips",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "ULCC->SCLXW:LICENSE AND SUPPLY AGREEMENT",
+          "source_ticker": "ULCC",
+          "target_ticker": "SCLXW",
+          "type": "license and supply agreement",
+          "product": "ZTlido",
+          "review_status": "approved",
+          "confidence": 1.0
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-07",
       "generated_at": "2026-10-07T09:07:39+00:00",
@@ -2919,19 +2960,6 @@
           "confidence": 1.0
         }
       ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-09-24",
-      "generated_at": "2026-09-24T07:56:33+00:00",
-      "previous_date": "2026-09-23",
-      "unique_links": 471,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
       "removed_links": [],
       "changed_links": []
     }
