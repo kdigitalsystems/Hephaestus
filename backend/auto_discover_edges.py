@@ -7,7 +7,7 @@ import argparse
 from datetime import datetime, timedelta, timezone
 import wikipedia
 import warnings
-from sqlalchemy import or_
+from sqlalchemy import and_, or_
 from sqlalchemy.exc import IntegrityError
 from thefuzz import fuzz
 
@@ -17,8 +17,8 @@ from parser import extract_dependencies
 from yahooquery import search as yq_search, Ticker
 from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_text, latest_annual_filing
 from additional_sources import get_additional_supply_chain_text
-from customer_concentration import SUPPLIER_TITLE_MARKER, describe_share, extract_disclosures
-from supplier_dependence import NameIndex, extract_supplier_dependencies
+from customer_concentration import SUPPLIER_TITLE_MARKER, describe_share, extract_disclosures, filer_documented_direction
+from supplier_dependence import NameIndex, company_key, extract_supplier_dependencies, is_non_common_security, same_company
 from evidence_quality import (
     GENERIC_NAME_WORDS,
     has_non_supply_relationship,
@@ -68,7 +68,7 @@ CONCENTRATION_RECHECK_DAYS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_RECH
 # A filing read before this moment was read by older rules (no supplier statements), so
 # it is due again once, largest companies first, whatever its recheck interval says.
 SWEEP_RULES_UPDATED = datetime.fromisoformat(
-    os.environ.get("HEPHAESTUS_SWEEP_RULES_UPDATED", "2026-09-29T12:00:00+00:00")
+    os.environ.get("HEPHAESTUS_SWEEP_RULES_UPDATED", "2026-10-08T12:00:00+00:00")
 )
 # Discovery starts at $250M: it had researched the whole $1B+ universe within its
 # cooldown by Sep 13, and below ~$100M the tail is mostly shells with thin filings. The
@@ -78,6 +78,15 @@ SWEEP_RULES_UPDATED = datetime.fromisoformat(
 DISCOVERY_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_MIN_MARKET_CAP", "250000000"))
 SWEEP_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_SWEEP_MIN_MARKET_CAP", "0"))
 IGNORED_SECTORS = ["Financial Services", "Real Estate", "Financial", "Asset Management", "Insurance", "Banks", "Shell Companies"]
+
+
+# A warrant, a preferred line or a right has no annual report of its own: the sweep read
+# its parent's again and linked the parent's suppliers to it (see is_non_common_security).
+NON_COMMON_NAME_PATTERNS = ("% warrant%", "%preferred%", "% rights", "% rights %", "%notes due%", "%subordinated%", "%cumulative%")
+
+
+def is_common_security():
+    return or_(Node.name.is_(None), and_(*[~Node.name.ilike(pattern) for pattern in NON_COMMON_NAME_PATTERNS]))
 
 
 def not_in_ignored_sector():
@@ -277,6 +286,12 @@ def known_company_names(session):
     return names
 
 
+def known_company_caps(session):
+    """Display name -> market cap: a short all-caps name ("AT&T", "IQVIA") counts only for a
+    company big enough to own the acronym ("CSP" and "IDT" are also a process and a private firm)."""
+    return {name: cap or 0 for name, cap in session.query(Node.name, Node.market_cap).filter(Node.ticker.is_not(None)).all()}
+
+
 def discover_customer_concentration(session, company, known_names, supplier_index=None):
     """Create pending edges from what the filer's own annual report says.
 
@@ -286,6 +301,9 @@ def discover_customer_concentration(session, company, known_names, supplier_inde
     the filer says it depends on (the filer is the customer).
     """
     if not USE_CUSTOMER_CONCENTRATION:
+        return 0
+    if is_non_common_security(company.name):
+        company.concentration_checked_at = utc_now()  # no annual report of its own
         return 0
     try:
         filing, text = latest_annual_filing(company.ticker)
@@ -309,7 +327,7 @@ def discover_customer_concentration(session, company, known_names, supplier_inde
     label = f"{filing['form']} filed {filing.get('filing_date') or 'unknown date'}"
     for disclosure in extract_disclosures(text, known_names, filer_aliases):
         customer = resolve_counterparty(session, None, disclosure.customer_name)
-        if not customer or customer.id == company.id:
+        if not customer or customer.id == company.id or is_non_common_security(customer.name):
             continue
         dep = {
             "dependency_type": "Revenue Concentration",
@@ -337,19 +355,55 @@ def node_named(session, display_name):
     return node or resolve_counterparty(session, None, display_name)
 
 
-def supplier_link_known(session, supplier, customer):
-    """True when this supplier -> customer link needs nothing from a new statement.
+def company_node_ids(session, node):
+    """Ids of every listing of this company: GOOG and GOOGL, a stock and its warrants."""
+    groups = session.info.get("company_groups")
+    if groups is None:
+        groups = {}
+        for node_id, name in session.query(Node.id, Node.name).filter(Node.ticker.is_not(None)).all():
+            groups.setdefault(company_key(name), set()).add(node_id)
+        session.info["company_groups"] = groups
+    return groups.get(company_key(node.name)) or {node.id}
 
-    A live edge in the same direction already carries it (whatever its label), and a
-    person who rejected the pair, or approved the opposite direction, has decided it.
+
+def is_human_verdict(edge):
+    return str(edge.review_note or "").startswith("Human review")
+
+
+def is_live(edge):
+    """On the site: only an approved link is. A curated seed still waiting for a person (NVIDIA's
+    TSMC and Micron seeds were held for want of an excerpt) is not, and must not block the
+    filing's own statement."""
+    return edge.review_status == "approved"
+
+
+SUPERSEDED_NOTE = "Automated cleanup: superseded by the filer's own statement"
+
+
+def supplier_link_state(session, supplier, customer):
+    """What a new supplier statement should do about this pair: (state, weaker edges).
+
+    "known": the pair is already published (under any label, from either listing of
+    either company) or a person decided it, so the statement adds nothing. Otherwise
+    "new", with the waiting links of the pair whose evidence the filing's own sentence
+    replaces: a Wikipedia line saying "Nvidia is a customer of TSMC" no longer blocks
+    the 10-K that says "we utilize foundries such as TSMC".
     """
-    same_direction = session.query(Edge).filter(Edge.source_id == supplier.id, Edge.target_id == customer.id).all()
-    if any(edge.review_status != "rejected" or str(edge.review_note or "").startswith("Human review") for edge in same_direction):
-        return True
-    opposite = session.query(Edge).filter(
-        Edge.source_id == customer.id, Edge.target_id == supplier.id, Edge.review_status == "approved"
-    ).all()
-    return any(str(edge.review_note or "").startswith("Human review") for edge in opposite)
+    supplier_ids, customer_ids = company_node_ids(session, supplier), company_node_ids(session, customer)
+    same = session.query(Edge).filter(Edge.source_id.in_(supplier_ids), Edge.target_id.in_(customer_ids)).all()
+    if any(is_live(edge) or is_human_verdict(edge) for edge in same):
+        return "known", []
+    opposite = session.query(Edge).filter(Edge.source_id.in_(customer_ids), Edge.target_id.in_(supplier_ids)).all()
+    if any(edge.review_status == "approved" and is_human_verdict(edge) for edge in opposite):
+        return "known", []
+    # Curated seeds and filing-backed links are not replaced.
+    weaker = [
+        edge for edge in same
+        if edge.review_status in ("pending", "rejected")
+        and not filer_documented_direction(edge)
+        and "Manual" not in f"{edge.source_url or ''} {edge.source_title or ''}"
+    ]
+    return "new", weaker
 
 
 def discover_supplier_statements(session, company, filing, text, supplier_index):
@@ -359,7 +413,15 @@ def discover_supplier_statements(session, company, filing, text, supplier_index)
     label = f"{filing['form']} filed {filing.get('filing_date') or 'unknown date'}"
     for statement in extract_supplier_dependencies(text, supplier_index, filer_aliases):
         supplier = node_named(session, statement.supplier_name)
-        if not supplier or supplier.id == company.id or supplier_link_known(session, supplier, company):
+        if (
+            not supplier
+            or supplier.id == company.id
+            or same_company(supplier.name, company.name)
+            or is_non_common_security(supplier.name)
+        ):
+            continue
+        state, weaker = supplier_link_state(session, supplier, company)
+        if state == "known":
             continue
         if not mentions_company(statement.sentence, supplier):
             # The review step must see the supplier named too, or it holds the link for a
@@ -374,8 +436,28 @@ def discover_supplier_statements(session, company, filing, text, supplier_index)
             "evidence_source_url": filing["url"],
             "evidence_source_title": f"SEC EDGAR ({label}; {SUPPLIER_TITLE_MARKER})",
         }
-        _edge, was_created = upsert_pending_edge(session, supplier, company, dep)
-        session.flush()  # the next statement's supplier_link_known must see this edge
+        same_label = next(
+            (edge for edge in weaker
+             if edge.dependency_type == dep["dependency_type"] and edge.source_id == supplier.id and edge.target_id == company.id
+             and not is_human_verdict(edge)),
+            None,
+        )
+        if same_label is not None:
+            # One edge per pair and label: the filing's sentence replaces the weaker evidence
+            # and the panel reviews the link again.
+            edge, was_created = same_label, False
+            edge.evidence_excerpt, edge.source_url, edge.source_title = dep["evidence_excerpt"], dep["evidence_source_url"], dep["evidence_source_title"]
+            edge.product, edge.confidence_score = dep["product"], SUPPLIER_STATEMENT_CONFIDENCE
+            edge.review_status, edge.review_note, edge.reviewed_at = "pending", None, None
+            print(f"  [~] SUPPLIER STATEMENT replaces weaker evidence: {supplier.ticker} -> {company.ticker} ({statement.dependency_type})")
+        else:
+            edge, was_created = upsert_pending_edge(session, supplier, company, dep)
+        session.flush()  # the next statement must see this edge, and the superseded ones need its id
+        for old in weaker:
+            if old is not edge and old.review_status == "pending" and not is_human_verdict(old):
+                old.review_status = "rejected"
+                old.review_note = f"{SUPERSEDED_NOTE} (edge #{edge.id}, {label})."
+                old.reviewed_at = utc_now()
         if was_created:
             created += 1
             print(f"  [+] SUPPLIER STATEMENT: {supplier.ticker} -> {company.ticker} ({statement.dependency_type})")
@@ -388,7 +470,7 @@ def sweep_customer_concentration(
     """Read the annual filings of the largest companies not read recently (or since a rules update)."""
     if limit <= 0 or not known_names:
         return {"checked": 0, "created": 0}
-    query = session.query(Node).filter(Node.ticker.is_not(None), not_in_ignored_sector())
+    query = session.query(Node).filter(Node.ticker.is_not(None), not_in_ignored_sector(), is_common_security())
     if SWEEP_MIN_MARKET_CAP > 0:
         query = query.filter(Node.market_cap > SWEEP_MIN_MARKET_CAP)
     companies = (
@@ -860,7 +942,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
         lonely_nodes = select_research_queue(session, limit, target_sectors, deep_dive)
 
         known_names = known_company_names(session) if USE_CUSTOMER_CONCENTRATION and USE_SEC_SOURCE else {}
-        supplier_index = NameIndex(known_names) if known_names and USE_SUPPLIER_STATEMENTS else None
+        supplier_index = NameIndex(known_names, known_company_caps(session)) if known_names and USE_SUPPLIER_STATEMENTS else None
         # The discovery budget covers the whole step, sweep included, so a long sweep
         # shortens the LLM queue (the rest is deferred) instead of the job's timeout.
         started = time.monotonic()

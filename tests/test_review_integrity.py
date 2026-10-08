@@ -689,3 +689,122 @@ def test_a_rejection_the_rules_no_longer_support_goes_back_to_a_person(pipeline_
     categories = {item["edge_id"]: (item["category"], (item["suggestion"] or {}).get("action")) for item in build_review_queue(check)["items"]}
     assert categories[bank.id] == ("backwards_evidence", "reverse")
     assert categories[elastic.id] == ("reopened", "approve")
+
+
+# --- supplier statements, warrants and second listings ---------------------------------------
+
+SUPPLIER_TITLE = "SEC EDGAR (10-K filed 2026-02-25; supplier-dependence disclosure)"
+
+
+def filing_edge(session, supplier, filer, label, sentence, status="approved", note=CONSENSUS + "ok"):
+    row = Edge(
+        source_id=supplier.id, target_id=filer.id, dependency_type=label, review_status=status, review_note=note,
+        source_url="https://www.sec.gov/Archives/edgar/data/1/10k.htm", source_title=SUPPLIER_TITLE,
+        evidence_excerpt=f"{filer.name.split(',')[0].split(' Inc')[0]} ({filer.ticker}) 10-K filed 2026-02-25: {sentence}",
+    )
+    session.add(row)
+    return row
+
+
+def company_nodes(session, *rows):
+    nodes = {ticker: Node(name=name, ticker=ticker, market_cap=cap, sector="Technology") for ticker, name, cap in rows}
+    session.add_all(nodes.values())
+    session.commit()
+    return nodes
+
+
+def test_old_supplier_statements_are_read_again_with_the_current_rules(pipeline_db):
+    """The reader got stricter after it had published drug partners, sales channels and a
+    "DoW" read as Dow. Cleanup reads each stored sentence again, so those links leave the site
+    without anyone clicking through them. A person's approval stands; a link a later rule fix
+    supports again goes back to a person, not to the site."""
+    from audit_data_quality import audit_database
+    from cleanup_reviewed_edges import HELD_NOTE_PREFIX, SUPPLIER_REJECTION_NOTE, cleanup_reviewed_edges
+
+    session = pipeline_db()
+    n = company_nodes(
+        session,
+        ("AMZN", "Amazon.com, Inc. Common Stock", 2.3e12), ("SNOW", "Snowflake Inc.", 6e10), ("IONQ", "IonQ, Inc.", 1e10),
+        ("BIIB", "Biogen Inc. Common Stock", 2e10), ("IONS", "Ionis Pharmaceuticals, Inc.", 1e10), ("TSM", "Taiwan Semiconductor Manufacturing Company Ltd.", 1.2e12),
+        ("NVDA", "NVIDIA Corporation Common Stock", 4e12), ("DOW", "Dow Inc.", 3e10), ("MP", "MP Materials Corp.", 1e10),
+    )
+    hosted = filing_edge(session, n["AMZN"], n["SNOW"], "Cloud Infrastructure Provider",
+                         "In addition, our platform currently operates on public cloud infrastructure provided by Amazon Web Services (AWS).")
+    channel = filing_edge(session, n["AMZN"], n["IONQ"], "Cloud Infrastructure Provider",
+                          "We currently offer our QCaaS on public clouds provided by AWS’s Braket and Microsoft’s Azure Quantum.")
+    pending_channel = filing_edge(session, n["AMZN"], n["IONS"], "Supply Relationship",
+                                  "We currently offer our product on public clouds provided by AWS’s Braket.", status="pending", note=None)
+    partner_by_a_person = filing_edge(session, n["BIIB"], n["IONS"], "Supply Relationship",
+                                      "We are relying on Biogen to obtain additional regulatory approvals for SPINRAZA and to commercialize it.",
+                                      note="Human review (2026-10-09): approved. Biogen also manufactures it for us.")
+    wrong_company = filing_edge(session, n["DOW"], n["MP"], "Supply Relationship",
+                                "We may be heavily reliant upon the continued availability of funding provided by the DoW.")
+    supported_again = filing_edge(session, n["TSM"], n["NVDA"], "Foundry Services",
+                                  "We utilize foundries, such as Taiwan Semiconductor Manufacturing Company Limited, or TSMC, to produce our semiconductor wafers.",
+                                  status="rejected", note=f"{SUPPLIER_REJECTION_NOTE} (an older rule).")
+    still_wrong = filing_edge(session, n["AMZN"], n["MP"], "Cloud Infrastructure Provider",
+                              "We currently offer our product on public clouds provided by AWS’s Braket.",
+                              status="rejected", note=f"{SUPPLIER_REJECTION_NOTE} (an older rule).")
+    session.commit()
+
+    cleanup_reviewed_edges()
+    cleanup_reviewed_edges()  # stable: nothing flips on the second run
+
+    check = pipeline_db()
+    get = lambda row: check.get(Edge, row.id)  # noqa: E731
+    assert get(hosted).review_status == "approved"
+    for row in (channel, pending_channel, wrong_company):
+        assert get(row).review_status == "rejected" and get(row).review_note.startswith(SUPPLIER_REJECTION_NOTE), row.id
+    assert get(partner_by_a_person).review_status == "approved", "a person's verdict stands"
+    assert get(supported_again).review_status == "pending" and get(supported_again).review_note.startswith(HELD_NOTE_PREFIX)
+    assert "supplier-statement rule fix" in get(supported_again).review_note
+    assert get(still_wrong).review_status == "rejected"
+    audit_database(fail_on_warnings=True)
+
+    # The review page files it under the same "Reopened after a rule fix" filter as other reopened links.
+    from review_queue import build_review_queue
+    categories = {item["edge_id"]: item["category"] for item in build_review_queue(check)["items"]}
+    assert categories[supported_again.id] == "reopened"
+
+
+def test_warrants_and_second_listings_are_not_companies_to_link(pipeline_db):
+    from audit_data_quality import audit_database
+    from cleanup_reviewed_edges import DUPLICATE_LISTING_NOTE, NON_COMPANY_NOTE, cleanup_reviewed_edges
+
+    session = pipeline_db()
+    n = company_nodes(
+        session,
+        ("IQV", "IQVIA Holdings Inc.", 3e10), ("CING", "Cingulate Inc. Common Stock", 5e7), ("CINGW", "Cingulate Inc. Warrants", 1e6),
+        ("LFMD", "LifeMD, Inc.", 3e8), ("LFMDP", "LifeMD, Inc. 8.875% Series A Cumulative Perpetual Preferred Stock", 3e7),
+        ("GOOG", "Alphabet Inc. Class C Capital Stock", 2.4e12), ("GOOGL", "Alphabet Inc. Class A Common Stock", 2.4e12),
+        ("SNOW", "Snowflake Inc.", 6e10), ("AMZN", "Amazon.com, Inc. Common Stock", 2.3e12), ("Z", "Zillow Group, Inc. Class C Capital Stock", 1e10),
+        ("ZG", "Zillow Group, Inc. Class A Common Stock", 1e10),
+    )
+    cloud = "In addition, our platform operates on public cloud infrastructure provided by Amazon Web Services (AWS) and Google Cloud Platform."
+    on_common = filing_edge(session, n["IQV"], n["CING"], "Supply Relationship", "The services provided by IQVIA are paid for by us.")
+    on_warrant = filing_edge(session, n["IQV"], n["CINGW"], "Supply Relationship", "The services provided by IQVIA are paid for by us.")
+    own_preferred = filing_edge(session, n["LFMD"], n["LFMDP"], "Supply Relationship", "We depend on LifeMD to deliver consultations.")
+    older = filing_edge(session, n["GOOG"], n["SNOW"], "Cloud Infrastructure Provider", cloud)
+    newer = filing_edge(session, n["GOOGL"], n["SNOW"], "Cloud Infrastructure Provider", cloud)
+    # Both Zillow listings are linked to one supplier; a person settled the second, so it is the one kept.
+    zg = filing_edge(session, n["AMZN"], n["ZG"], "Cloud Infrastructure Provider", cloud)
+    z_by_a_person = filing_edge(session, n["AMZN"], n["Z"], "Cloud Infrastructure Provider", cloud,
+                                note="Human review (2026-10-09): approved.")
+    session.commit()
+
+    with pytest.raises(SystemExit):
+        audit_database(fail_on_warnings=True)  # the gate sees all of it before cleanup
+
+    cleanup_reviewed_edges()
+    cleanup_reviewed_edges()
+
+    check = pipeline_db()
+    get = lambda row: check.get(Edge, row.id)  # noqa: E731
+    assert get(on_common).review_status == "approved"
+    for row in (on_warrant, own_preferred):
+        assert get(row).review_status == "rejected" and get(row).review_note.startswith(NON_COMPANY_NOTE), row.id
+    assert get(older).review_status == "approved"
+    assert get(newer).review_status == "rejected" and get(newer).review_note.startswith(DUPLICATE_LISTING_NOTE)
+    assert f"#{older.id}" in get(newer).review_note
+    assert get(z_by_a_person).review_status == "approved" and get(zg).review_status == "rejected"
+    audit_database(fail_on_warnings=True)

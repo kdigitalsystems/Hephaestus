@@ -3,6 +3,7 @@
 Every sentence below is quoted from a real 10-K, including the ones that must not
 produce a link.
 """
+import json
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -17,7 +18,14 @@ import auto_discover_edges
 from customer_concentration import filer_documented_direction
 from evidence_quality import mentions_company
 from models import Base, Edge, Node
-from supplier_dependence import NameIndex, extract_supplier_dependencies
+from supplier_dependence import (
+    NameIndex,
+    company_key,
+    extract_supplier_dependencies,
+    is_non_common_security,
+    same_company,
+    supplier_statement_problem,
+)
 
 
 UNIVERSE = [
@@ -65,7 +73,7 @@ def known_names():
     return {name: auto_discover_edges.clean_company_name(name) for name, _ticker, _cap in UNIVERSE}
 
 
-INDEX = NameIndex(known_names())
+INDEX = NameIndex(known_names(), {name: cap for name, _ticker, cap in UNIVERSE})
 
 
 def suppliers(text, filer=()):
@@ -321,3 +329,244 @@ def test_filer_documented_direction_reads_who_wrote_the_statement():
     assert not filer_documented_direction(SimpleNamespace(**{**edge.__dict__, "source_node": nvda, "target_node": tsm}))
     # A model's excerpt with the same wording but no filing title.
     assert not filer_documented_direction(SimpleNamespace(**{**edge.__dict__, "source_title": "Reuters"}))
+
+
+# --- the hand-labelled production links -----------------------------------------------------
+
+LABELS = json.loads((ROOT / "tests" / "data" / "supplier_statement_labels.json").read_text(encoding="utf-8"))
+
+
+def labelled_index():
+    names = {item["name"]: auto_discover_edges.clean_company_name(item["name"]) for item in LABELS["universe"]}
+    return NameIndex(names, {item["name"]: item["market_cap"] for item in LABELS["universe"]})
+
+
+def handled_before_the_reader(link):
+    """Warrant and preferred lines and a company's own other listing never reach the reader
+    (discovery skips them; cleanup rejects any already published)."""
+    return is_non_common_security(link["filer"]) or is_non_common_security(link["supplier"]) or same_company(link["supplier"], link["filer"])
+
+
+# Wrong links the reader still produces, each for a reason no sentence-level rule can see.
+KNOWN_MISSES = {
+    3673: "Air T 'depends on a contractual relationship with FedEx': FedEx is its customer, in the same words a supplier would be",
+    3063: "Avista, a valuation firm, shares its name with the utility Avista Corporation",
+}
+
+
+def test_the_reader_on_every_hand_labelled_link():
+    """674 links the sweep produced or a cold re-read of 574 filings found, read one by one: 123 were
+    wrong (drug partners, sales channels, auditors, court cases and tax rulings, a lender, "DoW"
+    read as Dow ...). The reader must drop them without losing a real supplier."""
+    index = labelled_index()
+    kept_wrong, lost_correct, counts = {}, [], {"wrong": 0, "correct": 0}
+    for link in LABELS["links"]:
+        if handled_before_the_reader(link):
+            continue
+        filer_names = (link["filer"], auto_discover_edges.clean_company_name(link["filer"]), link["filer_ticker"])
+        found = {company_key(r.supplier_name) for r in extract_supplier_dependencies(link["sentence"], index, filer_names)}
+        kept = company_key(link["supplier"]) in found
+        counts["wrong"] += link["label"] == "W"
+        counts["correct"] += link["label"] == "ok"
+        if link["label"] == "W" and kept:
+            kept_wrong[link["id"]] = link["why"]
+        if link["label"] == "ok" and not kept:
+            lost_correct.append((link["id"], link["sentence"][:80]))
+    assert not lost_correct, lost_correct
+    assert set(kept_wrong) <= set(KNOWN_MISSES), kept_wrong
+    assert counts["wrong"] >= 100 and counts["correct"] >= 500, counts
+
+
+def test_the_tighter_rules_keep_the_statements_they_could_have_cost():
+    kept = [
+        # An in-licence says what the licence is for; that is not a partner selling the filer's drug.
+        ("we obtained a license from Novartis Pharma AG, or Novartis, to develop and commercialize an antibody.", ["Novartis AG"]),
+        # A bottler or a hauler depends on its relationship with the company that supplies it.
+        ("We are dependent upon our relationships with Waste Management and Republic Services for the operation of landfills.",
+         ["Waste Management, Inc."]),
+        # The passive is about the filer's goods, said before it or just after the name.
+        ("Our mainline aircraft were all manufactured by Airbus or Boeing.", ["The Boeing Company Common Stock"]),
+        ("Products manufactured by Microsoft Corporation, HP Inc., and Dell Inc. represented 15%, 12%, and 12% of our total product purchases.",
+         ["Microsoft Corporation Common Stock", "HP Inc. Common Stock"]),
+        # A list whose names follow "for" inside the clause is still a list of suppliers.
+        ("The key suppliers of equipment and software for our existing networks are Huawei, Ericsson, Nokia and Juniper.", ["Nokia Oyj"]),
+        # "does not source from anyone other than" is a dependence, not a negation.
+        ("We do not currently source these wafers from anyone other than GLOBALFOUNDRIES, which could stop making them.",
+         ["GlobalFoundries Inc. Ordinary Shares"]),
+        # Large companies keep their acronyms; a legacy double name keeps its first half.
+        ("We rely on wireless carriers, mainly AT&T and Verizon, to provide access to wireless networks.", ["AT&T Inc."]),
+        ("We rely on contract manufacturing services provided by Flex, and Sanmina-SCI Israel Medical Systems Ltd.", ["Flex Ltd."]),
+        # Camel-case brands: the listing says "Sportradar", the filing "SportRadar".
+        ("We rely on third-party sports data providers, such as SportRadar and Genius Sports, to obtain accurate information.",
+         ["Sportradar Group AG"]),
+    ]
+    index = NameIndex(
+        {
+            "Novartis AG": "Novartis", "Waste Management, Inc.": "Waste Management", "The Boeing Company Common Stock": "Boeing",
+            "Microsoft Corporation Common Stock": "Microsoft", "HP Inc. Common Stock": "HP Inc.", "Nokia Oyj": "Nokia",
+            "GlobalFoundries Inc. Ordinary Shares": "GlobalFoundries", "AT&T Inc.": "AT&T", "Flex Ltd.": "Flex",
+            "Sportradar Group AG": "Sportradar", "Verizon Communications Inc.": "Verizon", "Huawei": "Huawei",
+        },
+        {"AT&T Inc.": 1.5e11, "Flex Ltd.": 2e10, "Sportradar Group AG": 7e9, "Nokia Oyj": 3e10},
+    )
+    for sentence, expected in kept:
+        found = [r.supplier_name for r in extract_supplier_dependencies(sentence, index)]
+        for name in expected:
+            assert name in found, (sentence, found)
+
+
+def test_names_that_are_something_else_in_the_sentence_are_not_companies():
+    index = NameIndex(
+        {
+            "Dow Inc.": "Dow", "Flex Ltd.": "Flex", "IDT Corporation Class B": "IDT", "CSP Inc.": "CSP", "Eve Holding, Inc.": "Eve",
+            "Group 1 Automotive, Inc.": "Group 1 Automotive", "Lucid Group, Inc.": "Lucid", "ATI Inc.": "ATI", "APi Group Corporation": "APi",
+            "NOV Inc.": "NOV", "V.F. Corporation": "V.F.",
+        },
+        {"Dow Inc.": 3e10, "Flex Ltd.": 2e10, "IDT Corporation Class B": 1e9, "CSP Inc.": 1e8, "Eve Holding, Inc.": 1e9,
+         "Group 1 Automotive, Inc.": 5e9, "Lucid Group, Inc.": 5e9, "ATI Inc.": 1e10, "APi Group Corporation": 9e9,
+         "NOV Inc.": 6e9, "V.F. Corporation": 6e9},
+    )
+    collisions = [
+        "We are heavily reliant upon the continued availability of funding provided by the DoW (including its ability to secure funding).",  # the Department of War
+        "We rely on third-party manufacturers to produce certain products, including MiniMed Flex pumps and infusion sets.",  # a product line
+        "We can purchase products already manufactured by IDT pursuant to its own specifications.",  # a private DNA company
+        "The technology we license from these companies includes solder bumping, ultra CSP assembly and wafer-level packaging.",  # chip-scale packaging
+        "We were dependent on a single spaceflight system consisting of a spaceship, VSS Unity, and launch vehicle, VMS Eve.",  # a launch vehicle
+        "Our business model relies on us maintaining a relationship with one or more Tier 1 automotive suppliers.",  # a grade, not a company
+        "We rely on the UHN License to use certain patents and other intellectual property rights associated with Lucid-MS.",  # a drug
+        "We exclusively license rights to ATI-052 from Biosion.",  # a drug code
+        "We expect to rely on third parties for the manufacture of the raw materials, API and finished drug product.",  # an acronym
+        "We depend on various technology, software and services from third parties, including for our data centers and API technology.",  # a noun, not a legal form
+        "We entered into an exclusive license agreement from the Stanford Office of Technology Licensing, filed Nov. 3, 2006.",  # November
+        "The main supplier of fuel is World Fuel Services Mexico, S. de R. L. de C. V. F-36 Table of Contents.",  # a company form and a page number
+    ]
+    for sentence in collisions:
+        assert [r.supplier_name for r in extract_supplier_dependencies(sentence, index)] == [], sentence
+    # The same names, as companies, still match.
+    assert [r.supplier_name for r in extract_supplier_dependencies("We purchase resin from Dow Inc. and from Flex Ltd. each year.", index)] == [
+        "Dow Inc.", "Flex Ltd.",
+    ]
+    assert [r.supplier_name for r in extract_supplier_dependencies("We rely on IDT Corporation for our DNA.", index)] == ["IDT Corporation Class B"]
+
+
+def test_company_identity_across_listings():
+    assert same_company("Alphabet Inc. Class A Common Stock", "Alphabet Inc. Class C Capital Stock")
+    assert same_company("Webull Corporation Class A Ordinary Shares", "Webull Corporation Warrants")
+    assert same_company("LifeMD, Inc.", "LifeMD, Inc. 8.875% Series A Cumulative Perpetual Preferred Stock")
+    # Different companies that share a first word stay different: the legal form is part of the key.
+    assert not same_company("Toro Company (The)", "Toro Corp. Common Stock")
+    assert not same_company("Graham Corporation", "GRAHAM HOLDINGS COMPANY")
+    assert not same_company("", "")
+    assert is_non_common_security("Cingulate Inc. Warrants") and is_non_common_security("Gen Digital Inc. Contingent Value Rights")
+    assert is_non_common_security("Microchip Technology Incorporated Depositary Shares Each Representing a 1/20th Interest in a Share of 7.50% Series A Mandatory Convertible Preferred Stock")
+    # Units of an operating partnership are its common equity; "(each representing the right to ...)" is a description.
+    assert not is_non_common_security("Plains GP Holdings, L.P. Class A Units representing Limited Partner Interests")
+    assert not is_non_common_security("America Movil S.A.B de C.V American Depositary Shares (each representing the right to receive twenty (20) Series B Shares)")
+
+
+# --- discovery: what a statement does to the links already there --------------------------------
+
+HELD = "Ollama consensus review hold: the opposite direction is published as edge #989; a human must decide which direction is correct."
+
+
+def add_node(session, name, ticker, cap=1e10):
+    node = Node(name=name, ticker=ticker, market_cap=cap, sector="Technology")
+    session.add(node)
+    session.commit()
+    return node
+
+
+def test_a_filing_statement_replaces_the_weaker_links_waiting_for_the_pair(monkeypatch):
+    """NVIDIA showed one supplier because queued Wikipedia and AI-research links for TSMC, Micron
+    and SK hynix counted as "already there" while waiting for a person."""
+    session, nodes = make_session()
+    monkeypatch.setattr(auto_discover_edges, "latest_annual_filing", lambda ticker: (FILING, NVDA_TEXT))
+
+    def waiting(source, label, url, title, note, excerpt):
+        row = Edge(source_id=nodes[source].id, target_id=nodes["NVDA"].id, dependency_type=label, source_url=url, source_title=title,
+                   review_status="pending", review_note=note, evidence_excerpt=excerpt, confidence_score=0.8)
+        session.add(row)
+        return row
+
+    same_label = waiting("TSM", "Foundry Services", "AI Multi-Source Research", "AI Multi-Source Research", HELD,
+                         "Most fabless semiconductor companies such as Nvidia are customers of TSMC.")
+    seed = waiting("TSM", "Advanced Silicon Fabrication", "Manual System Jumpstart", "Manual System Jumpstart",
+                   "Ollama consensus review hold: published without an evidence excerpt; a human must confirm the source.", "")
+    wiki = waiting("HXSCL", "Advanced Silicon Fabrication", "https://en.wikipedia.org/wiki/SK_Hynix", "WIKIPEDIA (Page: SK Hynix)",
+                   "Ollama consensus review left pending: Evidence excerpt does not name both companies.", "The company also supplies the HBM3E to Nvidia.")
+    published = Edge(source_id=nodes["MU"].id, target_id=nodes["NVDA"].id, dependency_type="HBM", review_status="approved",
+                     review_note="Ollama consensus review: ok", source_url="AI Multi-Source Research", evidence_excerpt="Micron supplies HBM to Nvidia.")
+    session.add_all([published])
+    session.commit()
+    known = auto_discover_edges.known_company_names(session)
+
+    created = auto_discover_edges.discover_customer_concentration(session, nodes["NVDA"], known, NameIndex(known))
+    session.commit()
+
+    # TSMC: the same label, so the filing's sentence replaces the AI-research excerpt in place and the panel reviews it again.
+    assert same_label.source_title.endswith("supplier-dependence disclosure)") and "We utilize foundries" in same_label.evidence_excerpt
+    assert same_label.review_status == "pending" and same_label.review_note is None
+    assert filer_documented_direction(same_label)
+    # A curated seed waiting for a person is neither replaced nor rejected.
+    assert seed.review_status == "pending" and seed.source_title == "Manual System Jumpstart"
+    # SK hynix: a new link, and the weaker Wikipedia link it replaces is retired with a pointer.
+    new = session.query(Edge).filter(Edge.source_id == nodes["HXSCL"].id, Edge.dependency_type == "Supply Relationship").one()
+    assert new.review_status == "pending" and filer_documented_direction(new)
+    assert wiki.review_status == "rejected" and wiki.review_note.startswith(auto_discover_edges.SUPERSEDED_NOTE) and f"#{new.id}" in wiki.review_note
+    # Micron is already published (under another label): nothing is added.
+    assert session.query(Edge).filter(Edge.source_id == nodes["MU"].id).count() == 1
+    assert created == 1  # only SK hynix is a new edge; TSMC's was upgraded in place
+
+
+def test_a_link_published_through_the_other_listing_is_already_known(monkeypatch):
+    session, nodes = make_session()
+    goog = add_node(session, "Alphabet Inc. Class C Capital Stock", "GOOG", 2.4e12)
+    session.add(Edge(source_id=goog.id, target_id=nodes["SNOW"].id, dependency_type="Cloud Infrastructure Provider",
+                     review_status="approved", review_note="Ollama consensus review: ok", source_url="AI Multi-Source Research",
+                     evidence_excerpt="Alphabet provides cloud services to Snowflake."))
+    session.commit()
+    text = ("In addition, our platform currently operates on public cloud infrastructure provided by Amazon Web Services (AWS), "
+            "Microsoft Azure (Azure), and Google Cloud Platform (GCP).")
+    monkeypatch.setattr(auto_discover_edges, "latest_annual_filing", lambda ticker: ({**FILING, "form": "10-K"}, text))
+    known = auto_discover_edges.known_company_names(session)
+
+    auto_discover_edges.discover_customer_concentration(session, nodes["SNOW"], known, NameIndex(known))
+    session.commit()
+
+    suppliers = sorted(edge.source_node.ticker for edge in session.query(Edge).filter(Edge.target_id == nodes["SNOW"].id))
+    assert suppliers == ["AMZN", "GOOG", "MSFT"], suppliers  # Alphabet once, not GOOG and GOOGL
+
+
+def test_discovery_ignores_warrants_and_a_companys_own_other_listing(monkeypatch):
+    session, nodes = make_session()
+    iqv = add_node(session, "IQVIA Holdings Inc.", "IQV", 3e10)
+    cing = add_node(session, "Cingulate Inc. Common Stock", "CING", 5e7)
+    cingw = add_node(session, "Cingulate Inc. Warrants", "CINGW", 1e6)
+    lifemd = add_node(session, "LifeMD, Inc.", "LFMD", 3e8)
+    lifemdp = add_node(session, "LifeMD, Inc. 8.875% Series A Cumulative Perpetual Preferred Stock", "LFMDP", 3e7)
+    reads = []
+
+    def filing(ticker):
+        reads.append(ticker)
+        text = {"CING": "The parties will negotiate in good faith any changes to the services provided by IQVIA due to changes in priorities established by us.",
+                "LFMDP": "We depend on LifeMD to deliver healthcare consultations through our platform."}.get(ticker, "")
+        return ({**FILING, "form": "10-K"}, text)
+
+    monkeypatch.setattr(auto_discover_edges, "latest_annual_filing", filing)
+    known = auto_discover_edges.known_company_names(session)
+    index = NameIndex(known, auto_discover_edges.known_company_caps(session))
+
+    assert auto_discover_edges.discover_customer_concentration(session, cingw, known, index) == 0
+    assert cingw.concentration_checked_at is not None and reads == [], "a warrant has no annual report: stamped, never fetched"
+    assert auto_discover_edges.discover_customer_concentration(session, cing, known, index) == 1
+    assert auto_discover_edges.discover_customer_concentration(session, lifemdp, known, index) == 0  # LifeMD is its own preferred shares' company
+    session.commit()
+    assert [(e.source_node.ticker, e.target_node.ticker) for e in session.query(Edge).all()] == [("IQV", "CING")]
+
+    # The sweep does not pick warrant or preferred lines up at all.
+    for node in (cing, cingw, lifemd, lifemdp):
+        node.concentration_checked_at = None
+    session.commit()
+    reads.clear()
+    auto_discover_edges.sweep_customer_concentration(session, known, limit=100, max_seconds=60, supplier_index=index)
+    assert "CINGW" not in reads and "LFMDP" not in reads and "CING" in reads and "LFMD" in reads, reads

@@ -15,9 +15,17 @@ from audit_data_quality import (  # noqa: F401  (HELD_NOTE_PREFIX is re-exported
     is_published,
     model_verdict,
     needs_human_confirmation,
+    non_company_reason,
+    share_class_duplicates,
     speculative_evidence,
 )
-from customer_concentration import describe_share, disclosure_sentence, extract_disclosures, implausible_share
+from customer_concentration import (
+    SUPPLIER_TITLE_MARKER,
+    describe_share,
+    disclosure_sentence,
+    extract_disclosures,
+    implausible_share,
+)
 from sqlalchemy import or_
 
 from database import SessionLocal
@@ -250,12 +258,89 @@ def reject_held_junk(session, counts):
             counts["rejected_held_junk"] = counts.get("rejected_held_junk", 0) + 1
 
 
+SUPPLIER_REJECTION_NOTE = "Automated cleanup: the filing sentence does not support this supplier link"
+NON_COMPANY_NOTE = "Automated cleanup: a warrant, preferred or rights line, or a second listing of the same company, is not a company to link"
+DUPLICATE_LISTING_NOTE = "Automated cleanup: repeats a link through another listing of the same company"
+
+
+def supplier_statement_edges(session, status_filter):
+    return session.query(Edge).filter(Edge.source_title.like(f"%{SUPPLIER_TITLE_MARKER}%"), status_filter).all()
+
+
+def recheck_supplier_statements(session, counts):
+    """Read every stored supplier statement again with the current rules.
+
+    The reader gets stricter (a drug partner, a sales channel, "DoW" read as Dow were all
+    published); links made under older rules fall out here without anyone clicking through
+    them. A person's verdict stands, and a link a later rule fix supports again is reopened
+    for a person, never put straight back on the site.
+    """
+    live = supplier_statement_edges(session, Edge.review_status != "rejected")
+    rejected = supplier_statement_edges(session, Edge.review_status == "rejected")
+    rejected = [edge for edge in rejected if str(edge.review_note or "").startswith(SUPPLIER_REJECTION_NOTE)]
+    if not (live or rejected):
+        return
+    from auto_discover_edges import clean_company_name, known_company_caps, known_company_names  # heavy module; import lazily
+    from supplier_dependence import NameIndex, supplier_statement_problem
+
+    index = NameIndex(known_company_names(session), known_company_caps(session))
+    for edge in live:
+        if not needs_human_confirmation(edge) and edge.review_status != "pending":
+            continue  # a person approved it
+        if str(edge.review_note or "").startswith("Human review"):
+            continue
+        reason = supplier_statement_problem(edge, index, clean_company_name)
+        if reason:
+            edge.review_status = "rejected"
+            edge.review_note = f"{SUPPLIER_REJECTION_NOTE} ({reason})."[:1000]
+            edge.reviewed_at = datetime.now(timezone.utc)
+            counts["rejected_supplier_statement"] = counts.get("rejected_supplier_statement", 0) + 1
+    for edge in rejected:
+        if non_company_reason(edge):
+            continue  # rejected for that reason too, and that does not clear
+        if supplier_statement_problem(edge, index, clean_company_name) is None:
+            hold_for_human(edge, counts, "reopened_supplier_statement",
+                           "reopened after a supplier-statement rule fix: the current rules support it")
+
+
+def reject_non_company_edges(session, counts):
+    """A warrant, a preferred line or a right is not a company, and a company is not its own supplier."""
+    for edge in session.query(Edge).filter(Edge.review_status != "rejected").all():
+        if not (needs_human_confirmation(edge) or edge.review_status == "pending"):
+            continue
+        if str(edge.review_note or "").startswith("Human review") or "Manual" in (edge.source_url or ""):
+            continue
+        reason = non_company_reason(edge)
+        if reason:
+            edge.review_status = "rejected"
+            edge.review_note = f"{NON_COMPANY_NOTE} ({reason})."[:1000]
+            edge.reviewed_at = datetime.now(timezone.utc)
+            counts["rejected_non_company"] = counts.get("rejected_non_company", 0) + 1
+
+
+def resolve_share_class_duplicates(session, counts):
+    """One link published through two listings of a company (GOOG and GOOGL) keeps one."""
+    published = [edge for edge in session.query(Edge).all() if is_published(edge)]
+    for edge, kept in share_class_duplicates(published):
+        edge.review_status = "rejected"
+        edge.review_note = f"{DUPLICATE_LISTING_NOTE} (edge #{kept.id})."
+        edge.reviewed_at = datetime.now(timezone.utc)
+        counts["rejected_duplicate_listing"] = counts.get("rejected_duplicate_listing", 0) + 1
+
+
 def cleanup_reviewed_edges():
     session = SessionLocal()
     counts = {"rejected_non_supply": 0, "rejected_unsupported_ai": 0, "pending_role_labels": 0}
     try:
         register_company_names(session.query(Node.ticker, Node.name).filter(Node.ticker.is_not(None)).all())
         reopen_cleared_rejections(session, counts)
+        session.flush()
+        # Whose links are they? Companies first, then their statements, then repeats.
+        reject_non_company_edges(session, counts)
+        session.flush()
+        recheck_supplier_statements(session, counts)
+        session.flush()
+        resolve_share_class_duplicates(session, counts)
         session.flush()
         # Direction first: the reciprocal check must see the corrected foundry edges.
         correct_foundry_direction(session, counts)
