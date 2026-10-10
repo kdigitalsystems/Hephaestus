@@ -147,7 +147,10 @@ function mockElement(tag = "div", id = "") {
 }
 
 const documentHandlers = {};
+const windowHandlers = {};
+const dispatchedEvents = [];
 const selectorNodes = {};
+const storageValues = new Map();
 
 function dispatchKeydown(init) {
   const event = Object.assign({ shiftKey: false, ctrlKey: false, metaKey: false, altKey: false, defaultPrevented: false }, init);
@@ -172,6 +175,11 @@ const context = {
   URLSearchParams,
   setTimeout,
   clearTimeout,
+  CustomEvent: class { constructor(type) { this.type = type; } },
+  localStorage: {
+    getItem: (key) => (storageValues.has(key) ? storageValues.get(key) : null),
+    setItem: (key, value) => { storageValues.set(key, String(value)); },
+  },
   fetch: () => new Promise(() => {}),
   document: {
     createElement: (tag) => mockElement(tag),
@@ -190,7 +198,8 @@ const context = {
   },
   window: {
     location: { hash: "" },
-    addEventListener() {},
+    addEventListener(type, handler) { (windowHandlers[type] = windowHandlers[type] || []).push(handler); },
+    dispatchEvent(event) { dispatchedEvents.push(event.type); return true; },
     clearTimeout,
     setTimeout,
     scrollTo() {},
@@ -903,4 +912,116 @@ check(htmlSource.indexOf('class="skip-link"') < htmlSource.indexOf('<header clas
 check(/id="detail-summary"[^>]*tabindex="0"/.test(htmlSource), "the scrollable profile must be reachable by keyboard");
 vm.runInContext("globalThis.__skipPrevented = false; skipToContent({ preventDefault() { globalThis.__skipPrevented = true; } });", context);
 check(context.__skipPrevented && context.document.activeElement.id === "main-content", "the skip link moves focus without touching the hash (the hash is the router)");
+
+// --- Modified clicks on a company name belong to the browser ----------------------------
+vm.runInContext("globalThis.__row = renderCompanyTableRow(allCompanies[0]); currentRoute = { view: 'companies' };", context);
+const nameLink = context.__row.children[0].children[0].children[0];
+["ctrlKey", "metaKey", "shiftKey", "altKey"].forEach((modifier) => {
+  let stopped = false;
+  let prevented = false;
+  const pushedBefore = context.history.pushed.length;
+  const event = { [modifier]: true, stopPropagation() { stopped = true; }, preventDefault() { prevented = true; } };
+  nameLink.onclick(event);
+  if (!stopped) context.__row.onclick(event); // what bubbling would do
+  check(stopped && !prevented, `${modifier}-click must reach the browser untouched (stopped=${stopped}, prevented=${prevented})`);
+  check(context.history.pushed.length === pushedBefore && vm.runInContext("currentRoute.view", context) === "companies", `${modifier}-click must not navigate this tab`);
+});
+{
+  let stopped = false;
+  const event = { stopPropagation() { stopped = true; }, preventDefault() {} };
+  nameLink.onclick(event);
+  if (!stopped) context.__row.onclick(event);
+  check(vm.runInContext("currentRoute.view + ':' + currentRoute.ticker", context) === "company:AMD", "a plain click opens the company");
+}
+
+// --- Sector routes only know sectors ----------------------------------------------------
+const noticeHost = mockElement("main");
+noticeHost.appendChild(element("view-hero"));
+const notices = () => noticeHost.children.filter((child) => child.className === "route-notice");
+["constructor", "__proto__", "toString", "hasOwnProperty", "Nonexistent", "Linked Companies", ""].forEach((name) => {
+  const before = notices().length;
+  vm.runInContext(`applyRoute({ view: "sector", sector: ${JSON.stringify(name)} });`, context);
+  check(vm.runInContext("currentRoute.view", context) === "overview", `#sector?sector=${name} falls back to the overview`);
+  check(notices().length === before + 1 && collectText(notices()[notices().length - 1]).includes(`No sector in the dataset is named "${name}"`), `#sector?sector=${name} says why`);
+});
+vm.runInContext('renderSectorView("constructor"); renderSectorView("__proto__");', context); // must not throw
+const noticesBefore = notices().length;
+vm.runInContext('applyRoute({ view: "sector", sector: "Technology" });', context);
+check(vm.runInContext("currentRoute.view", context) === "sector" && element("sector-title").textContent === "Technology" && notices().length === noticesBefore, "a real sector still renders");
+check(element("sector-heading").textContent === "Technology sector", "the sector view's h1 names the sector");
+
+vm.runInContext(`
+  allCompanies.push({ ticker: "NVS", name: "Novartis", sector: "Linked Companies", upstream: [{ ticker: "TSM", name: "TSMC", type: "Foundry" }], downstream: [], connection_count: 1 });
+  document.getElementById("exposure-input").value = "TSM";
+  renderExposureView(false);
+`, context);
+const exposureChips = collectText(element("exposure-sectors"));
+check(exposureChips.includes("Technology") && !exposureChips.includes("Linked Companies"), `exposure must not offer the synthetic bucket as a sector: ${exposureChips}`);
+check(collectText(element("exposure-results")).includes("NVS"), "the company itself is still listed as exposed");
+vm.runInContext("allCompanies = allCompanies.filter(company => company.ticker !== 'NVS');", context);
+
+// --- Back and filters keep their place ---------------------------------------------------
+vm.runInContext("currentRoute = { view: 'predictions' }; navigateCompany('AMD'); globalThis.__predictionsLabel = document.getElementById('detail-back-button').textContent; navigateBackToCompanies(); globalThis.__afterPredictionsBack = currentRoute.view;", context);
+check(context.__predictionsLabel === "Back to predictions" && context.__afterPredictionsBack === "predictions", `Open brief from Predictions: "${context.__predictionsLabel}" returns to ${context.__afterPredictionsBack}`);
+
+vm.runInContext(`
+  currentRoute = { view: 'companies', query: 'amd' };
+  navigateCompany('AMD');
+  navigateCompany('IBM');
+  globalThis.__chainPrevious = currentRoute.previous;
+  globalThis.__chainLabel = document.getElementById('detail-back-button').textContent;
+  navigateBackToCompanies();
+  globalThis.__chainBack = currentRoute;
+`, context);
+check(context.__chainPrevious.view === "companies" && context.__chainPrevious.query === "amd", `a related company keeps the list the visitor came from: ${JSON.stringify(context.__chainPrevious)}`);
+check(context.__chainBack.view === "companies" && context.__chainBack.query === "amd" && context.__chainLabel === "Back to screener", `Back to screener restores the query: ${JSON.stringify(context.__chainBack)}`);
+
+{
+  const pushedBefore = context.history.pushed.length;
+  const replacedBefore = context.history.replaced.length;
+  vm.runInContext("currentRoute = { view: 'overview' }; window.location.hash = '#overview'; clearFilters();", context);
+  check(context.history.pushed.length === pushedBefore + 1 && context.history.pushed[pushedBefore] === "#companies" && context.history.replaced.length === replacedBefore,
+    "Reset filters on the overview opens the screener as a new history entry, so Back returns to the overview");
+  vm.runInContext("currentRoute = { view: 'companies', query: 'x' }; window.location.hash = '#companies?query=x'; clearFilters();", context);
+  check(context.history.pushed.length === pushedBefore + 1 && context.history.replaced.length === replacedBefore + 1,
+    "Reset filters inside the screener replaces the filtered entry");
+}
+
+vm.runInContext("window.location.hash = '#companies?query=zz'; applyRouteFromHash(false); globalThis.__zzRoute = currentRoute;", context);
+check(context.__zzRoute.view === "companies" && context.__zzRoute.query === "zz", `#companies?query=zz stays the screener: ${JSON.stringify(context.__zzRoute)}`);
+check(element("result-count").textContent === "0 results" && !element("view-companies").classList.contains("hidden") && element("view-industries").classList.contains("hidden"),
+  "#companies?query=zz shows the screener's empty result, not the overview");
+
+// --- The evidence dialog does not outlive its view ---------------------------------------
+const dialogOpener = mockElement("button", "dialog-opener");
+context.document.activeElement = dialogOpener;
+vm.runInContext('openEvidenceModal({ ticker: "TSM", name: "TSMC", type: "Foundry" }, { ticker: "AMD" }, "upstream");', context);
+check(!element("evidence-modal").classList.contains("hidden"), "the dialog opens");
+vm.runInContext('applyRoute({ view: "predictions" });', context);
+check(element("evidence-modal").classList.contains("hidden"), "Back / a route change closes the evidence dialog");
+check(context.document.activeElement.id === "main-content", `focus goes to the main area, not a hidden opener: ${context.document.activeElement && context.document.activeElement.id}`);
+[["detached", (node) => { node.isConnected = false; }], ["in a hidden view", (node) => { node.getClientRects = () => []; }]].forEach(([name, hide]) => {
+  const gone = mockElement("button", "gone-opener");
+  hide(gone);
+  context.document.activeElement = gone;
+  vm.runInContext('openEvidenceModal({ ticker: "TSM", name: "TSMC", type: "Foundry" }, { ticker: "AMD" }, "upstream");', context);
+  context.document.activeElement = element("evidence-dialog");
+  dispatchKeydown({ key: "Escape" });
+  check(context.document.activeElement.id === "main-content", `Escape with an opener that is ${name} must not lose focus`);
+});
+
+// --- Two tabs share one watchlist ---------------------------------------------------------
+storageValues.set("hephaestus_watchlist", '["AAPL"]'); // tab one tracked AAPL after this tab loaded
+vm.runInContext("watchlist = new Set(); currentRoute = { view: 'company', ticker: 'MSFT' }; toggleCurrentWatchlist();", context);
+check(storageValues.get("hephaestus_watchlist") === '["AAPL","MSFT"]', `tracking in a second tab keeps the first tab's company: ${storageValues.get("hephaestus_watchlist")}`);
+vm.runInContext("toggleCurrentWatchlist();", context);
+check(storageValues.get("hephaestus_watchlist") === '["AAPL"]', `untracking removes only that company: ${storageValues.get("hephaestus_watchlist")}`);
+storageValues.set("hephaestus_watchlist", '["NVDA","AMD"]');
+vm.runInContext("currentRoute = { view: 'watchlist' };", context);
+windowHandlers.storage.forEach((handler) => handler({ key: "hephaestus_watchlist" }));
+check(vm.runInContext("[...watchlist].sort().join()", context) === "AMD,NVDA" && element("watchlist-count").textContent.startsWith("1 saved"), "another tab's change shows up here");
+storageValues.set("hephaestus_watchlist", '["ZZZ"]');
+windowHandlers.storage.forEach((handler) => handler({ key: "something_else" }));
+check(vm.runInContext("[...watchlist].sort().join()", context) === "AMD,NVDA", "other storage keys are ignored");
+vm.runInContext("watchlist = new Set();", context);
 

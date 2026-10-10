@@ -75,6 +75,10 @@ const changeClassName = (company) => {
 // Synthetic buckets created by the repair step for approved counterparties that lack
 // market data. They are browsable, but they are not sectors for aggregate statistics.
 const SYNTHETIC_SECTORS = new Set(['Linked Companies']);
+// globalData is a plain object, so a route like #sector?sector=constructor would find
+// Object.prototype members; only the dashboard's own sector lists count.
+const realSector = (sector) => Object.prototype.hasOwnProperty.call(globalData, sector)
+    && Array.isArray(globalData[sector]) && !SYNTHETIC_SECTORS.has(sector);
 // Without a relationship_key the identity must be the same from both endpoints, so
 // the pair of tickers is sorted before it is combined with the type.
 const relationshipIdentity = (company, link) => {
@@ -215,6 +219,19 @@ function loadWatchlist() {
 function saveWatchlist() {
     writeStoredValue('hephaestus_watchlist', JSON.stringify([...watchlist].sort()));
 }
+
+// Tabs share one watchlist; saving this tab's copy as it was loaded would erase a company
+// another tab tracked in the meantime. Other tabs' changes are shown as they happen.
+window.addEventListener('storage', event => {
+    if (event.key !== 'hephaestus_watchlist' && event.key !== null) return;
+    loadWatchlist();
+    if (currentRoute.view === 'watchlist') {
+        renderWatchlistView();
+    } else if (currentRoute.view === 'company') {
+        const company = getCompanyByTicker(currentRoute.ticker);
+        if (company) renderDecisionBrief(company);
+    }
+});
 
 function applyTheme(theme) {
     currentTheme = theme === 'light' ? 'light' : 'dark';
@@ -475,7 +492,8 @@ function navigateCompanies(route = {}, push = true) {
 
 function navigateCompany(ticker) {
     if (!ticker) return;
-    setRoute({ view: 'company', ticker, previous: currentRoute });
+    // From one company to a related one, "Back" still means the list the visitor came from.
+    setRoute({ view: 'company', ticker, previous: currentRoute.view === 'company' ? currentRoute.previous : currentRoute });
 }
 
 function navigateExposure(ticker = '') {
@@ -554,6 +572,8 @@ function applyRoute(route) {
     // A search typed moments ago must not fire after the user has navigated away:
     // the callback would re-render the screener over whatever view this route opens.
     window.clearTimeout(searchInputTimer);
+    // The dialog describes a link on the view being left; Back must not leave it open over the next one.
+    if (isEvidenceModalOpen()) closeEvidenceModal(false);
     lastRoutedHash = window.location.hash;
     currentRoute = route;
     updateActiveNav(route);
@@ -613,7 +633,17 @@ function applyRoute(route) {
     }
 
     if (route.view === 'sector') {
-        renderSectorView(route.sector || '');
+        if (realSector(route.sector)) {
+            renderSectorView(route.sector);
+            return;
+        }
+        if (allCompanies.length) {
+            // Same as an unknown ticker: say so instead of rendering an empty sector page.
+            setRoute({ view: 'overview' }, false);
+            showRouteNotice(`No sector in the dataset is named "${String(route.sector || '').slice(0, 60)}". Showing the overview instead.`);
+            return;
+        }
+        renderLevel1();
         return;
     }
 
@@ -891,7 +921,9 @@ function clearFilters() {
     document.getElementById('sector-filter').value = '';
     document.getElementById('dependency-filter').value = '';
     document.getElementById('connected-filter').checked = false;
-    navigateCompanies({}, false);
+    // From the overview this opens the screener, so it is a new history entry; replacing the
+    // overview's would make Back leave the site.
+    navigateCompanies({}, currentRoute.view !== 'companies');
 }
 
 function clearSearchInput() {
@@ -943,11 +975,13 @@ function applyFilters(updateRoute = true, committedSearch = false, openExactTick
         return;
     }
 
-    if (query && query.length < LIVE_SEARCH_MIN_CHARS && !exactTicker && !tickerPrefixSearch && !hasStructuredFilter) {
+    // "Keep typing" only applies to a search being typed. A short query in a link
+    // (#companies?query=zz) is a request for those results, not a prompt; showing the
+    // overview under a Screener URL and tab was neither.
+    if (updateRoute && query && query.length < LIVE_SEARCH_MIN_CHARS && !exactTicker && !tickerPrefixSearch && !hasStructuredFilter) {
         currentCompaniesList = [];
         if (currentRoute.view !== 'overview') {
-            if (updateRoute) updateRouteHash({ view: 'overview' }, false);
-            else currentRoute = { view: 'overview' };
+            updateRouteHash({ view: 'overview' }, false);
             renderLevel1();
         }
         updateSearchHelper();
@@ -1054,9 +1088,11 @@ function renderCompanyTableRow(company) {
     nameLink.href = routeToHash({ view: 'company', ticker: company.ticker });
     nameLink.appendChild(makeElement('strong', '', displayCompanyName(company.name)));
     nameLink.onclick = (event) => {
+        // The row navigates on any click that reaches it; a modified click belongs to the
+        // browser (new tab or window), so it must not bubble up and navigate this tab too.
+        if (event.stopPropagation) event.stopPropagation();
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button) return;
         if (event.preventDefault) event.preventDefault();
-        if (event.stopPropagation) event.stopPropagation();
         navigateCompany(company.ticker);
     };
     nameWrap.appendChild(nameLink);
@@ -1143,6 +1179,7 @@ function updateDetailBackLabel(previousRoute) {
         sector: 'Back to sector',
         compare: 'Back to compare',
         watchlist: 'Back to watchlist',
+        predictions: 'Back to predictions',
         exposure: 'Back to exposure',
     };
     button.textContent = labels[previousRoute?.view] || 'Back to screener';
@@ -1264,6 +1301,7 @@ function renderDecisionBrief(company) {
 function toggleCurrentWatchlist() {
     const ticker = currentRoute.ticker;
     if (!ticker) return;
+    loadWatchlist();
     if (watchlist.has(ticker)) watchlist.delete(ticker);
     else watchlist.add(ticker);
     saveWatchlist();
@@ -1567,12 +1605,19 @@ function handleModalKeydown(event) {
     }
 }
 
-function closeEvidenceModal() {
+// A node that is detached or inside a hidden view cannot take focus; focus would fall to <body>.
+const isRendered = (node) => Boolean(node) && node.isConnected !== false
+    && (typeof node.getClientRects !== 'function' || node.getClientRects().length > 0);
+
+function closeEvidenceModal(returnToOpener = true) {
     const modal = document.getElementById('evidence-modal');
     if (!modal) return;
     modal.classList.add('hidden');
-    const target = modalReturnFocus;
+    const opener = modalReturnFocus;
     modalReturnFocus = null;
+    // The opener may be gone: the profile finishing its load redraws the relationship
+    // cards, and a route change hides the whole view. The page's main area is the fallback.
+    const target = returnToOpener && isRendered(opener) ? opener : document.getElementById('main-content');
     if (target && typeof target.focus === 'function') target.focus();
 }
 
@@ -1727,6 +1772,8 @@ function renderExposureView(updateRoute = true) {
     const sectorCounts = new Map();
     downstream.forEach(entry => {
         const sector = entry.company && entry.company.sector ? entry.company.sector : 'Unknown';
+        // A chip opens the sector page, so only sectors that have one get a chip.
+        if (!realSector(sector)) return;
         sectorCounts.set(sector, (sectorCounts.get(sector) || 0) + 1);
     });
     if (sectorCounts.size) {
@@ -1979,7 +2026,7 @@ function renderSectorView(sector) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     hideAllViews();
     document.getElementById('view-sector').classList.remove('hidden');
-    const companies = (globalData[sector] || []).map(company => ({ ...company, sector, connection_count: relationshipCount(company) }));
+    const companies = (realSector(sector) ? globalData[sector] : []).map(company => ({ ...company, sector, connection_count: relationshipCount(company) }));
     const linked = companies.filter(company => relationshipCount(company) > 0);
     setText('sector-title', sector || 'Unknown sector');
     setText('sector-heading', `${sector || 'Unknown'} sector`);
