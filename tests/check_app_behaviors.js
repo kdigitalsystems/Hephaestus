@@ -147,7 +147,10 @@ function mockElement(tag = "div", id = "") {
 }
 
 const documentHandlers = {};
+const windowHandlers = {};
+const dispatchedEvents = [];
 const selectorNodes = {};
+const storageValues = new Map();
 
 function dispatchKeydown(init) {
   const event = Object.assign({ shiftKey: false, ctrlKey: false, metaKey: false, altKey: false, defaultPrevented: false }, init);
@@ -172,6 +175,11 @@ const context = {
   URLSearchParams,
   setTimeout,
   clearTimeout,
+  CustomEvent: class { constructor(type) { this.type = type; } },
+  localStorage: {
+    getItem: (key) => (storageValues.has(key) ? storageValues.get(key) : null),
+    setItem: (key, value) => { storageValues.set(key, String(value)); },
+  },
   fetch: () => new Promise(() => {}),
   document: {
     createElement: (tag) => mockElement(tag),
@@ -190,7 +198,8 @@ const context = {
   },
   window: {
     location: { hash: "" },
-    addEventListener() {},
+    addEventListener(type, handler) { (windowHandlers[type] = windowHandlers[type] || []).push(handler); },
+    dispatchEvent(event) { dispatchedEvents.push(event.type); return true; },
     clearTimeout,
     setTimeout,
     scrollTo() {},
@@ -802,3 +811,229 @@ const independentText = collectText(element("prediction-track-record"));
     throw new Error(`track record must explain overlap and abstentions; missing ${expected}; got ${independentText}`);
   }
 });
+
+function check(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+// --- The strip under the banner agrees with the banner ---------------------------------
+// It used calibration.hit_rate / resolved_predictions (554 overlapping daily signals, 53%)
+// directly under a banner counting 165 independent signals at 54%.
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 554, hit_rate: 0.527 }, track_record: {
+    status: "experimental", minimum_resolved: 30, minimum_periods: 3, independent_periods: 2, resolved: 165, resolved_with_overlap: 554,
+    hits: 89, hit_rate: 0.539, always_up_hit_rate: 0.539, matured_unresolved: 0,
+    by_direction: { up: { resolved: 165, hit_rate: 0.539 } }, latest_evaluated_on: "2026-10-05",
+  } };
+  renderPredictionsView();
+`, context);
+const stripText = collectText(element("prediction-calibration"));
+["Experimental: 54% hit rate so far", "165 resolved signals, 2 of 3 independent periods", 'Always saying "up" scores the same: every scored call so far was "up"'].forEach((expected) => {
+  check(stripText.includes(expected), `prediction strip missing ${expected}; got ${stripText}`);
+});
+check(!stripText.includes("554") && !stripText.includes("53%"), `the strip must not show the overlapping calibration numbers: ${stripText}`);
+
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 250, hit_rate: 0.9 }, track_record: {
+    status: "established", minimum_resolved: 30, resolved: 250, hit_rate: 0.476, always_up_hit_rate: 0.584,
+    by_direction: { up: { resolved: 196, hit_rate: 0.5 }, neutral: { resolved: 0, hit_rate: null } },
+  } };
+  renderPredictionsView();
+`, context);
+const establishedStrip = collectText(element("prediction-calibration"));
+check(establishedStrip.includes("48% hit rate") && !establishedStrip.includes("Experimental") && establishedStrip.includes("250 resolved signals"), `established strip wrong: ${establishedStrip}`);
+check(establishedStrip.includes('Always saying "up" scores 58%') && !establishedStrip.includes("every scored call"), `a different baseline is stated as a number: ${establishedStrip}`);
+
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 4, hit_rate: 0.5 }, track_record: { status: "experimental", resolved: 0, hit_rate: null, by_direction: {} } };
+  renderPredictionsView();
+`, context);
+const calibratingStrip = collectText(element("prediction-calibration"));
+check(calibratingStrip.includes("Calibrating") && !calibratingStrip.includes("%") && !calibratingStrip.includes("Always saying"), `no hit rate means Calibrating: ${calibratingStrip}`);
+
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 4, hit_rate: 0.5 } };
+  renderPredictionsView();
+`, context);
+const legacyStrip = collectText(element("prediction-calibration"));
+check(legacyStrip.includes("Experimental: 50% hit rate so far") && legacyStrip.includes("4 resolved signals"), `a payload without track_record falls back to calibration: ${legacyStrip}`);
+vm.runInContext("predictionData = { predictions: [], calibration: {} };", context);
+
+// --- "Concentration" and "Risk" say what they measure ------------------------------------
+check(!htmlSource.includes("<small>Concentration</small>") && !htmlSource.includes("<small>Risk</small>"), "the brief must not label link-balance numbers Concentration and Risk");
+check(htmlSource.includes("<small>Larger-side share</small>") && htmlSource.includes("<small>Data gap</small>"), "the brief names what the two numbers are");
+check(htmlSource.includes("Neither measures how dependent the company is on any one supplier or customer"), "the brief explains the numbers in plain text, not only a tooltip");
+
+vm.runInContext(`
+  renderDecisionBrief({ ticker: "AMD", name: "AMD", upstream: [{ ticker: "TSM" }], downstream: [],
+    investor_metrics: { total_links: 1, upstream_count: 1, downstream_count: 0, concentration_score: 1, risk_score: 46 } });
+`, context);
+check(element("brief-concentration").textContent === "100%" && element("brief-verified").textContent === "46/100", "a company with links shows its numbers");
+vm.runInContext(`renderDecisionBrief({ ticker: "AMAT", name: "Applied Materials", upstream: [], downstream: [] });`, context);
+check(element("brief-concentration").textContent === "N/A" && element("brief-verified").textContent === "N/A", `no links is N/A, not 0%: ${element("brief-concentration").textContent} ${element("brief-verified").textContent}`);
+check(collectText(element("detail-risk-badges")).includes("Discovery candidate"), "an unlinked company is still a discovery candidate");
+
+// The watchlist is a research queue sorted by the data gap, with unscored companies after the scored ones.
+vm.runInContext(`
+  const withMetrics = (company, risk) => Object.assign(company, { investor_metrics: { total_links: 1, upstream_count: 1, downstream_count: 0, concentration_score: 1, risk_score: risk } });
+  withMetrics(allCompanies[0], 31);
+  withMetrics(allCompanies[1], 47);
+  watchlist = new Set(["AMAT", "AMD", "ACME"]);
+  renderWatchlistView();
+`, context);
+const queueCards = element("watchlist-grid").children.map(collectText);
+check(queueCards.map((text) => text.split(" - ")[0]).join() === "ACME,AMD,AMAT", `watchlist order: ${queueCards.join(" | ")}`);
+check(queueCards[0].includes("Data gap 47/100") && queueCards[2].includes("Data gap N/A") && queueCards[2].includes("No tracked links yet"), `watchlist cards: ${queueCards.join(" | ")}`);
+check(element("watchlist-count").textContent.includes("largest data gap first"), "the watchlist says how it is sorted");
+check(!queueCards.join(" ").includes("supplier risk") && !queueCards.join(" ").includes("customer risk"), "the watchlist no longer shows supplier/customer risk");
+
+vm.runInContext(`renderSectorView("Consumer");`, context);
+check(collectText(element("sector-summary")).includes("Avg data gap47"), `sector average: ${collectText(element("sector-summary"))}`);
+vm.runInContext(`globalData.Bare = [allCompanies[2]]; renderSectorView("Bare"); delete globalData.Bare;`, context);
+check(collectText(element("sector-summary")).includes("Avg data gapN/A"), `a sector with no linked companies has no average: ${collectText(element("sector-summary"))}`);
+
+element("compare-a").value = "ACME";
+element("compare-b").value = "AMAT";
+vm.runInContext("renderCompareView(false);", context);
+const compareText = collectText(element("compare-grid"));
+["Larger-side share100%", "Data gap47/100", "Data gapN/A", "Suppliers1", "Customers0"].forEach((expected) => {
+  check(compareText.includes(expected), `compare card missing ${expected}; got ${compareText}`);
+});
+check(!/Risk score|Supplier risk|Customer risk/.test(compareText), "compare no longer calls these numbers risk");
+vm.runInContext("watchlist = new Set();", context);
+
+// --- Keyboard and screen-reader structure --------------------------------------------------
+check(/<a class="skip-link" href="#main-content" onclick="skipToContent\(event\)">/.test(htmlSource) && /<main class="container" id="main-content" tabindex="-1">/.test(htmlSource), "a skip link leads to the main area");
+check(htmlSource.indexOf('class="skip-link"') < htmlSource.indexOf('<header class="topbar">'), "the skip link comes before the navigation");
+["sector", "watchlist", "predictions", "compare", "exposure", "companies", "details"].forEach((view) => {
+  const start = htmlSource.indexOf(`<section id="view-${view}"`);
+  check(start > 0 && /^\s*<h1 class="visually-hidden"/.test(htmlSource.slice(htmlSource.indexOf(">", start) + 1, start + 400)), `view-${view} needs a level-one heading`);
+});
+check(/id="detail-summary"[^>]*tabindex="0"/.test(htmlSource), "the scrollable profile must be reachable by keyboard");
+vm.runInContext("globalThis.__skipPrevented = false; skipToContent({ preventDefault() { globalThis.__skipPrevented = true; } });", context);
+check(context.__skipPrevented && context.document.activeElement.id === "main-content", "the skip link moves focus without touching the hash (the hash is the router)");
+
+// --- Modified clicks on a company name belong to the browser ----------------------------
+vm.runInContext("globalThis.__row = renderCompanyTableRow(allCompanies[0]); currentRoute = { view: 'companies' };", context);
+const nameLink = context.__row.children[0].children[0].children[0];
+["ctrlKey", "metaKey", "shiftKey", "altKey"].forEach((modifier) => {
+  let stopped = false;
+  let prevented = false;
+  const pushedBefore = context.history.pushed.length;
+  const event = { [modifier]: true, stopPropagation() { stopped = true; }, preventDefault() { prevented = true; } };
+  nameLink.onclick(event);
+  if (!stopped) context.__row.onclick(event); // what bubbling would do
+  check(stopped && !prevented, `${modifier}-click must reach the browser untouched (stopped=${stopped}, prevented=${prevented})`);
+  check(context.history.pushed.length === pushedBefore && vm.runInContext("currentRoute.view", context) === "companies", `${modifier}-click must not navigate this tab`);
+});
+{
+  let stopped = false;
+  const event = { stopPropagation() { stopped = true; }, preventDefault() {} };
+  nameLink.onclick(event);
+  if (!stopped) context.__row.onclick(event);
+  check(vm.runInContext("currentRoute.view + ':' + currentRoute.ticker", context) === "company:AMD", "a plain click opens the company");
+}
+
+// --- Sector routes only know sectors ----------------------------------------------------
+const noticeHost = mockElement("main");
+noticeHost.appendChild(element("view-hero"));
+const notices = () => noticeHost.children.filter((child) => child.className === "route-notice");
+["constructor", "__proto__", "toString", "hasOwnProperty", "Nonexistent", "Linked Companies", ""].forEach((name) => {
+  const before = notices().length;
+  vm.runInContext(`applyRoute({ view: "sector", sector: ${JSON.stringify(name)} });`, context);
+  check(vm.runInContext("currentRoute.view", context) === "overview", `#sector?sector=${name} falls back to the overview`);
+  check(notices().length === before + 1 && collectText(notices()[notices().length - 1]).includes(`No sector in the dataset is named "${name}"`), `#sector?sector=${name} says why`);
+});
+vm.runInContext('renderSectorView("constructor"); renderSectorView("__proto__");', context); // must not throw
+const noticesBefore = notices().length;
+vm.runInContext('applyRoute({ view: "sector", sector: "Technology" });', context);
+check(vm.runInContext("currentRoute.view", context) === "sector" && element("sector-title").textContent === "Technology" && notices().length === noticesBefore, "a real sector still renders");
+check(element("sector-heading").textContent === "Technology sector", "the sector view's h1 names the sector");
+
+vm.runInContext(`
+  allCompanies.push({ ticker: "NVS", name: "Novartis", sector: "Linked Companies", upstream: [{ ticker: "TSM", name: "TSMC", type: "Foundry" }], downstream: [], connection_count: 1 });
+  document.getElementById("exposure-input").value = "TSM";
+  renderExposureView(false);
+`, context);
+const exposureChips = collectText(element("exposure-sectors"));
+check(exposureChips.includes("Technology") && !exposureChips.includes("Linked Companies"), `exposure must not offer the synthetic bucket as a sector: ${exposureChips}`);
+check(collectText(element("exposure-results")).includes("NVS"), "the company itself is still listed as exposed");
+vm.runInContext("allCompanies = allCompanies.filter(company => company.ticker !== 'NVS');", context);
+
+// --- Back and filters keep their place ---------------------------------------------------
+vm.runInContext("currentRoute = { view: 'predictions' }; navigateCompany('AMD'); globalThis.__predictionsLabel = document.getElementById('detail-back-button').textContent; navigateBackToCompanies(); globalThis.__afterPredictionsBack = currentRoute.view;", context);
+check(context.__predictionsLabel === "Back to predictions" && context.__afterPredictionsBack === "predictions", `Open brief from Predictions: "${context.__predictionsLabel}" returns to ${context.__afterPredictionsBack}`);
+
+vm.runInContext(`
+  currentRoute = { view: 'companies', query: 'amd' };
+  navigateCompany('AMD');
+  navigateCompany('IBM');
+  globalThis.__chainPrevious = currentRoute.previous;
+  globalThis.__chainLabel = document.getElementById('detail-back-button').textContent;
+  navigateBackToCompanies();
+  globalThis.__chainBack = currentRoute;
+`, context);
+check(context.__chainPrevious.view === "companies" && context.__chainPrevious.query === "amd", `a related company keeps the list the visitor came from: ${JSON.stringify(context.__chainPrevious)}`);
+check(context.__chainBack.view === "companies" && context.__chainBack.query === "amd" && context.__chainLabel === "Back to screener", `Back to screener restores the query: ${JSON.stringify(context.__chainBack)}`);
+
+{
+  const pushedBefore = context.history.pushed.length;
+  const replacedBefore = context.history.replaced.length;
+  vm.runInContext("currentRoute = { view: 'overview' }; window.location.hash = '#overview'; clearFilters();", context);
+  check(context.history.pushed.length === pushedBefore + 1 && context.history.pushed[pushedBefore] === "#companies" && context.history.replaced.length === replacedBefore,
+    "Reset filters on the overview opens the screener as a new history entry, so Back returns to the overview");
+  vm.runInContext("currentRoute = { view: 'companies', query: 'x' }; window.location.hash = '#companies?query=x'; clearFilters();", context);
+  check(context.history.pushed.length === pushedBefore + 1 && context.history.replaced.length === replacedBefore + 1,
+    "Reset filters inside the screener replaces the filtered entry");
+}
+
+vm.runInContext("window.location.hash = '#companies?query=zz'; applyRouteFromHash(false); globalThis.__zzRoute = currentRoute;", context);
+check(context.__zzRoute.view === "companies" && context.__zzRoute.query === "zz", `#companies?query=zz stays the screener: ${JSON.stringify(context.__zzRoute)}`);
+check(element("result-count").textContent === "0 results" && !element("view-companies").classList.contains("hidden") && element("view-industries").classList.contains("hidden"),
+  "#companies?query=zz shows the screener's empty result, not the overview");
+
+// --- The evidence dialog does not outlive its view ---------------------------------------
+const dialogOpener = mockElement("button", "dialog-opener");
+context.document.activeElement = dialogOpener;
+vm.runInContext('openEvidenceModal({ ticker: "TSM", name: "TSMC", type: "Foundry" }, { ticker: "AMD" }, "upstream");', context);
+check(!element("evidence-modal").classList.contains("hidden"), "the dialog opens");
+vm.runInContext('applyRoute({ view: "predictions" });', context);
+check(element("evidence-modal").classList.contains("hidden"), "Back / a route change closes the evidence dialog");
+check(context.document.activeElement.id === "main-content", `focus goes to the main area, not a hidden opener: ${context.document.activeElement && context.document.activeElement.id}`);
+[["detached", (node) => { node.isConnected = false; }], ["in a hidden view", (node) => { node.getClientRects = () => []; }]].forEach(([name, hide]) => {
+  const gone = mockElement("button", "gone-opener");
+  hide(gone);
+  context.document.activeElement = gone;
+  vm.runInContext('openEvidenceModal({ ticker: "TSM", name: "TSMC", type: "Foundry" }, { ticker: "AMD" }, "upstream");', context);
+  context.document.activeElement = element("evidence-dialog");
+  dispatchKeydown({ key: "Escape" });
+  check(context.document.activeElement.id === "main-content", `Escape with an opener that is ${name} must not lose focus`);
+});
+
+// --- Two tabs share one watchlist ---------------------------------------------------------
+storageValues.set("hephaestus_watchlist", '["AAPL"]'); // tab one tracked AAPL after this tab loaded
+vm.runInContext("watchlist = new Set(); currentRoute = { view: 'company', ticker: 'MSFT' }; toggleCurrentWatchlist();", context);
+check(storageValues.get("hephaestus_watchlist") === '["AAPL","MSFT"]', `tracking in a second tab keeps the first tab's company: ${storageValues.get("hephaestus_watchlist")}`);
+vm.runInContext("toggleCurrentWatchlist();", context);
+check(storageValues.get("hephaestus_watchlist") === '["AAPL"]', `untracking removes only that company: ${storageValues.get("hephaestus_watchlist")}`);
+storageValues.set("hephaestus_watchlist", '["NVDA","AMD"]');
+vm.runInContext("currentRoute = { view: 'watchlist' };", context);
+windowHandlers.storage.forEach((handler) => handler({ key: "hephaestus_watchlist" }));
+check(vm.runInContext("[...watchlist].sort().join()", context) === "AMD,NVDA" && element("watchlist-count").textContent.startsWith("1 saved"), "another tab's change shows up here");
+storageValues.set("hephaestus_watchlist", '["ZZZ"]');
+windowHandlers.storage.forEach((handler) => handler({ key: "something_else" }));
+check(vm.runInContext("[...watchlist].sort().join()", context) === "AMD,NVDA", "other storage keys are ignored");
+vm.runInContext("watchlist = new Set();", context);
+
+// --- analytics.js hears about every page the app shows -------------------------------------
+dispatchedEvents.length = 0;
+vm.runInContext("window.location.hash = '#overview'; setRoute({ view: 'watchlist' });", context);
+check(dispatchedEvents.join() === "hephaestus:route", `a navigation announces itself once: ${dispatchedEvents}`);
+dispatchedEvents.length = 0;
+vm.runInContext("updateRouteHash({ view: 'exposure', ticker: 'TS' }, false);", context);
+check(dispatchedEvents.length === 0, "typing in a box rewrites the hash without announcing a page");
+vm.runInContext("window.location.hash = '#overview'; updateRouteHash({ view: 'companies', query: 'nv' }, true);", context);
+check(dispatchedEvents.join() === "hephaestus:route", "a search that opens the screener is a page");
+dispatchedEvents.length = 0;
+vm.runInContext("window.location.hash = '#predictions'; handleLocationChange();", context);
+check(dispatchedEvents.join() === "hephaestus:route", "Back / Forward through the location guard announces once");
