@@ -153,6 +153,30 @@ const isHttpUrl = (value) => /^https?:\/\//i.test(String(value || ''));
 // which link it was about and is dropped if the id now names a different one.
 const edgeSignature = (item) => `${item.source_ticker}->${item.target_ticker}:${item.type}`;
 
+// Saved decisions that no longer describe a waiting link. Only the full queue can say so:
+// the dashboard's fallback copy is shorter (250 of ~480 links), and a link missing from it
+// is not shown, not settled. A truncated full queue is the same case for the links it cut.
+function staleDecisionIds(decisions, byId, queue) {
+    if (queue.fallback) return [];
+    return Object.keys(decisions).filter(edgeId => {
+        const item = byId.get(Number(edgeId));
+        if (!item) return !queue.truncated;
+        return decisions[edgeId].signature !== edgeSignature(item);
+    });
+}
+
+// Tabs share one storage key, so saving this tab's whole copy would erase what another tab
+// saved since this one loaded. Only this tab's changes (against what it last read or wrote)
+// are applied on top of what is stored now.
+const sameValue = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+function mergeChanges(base, mine, theirs) {
+    const merged = { ...theirs };
+    Object.keys(mine).forEach(key => { if (!sameValue(mine[key], base[key])) merged[key] = mine[key]; });
+    Object.keys(base).forEach(key => { if (!(key in mine)) delete merged[key]; });
+    return merged;
+}
+
 // --- State -------------------------------------------------------------------------
 
 const reviewState = {
@@ -176,12 +200,30 @@ function loadStored() {
     }
 }
 
+let savedState = { decisions: {}, sent: {} };
+
+const snapshotOf = (state) => JSON.parse(JSON.stringify({ decisions: state.decisions, sent: state.sent }));
+
 function saveStored() {
     try {
-        localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify({ decisions: reviewState.decisions, sent: reviewState.sent }));
+        const current = loadStored();
+        const decisions = mergeChanges(savedState.decisions, reviewState.decisions, current.decisions);
+        const sent = mergeChanges(savedState.sent, reviewState.sent, current.sent);
+        localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify({ decisions, sent }));
+        reviewState.decisions = decisions;
+        reviewState.sent = sent;
+        savedState = snapshotOf(reviewState);
     } catch (_error) {
         // Private windows can refuse storage; decisions still work for this visit.
     }
+}
+
+// Another tab saved: show its decisions here now, rather than at this tab's next save.
+function adoptStored() {
+    const stored = loadStored();
+    reviewState.decisions = stored.decisions;
+    reviewState.sent = stored.sent;
+    savedState = snapshotOf(reviewState);
 }
 
 function records() {
@@ -325,10 +367,17 @@ function renderCard(item) {
         note.placeholder = 'Optional note for the record';
         note.value = decision.note || '';
         note.setAttribute('aria-label', `Note for #${item.edge_id}`);
-        note.addEventListener('change', () => { decision.note = note.value; saveStored(); renderSubmit(); });
+        // Saving can replace the stored objects with another tab's, so look the decision up again.
+        note.addEventListener('change', () => {
+            const current = reviewState.decisions[item.edge_id];
+            if (!current) return;
+            current.note = note.value;
+            saveStored();
+            renderSubmit();
+        });
         card.appendChild(note);
     }
-    card.addEventListener('focusin', () => { reviewState.focusId = item.edge_id; });
+    card.addEventListener('focusin', () => { reviewState.focusId = Number(item.edge_id); });
     return card;
 }
 
@@ -338,6 +387,8 @@ function renderList() {
     const items = visibleItems();
     items.forEach(item => list.appendChild(renderCard(item)));
     document.getElementById('review-empty').hidden = items.length > 0;
+    // A filter can take the focused card off the page; shortcuts must not keep acting on it.
+    if (!items.some(item => Number(item.edge_id) === reviewState.focusId)) reviewState.focusId = null;
     const suggestible = items.filter(item => item.suggestion && !reviewState.decisions[item.edge_id]);
     const accept = document.getElementById('review-accept-suggestions');
     accept.disabled = suggestible.length === 0;
@@ -361,6 +412,15 @@ function renderStatus() {
     if (queue.truncated) text += ` Showing the first ${queue.items.length} of ${queue.pendingCount}.`;
     if (!queue.withSuggestions) text += ' Suggestions appear after the next pipeline run.';
     document.getElementById('review-status').textContent = text;
+
+    const warning = document.getElementById('review-warning');
+    warning.hidden = !queue.fallback;
+    if (queue.fallback) {
+        const unseen = Object.keys(reviewState.decisions).filter(edgeId => !reviewState.byId.has(Number(edgeId))).length;
+        warning.textContent = `The full review queue could not be loaded (${queue.fallbackReason}), so this is the shorter list from the dashboard: ${queue.items.length} of ${queue.pendingCount} links.`
+            + (unseen ? ` ${unseen} saved decision${unseen === 1 ? '' : 's'} for links not in this list ${unseen === 1 ? 'is' : 'are'} kept, and come back when the full queue loads.` : '')
+            + ' Reload to try again.';
+    }
 }
 
 function render() {
@@ -368,6 +428,12 @@ function render() {
     renderList();
     renderSubmit();
     renderStatus();
+}
+
+function renderKeepingScroll() {
+    const scrollY = window.scrollY;
+    render();
+    window.scrollTo(0, scrollY);
 }
 
 // --- Actions -----------------------------------------------------------------------
@@ -380,9 +446,7 @@ function decide(edgeId, action) {
     }
     delete reviewState.sent[edgeId];
     saveStored();
-    const scrollY = window.scrollY;
-    render();
-    window.scrollTo(0, scrollY);
+    renderKeepingScroll();
     const card = document.getElementById(`edge-${edgeId}`);
     if (card) card.focus({ preventScroll: true });
 }
@@ -490,8 +554,9 @@ function handleKey(event) {
     const key = event.key.toLowerCase();
     if (key === 'j' || key === 'arrowdown') { event.preventDefault(); moveFocus(1); return; }
     if (key === 'k' || key === 'arrowup') { event.preventDefault(); moveFocus(-1); return; }
+    // Only a card that is on the page: a filter may have hidden the one focused last.
     const item = reviewState.byId.get(reviewState.focusId);
-    if (!item) return;
+    if (!item || !document.getElementById(`edge-${item.edge_id}`)) return;
     const action = { a: 'approve', r: 'reverse', x: 'reject' }[key];
     if (action) { event.preventDefault(); decide(item.edge_id, action); return; }
     if (key === 's' && item.suggestion) { event.preventDefault(); decide(item.edge_id, item.suggestion.action); return; }
@@ -503,17 +568,22 @@ function handleKey(event) {
 async function fetchQueue() {
     const readJson = (response) => (response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)));
     try {
-        return normalizeQueue(await fetch('review_queue.json', { cache: 'no-store' }).then(readJson));
-    } catch (_error) {
-        // Before the first run that publishes review_queue.json, use the dashboard's copy.
-        return normalizeQueue(await fetch('dashboard_lite.json').then(readJson));
+        const payload = await fetch('review_queue.json', { cache: 'no-store' }).then(readJson);
+        // A body without a list of items is not a queue; read as an empty one it would drop every saved decision.
+        if (!payload || !Array.isArray(payload.items)) throw new Error('unexpected content');
+        return normalizeQueue(payload);
+    } catch (error) {
+        // Before the first run that publishes review_queue.json, or when it cannot be read,
+        // use the dashboard's copy, which holds the first 250 links.
+        const queue = normalizeQueue(await fetch('dashboard_lite.json').then(readJson));
+        queue.fallback = true;
+        queue.fallbackReason = error.message;
+        return queue;
     }
 }
 
 async function startReviewPage() {
-    const stored = loadStored();
-    reviewState.decisions = stored.decisions;
-    reviewState.sent = stored.sent;
+    adoptStored();
     try {
         reviewState.queue = await fetchQueue();
     } catch (error) {
@@ -523,17 +593,20 @@ async function startReviewPage() {
     reviewState.byId = new Map(reviewState.queue.items.map(item => [Number(item.edge_id), item]));
     // Decisions for links that are no longer waiting have been applied (or settled
     // some other way); drop them so they are never sent twice.
-    Object.keys(reviewState.decisions).forEach(edgeId => {
-        const item = reviewState.byId.get(Number(edgeId));
-        if (!item || reviewState.decisions[edgeId].signature !== edgeSignature(item)) {
-            delete reviewState.decisions[edgeId];
-            delete reviewState.sent[edgeId];
-        }
+    const stale = staleDecisionIds(reviewState.decisions, reviewState.byId, reviewState.queue);
+    stale.forEach(edgeId => {
+        delete reviewState.decisions[edgeId];
+        delete reviewState.sent[edgeId];
     });
-    saveStored();
+    if (stale.length) saveStored();
 
-    document.getElementById('review-search').addEventListener('input', event => { reviewState.query = event.target.value; renderList(); });
-    document.getElementById('review-hide-decided').addEventListener('change', event => { reviewState.hideDecided = event.target.checked; renderList(); });
+    // Browsers restore form controls on Back and reload; the controls must show the state the list is in.
+    const search = document.getElementById('review-search');
+    search.value = reviewState.query;
+    search.addEventListener('input', event => { reviewState.query = event.target.value; renderList(); });
+    const hideDecided = document.getElementById('review-hide-decided');
+    hideDecided.checked = reviewState.hideDecided;
+    hideDecided.addEventListener('change', event => { reviewState.hideDecided = event.target.checked; renderList(); });
     const order = document.getElementById('review-order');
     order.value = reviewState.order;
     order.addEventListener('change', event => {
@@ -552,6 +625,13 @@ async function startReviewPage() {
         shortcutsToggle.setAttribute('aria-expanded', String(!panel.hidden));
     });
     document.addEventListener('keydown', handleKey);
+    window.addEventListener('storage', event => {
+        if (event.key !== null && event.key !== REVIEW_STORAGE_KEY) return;
+        adoptStored();
+        // A note being typed would be wiped by a re-render; the next action redraws it.
+        if (document.activeElement && document.activeElement.className === 'rq-note') renderSubmit();
+        else renderKeepingScroll();
+    });
     render();
 }
 

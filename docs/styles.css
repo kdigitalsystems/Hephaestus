@@ -3041,6 +3041,20 @@ td.muted {
     font-size: 0.92rem;
 }
 
+.rq-warning {
+    max-width: 760px;
+    margin: 0 0 12px;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--red);
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--red) 14%, var(--surface));
+    color: var(--text-main);
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.rq-warning[hidden] { display: none; }
+
 .rq-toolbar {
     position: sticky;
     top: 0;
