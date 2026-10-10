@@ -1,8 +1,698 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-08T09:54:31+00:00",
-  "unique_links": 827,
+  "generated_at": "2026-10-10T10:57:36+00:00",
+  "unique_links": 757,
   "days": [
+    {
+      "date": "2026-10-10",
+      "generated_at": "2026-10-10T10:57:36+00:00",
+      "previous_date": "2026-10-08",
+      "unique_links": 757,
+      "net_change": -70,
+      "new_count": 25,
+      "removed_count": 95,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AAL->RJET:SUPPLY RELATIONSHIP",
+          "source_ticker": "AAL",
+          "target_ticker": "RJET",
+          "type": "Supply Relationship",
+          "product": "Airlines services (specifically regional jet CPAs with American Airlines, Delta Air Lines, and United Airlines)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ACM->BCRX:SUPPLY RELATIONSHIP",
+          "source_ticker": "ACM",
+          "target_ticker": "BCRX",
+          "type": "Supply Relationship",
+          "product": "potent inhibitors of purine nucleoside phosphorylase (\u201cPNP\u201d) and galidesivir for any antiviral use, influenza neuraminidase and complement inhibitors",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ADIG->REZI:SUPPLY RELATIONSHIP",
+          "source_ticker": "ADIG",
+          "target_ticker": "REZI",
+          "type": "Supply Relationship",
+          "product": "Product components, production equipment, and replacement parts for products",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "AMZN->TUYA:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "TUYA",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Cloud Infrastructure",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "AMZN->U:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "U",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Cloud infrastructure for Unity's platform",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "BA->AER:SUPPLY RELATIONSHIP",
+          "source_ticker": "BA",
+          "target_ticker": "AER",
+          "type": "Supply Relationship",
+          "product": "Spare engines for popular and in-demand aircraft including Boeing 737, Boeing 787, and Boeing 737 MAX aircraft.",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "BLBD->RUSHB:SUPPLY RELATIONSHIP",
+          "source_ticker": "BLBD",
+          "target_ticker": "RUSHB",
+          "type": "Supply Relationship",
+          "product": "Blue Bird Corporation Common Stock",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "CLLS->IOVA:SUPPLY RELATIONSHIP",
+          "source_ticker": "CLLS",
+          "target_ticker": "IOVA",
+          "type": "Supply Relationship",
+          "product": "Certain TALEN \u00ae technology for genetically edited and potentially more potent TIL cell therapies",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "CRM->NCNO:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "CRM",
+          "target_ticker": "NCNO",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Salesforce Platform and related solutions",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "DAL->RJET:SUPPLY RELATIONSHIP",
+          "source_ticker": "DAL",
+          "target_ticker": "RJET",
+          "type": "supply relationship",
+          "product": "airlines services (specifically regional jet CPAs with American Airlines, Delta Air Lines, and United Airlines)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "DOW->ANRO:SUPPLY RELATIONSHIP",
+          "source_ticker": "DOW",
+          "target_ticker": "ANRO",
+          "type": "Supply Relationship",
+          "product": "patent for certain intermediate compounds useful in the manufacturing ALTO-100",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "LGND->VKTX:DRUG DEVELOPMENT",
+          "source_ticker": "LGND",
+          "target_ticker": "VKTX",
+          "type": "Drug Development",
+          "product": "LGD-4033",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "MSFT->AZUL:SUPPLY RELATIONSHIP",
+          "source_ticker": "MSFT",
+          "target_ticker": "AZUL",
+          "type": "Supply Relationship",
+          "product": "Software products",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "MU->NVDA:SUPPLY RELATIONSHIP",
+          "source_ticker": "MU",
+          "target_ticker": "NVDA",
+          "type": "supply relationship",
+          "product": "memory products",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "NGS->MEOH:RAW MATERIALS",
+          "source_ticker": "NGS",
+          "target_ticker": "MEOH",
+          "type": "Raw Materials",
+          "product": "Natural Gas",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "NTES->DAO:SUPPLY RELATIONSHIP",
+          "source_ticker": "NTES",
+          "target_ticker": "DAO",
+          "type": "Supply Relationship",
+          "product": "certain fixed assets",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "NVDA->NBIS:SUPPLY RELATIONSHIP",
+          "source_ticker": "NVDA",
+          "target_ticker": "NBIS",
+          "type": "Supply Relationship",
+          "product": "GPU chips",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "PFE->MDGL:SUPPLY RELATIONSHIP",
+          "source_ticker": "PFE",
+          "target_ticker": "MDGL",
+          "type": "supply relationship",
+          "product": "ervogastat (oral DGAT-2 inhibitor)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "PFE->OPK:SUPPLY RELATIONSHIP",
+          "source_ticker": "PFE",
+          "target_ticker": "OPK",
+          "type": "supply relationship",
+          "product": "commercialization of product (not specified)",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "SBSW->DRD:SUPPLY RELATIONSHIP",
+          "source_ticker": "SBSW",
+          "target_ticker": "DRD",
+          "type": "Supply Relationship",
+          "product": "mining infrastructure, property and related services, including water and electricity supply.",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "SKHY->NVDA:SUPPLY RELATIONSHIP",
+          "source_ticker": "SKHY",
+          "target_ticker": "NVDA",
+          "type": "supply relationship",
+          "product": "memory",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "TSM->INDI:FOUNDRY SERVICES",
+          "source_ticker": "TSM",
+          "target_ticker": "INDI",
+          "type": "foundry services",
+          "product": "semiconductor chips",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "TSM->NVDA:FOUNDRY SERVICES",
+          "source_ticker": "TSM",
+          "target_ticker": "NVDA",
+          "type": "foundry services",
+          "product": "semiconductor wafers",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "TX->TS:SUPPLY RELATIONSHIP",
+          "source_ticker": "TX",
+          "target_ticker": "TS",
+          "type": "Supply Relationship",
+          "product": "Supplier named in TS's 20-F",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "UAL->RJET:SUPPLY RELATIONSHIP",
+          "source_ticker": "UAL",
+          "target_ticker": "RJET",
+          "type": "Supply Relationship",
+          "product": "Regional jet services",
+          "review_status": "approved",
+          "confidence": 0.975
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "ABBV->CLGN:SUPPLY RELATIONSHIP",
+          "source_ticker": "ABBV",
+          "target_ticker": "CLGN",
+          "type": "Supply Relationship",
+          "product": "dermal filler product being developed by AbbVie",
+          "review_status": "approved",
+          "confidence": 0.9333
+        },
+        {
+          "relationship_key": "ABBV->IRWD:SUPPLY RELATIONSHIP",
+          "source_ticker": "ABBV",
+          "target_ticker": "IRWD",
+          "type": "Supply Relationship",
+          "product": "LINZESS",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "ABT->GRFS:SUPPLY RELATIONSHIP",
+          "source_ticker": "ABT",
+          "target_ticker": "GRFS",
+          "type": "Supply Relationship",
+          "product": "antigens",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "ACDC->FTK:SUPPLY RELATIONSHIP",
+          "source_ticker": "ACDC",
+          "target_ticker": "FTK",
+          "type": "Supply Relationship",
+          "product": "Asset maintenance and payment obligations under the Lease Agreement",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AGEN->INKT:SUPPLY RELATIONSHIP",
+          "source_ticker": "AGEN",
+          "target_ticker": "INKT",
+          "type": "Supply Relationship",
+          "product": "funding",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->BULLW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "BULLW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "cloud infrastructure services",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AMZN->GRRRW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "GRRRW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Software-as-a-Service offerings, including AWS services",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "AMZN->HSCSW:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "AMZN",
+          "target_ticker": "HSCSW",
+          "type": "Operational Supply Chain Dependency",
+          "product": "Amazon Web Services (AWS) services",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AMZN->INFQ:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "INFQ",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Supplier named in INFQ's 10-K (Amazon AWS)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->IONQ:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "IONQ",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Quantum Cloud Services (QCaaS)",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "AMZN->KDKRW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "KDKRW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->MNYWW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "MNYWW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS cloud services for hosting websites and data",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "AMZN->XNDU:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "XNDU",
+          "type": "Cloud Infrastructure Provider",
+          "product": "PennyLane on public clouds provided by AWS\u2019s Amazon Braket and IBM Quantum",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AMZN->Z:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "Z",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS cloud services",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "AVGO->GENVR:SUPPLY RELATIONSHIP",
+          "source_ticker": "AVGO",
+          "target_ticker": "GENVR",
+          "type": "Supply Relationship",
+          "product": "engineering and threat response services",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "AZN->CGEN:SUPPLY RELATIONSHIP",
+          "source_ticker": "AZN",
+          "target_ticker": "CGEN",
+          "type": "Supply Relationship",
+          "product": "cash received from partner",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AZN->IONS:SUPPLY RELATIONSHIP",
+          "source_ticker": "AZN",
+          "target_ticker": "IONS",
+          "type": "Supply Relationship",
+          "product": "joint development and funding of WAINUA",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "BHP->LZM:SUPPLY RELATIONSHIP",
+          "source_ticker": "BHP",
+          "target_ticker": "LZM",
+          "type": "Supply Relationship",
+          "product": "Mining services and expertise for the Kabanga Nickel Project",
+          "review_status": "approved",
+          "confidence": 0.9
+        },
+        {
+          "relationship_key": "BIIB->ALKS:CONTRACT MANUFACTURING",
+          "source_ticker": "BIIB",
+          "target_ticker": "ALKS",
+          "type": "Contract Manufacturing",
+          "product": "VUMERITY",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "BIIB->IONS:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "BIIB",
+          "target_ticker": "IONS",
+          "type": "operational supply-chain dependency",
+          "product": "SPINRAZA and QALSODY (biologics)",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "BIIB->STOK:SUPPLY RELATIONSHIP",
+          "source_ticker": "BIIB",
+          "target_ticker": "STOK",
+          "type": "Supply Relationship",
+          "product": "ASO therapies utilizing intrathecal delivery, including SPINRAZA and QALSODY produced by Biogen Inc.",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "CAH->SCLXW:SUPPLY RELATIONSHIP",
+          "source_ticker": "CAH",
+          "target_ticker": "SCLXW",
+          "type": "Supply Relationship",
+          "product": "title model services",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "CBZ->IMDX:SUPPLY RELATIONSHIP",
+          "source_ticker": "CBZ",
+          "target_ticker": "IMDX",
+          "type": "Supply Relationship",
+          "product": "Auditing and Accounting Services",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "CBZ->NATH:SUPPLY RELATIONSHIP",
+          "source_ticker": "CBZ",
+          "target_ticker": "NATH",
+          "type": "Supply Relationship",
+          "product": "Audit services",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "CMCSA->TMUS:SUPPLY RELATIONSHIP",
+          "source_ticker": "CMCSA",
+          "target_ticker": "TMUS",
+          "type": "Supply Relationship",
+          "product": "Spectrum in the 600 MHz band",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "CR->CXT:SUPPLY RELATIONSHIP",
+          "source_ticker": "CR",
+          "target_ticker": "CXT",
+          "type": "Supply Relationship",
+          "product": "Tax Opinion services",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "CSPI->ASX:FOUNDRY SERVICES",
+          "source_ticker": "CSPI",
+          "target_ticker": "ASX",
+          "type": "Foundry Services",
+          "product": "solder bumping, redistribution, ultra CSP assembly, advanced QFN assembly, wafer-level packaging, and other technologies used in the production of package types, such as BCC, flip chip BGA, film BGA, aQFN, and chip embedding.",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "CTOR->CTXR:SUPPLY RELATIONSHIP",
+          "source_ticker": "CTOR",
+          "target_ticker": "CTXR",
+          "type": "Supply Relationship",
+          "product": "LYMPHIR",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "CVX->HESM:SUPPLY RELATIONSHIP",
+          "source_ticker": "CVX",
+          "target_ticker": "HESM",
+          "type": "Supply Relationship",
+          "product": "Services provided by Chevron Corporation to Hess Midstream LP Class A Share representing a limited partner Interest",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "DOW->MDWD:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "DOW",
+          "target_ticker": "MDWD",
+          "type": "operational supply-chain dependency",
+          "product": "NexoBrid for field use in the United States",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "DOW->MP:SUPPLY RELATIONSHIP",
+          "source_ticker": "DOW",
+          "target_ticker": "MP",
+          "type": "Supply Relationship",
+          "product": "funding provided by Dow Inc.",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "EVEX->SPCE:SUPPLY RELATIONSHIP",
+          "source_ticker": "EVEX",
+          "target_ticker": "SPCE",
+          "type": "Supply Relationship",
+          "product": "spaceflight system consisting of a spaceship, VSS Unity, and launch vehicle, VMS Eve.",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "EVH->CNC:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "EVH",
+          "target_ticker": "CNC",
+          "type": "operational supply-chain dependency",
+          "product": "12.2% of EVH revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "EVH->HUM:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "EVH",
+          "target_ticker": "HUM",
+          "type": "operational supply-chain dependency",
+          "product": "19.3% of EVH revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "EVH->MOH:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "EVH",
+          "target_ticker": "MOH",
+          "type": "operational supply-chain dependency",
+          "product": "25.7% of EVH revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "F->ALSN:SUPPLY RELATIONSHIP",
+          "source_ticker": "F",
+          "target_ticker": "ALSN",
+          "type": "Supply Relationship",
+          "product": "Automatic transmissions",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "FDX->NEXRW:SUPPLY RELATIONSHIP",
+          "source_ticker": "FDX",
+          "target_ticker": "NEXRW",
+          "type": "Supply Relationship",
+          "product": "Logistics services",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "FLEX->MMED:SUPPLY RELATIONSHIP",
+          "source_ticker": "FLEX",
+          "target_ticker": "MMED",
+          "type": "supply relationship",
+          "product": "MiniMed Flex pumps, infusion sets, transmitters, and InPen smart insulin pens",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "FMS->HUMA:SUPPLY RELATIONSHIP",
+          "source_ticker": "FMS",
+          "target_ticker": "HUMA",
+          "type": "Supply Relationship",
+          "product": "Distribution product in the field",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "GM->DCH:MANUFACTURING SUPPLIER",
+          "source_ticker": "GM",
+          "target_ticker": "DCH",
+          "type": "Manufacturing Supplier",
+          "product": "driveline components (rear axle and four-wheel drive and all-wheel drive (4WD/AWD) axle)",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "GM->SYPR:SUPPLY RELATIONSHIP",
+          "source_ticker": "GM",
+          "target_ticker": "SYPR",
+          "type": "Supply Relationship",
+          "product": "drive train components including axle shafts, transmission shafts, gear sets, steer axle knuckles, and other components",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "GOOGL->HPAIW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "GOOGL",
+          "target_ticker": "HPAIW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "IaaS and PaaS platforms",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "GOOGL->INFQ:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "GOOGL",
+          "target_ticker": "INFQ",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Google Cloud",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "GOOGL->IONQ:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "GOOGL",
+          "target_ticker": "IONQ",
+          "type": "Cloud Infrastructure Provider",
+          "product": "QCaaS (Quantum Cloud as a Service)",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "GOOGL->SNOW:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "GOOGL",
+          "target_ticker": "SNOW",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Google Cloud Platform (GCP)",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "GPI->ARBE:SUPPLY RELATIONSHIP",
+          "source_ticker": "GPI",
+          "target_ticker": "ARBE",
+          "type": "Supply Relationship",
+          "product": "chipset for radar-based product",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "GPI->LIDR:SUPPLY RELATIONSHIP",
+          "source_ticker": "GPI",
+          "target_ticker": "LIDR",
+          "type": "Supply Relationship",
+          "product": "Products/Services provided by Group 1 Automotive to AEye (LIDR)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "GPK->CLW:CONTRACT MANUFACTURING",
+          "source_ticker": "GPK",
+          "target_ticker": "CLW",
+          "type": "Contract Manufacturing",
+          "product": "Paperboard manufacturing facility and associated business",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "HD->GCT:SUPPLY RELATIONSHIP",
+          "source_ticker": "HD",
+          "target_ticker": "GCT",
+          "type": "Supply Relationship",
+          "product": "Highly rated products",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "IDT->SOPH:SUPPLY RELATIONSHIP",
+          "source_ticker": "IDT",
+          "target_ticker": "SOPH",
+          "type": "Supply Relationship",
+          "product": "research products",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "changed_links": []
+    },
     {
       "date": "2026-10-08",
       "generated_at": "2026-10-08T09:54:31+00:00",
@@ -2937,29 +3627,6 @@
       "removed_count": 0,
       "changed_count": 0,
       "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-09-25",
-      "generated_at": "2026-09-25T08:17:06+00:00",
-      "previous_date": "2026-09-24",
-      "unique_links": 472,
-      "net_change": 1,
-      "new_count": 1,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "SNX->AAPL:SUPPLY CHAIN",
-          "source_ticker": "SNX",
-          "target_ticker": "AAPL",
-          "type": "Supply Chain",
-          "product": "Electronics & Computer Distribution services",
-          "review_status": "approved",
-          "confidence": 1.0
-        }
-      ],
       "removed_links": [],
       "changed_links": []
     }
