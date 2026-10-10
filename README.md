@@ -39,7 +39,7 @@ docs/
   dashboard_data.json     Exported dashboard data (complete)
   dashboard_lite.json     Homepage payload: same structure minus summaries and investor metrics
   company-data/           Per-letter detail shards fetched when a brief opens
-  status.json             Last run: data date, links, new links, companies researched, filings swept
+  status.json             Last run: data date, links, new links, companies researched, filings swept; `discovery` says whether those counts are from this run (`ran`), from a run with no discovery step (`not_run`, kept from `discovery_at`) or missing because discovery did not finish (`stale`)
   link_history.json       Daily published link-count history
   changes.json            Day-over-day graph changes, newest first (from link history)
   feed.xml                RSS feed of the same changes

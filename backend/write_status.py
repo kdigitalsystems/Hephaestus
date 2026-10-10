@@ -50,10 +50,12 @@ def fresh_discovery(discovery, now):
 def build_status(dashboard, discovery=None, previous=None, now=None):
     dashboard = dashboard or {}
     now = now or datetime.now(timezone.utc)
+    previous = previous if isinstance(previous, dict) else {}
+    discovery = discovery if isinstance(discovery, dict) else None
     metrics = dashboard.get("investor_metrics") or {}
     change = metrics.get("change_summary") or {}
-    discovery = fresh_discovery(discovery, now)
-    sweep = discovery.get("concentration_sweep") or {}
+    current = fresh_discovery(discovery, now)
+    sweep = current.get("concentration_sweep") or {}
     status = {
         "generated_at": now.isoformat(timespec="seconds"),
         "data_as_of": dashboard.get("generated_at"),
@@ -62,17 +64,27 @@ def build_status(dashboard, discovery=None, previous=None, now=None):
         "linked_companies": metrics.get("linked_companies"),
         "new_links": change.get("new_count"),
         "removed_links": change.get("removed_count"),
-        "companies_researched": discovery.get("companies_analyzed"),
-        "companies_deferred": discovery.get("deferred"),
-        "extraction_failures": discovery.get("extraction_failures"),
+        "companies_researched": current.get("companies_analyzed"),
+        "companies_deferred": current.get("deferred"),
+        "extraction_failures": current.get("extraction_failures"),
         "filings_swept": sweep.get("checked"),
         "disclosures_found": sweep.get("created"),
     }
-    # A run without a discovery step (run_pipeline.sh, or a discovery that crashed) must
-    # not blank the banner: keep the last published numbers for what it did not produce.
-    for key, value in (previous or {}).items():
-        if key in DISCOVERY_FIELDS and status.get(key) is None:
-            status[key] = value
+    # Say which of three things happened, so the site never presents old discovery numbers
+    # as today's: "ran" (a summary written in this run's window), "stale" (a summary from an
+    # earlier run is all that is left, so discovery crashed or did not finish: nothing is
+    # carried forward) or "not_run" (no summary at all, as in run_pipeline.sh, which has no
+    # discovery step: the last published numbers stay so the banner is not blanked, with
+    # discovery_at saying when they were produced).
+    if current:
+        status["discovery"], status["discovery_at"] = "ran", current.get("generated_at")
+    elif discovery:
+        status["discovery"], status["discovery_at"] = "stale", discovery.get("generated_at")
+    else:
+        status["discovery"], status["discovery_at"] = "not_run", previous.get("discovery_at")
+        for key in DISCOVERY_FIELDS:
+            if status.get(key) is None:
+                status[key] = previous.get(key)
     return status
 
 
