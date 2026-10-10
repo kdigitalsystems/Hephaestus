@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy.exc import IntegrityError
 
+from apply_human_review import human_note
 from database import SessionLocal
 from edge_review_decisions import DEFAULT_PATH as DECISIONS_PATH, export_decisions
 from models import Edge, Node
@@ -58,7 +59,12 @@ def set_status(args):
             raise SystemExit(f"Edge {args.edge_id} not found.")
 
         edge.review_status = args.status
-        if args.note:
+        if args.status in {"approved", "rejected"}:
+            # Keeping the panel's note on a human verdict made the site call an approval
+            # "Consensus panel 1/3 models", and every cleanup rule treats a model's note as a
+            # verdict to re-check. The same wording as the review page's decisions.
+            edge.review_note = human_note(args.status, datetime.now(timezone.utc).date().isoformat(), args.note)[:1000]
+        elif args.note:
             # An omitted --note must not erase the existing rationale.
             edge.review_note = args.note
         edge.reviewed_at = datetime.now(timezone.utc) if args.status in {"approved", "rejected"} else None

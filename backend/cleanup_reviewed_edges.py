@@ -1,3 +1,4 @@
+import re
 from collections import defaultdict
 from datetime import datetime, timezone
 
@@ -231,6 +232,40 @@ def reopen_cleared_rejections(session, counts):
         hold_for_human(edge, counts, "reopened_after_rule_fix", f"reopened after an evidence-rule fix: {reason}")
 
 
+VEHICLE_REJECTION = re.compile(r"^Ollama (?:consensus )?review: Non-operating financial vehicle or fund is not a useful")
+
+
+def reopen_wrong_vehicle_rejections(session, counts):
+    """Send a "non-operating vehicle" rejection back to the panel once neither end is one.
+
+    The name test used to be a substring match, so " spac" read AST SpaceMobile, Space
+    Exploration Technologies and MDA Space as blank-check companies and "Our Bond, Inc." as
+    a bond: their links were rejected at 0.96 before any model saw them. Only a rejection
+    whose whole reason was the vehicle rule is touched (a person's verdict, or a model's
+    own rationale, never matches), and only when the current rule clears both companies.
+    The edge goes back to pending without a hold note, so the nightly panel reviews it
+    like any new link; nothing is approved here.
+    """
+    from review_edges_with_ollama import is_non_operating_vehicle  # imports the Ollama client; only this step needs it
+
+    rejected = session.query(Edge).filter(
+        Edge.review_status == "rejected",
+        Edge.review_note.like("Ollama%Non-operating financial vehicle%"),
+    ).all()
+    for edge in rejected:
+        if not VEHICLE_REJECTION.match(str(edge.review_note or "")):
+            continue
+        if is_non_operating_vehicle(edge.source_node) or is_non_operating_vehicle(edge.target_node):
+            continue
+        edge.review_status = "pending"
+        edge.review_note = (
+            "Automated cleanup: reopened after a rule fix; neither company is a fund, ETF, trust, "
+            "bond issue or blank-check company, so the review panel looks at this link again."
+        )
+        edge.reviewed_at = None
+        counts["reopened_vehicle_rule_fix"] = counts.get("reopened_vehicle_rule_fix", 0) + 1
+
+
 def reject_held_junk(session, counts):
     """Links waiting for a person whose excerpt the evidence rules call junk.
 
@@ -334,6 +369,8 @@ def cleanup_reviewed_edges():
     try:
         register_company_names(session.query(Node.ticker, Node.name).filter(Node.ticker.is_not(None)).all())
         reopen_cleared_rejections(session, counts)
+        session.flush()
+        reopen_wrong_vehicle_rejections(session, counts)
         session.flush()
         # Whose links are they? Companies first, then their statements, then repeats.
         reject_non_company_edges(session, counts)

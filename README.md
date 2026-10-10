@@ -39,7 +39,7 @@ docs/
   dashboard_data.json     Exported dashboard data (complete)
   dashboard_lite.json     Homepage payload: same structure minus summaries and investor metrics
   company-data/           Per-letter detail shards fetched when a brief opens
-  status.json             Last run: data date, links, new links, companies researched, filings swept
+  status.json             Last run: data date, links, new links, companies researched, filings swept; `discovery` says whether those counts are from this run (`ran`), from a run with no discovery step (`not_run`, kept from `discovery_at`) or missing because discovery did not finish (`stale`)
   link_history.json       Daily published link-count history
   changes.json            Day-over-day graph changes, newest first (from link history)
   feed.xml                RSS feed of the same changes
@@ -120,6 +120,8 @@ To rebuild the local database from scratch and refresh dashboard data:
 ```bash
 ./scripts/rebuild_db.sh
 ```
+
+The rebuild runs the same publishing steps in the same order as the scheduled workflow and `run_pipeline.sh` (apply the tracked decisions, apply the review-page decisions, clean up, persist the decisions, audit, export, repair from the persisted decisions). Before it deletes the old database it merges that database's decisions into `data/edge_review_decisions.json` with `edge_review_decisions.py export --only-newer`, which adds or updates but never drops a decision the file holds a newer verdict on. A normal `export` also keeps every decision about a pair the database has no edge for (for example a company missing from a fresh runner), and `apply` warns about each decision it could not apply.
 
 For a limited debug rebuild:
 
@@ -263,6 +265,8 @@ python3 backend/review_edges_with_ollama.py --model qwen2.5:14b-instruct --limit
 python3 backend/apply_ollama_review_report.py reports/ollama_edge_review.csv --min-approve 0.85 --min-reverse 0.85
 ```
 
+As in the nightly reviewer, a report's `reverse` verdicts are applied only when the run opts in with `--apply-reversals`; each row is committed on its own, so one verdict that conflicts with another edge between the same two companies is reported and skipped instead of losing the whole report.
+
 Persist reviewed decisions outside the local SQLite database:
 
 ```bash
@@ -299,7 +303,7 @@ python3 backend/repair_dashboard_from_decisions.py
 python3 backend/validate_dashboard_data.py
 ```
 
-This repair step is important. The broad stock screener still prefers companies with current market data, but approved/manual supply-chain relationships should not disappear just because Yahoo/market metrics are temporarily missing for one endpoint. The repair step uses `data/edge_review_decisions.json` as the durable source of reviewed links, adds missing approved endpoints under `Linked Companies`, and writes stable `relationship_key` values so the dashboard link count is not tied to volatile SQLite edge IDs.
+This repair step is important. The broad stock screener still prefers companies with current market data, but approved/manual supply-chain relationships should not disappear just because Yahoo/market metrics are temporarily missing for one endpoint. The export already publishes every company that has an approved link, with or without market data. The repair step uses `data/edge_review_decisions.json` as the durable source of reviewed links and attaches them to the companies the export published; a decision whose company the export left out (a financial, real-estate or shell company, or one this database does not hold) is skipped and reported rather than re-added as a blank "Reviewed relationship endpoint" page, and `validate_dashboard_data.py` fails if such a placeholder ever appears. It writes stable `relationship_key` values so the dashboard link count is not tied to volatile SQLite edge IDs. A pending edge is published only when its source is a curated label such as "Manual System Jumpstart"; a URL that merely contains "Manual" is AI-derived evidence, as in the evidence checks.
 
 By default, export is conservative: it includes reviewed/manual edges and hides unreviewed AI-discovered edges. To publish AI research edges anyway:
 
@@ -309,13 +313,13 @@ HEPHAESTUS_EXPORT_AI_RESEARCH=1 python3 backend/export.py
 
 Use that mode only after reviewing the generated relationships; LLM extraction can create plausible but wrong links.
 
-The exported dashboard includes review metadata for CI and maintainer workflows. Each published relationship also carries a compact `review_summary` (curated seed, consensus panel vote count, single-model review, or human review, plus a short rationale) and a `source_title` citation derived from the collector that supplied the evidence, so the dashboard can show how a link was verified and where it came from; `docs/methodology.html` documents the sources, review rules, and limitations for readers. The pending review queue itself is not part of the public experience.
+The exported dashboard includes review metadata for CI and maintainer workflows. Each published relationship also carries a compact `review_summary` (curated seed, consensus panel vote count, single-model review, or human review, plus a short rationale) and a `source_title` citation derived from the collector that supplied the evidence, so the dashboard can show how a link was verified and where it came from (a link merged from several sources keeps each URL paired with its own title in `sources`, since a title can itself contain " / "); `docs/methodology.html` documents the sources, review rules, and limitations for readers. The pending review queue itself is not part of the public experience.
 
 The dashboard payload also includes investor-facing derived metrics:
 
 - `investor_metrics.unique_links`, `approved_links`, `pending_links`, and `sector_exposure` summarize the published graph.
 - Each company has `investor_metrics` with upstream/downstream counts, approval counts, top counterparties, average confidence, concentration score, explainable risk scores, and last verified date.
-- `docs/link_history.json` keeps one rolling snapshot per UTC date of published relationship keys so the dashboard can show what changed between daily runs without adding duplicate same-day snapshots. The overview renders that comparison as a "What changed in the graph" panel, and `python3 backend/generate_change_feed.py` derives `docs/changes.json` and an RSS feed (`docs/feed.xml`) from the same snapshots; both pipelines run it after validation.
+- `docs/link_history.json` keeps one rolling snapshot per UTC date of published relationship keys so the dashboard can show what changed between daily runs without adding duplicate same-day snapshots. The overview renders that comparison as a "What changed in the graph" panel, and `python3 backend/generate_change_feed.py` derives `docs/changes.json` and an RSS feed (`docs/feed.xml`) from the same snapshots; both pipelines run it after validation. Days are compared by supplier-to-customer pair: a pair that stays published but whose leading dependency type changed (which changes its `relationship_key`) counts as updated, not as one removed link plus one new one, and feed entries for it carry `previous_type`. Control characters that XML 1.0 forbids are stripped from the feed.
 - `update_metrics.py` refreshes companies that have supply-chain links before the rest of the universe, so a throttled market-data crawl degrades the long tail rather than the companies people open.
 - The static UI uses those fields for search filters, watchlist cards, comparison views, source/evidence modals, sector pages, and company Decision Briefs.
 
@@ -453,7 +457,7 @@ HEPHAESTUS_REVIEW_CONSENSUS_MIN_RATIO=0.66 \
 ./run_pipeline.sh
 ```
 
-By default the reviewer runs three 7B/8B-class models one at a time so they fit on a 12GB GPU. A pending edge is auto-applied only when the configured consensus threshold agrees on the same action and direction. Split votes, low confidence, or direction disagreement stay `pending` instead of being published as approved links.
+By default the reviewer runs three 7B/8B-class models one at a time so they fit on a 12GB GPU. A pending edge is auto-applied only when the configured consensus threshold agrees on the same action and direction. Split votes, low confidence, or direction disagreement stay `pending` instead of being published as approved links; a direction disagreement means any one model voting the opposite direction (two approvals and a reverse), while a dissenting reject does not block a 2-of-3 decision. A model that times out or returns unparsable JSON casts no vote; an edge that no model could answer is retried on up to three runs and then held, and a run stops after three such edges in a row. Fund, ETF, trust, bond-issue and blank-check names are recognised as whole words (`AST SpaceMobile` is not a SPAC), so the vehicle rule no longer rejects them; links an earlier version rejected that way are reopened to `pending` for the panel by the cleanup step.
 
 To skip local AI review during a manual pipeline run:
 

@@ -5,6 +5,7 @@ import re
 import tempfile
 from datetime import datetime, timezone
 from database import SessionLocal
+from evidence_quality import requires_source_evidence
 from models import Node, Edge
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -166,6 +167,17 @@ def unique_join(values):
         merged.append(value)
     return " / ".join(merged)
 
+def merge_sources(relationships):
+    """(source, title) pairs of a merged group: one per distinct source, first title wins."""
+    pairs, seen = [], set()
+    for relationship in relationships:
+        source = str(relationship.get("source") or "").strip()
+        if not source or source.lower() in seen:
+            continue
+        seen.add(source.lower())
+        pairs.append((source, str(relationship.get("source_title") or "").strip() or source))
+    return pairs
+
 def merge_relationship_group(relationships):
     # A rejected member must never contribute to a published row.
     kept = [relationship for relationship in relationships if relationship_status(relationship) != "rejected"]
@@ -176,8 +188,15 @@ def merge_relationship_group(relationships):
     primary["edge_id"] = ranked[0].get("edge_id")
     primary["type"] = unique_join(relationship.get("type") for relationship in ranked)
     primary["product"] = unique_join(relationship.get("product") for relationship in ranked)
-    primary["source"] = unique_join(relationship.get("source") for relationship in ranked)
-    primary["source_title"] = unique_join(relationship.get("source_title") for relationship in ranked)
+    # A source and its title travel as a pair. Joining each field on its own dropped a
+    # repeated title but not the URL beside it, and the page then read the second URL's
+    # title from the wrong slot.
+    sources = merge_sources(ranked)
+    primary["source"] = " / ".join(url for url, _ in sources)
+    primary["source_title"] = " / ".join(title for _, title in sources)
+    if len(sources) > 1:
+        # Titles can contain " / " themselves, so the joined strings cannot be split reliably.
+        primary["sources"] = [{"url": url, "title": title} for url, title in sources]
     primary["source_type"] = unique_join(relationship.get("source_type") for relationship in ranked)
     primary["evidence_excerpt"] = unique_join(relationship.get("evidence_excerpt") for relationship in ranked)
     primary["review_status"] = unique_join(relationship.get("review_status") for relationship in ranked)
@@ -414,6 +433,41 @@ def relationship_snapshot_entry(key, relationship):
         "last_verified": relationship.get("last_verified") or "N/A",
     }
 
+def link_pair(key):
+    """The supplier->customer pair a relationship_key belongs to (a key without one is its own pair)."""
+    source, target = relationship_direction_from_key(str(key))
+    return (source, target) if source and target else (str(key),)
+
+def diff_link_snapshots(previous_links, current_links):
+    """What changed between two snapshots, by supplier->customer pair.
+
+    relationship_key ends in the dependency type of the highest-ranked merged member, so
+    when another type overtakes it the key changes while the link stays published; 25 of
+    29 daily diffs reported that as one removed link plus one new one. A pair present on
+    both days is therefore never new or removed: its new key is an update, and
+    `retyped` maps it to the key(s) it replaced. Stored keys keep their format.
+    """
+    previous_by_pair, current_by_pair = {}, {}
+    for key in previous_links:
+        previous_by_pair.setdefault(link_pair(key), set()).add(key)
+    for key in current_links:
+        current_by_pair.setdefault(link_pair(key), set()).add(key)
+
+    new_keys = sorted(key for pair in current_by_pair.keys() - previous_by_pair.keys() for key in current_by_pair[pair])
+    removed_keys = sorted(key for pair in previous_by_pair.keys() - current_by_pair.keys() for key in previous_by_pair[pair])
+    changed_keys = {
+        key for key in set(current_links) & set(previous_links)
+        if current_links[key].get("review_status") != previous_links[key].get("review_status")
+        or current_links[key].get("confidence") != previous_links[key].get("confidence")
+    }
+    retyped = {}
+    for pair in current_by_pair.keys() & previous_by_pair.keys():
+        replaced = sorted(previous_by_pair[pair] - current_by_pair[pair])
+        for key in sorted(current_by_pair[pair] - previous_by_pair[pair]):
+            changed_keys.add(key)
+            retyped[key] = replaced
+    return {"new": new_keys, "removed": removed_keys, "changed": sorted(changed_keys), "retyped": retyped}
+
 def build_change_summary(history, current_snapshot, generated_on=None):
     """Diff the current snapshot against the latest snapshot from an earlier date.
 
@@ -428,15 +482,8 @@ def build_change_summary(history, current_snapshot, generated_on=None):
     previous_snapshot = previous_entry.get("links", {}) if previous_entry else {}
     previous_keys = set(previous_snapshot)
     current_keys = set(current_snapshot)
-    new_keys = sorted(current_keys - previous_keys)
-    removed_keys = sorted(previous_keys - current_keys)
-    changed_keys = sorted(
-        key for key in current_keys & previous_keys
-        if (
-            current_snapshot[key].get("review_status") != previous_snapshot[key].get("review_status")
-            or current_snapshot[key].get("confidence") != previous_snapshot[key].get("confidence")
-        )
-    )
+    diff = diff_link_snapshots(previous_snapshot, current_snapshot)
+    new_keys, removed_keys, changed_keys = diff["new"], diff["removed"], diff["changed"]
     rejected_keys = sorted(
         key for key, link in current_snapshot.items()
         if link.get("review_status") == "rejected"
@@ -663,13 +710,19 @@ def export_sector(node):
         return FALLBACK_LINKED_SECTOR
     return sector
 
+def is_curated_source(source_url):
+    """A hand-entered provenance label ("Manual System Jumpstart"), which may be published
+    while pending. A URL that merely contains "Manual" is AI-derived evidence and is not;
+    this is evidence_quality's definition, so the export and the evidence checks agree."""
+    return not requires_source_evidence(source_url)
+
 def should_export_edge(edge):
     source_url = edge.source_url or ""
     if edge.review_status == "rejected":
         return False
     if edge.review_status == "approved":
         return True
-    if "Manual" in source_url:
+    if is_curated_source(source_url):
         return True
     if "AI" in source_url and EXPORT_AI_RESEARCH:
         return True

@@ -10,14 +10,15 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import tempfile
 from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
 from urllib.parse import quote
-from xml.sax.saxutils import escape, quoteattr
+from xml.sax import saxutils
 
-from export import history_entry_date, load_link_history, publishable_file_mode, write_json_atomic
+from export import diff_link_snapshots, history_entry_date, load_link_history, publishable_file_mode, write_json_atomic
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,6 +31,18 @@ SITE_URL = os.environ.get("HEPHAESTUS_SITE_URL", "https://kdigitalsystems.github
 FEED_DAYS = 14
 MAX_LINKS_PER_LIST = 50
 
+# XML 1.0 allows tab, newline, carriage return and the printable ranges; saxutils.escape
+# keeps everything else, so one \x0b in a scraped product name made feed.xml unparsable.
+ILLEGAL_XML_CHARS = re.compile("[^\t\n\r\u0020-\ud7ff\ue000-\ufffd\U00010000-\U0010ffff]")
+
+
+def escape(text):
+    return saxutils.escape(ILLEGAL_XML_CHARS.sub("", str(text)))
+
+
+def quoteattr(text):
+    return saxutils.quoteattr(ILLEGAL_XML_CHARS.sub("", str(text)))
+
 
 def company_url(ticker):
     # A name can reach this when a relationship key carried no ticker; percent-encode
@@ -37,9 +50,9 @@ def company_url(ticker):
     return f"{SITE_URL}#company?ticker={quote(str(ticker), safe='.-_')}"
 
 
-def link_summary(key, entry):
+def link_summary(key, entry, replaced=None):
     entry = entry or {}
-    return {
+    summary = {
         "relationship_key": key,
         "source_ticker": entry.get("source_ticker") or "",
         "target_ticker": entry.get("target_ticker") or "",
@@ -48,18 +61,25 @@ def link_summary(key, entry):
         "review_status": entry.get("review_status") or "pending",
         "confidence": entry.get("confidence"),
     }
+    if replaced:
+        # The pair stayed published but another type now leads: an update, not a new link.
+        summary["previous_type"] = replaced
+    return summary
+
+
+def previous_type_of(previous_links, replaced_keys):
+    """The type the pair was published under the day before, when another type has taken over."""
+    for key in replaced_keys or []:
+        if (previous_links.get(key) or {}).get("type"):
+            return previous_links[key]["type"]
+    return None
 
 
 def diff_snapshots(previous, current):
     previous_links = previous.get("links") or {}
     current_links = current.get("links") or {}
-    new_keys = sorted(set(current_links) - set(previous_links))
-    removed_keys = sorted(set(previous_links) - set(current_links))
-    changed_keys = sorted(
-        key for key in set(current_links) & set(previous_links)
-        if current_links[key].get("review_status") != previous_links[key].get("review_status")
-        or current_links[key].get("confidence") != previous_links[key].get("confidence")
-    )
+    diff = diff_link_snapshots(previous_links, current_links)
+    new_keys, removed_keys, changed_keys = diff["new"], diff["removed"], diff["changed"]
     return {
         "date": history_entry_date(current),
         "generated_at": current.get("generated_at"),
@@ -71,7 +91,10 @@ def diff_snapshots(previous, current):
         "changed_count": len(changed_keys),
         "new_links": [link_summary(key, current_links[key]) for key in new_keys[:MAX_LINKS_PER_LIST]],
         "removed_links": [link_summary(key, previous_links[key]) for key in removed_keys[:MAX_LINKS_PER_LIST]],
-        "changed_links": [link_summary(key, current_links[key]) for key in changed_keys[:MAX_LINKS_PER_LIST]],
+        "changed_links": [
+            link_summary(key, current_links[key], previous_type_of(previous_links, diff["retyped"].get(key)))
+            for key in changed_keys[:MAX_LINKS_PER_LIST]
+        ],
     }
 
 
@@ -124,6 +147,8 @@ def link_html(link):
     detail = escape(link["type"])
     if link.get("product") and link["product"] != link["type"]:
         detail += f" ({escape(link['product'])})"
+    if link.get("previous_type"):
+        detail += f", was {escape(link['previous_type'])}"
     return f"<li>{source} → {target}: {detail}</li>"
 
 

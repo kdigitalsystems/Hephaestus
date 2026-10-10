@@ -69,7 +69,7 @@
             <dt>Deterministic checks</dt>
             <dd>Self-links, missing or placeholder evidence, financial vehicles that are not operating companies, excerpts that do not name both companies, and relationships whose opposite direction is already approved are rejected or held for a person before any model votes.</dd>
             <dt>Consensus panel</dt>
-            <dd>Three independent local models each decide whether the relationship is real, whether its direction is right, and how confident they are. A relationship is approved only when at least two models agree on the same decision <em>and</em> the same direction, with average confidence of at least 0.85. Split votes, low confidence, and direction disagreements stay pending.</dd>
+            <dd>Three independent local models each decide whether the relationship is real, whether its direction is right, and how confident they are. A relationship is approved only when at least two models agree on the same decision <em>and</em> the same direction, with average confidence of at least 0.85. Split votes, low confidence, and direction disagreements stay pending, and one model voting the opposite direction is enough to count as a disagreement. A model that fails to answer casts no vote.</dd>
             <dt>Human review</dt>
             <dd>Maintainers can approve, reject, reverse, or relabel any relationship. Human decisions are persisted and replayed on every run so an automated pass cannot undo them.</dd>
         </dl>

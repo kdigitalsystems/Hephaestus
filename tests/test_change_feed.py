@@ -106,3 +106,96 @@ def test_change_summary_records_the_dates_it_compares():
 
     assert summary["previous_generated_on"] == "2026-09-01"
     assert summary["current_generated_on"] == "2026-09-02"
+
+
+# --- a pair that stays published under a different type ---------------------------------
+
+def flip_days():
+    """2026-09-17 -> 09-18 on the real history: UMC -> NVDA stayed published while a second
+    type overtook the first, which changed its relationship_key."""
+    before = entry("2026-09-17", ["UMC->NVDA:MANUFACTURING SERVICES", "TSM->AMD:FOUNDRY", "MU->NVDA:MEMORY"])
+    after = entry("2026-09-18", ["UMC->NVDA:SUPPLY RELATIONSHIP", "TSM->AMD:FOUNDRY", "ASML->TSM:EQUIPMENT"])
+    after["links"]["UMC->NVDA:SUPPLY RELATIONSHIP"]["type"] = "Supply Relationship / Manufacturing Services"
+    before["links"]["UMC->NVDA:MANUFACTURING SERVICES"]["type"] = "Manufacturing Services"
+    return before, after
+
+
+def test_a_retyped_pair_is_updated_not_removed_and_new():
+    before, after = flip_days()
+
+    day = feed.diff_snapshots(before, after)
+
+    # MU->NVDA really left and ASML->TSM really arrived; UMC->NVDA never stopped being published.
+    assert [item["relationship_key"] for item in day["new_links"]] == ["ASML->TSM:EQUIPMENT"]
+    assert [item["relationship_key"] for item in day["removed_links"]] == ["MU->NVDA:MEMORY"]
+    assert (day["new_count"], day["removed_count"], day["changed_count"]) == (1, 1, 1)
+    updated = day["changed_links"][0]
+    assert updated["relationship_key"] == "UMC->NVDA:SUPPLY RELATIONSHIP"
+    assert updated["previous_type"] == "Manufacturing Services"
+    assert day["net_change"] == 0
+
+
+def test_the_homepage_change_summary_counts_a_retyped_pair_once():
+    before, after = flip_days()
+
+    summary = export.build_change_summary([before], after["links"], generated_on="2026-09-18")
+
+    assert (summary["new_count"], summary["removed_count"], summary["changed_count"]) == (1, 1, 1)
+    assert [item["relationship_key"] for item in summary["changed_links"]] == ["UMC->NVDA:SUPPLY RELATIONSHIP"]
+
+
+def test_status_and_feed_carry_the_corrected_counts():
+    from write_status import build_status
+
+    before, after = flip_days()
+    summary = export.build_change_summary([before], after["links"], generated_on="2026-09-18")
+    status = build_status({"investor_metrics": {"change_summary": summary}})
+    assert (status["new_links"], status["removed_links"]) == (1, 1)
+
+    rss = feed.build_rss(feed.build_changes_payload([before, after]))
+    root = ET.fromstring(rss)
+    assert root.find("./channel/item/title").text == "2026-09-18: 1 new, 1 removed, 1 updated supply links (3 total)"
+    assert "was Manufacturing Services" in root.find("./channel/item/description").text
+
+
+def test_a_pair_that_really_goes_or_arrives_is_still_removed_or_new():
+    gone = feed.diff_snapshots(entry("a", ["A->B:X", "C->D:Y"]), entry("b", ["C->D:Y"]))
+    assert (gone["new_count"], gone["removed_count"], gone["changed_count"]) == (0, 1, 0)
+    # The reverse direction is a different pair: B->A is new and A->B is removed.
+    swapped = feed.diff_snapshots(entry("a", ["A->B:X"]), entry("b", ["B->A:X"]))
+    assert (swapped["new_count"], swapped["removed_count"], swapped["changed_count"]) == (1, 1, 0)
+    # Keys with no direction in them keep the old identity rule.
+    legacy = feed.diff_snapshots({"links": {"41": {}, "42": {}}}, {"links": {"42": {}, "43": {}}})
+    assert (legacy["new_count"], legacy["removed_count"], legacy["changed_count"]) == (1, 1, 0)
+
+
+def test_replaying_the_real_history_loses_only_the_type_flips():
+    history = [item for item in export.load_link_history(str(ROOT / "docs" / "link_history.json")) if isinstance(item.get("links"), dict)]
+    assert len(history) > 1
+    for previous, current in zip(history, history[1:]):
+        old_new = set(current["links"]) - set(previous["links"])
+        old_removed = set(previous["links"]) - set(current["links"])
+        flips = {export.link_pair(key) for key in old_removed} & {export.link_pair(key) for key in old_new}
+        day = feed.diff_snapshots(previous, current)
+
+        new_pairs = {export.link_pair(item["relationship_key"]) for item in day["new_links"]}
+        removed_pairs = {export.link_pair(item["relationship_key"]) for item in day["removed_links"]}
+        # No pair is both added and dropped on one day, and every genuine add or drop survives.
+        assert not new_pairs & removed_pairs
+        assert day["new_count"] == len(old_new) - len(flips)
+        assert day["removed_count"] == len(old_removed) - len(flips)
+        assert day["net_change"] == len(current["links"]) - len(previous["links"])
+
+
+# --- feed.xml must stay valid XML -------------------------------------------------------
+
+def test_control_characters_in_a_product_do_not_break_the_feed():
+    bad = entry("2026-09-02", ["ASML->TSM:EQUIPMENT"])
+    bad["links"]["ASML->TSM:EQUIPMENT"]["product"] = "EUV\x0b lithography\x0c tools\x00￾"
+    bad["links"]["ASML->TSM:EQUIPMENT"]["type"] = "Equip\x1fment"
+    rss = feed.build_rss(feed.build_changes_payload([entry("2026-09-01", []), bad]))
+
+    root = ET.fromstring(rss.encode("utf-8"))  # raised ParseError on the old escape()
+
+    assert "EUV" in root.find("./channel/item/description").text
+    assert "\x0b" not in rss and "\x0c" not in rss and "\x00" not in rss and "\x1f" not in rss

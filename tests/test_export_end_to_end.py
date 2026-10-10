@@ -81,3 +81,21 @@ def test_export_to_json_end_to_end(tmp_path, monkeypatch):
     assert dashboard["investor_metrics"]["unique_links"] == 3
     assert dashboard["investor_metrics"]["history"][-1]["unique_links"] == 3
     assert json.loads(history_path.read_text(encoding="utf-8"))[-1]["unique_links"] == 3
+
+
+def test_a_url_containing_manual_is_not_a_curated_source():
+    """A pending edge sourced from ".../Manual.pdf" was exported unreviewed while the evidence
+    checks treated it as AI-derived; export and audit now share evidence_quality's definition."""
+    from types import SimpleNamespace
+
+    from audit_data_quality import is_published
+
+    def pending(source_url):
+        return SimpleNamespace(review_status="pending", source_url=source_url)
+
+    for curated in ("Manual System Jumpstart", "AI Manual Review"):
+        assert export.should_export_edge(pending(curated)) and is_published(pending(curated)), curated
+    for derived in ("https://example.com/Manual.pdf", "https://www.sec.gov/Archives/service-manual.htm", "AI Multi-Source Research", None):
+        assert not export.should_export_edge(pending(derived)) and not is_published(pending(derived)), derived
+    assert export.should_export_edge(SimpleNamespace(review_status="approved", source_url="https://example.com/Manual.pdf"))
+    assert not export.should_export_edge(SimpleNamespace(review_status="rejected", source_url="Manual System Jumpstart"))
