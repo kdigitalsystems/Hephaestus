@@ -203,3 +203,42 @@ def test_a_stale_database_cannot_overwrite_or_erase_newer_decisions(database, tm
     monkeypatch.setattr(sys, "argv", ["edge_review_decisions.py", "export", "--only-newer", "--path", str(path)])
     decisions.main()
     assert ("SUP", "CUS", "approved") in tracked(path)
+
+
+def test_a_human_verdict_from_the_cli_does_not_keep_the_panels_note(database, monkeypatch):
+    """Approving without --note kept 'Ollama consensus review: Consensus 1/3 ...', so the site
+    labelled a human approval 'Consensus panel 1/3 models' and cleanup treated it as a model's."""
+    from argparse import Namespace
+
+    import review_edges
+    from audit_data_quality import needs_human_confirmation
+    from export import summarize_review
+
+    seed(database, "SUP", "CUS")
+    session = database()
+    sup, cus = session.query(Node).filter_by(ticker="SUP").one(), session.query(Node).filter_by(ticker="CUS").one()
+    edge = Edge(source_id=sup.id, target_id=cus.id, dependency_type="Components", review_status="pending",
+                review_note="Ollama consensus review: Consensus 1/3 for approve (avg confidence 0.90; votes approve:1). Lead rationale from x: ok.")
+    session.add(edge)
+    session.commit()
+    edge_id = edge.id
+    session.close()
+    monkeypatch.setattr(review_edges, "SessionLocal", database)
+
+    review_edges.set_status(Namespace(edge_id=edge_id, status="approved", note="", no_persist=True))
+
+    session = database()
+    row = session.get(Edge, edge_id)
+    assert row.review_status == "approved" and row.reviewed_at is not None
+    assert row.review_note.startswith("Human review (") and row.review_note.endswith("): approved.")
+    assert summarize_review(row.review_note, row.source_url, row.review_status)["label"] == "Human review"
+    assert not needs_human_confirmation(row)
+
+    review_edges.set_status(Namespace(edge_id=edge_id, status="rejected", note="Not a real customer.", no_persist=True))
+    session.expire_all()
+    assert session.get(Edge, edge_id).review_note.endswith("): rejected. Not a real customer.")
+    # Sending it back to the queue still leaves the existing rationale alone.
+    review_edges.set_status(Namespace(edge_id=edge_id, status="pending", note="", no_persist=True))
+    session.expire_all()
+    assert session.get(Edge, edge_id).review_status == "pending" and session.get(Edge, edge_id).review_note.endswith("Not a real customer.")
+    session.close()

@@ -143,6 +143,34 @@ def test_prose_keeps_mid_sentence_periods_and_a_restated_share_is_not_repeated()
     assert 'rel="icon"' in page
 
 
+def source_links(**fields):
+    import re
+
+    html = pages.render_link(link("SVCO", "Silvaco, Inc.", **fields), "downstream", set())
+    return re.findall(r'<a href="([^"]+)" rel="noopener noreferrer">([^<]*)</a>', html)
+
+
+def test_a_title_containing_a_slash_stays_whole_for_a_single_source():
+    """NVDA -> SVCO was shown with the source title "Company IR" instead of "Company IR / Website"."""
+    assert source_links(source="https://silvaco.com", source_title="Company IR / Website") == [("https://silvaco.com", "Company IR / Website")]
+
+
+def test_each_source_of_a_merged_link_gets_its_own_title():
+    listed = [{"url": "https://a.example/10k", "title": "Company IR / Website"}, {"url": "https://b.example/8k", "title": "Company IR / Website"},
+              {"url": "https://c.example/x", "title": "SEC EDGAR (10-K)"}]
+    assert source_links(source="https://a.example/10k / https://b.example/8k / https://c.example/x",
+                        source_title="Company IR / Website / Company IR / Website / SEC EDGAR (10-K)", sources=listed) == [
+        ("https://a.example/10k", "Company IR / Website"), ("https://b.example/8k", "Company IR / Website"), ("https://c.example/x", "SEC EDGAR (10-K)")]
+
+
+def test_legacy_joined_strings_are_paired_only_when_the_counts_agree():
+    # Published before `sources` existed: titles de-duplicated on their own no longer line up.
+    assert source_links(source="https://a.example / https://b.example / https://c.example", source_title="Same / SEC EDGAR") == [
+        ("https://a.example", "Source document"), ("https://b.example", "Source document"), ("https://c.example", "Source document")]
+    assert source_links(source="https://a.example / https://b.example", source_title="First / Second") == [
+        ("https://a.example", "First"), ("https://b.example", "Second")]
+
+
 def test_hand_written_pages_share_as_preview_cards():
     import re
     import struct

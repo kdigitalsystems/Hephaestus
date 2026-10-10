@@ -265,6 +265,8 @@ python3 backend/review_edges_with_ollama.py --model qwen2.5:14b-instruct --limit
 python3 backend/apply_ollama_review_report.py reports/ollama_edge_review.csv --min-approve 0.85 --min-reverse 0.85
 ```
 
+As in the nightly reviewer, a report's `reverse` verdicts are applied only when the run opts in with `--apply-reversals`; each row is committed on its own, so one verdict that conflicts with another edge between the same two companies is reported and skipped instead of losing the whole report.
+
 Persist reviewed decisions outside the local SQLite database:
 
 ```bash
@@ -311,7 +313,7 @@ HEPHAESTUS_EXPORT_AI_RESEARCH=1 python3 backend/export.py
 
 Use that mode only after reviewing the generated relationships; LLM extraction can create plausible but wrong links.
 
-The exported dashboard includes review metadata for CI and maintainer workflows. Each published relationship also carries a compact `review_summary` (curated seed, consensus panel vote count, single-model review, or human review, plus a short rationale) and a `source_title` citation derived from the collector that supplied the evidence, so the dashboard can show how a link was verified and where it came from; `docs/methodology.html` documents the sources, review rules, and limitations for readers. The pending review queue itself is not part of the public experience.
+The exported dashboard includes review metadata for CI and maintainer workflows. Each published relationship also carries a compact `review_summary` (curated seed, consensus panel vote count, single-model review, or human review, plus a short rationale) and a `source_title` citation derived from the collector that supplied the evidence, so the dashboard can show how a link was verified and where it came from (a link merged from several sources keeps each URL paired with its own title in `sources`, since a title can itself contain " / "); `docs/methodology.html` documents the sources, review rules, and limitations for readers. The pending review queue itself is not part of the public experience.
 
 The dashboard payload also includes investor-facing derived metrics:
 

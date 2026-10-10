@@ -167,6 +167,17 @@ def unique_join(values):
         merged.append(value)
     return " / ".join(merged)
 
+def merge_sources(relationships):
+    """(source, title) pairs of a merged group: one per distinct source, first title wins."""
+    pairs, seen = [], set()
+    for relationship in relationships:
+        source = str(relationship.get("source") or "").strip()
+        if not source or source.lower() in seen:
+            continue
+        seen.add(source.lower())
+        pairs.append((source, str(relationship.get("source_title") or "").strip() or source))
+    return pairs
+
 def merge_relationship_group(relationships):
     # A rejected member must never contribute to a published row.
     kept = [relationship for relationship in relationships if relationship_status(relationship) != "rejected"]
@@ -177,8 +188,15 @@ def merge_relationship_group(relationships):
     primary["edge_id"] = ranked[0].get("edge_id")
     primary["type"] = unique_join(relationship.get("type") for relationship in ranked)
     primary["product"] = unique_join(relationship.get("product") for relationship in ranked)
-    primary["source"] = unique_join(relationship.get("source") for relationship in ranked)
-    primary["source_title"] = unique_join(relationship.get("source_title") for relationship in ranked)
+    # A source and its title travel as a pair. Joining each field on its own dropped a
+    # repeated title but not the URL beside it, and the page then read the second URL's
+    # title from the wrong slot.
+    sources = merge_sources(ranked)
+    primary["source"] = " / ".join(url for url, _ in sources)
+    primary["source_title"] = " / ".join(title for _, title in sources)
+    if len(sources) > 1:
+        # Titles can contain " / " themselves, so the joined strings cannot be split reliably.
+        primary["sources"] = [{"url": url, "title": title} for url, title in sources]
     primary["source_type"] = unique_join(relationship.get("source_type") for relationship in ranked)
     primary["evidence_excerpt"] = unique_join(relationship.get("evidence_excerpt") for relationship in ranked)
     primary["review_status"] = unique_join(relationship.get("review_status") for relationship in ranked)
