@@ -14,6 +14,12 @@ REQUIRED_FIELDS = {
 
 
 def validate_predictions(payload):
+    """Structure, bounds, and the recommendation-language screen on the scenario prose.
+
+    The screen is the only check on the prose. It is not compared with the evidence, so
+    the prose can mention things the evidence does not contain; documentation must not
+    say otherwise.
+    """
     assert payload.get("universe_size") == 50, "prediction export must stay limited to 50 companies"
     assert payload.get("horizon_days") == 30
     assert isinstance(payload.get("predictions"), list) and len(payload["predictions"]) == 50

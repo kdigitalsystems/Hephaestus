@@ -17,6 +17,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
+from supplier_dependence import company_key
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS_DIR = ROOT / "docs"
@@ -26,12 +28,15 @@ DEFAULT_HISTORY_PATH = DOCS_DIR / "prediction_history.json"
 TOP_COMPANY_LIMIT = 50
 HORIZON_DAYS = 30
 MODEL_VERSION = "graph-signal-v1"
-# Resolved predictions are kept up to this many; unresolved predictions are always
-# retained until they can mature, so a larger --limit cannot starve calibration.
-HISTORY_RETENTION_LIMIT = 2000
-# Never prune the calibration corpus below this, even when unresolved entries pile
-# up because the price provider has been unavailable.
-MIN_RESOLVED_HISTORY = 500
+# Scored predictions are kept by age, not by count. A 30-day window needs ~22 weekdays
+# of unresolved entries (50 each) alongside them, so the old 2,000-entry cap left room
+# for under one window of scored history and the track record could never reach the
+# three independent periods it needs. A year is long enough to span many periods and
+# to learn relationship weights from; the entries are compacted (see below) to stay small.
+SCORED_RETENTION_DAYS = 365
+# Backstop for a very large --limit: past this many entries the oldest scored ones go.
+# Unresolved predictions are never dropped for size, only when they can no longer mature.
+HISTORY_ENTRY_CEILING = 30000
 # Unresolved predictions older than this can no longer be evaluated meaningfully.
 UNRESOLVED_RETENTION_MULTIPLIER = 4
 RESOLVED_OUTCOMES = frozenset({"correct", "incorrect"})
@@ -40,7 +45,27 @@ RESOLVED_OUTCOMES = frozenset({"correct", "incorrect"})
 # the time and dragged the published hit rate under the always-up baseline.
 NO_CALL_OUTCOME = "no_call"
 EVALUATED_OUTCOMES = RESOLVED_OUTCOMES | {NO_CALL_OUTCOME}
+# A prediction whose start price is known to be wrong (a stale dashboard repeated the
+# previous day's quote) is kept for the record but is not a measurement of anything.
+EXCLUDED_OUTCOME = "excluded"
+SETTLED_OUTCOMES = EVALUATED_OUTCOMES | {EXCLUDED_OUTCOME}
 VALID_DIRECTIONS = frozenset({"up", "down", "neutral"})
+# A recorded quote and the split-adjusted close of the session before it are the same
+# price to within a day's move. Further apart than this and they are on different bases
+# (a split: 5-for-4 is the smallest the check can see) and the series close is used.
+START_PRICE_TOLERANCE = 0.20
+# A generation day whose start prices repeat the previous day's for at least this
+# share of the companies it has in common (and at least MIN_PRICES_COMPARED of them)
+# was built on a dashboard that had not refreshed. Fresh days repeat 0-2% by chance.
+STALE_START_FRACTION = 0.8
+MIN_PRICES_COMPARED = 10
+# Refuse to generate from a dashboard older than this, whatever the last run saw.
+MAX_DASHBOARD_AGE = timedelta(hours=72)
+# Prose and retry bookkeeping that nothing reads once a prediction is scored.
+COMPACT_DROPPED_FIELDS = (
+    "scenario_summary", "bull_case", "bear_case", "scenario_model",
+    "evaluation_attempts", "last_evaluation_status", "last_evaluation_at",
+)
 # Below this many resolved signals the track record is too small to mean anything.
 MIN_RESOLVED_FOR_TRACK_RECORD = 30
 # Predictions are made daily for the same companies, so consecutive 30-day windows
@@ -190,15 +215,30 @@ def relationship_index(companies: Iterable[dict[str, Any]]) -> dict[str, list[tu
     return indexed
 
 
+def scored_directional(history: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Directional predictions with a graded outcome: what the track record and the
+    calibration both learn from. Neutral signals abstain and excluded ones are not
+    measurements."""
+    return [
+        entry for entry in history
+        if entry.get("outcome") in RESOLVED_OUTCOMES and entry.get("direction") != "neutral"
+    ]
+
+
 def calibration_from_history(history: list[dict[str, Any]]) -> dict[str, Any]:
-    """Learn only from resolved predictions, with shrinkage toward neutral weights."""
+    """Learn only from resolved predictions, with shrinkage toward neutral weights.
+
+    Each company counts once per horizon window, exactly as the track record counts it.
+    A daily prediction for one company re-scores almost the same 30-day return, so
+    learning from every repeat gave weights such as 0.794 for "historical" from eleven
+    observations of a single ticker, which the five-observation prior cannot shrink.
+    """
+    scored = scored_directional(history)
+    independent = independent_outcomes(scored)
     outcomes: dict[str, list[float]] = defaultdict(list)
-    resolved = 0
+    resolved = len(independent)
     correct = 0
-    for entry in history:
-        if entry.get("outcome") not in RESOLVED_OUTCOMES:
-            continue
-        resolved += 1
+    for entry in independent:
         correct += entry["outcome"] == "correct"
         # One resolved prediction is one observation per relationship type. Counting
         # every path separately would let a single outcome outweigh the shrinkage.
@@ -215,7 +255,9 @@ def calibration_from_history(history: list[dict[str, Any]]) -> dict[str, Any]:
         accuracy = (sum(values) + 2.5) / (len(values) + 5)
         weights[relationship_type] = round(clamp(0.70 + accuracy * 0.60, 0.70, 1.30), 3)
     return {
+        # What the weights were learned from; the track record's `resolved` is the same count.
         "resolved_predictions": resolved,
+        "resolved_with_overlap": len(scored),
         "hit_rate": round(correct / resolved, 3) if resolved else None,
         "relationship_weights": weights,
     }
@@ -303,7 +345,9 @@ def build_prediction(company: dict[str, Any], company_by_ticker: dict[str, dict[
         "starting_price": as_number(company.get("price")) or None,
         "key_inputs": inputs,
         # Publish every contributing path so network_signal can be reproduced from
-        # the artifact; the exporter already caps relationships at five per side.
+        # the artifact. The exporter does not cap relationships (AMZN publishes 150+
+        # downstream), so this list can be long; scored history entries keep only the
+        # relationship types (compact_settled_entry).
         "connection_paths": paths,
         "scenario_summary": scenarios["summary"],
         "bull_case": scenarios["bull_case"],
@@ -332,12 +376,145 @@ def price_date_from_source(source: str, fallback: datetime) -> str:
     return match.group(1) if match else fallback.date().isoformat()
 
 
-def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str, dict[str, Any]], now: datetime, price_lookup: PriceLookup | None = None) -> list[dict[str, Any]]:
+def lookup_price(lookup: PriceLookup, ticker: Any, at: datetime) -> tuple[float, str]:
+    try:
+        close, source = lookup(str(ticker or ""), at)
+    except Exception as exc:
+        close, source = None, f"historical_close_unavailable:{type(exc).__name__}"
+    return as_number(close), str(source)
+
+
+def same_price_basis(recorded: float, series: float) -> bool:
+    """Is a recorded price the same quantity as the series close, to within a day's move?"""
+    return recorded > 0 and series > 0 and abs(recorded / series - 1) <= START_PRICE_TOLERANCE
+
+
+def record_outcome(entry: dict[str, Any], start: float, end: float, source: str, now: datetime, target_at: datetime) -> None:
+    direction = entry.get("direction")
+    return_pct = round(((end - start) / start) * 100, 2)
+    entry["realized_return_pct"] = return_pct
+    entry["evaluated_at"] = now.isoformat()
+    entry["evaluation_target_date"] = target_at.date().isoformat()
+    entry["outcome_price_date"] = price_date_from_source(source, target_at)
+    entry["outcome_price"] = round(end, 4)
+    entry["outcome_price_source"] = source
+    if direction == "neutral":
+        entry["outcome"] = NO_CALL_OUTCOME
+    else:
+        entry["outcome"] = "correct" if (direction == "up" and return_pct > 0) or (direction == "down" and return_pct < 0) else "incorrect"
+
+
+def exclude_from_scoring(entry: dict[str, Any], reason: str) -> None:
+    # The return was computed from a wrong start price; leaving it in the file invites
+    # someone to average it. The outcome price stays, as evidence of what was seen.
+    entry.pop("realized_return_pct", None)
+    entry["outcome"] = EXCLUDED_OUTCOME
+    entry["exclusion_reason"] = reason
+
+
+def starting_prices_by_day(history: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
+    by_day: dict[str, dict[str, float]] = {}
+    for entry in history:
+        generated = parse_generated_at(entry)
+        price = as_number(entry.get("starting_price"))
+        ticker = str(entry.get("ticker") or "").upper()
+        if generated is not None and price > 0 and ticker:
+            by_day.setdefault(generated.date().isoformat(), {})[ticker] = price
+    return by_day
+
+
+def prices_repeat(current: dict[str, float], previous: dict[str, float]) -> bool:
+    """True when `current` is, for practical purposes, `previous` again."""
+    common = [ticker for ticker in current if ticker in previous]
+    if len(common) < MIN_PRICES_COMPARED:
+        return False
+    same = sum(1 for ticker in common if current[ticker] == previous[ticker])
+    return same / len(common) >= STALE_START_FRACTION
+
+
+def stale_generation_days(history: list[dict[str, Any]]) -> set[str]:
+    """Generation days whose start prices are the previous generation day's again.
+
+    The dashboard had not refreshed, so the "starting price" belongs to an earlier day
+    and the measured window is longer than the horizon (31-33 days on seven of the
+    first 35 generation days). The history shows this by itself: no two days of real
+    quotes repeat for most of 50 companies.
+    """
+    by_day = starting_prices_by_day(history)
+    stale: set[str] = set()
+    previous: dict[str, float] | None = None
+    for day in sorted(by_day):
+        if previous is not None and prices_repeat(by_day[day], previous):
+            stale.add(day)
+        previous = by_day[day]
+    return stale
+
+
+def exclude_duplicate_start_prices(history: list[dict[str, Any]]) -> int:
+    stale = stale_generation_days(history)
+    excluded = 0
+    for entry in history:
+        generated = parse_generated_at(entry)
+        if generated is not None and generated.date().isoformat() in stale and entry.get("outcome") != EXCLUDED_OUTCOME:
+            exclude_from_scoring(entry, "duplicate_start_price")
+            excluded += 1
+    return excluded
+
+
+def verify_start_price_basis(entry: dict[str, Any], price_lookup: PriceLookup, base_lookup: PriceLookup, now: datetime) -> None:
+    """Re-grade a scored entry from one split-adjusted series, once.
+
+    Entries scored before the start price was checked compared a raw quote with a
+    split-adjusted close (Amphenol's 2-for-1 split graded two up calls as -46%).
+    Both ends are fetched again from the same series; if the stored pair agrees with
+    them the entry is left exactly as it was and only marked as checked. A price that
+    cannot be fetched leaves the entry unmarked, so a later run tries again.
+    """
+    generated = parse_generated_at(entry)
+    target_at = generated + timedelta(days=entry_horizon_days(entry))
+    start = as_number(entry.get("starting_price"))
+    ticker = entry.get("ticker")
+    base, base_source = lookup_price(base_lookup, ticker, generated)
+    end, end_source = lookup_price(price_lookup, ticker, target_at)
+    if base <= 0 or end <= 0:
+        return
+    if same_price_basis(start, base) and same_price_basis(as_number(entry.get("outcome_price")), end):
+        entry["start_price_basis"] = "quote_matches_series"
+        return
+    entry["outcome_before_regrade"] = entry.get("outcome")
+    entry["regraded_at"] = now.isoformat()
+    first_evaluated = entry.get("evaluated_at")
+    entry["graded_start_price"] = round(base, 4)
+    entry["start_price_basis"] = "adjusted_series_close"
+    record_outcome(entry, base, end, end_source, now, target_at)
+    # `evaluated_at` says when the signal matured and was first scored; `regraded_at` says this.
+    entry["evaluated_at"] = first_evaluated or now.isoformat()
+
+
+def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str, dict[str, Any]], now: datetime, price_lookup: PriceLookup | None = None, base_lookup: PriceLookup | None = None) -> list[dict[str, Any]]:
+    """Grade matured predictions.
+
+    `price_lookup` gives the close at maturity and `base_lookup` the close of the
+    session before generation, both from the same split-adjusted series. With both, a
+    stored start price on a different basis than that series (a split in between) is
+    replaced by the series close; without `base_lookup` the stored price is trusted.
+    """
+    exclude_duplicate_start_prices(history)
     for entry in history:
         if entry.get("direction") == "neutral" and entry.get("outcome") in RESOLVED_OUTCOMES:
             # Re-grade abstentions scored under the old +/-2% rule.
             entry["outcome"] = NO_CALL_OUTCOME
+        if entry.get("outcome") == EXCLUDED_OUTCOME:
+            continue
         if entry.get("outcome"):
+            if (
+                price_lookup and base_lookup
+                and entry["outcome"] in EVALUATED_OUTCOMES
+                and "start_price_basis" not in entry
+                and as_number(entry.get("starting_price")) > 0
+                and parse_generated_at(entry) is not None
+            ):
+                verify_start_price_basis(entry, price_lookup, base_lookup, now)
             continue
         generated = parse_generated_at(entry)
         if generated is None:
@@ -360,35 +537,37 @@ def evaluate_history(history: list[dict[str, Any]], company_by_ticker: dict[str,
         start = as_number(entry.get("starting_price"))
         end = 0.0
         source = "latest_exported_price_fallback"
+        basis = None
         if price_lookup:
-            try:
-                historical_close, historical_source = price_lookup(str(entry.get("ticker") or ""), target_at)
-            except Exception as exc:
-                historical_close, historical_source = None, f"historical_close_unavailable:{type(exc).__name__}"
-            end = as_number(historical_close)
-            source = historical_source
+            end, source = lookup_price(price_lookup, entry.get("ticker"), target_at)
+            failed_source = source
+            if end > 0 and base_lookup and start > 0:
+                base, failed_source = lookup_price(base_lookup, entry.get("ticker"), generated)
+                if base > 0:
+                    if same_price_basis(start, base):
+                        basis = "quote_matches_series"
+                    else:
+                        basis = "adjusted_series_close"
+                        start = base
+                else:
+                    end = 0.0
             if end <= 0:
                 # Leave the entry unresolved, but make repeated failures visible.
                 entry["evaluation_attempts"] = int(as_number(entry.get("evaluation_attempts"))) + 1
-                entry["last_evaluation_status"] = str(source)
+                entry["last_evaluation_status"] = failed_source
                 entry["last_evaluation_at"] = now.isoformat()
                 continue
         elif end <= 0:
+            # Only for library callers that supply no lookup; the exporter always does.
             end = as_number(company.get("price")) if company else 0.0
             source = "latest_exported_price_fallback"
         if start <= 0 or end <= 0:
             continue
-        return_pct = round(((end - start) / start) * 100, 2)
-        entry["realized_return_pct"] = return_pct
-        entry["evaluated_at"] = now.isoformat()
-        entry["evaluation_target_date"] = target_at.date().isoformat()
-        entry["outcome_price_date"] = price_date_from_source(source, target_at)
-        entry["outcome_price"] = round(end, 4)
-        entry["outcome_price_source"] = source
-        if direction == "neutral":
-            entry["outcome"] = NO_CALL_OUTCOME
-        else:
-            entry["outcome"] = "correct" if (direction == "up" and return_pct > 0) or (direction == "down" and return_pct < 0) else "incorrect"
+        if basis:
+            entry["start_price_basis"] = basis
+            if basis == "adjusted_series_close":
+                entry["graded_start_price"] = round(start, 4)
+        record_outcome(entry, start, end, source, now, target_at)
     return history
 
 
@@ -410,6 +589,11 @@ def entry_horizon_days(entry: dict[str, Any]) -> int:
         return HORIZON_DAYS
 
 
+def independence_key(entry: dict[str, Any], index: int) -> str:
+    """One key per company, not per listing: GOOG and GOOGL are one bet on Alphabet."""
+    return company_key(entry.get("company_name")) or str(entry.get("ticker") or f"#{index}").lower()
+
+
 def independent_outcomes(resolved: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """At most one scored prediction per company per horizon window.
 
@@ -424,7 +608,7 @@ def independent_outcomes(resolved: list[dict[str, Any]]) -> list[dict[str, Any]]
     kept = []
     for index, entry in ordered:
         generated = parse_generated_at(entry)
-        key = str(entry.get("ticker") or f"#{index}").upper()
+        key = independence_key(entry, index)
         previous = last_kept.get(key)
         if generated is None or previous is None or generated >= previous + timedelta(days=entry_horizon_days(entry)):
             kept.append(entry)
@@ -453,12 +637,11 @@ def track_record(history: list[dict[str, Any]], now: datetime) -> dict[str, Any]
     the comparison a reader needs to judge whether the signals carry information.
     Only directional calls are scored, and only once per company per window.
     """
-    scored = [
-        entry for entry in history
-        if entry.get("outcome") in RESOLVED_OUTCOMES and entry.get("direction") != "neutral"
-    ]
+    scored = scored_directional(history)
     resolved = independent_outcomes(scored)
     periods = independent_periods(scored)
+    excluded = sum(1 for entry in history if entry.get("outcome") == EXCLUDED_OUTCOME)
+    rebased = sum(1 for entry in scored if entry.get("start_price_basis") == "adjusted_series_close")
     no_calls = sum(
         1 for entry in history
         if entry.get("outcome") == NO_CALL_OUTCOME
@@ -488,6 +671,8 @@ def track_record(history: list[dict[str, Any]], now: datetime) -> dict[str, Any]
         "resolved": len(resolved),
         "resolved_with_overlap": len(scored),
         "no_calls": no_calls,
+        "excluded": excluded,
+        "rebased_to_adjusted_series": rebased,
         "hits": hits,
         "hit_rate": round(hits / len(resolved), 3) if resolved else None,
         "always_up_hit_rate": round(always_up_hits / len(resolved), 3) if resolved else None,
@@ -497,14 +682,44 @@ def track_record(history: list[dict[str, Any]], now: datetime) -> dict[str, Any]
     }
 
 
+def compact_settled_entry(entry: dict[str, Any]) -> dict[str, Any]:
+    """Keep what scoring, calibration and retrieval read; drop the bulk.
+
+    A scored prediction's scenario prose is never read again, and its connection paths
+    carry source evidence text (2.2 KB of a 3.9 KB entry). Calibration and prior-outcome
+    retrieval read only the relationship types of graded up/down calls, so those stay.
+    The full entry remains in the repository's commit history. Compacting is idempotent.
+    """
+    compact = {key: value for key, value in entry.items() if key not in COMPACT_DROPPED_FIELDS}
+    if "connection_paths" in entry:
+        labels: dict[str, str] = {}
+        # Only graded directional calls teach the calibration or serve as retrieved examples.
+        if entry.get("outcome") in RESOLVED_OUTCOMES:
+            for path in entry.get("connection_paths") or []:
+                if isinstance(path, dict):
+                    label = str(path.get("relationship_type") or "Supply Link")
+                    labels.setdefault(label.lower(), label)
+        compact["connection_paths"] = [{"relationship_type": label} for label in labels.values()]
+        compact["compacted"] = True
+    return compact
+
+
 def prune_history(history: list[dict[str, Any]], now: datetime) -> list[dict[str, Any]]:
-    """Bound the history file without ever dropping a prediction that can still mature."""
+    """Bound the history file without ever dropping a prediction that can still mature.
+
+    Scored entries are compacted and kept for SCORED_RETENTION_DAYS. The track record
+    needs months of them (three non-overlapping 30-day periods, the last one matured),
+    which an entry-count cap could not hold next to the ~1,100 unresolved entries that
+    always stay.
+    """
+    cutoff = now - timedelta(days=SCORED_RETENTION_DAYS)
     retained = []
     for entry in history:
-        if entry.get("outcome") in EVALUATED_OUTCOMES:
-            retained.append(entry)
-            continue
         generated = parse_generated_at(entry)
+        if entry.get("outcome") in SETTLED_OUTCOMES:
+            if generated is None or generated >= cutoff:
+                retained.append(compact_settled_entry(entry))
+            continue
         if generated is not None:
             try:
                 horizon_days = max(1, int(entry.get("horizon_days") or HORIZON_DAYS))
@@ -514,28 +729,15 @@ def prune_history(history: list[dict[str, Any]], now: datetime) -> list[dict[str
                 continue
         retained.append(entry)
 
-    overflow = len(retained) - HISTORY_RETENTION_LIMIT
+    overflow = len(retained) - HISTORY_ENTRY_CEILING
     if overflow <= 0:
         return retained
-    # Drop the oldest resolved entries first, but keep a calibration corpus; unresolved
-    # entries always survive, even if that leaves the file over the soft limit.
-    resolved_count = sum(1 for entry in retained if entry.get("outcome") in RESOLVED_OUTCOMES)
-    no_call_count = sum(1 for entry in retained if entry.get("outcome") == NO_CALL_OUTCOME)
-    scored_droppable = max(0, resolved_count - MIN_RESOLVED_HISTORY)
-    overflow = min(overflow, no_call_count + scored_droppable)
-    bounded = []
-    dropped = 0
-    dropped_scored = 0
-    for entry in retained:
-        outcome = entry.get("outcome")
-        if dropped < overflow and (
-            outcome == NO_CALL_OUTCOME or (outcome in RESOLVED_OUTCOMES and dropped_scored < scored_droppable)
-        ):
-            dropped += 1
-            dropped_scored += outcome in RESOLVED_OUTCOMES
-            continue
-        bounded.append(entry)
-    return bounded
+    oldest_first = sorted(
+        (index for index, entry in enumerate(retained) if entry.get("outcome") in SETTLED_OUTCOMES),
+        key=lambda index: (parse_generated_at(retained[index]) or datetime.min.replace(tzinfo=timezone.utc), index),
+    )
+    dropped = set(oldest_first[:overflow])
+    return [entry for index, entry in enumerate(retained) if index not in dropped]
 
 
 def load_json(path: Path, fallback: Any) -> Any:
@@ -546,11 +748,42 @@ def load_json(path: Path, fallback: Any) -> Any:
         return fallback
 
 
-def generate_predictions(dashboard_data: dict[str, Any], history: list[dict[str, Any]] | None = None, limit: int = TOP_COMPANY_LIMIT, now: datetime | None = None, price_lookup: PriceLookup | None = None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+def dashboard_staleness(dashboard_data: dict[str, Any], history: list[dict[str, Any]], now: datetime, limit: int = TOP_COMPANY_LIMIT) -> str | None:
+    """Why this dashboard must not seed new predictions, or None when it is fresh.
+
+    A dashboard that has not been republished since the previous run gives every
+    company the previous run's starting price, so the new "30-day" window really
+    opens a day or more earlier (this happened on 7 of the first 35 generation days).
+    Refusing is better than publishing a day's signals as new when their inputs are not.
+    """
+    try:
+        published = datetime.fromisoformat(str(dashboard_data.get("generated_at")).replace("Z", "+00:00"))
+        if published.tzinfo is None:
+            published = published.replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError):
+        published = None
+    last_run = max((generated for generated in map(parse_generated_at, history) if generated is not None), default=None)
+    if published is not None:
+        if now - published > MAX_DASHBOARD_AGE:
+            return f"the dashboard data was published {published.isoformat()}, more than {int(MAX_DASHBOARD_AGE.total_seconds() // 3600)} hours ago"
+        if last_run is not None and published <= last_run:
+            return f"the dashboard data was published {published.isoformat()}, not after the previous signal run at {last_run.isoformat()}"
+    by_day = starting_prices_by_day(history)
+    if by_day:
+        current = {
+            str(company["ticker"]).upper(): as_number(company.get("price"))
+            for company in select_top_companies(iter_companies(dashboard_data), limit)
+        }
+        if prices_repeat(current, by_day[max(by_day)]):
+            return f"its prices repeat the previous run's ({max(by_day)}) for at least {STALE_START_FRACTION:.0%} of the companies"
+    return None
+
+
+def generate_predictions(dashboard_data: dict[str, Any], history: list[dict[str, Any]] | None = None, limit: int = TOP_COMPANY_LIMIT, now: datetime | None = None, price_lookup: PriceLookup | None = None, base_lookup: PriceLookup | None = None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     now = now or utc_now()
     all_companies = list(iter_companies(dashboard_data))
     company_by_ticker = {str(company["ticker"]).upper(): company for company in all_companies}
-    history = evaluate_history(list(history or []), company_by_ticker, now, price_lookup)
+    history = evaluate_history(list(history or []), company_by_ticker, now, price_lookup, base_lookup)
     calibration = calibration_from_history(history)
     performance = track_record(history, now)
     universe = select_top_companies(all_companies, limit)
@@ -773,12 +1006,18 @@ def enhance_scenarios_with_ollama(payload: dict[str, Any], model: str, history: 
 
 
 def write_outputs(payload: dict[str, Any], history: list[dict[str, Any]], predictions_path: Path = DEFAULT_PREDICTIONS_PATH, history_path: Path = DEFAULT_HISTORY_PATH, now: datetime | None = None) -> None:
-    def atomic_write_json(path: Path, value: Any) -> None:
+    def atomic_write_json(path: Path, value: Any, one_line_per_item: bool = False) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
         try:
             with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
-                json.dump(value, handle, indent=2)
+                if one_line_per_item and value:
+                    # Indentation was a quarter of the history file, and a year of scored
+                    # entries is ~13,000 of them. One line per entry also keeps each
+                    # nightly change reviewable as a handful of changed lines.
+                    handle.write("[\n" + ",\n".join("  " + json.dumps(item) for item in value) + "\n]")
+                else:
+                    json.dump(value, handle, indent=2)
                 handle.write("\n")
                 handle.flush()
                 os.fsync(handle.fileno())
@@ -806,5 +1045,5 @@ def write_outputs(payload: dict[str, Any], history: list[dict[str, Any]], predic
         if now.tzinfo is None:
             now = now.replace(tzinfo=timezone.utc)
     # History first: a retry can safely reconstruct the current payload from it.
-    atomic_write_json(history_path, prune_history(history, now))
+    atomic_write_json(history_path, prune_history(history, now), one_line_per_item=True)
     atomic_write_json(predictions_path, payload)

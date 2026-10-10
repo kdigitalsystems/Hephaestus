@@ -33,7 +33,7 @@ def test_historical_close_uses_first_available_session_after_target(monkeypatch)
             return FakeHistory()
 
     monkeypatch.setattr(historical_prices, "Ticker", FakeTicker)
-    monkeypatch.setattr(historical_prices, "_LOOKUP_CACHE", {})
+    monkeypatch.setattr(historical_prices, "_SERIES_CACHE", {})
 
     close, source = historical_prices.historical_close_on_or_after(
         "BASE",
@@ -66,7 +66,7 @@ def test_historical_close_handles_null_date_column(monkeypatch):
             return NullDateHistory()
 
     monkeypatch.setattr(historical_prices, "Ticker", FakeTicker)
-    monkeypatch.setattr(historical_prices, "_LOOKUP_CACHE", {})
+    monkeypatch.setattr(historical_prices, "_SERIES_CACHE", {})
 
     close, source = historical_prices.historical_close_on_or_after("BASE", datetime(2026, 3, 1, tzinfo=timezone.utc))
 
@@ -83,7 +83,7 @@ def test_historical_close_is_explicit_when_provider_fails(monkeypatch):
             raise RuntimeError("provider unavailable")
 
     monkeypatch.setattr(historical_prices, "Ticker", FailingTicker)
-    monkeypatch.setattr(historical_prices, "_LOOKUP_CACHE", {})
+    monkeypatch.setattr(historical_prices, "_SERIES_CACHE", {})
 
     close, source = historical_prices.historical_close_on_or_after(
         "BASE",
@@ -93,4 +93,4 @@ def test_historical_close_is_explicit_when_provider_fails(monkeypatch):
     assert close is None
     assert source == "historical_close_unavailable"
     # A provider failure is remembered for the run instead of retried per prediction.
-    assert historical_prices._LOOKUP_CACHE[("BASE", datetime(2026, 2, 1).date())] == (None, "historical_close_unavailable")
+    assert list(historical_prices._SERIES_CACHE.values()) == [None]
