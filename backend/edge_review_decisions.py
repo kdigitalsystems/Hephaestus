@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from thefuzz import fuzz
 
 from database import SessionLocal
+from export import write_json_atomic
 from models import Edge, Node
 
 
@@ -23,7 +24,27 @@ def edge_key(edge):
     }
 
 
+def load_decisions(path):
+    """The decisions in the tracked file ([] when there is none yet).
+
+    An unreadable file stops the export: a decision cannot be carried over if it cannot
+    be read, and overwriting the file would silently drop every one of them.
+    """
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path, encoding="utf-8") as handle:
+            decisions = json.load(handle).get("decisions")
+    except (OSError, ValueError, AttributeError) as exc:
+        raise SystemExit(f"{path} exists but could not be read ({exc}); refusing to overwrite it.")
+    if not isinstance(decisions, list):
+        raise SystemExit(f"{path} has no list of decisions; refusing to overwrite it.")
+    return decisions
+
+
 def export_decisions(path):
+    # Read first: a refusal must happen before the database is queried or anything written.
+    existing = load_decisions(path)
     session = SessionLocal()
     try:
         edges = (
@@ -32,32 +53,46 @@ def export_decisions(path):
             .order_by(Edge.id.asc())
             .all()
         )
-        payload = {
-            "exported_at": datetime.now(timezone.utc).isoformat(),
-            "decisions": [
-                {
-                    "edge_id": edge.id,
-                    **edge_key(edge),
-                    "dependency_type": edge.dependency_type,
-                    "product": edge.product,
-                    "confidence_score": edge.confidence_score,
-                    "revenue_share": edge.revenue_share,
-                    "source_url": edge.source_url,
-                    "source_title": edge.source_title,
-                    "evidence_excerpt": edge.evidence_excerpt,
-                    "review_status": edge.review_status,
-                    "review_note": edge.review_note,
-                    "reviewed_at": edge.reviewed_at.isoformat() if edge.reviewed_at else None,
-                }
-                for edge in edges
-            ],
+        decisions = [
+            {
+                "edge_id": edge.id,
+                **edge_key(edge),
+                "dependency_type": edge.dependency_type,
+                "product": edge.product,
+                "confidence_score": edge.confidence_score,
+                "revenue_share": edge.revenue_share,
+                "source_url": edge.source_url,
+                "source_title": edge.source_title,
+                "evidence_excerpt": edge.evidence_excerpt,
+                "review_status": edge.review_status,
+                "review_note": edge.review_note,
+                "reviewed_at": edge.reviewed_at.isoformat() if edge.reviewed_at else None,
+            }
+            for edge in edges
+        ]
+        # A decision about a pair this database has no edge for at all was never applied (a
+        # company missing from a fresh database, or apply not yet run): writing only what the
+        # database holds would erase it from the file, and the next repair would drop its
+        # link from the site. It is carried over verbatim. A pair that does have an edge is
+        # up to the database, so relabelling or un-reviewing an edge still replaces it.
+        pairs = {
+            (edge.source_node.ticker, edge.target_node.ticker)
+            for edge in session.query(Edge).all()
+            if edge.source_node and edge.target_node
         }
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, "w") as handle:
-            json.dump(payload, handle, indent=2)
-        print(f"Exported {len(edges)} review decision(s) to {path}")
+        carried = [item for item in existing if (item.get("source_ticker"), item.get("target_ticker")) not in pairs]
+        payload = {"exported_at": datetime.now(timezone.utc).isoformat(), "decisions": decisions + carried}
+        write_json_atomic(path, payload)
+        note = f"; kept {len(carried)} that this database has no edge for" if carried else ""
+        print(f"Exported {len(decisions)} review decision(s) to {path}{note}")
     finally:
         session.close()
+
+
+def warn(message):
+    print(f"WARNING: {message}")
+    if os.environ.get("GITHUB_ACTIONS"):
+        print(f"::warning title=Review decisions not applied::{message}")
 
 
 def apply_decisions(path):
@@ -67,6 +102,7 @@ def apply_decisions(path):
     decisions = payload.get("decisions", [])
     session = SessionLocal()
     counts = {"applied": 0, "missing": 0}
+    missing = []
     try:
         for decision in decisions:
             try:
@@ -79,7 +115,16 @@ def apply_decisions(path):
                 result = apply_decision(session, decision)
                 counts[result] += 1
                 session.commit()
+            if result == "missing":
+                missing.append(f"{decision.get('source_ticker')}->{decision.get('target_ticker')}")
         print("Applied review decisions:", counts)
+        if missing:
+            shown = ", ".join(missing[:15]) + (f" and {len(missing) - 15} more" if len(missing) > 15 else "")
+            warn(
+                f"{len(missing)} review decision(s) were not applied because a company is not in this database "
+                f"({shown}). They stay in {os.path.basename(path)} and are re-tried on every run."
+            )
+        return counts
     finally:
         session.close()
 
