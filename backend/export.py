@@ -764,7 +764,7 @@ def export_to_json():
                 "ticker": node.ticker,
                 "industry": displayable(node.industry),
                 "price": clean_num(node.current_price),
-                "change": clean_num(node.percent_change) or 0.0,
+                "change": clean_num(node.percent_change),  # None stays None: the page shows N/A, not a flat 0.00%
                 "market_cap": clean_num(node.market_cap),
                 "enterprise_value": clean_num(node.enterprise_value),
                 "trailing_pe": clean_num(node.trailing_pe),

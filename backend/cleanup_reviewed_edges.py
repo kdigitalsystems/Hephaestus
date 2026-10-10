@@ -1,9 +1,11 @@
+import re
 from collections import defaultdict
 from datetime import datetime, timezone
 
 from audit_data_quality import (  # noqa: F401  (HELD_NOTE_PREFIX is re-exported for callers)
     HELD_NOTE_PREFIX,
     backwards_foundry_edge,
+    concentration_share_problems,
     contested_reciprocal_edges,
     direction_contested,
     endpoint_label_as_product,
@@ -22,8 +24,6 @@ from audit_data_quality import (  # noqa: F401  (HELD_NOTE_PREFIX is re-exported
 from customer_concentration import (
     SUPPLIER_TITLE_MARKER,
     describe_share,
-    disclosure_sentence,
-    extract_disclosures,
     implausible_share,
 )
 from sqlalchemy import or_
@@ -43,6 +43,11 @@ from models import Edge, Node
 CONCENTRATION_TYPE = "Revenue Concentration"
 
 
+def product_states_share(product, share):
+    """The product text repeats the share ("26.6% of JAKK revenue"), so it goes when the share does."""
+    return share is not None and re.search(rf"(?<![\d.]){re.escape(f'{share:g}')}\s?%", str(product or "")) is not None
+
+
 def recheck_concentration_edges(session, counts):
     """Re-derive each stored concentration share from its own evidence sentence.
 
@@ -50,11 +55,13 @@ def recheck_concentration_edges(session, counts):
     a share paired wrongly in an earlier run (Howmet -> GE was published at 53%, the
     commercial-aerospace segment, when the sentence says GE is ~11%) is corrected
     here, and the decisions file re-applied at the start of the next run then
-    carries the corrected value instead of restoring the old one. Evidence that no
-    longer yields a share for the named customer sends the edge back to review.
+    carries the corrected value instead of restoring the old one. When the sentence
+    names the customer but the figure is not its own (a joint figure, a range, a blank
+    cell this year: Garmin distributes for Iridium, but "Marlink Group and Garmin, together
+    represented approximately 10%") the share is cleared and the link stays. Evidence that no
+    longer makes the company a customer with a share (a name that is really "Southern
+    Region") sends the edge back to review. A person's verdict, share included, stands.
     """
-    from auto_discover_edges import clean_company_name, known_company_names  # heavy module; import lazily
-
     # Any edge carrying a disclosed share, whatever the panel relabelled it to: ROKU's
     # 81% survived for days as "operational supply chain dependency".
     edges = session.query(Edge).filter(
@@ -63,36 +70,31 @@ def recheck_concentration_edges(session, counts):
     ).all()
     if not edges:
         return
-    # The whole universe, not just this edge's customer: discovery's rules (at most
-    # three names per sentence, peer lists, rating agencies) must apply identically
-    # here, or the recheck would confirm a share discovery would now reject.
-    known = known_company_names(session)
+    problems = concentration_share_problems(session, edges)
     for edge in edges:
         filer, customer = edge.source_node, edge.target_node
         if not filer or not customer:
             continue
-        sentence = disclosure_sentence(edge.evidence_excerpt)
-        filer_names = (filer.name, clean_company_name(filer.name))
-        # The stored excerpt is the disclosure sentence alone, but discovery may have
-        # taken the customer cue from the sentence before it; requiring the cue again
-        # here would demote a valid edge on every run.
-        shares = [
-            d.share_pct
-            for d in extract_disclosures(sentence, known, filer_names, require_customer_cue=False)
-            if d.customer_name == customer.name and d.share_pct is not None
-        ]
-        if not shares:
+        problem = problems.get(edge)
+        # Nobody has decided a waiting or model-approved link; a person's share is theirs.
+        ours = needs_human_confirmation(edge) or edge.review_status == "pending"
+        if problem and problem.action == "hold":
             if needs_human_confirmation(edge):
-                hold_for_human(edge, counts, "concentration_unsupported",
-                               "the filing sentence no longer yields a revenue share for this customer")
+                hold_for_human(edge, counts, "concentration_unsupported", problem.reason)
             continue
-        share = max(shares)
-        if edge.revenue_share != share:
-            edge.revenue_share = share
-            edge.product = describe_share(share, filer.ticker)
+        if problem and not ours:
+            counts["concentration_share_left_to_a_person"] = counts.get("concentration_share_left_to_a_person", 0) + 1
+        elif problem and problem.action == "correct":
+            edge.revenue_share = problem.share
+            edge.product = describe_share(problem.share, filer.ticker)
             counts["concentration_share_corrected"] = counts.get("concentration_share_corrected", 0) + 1
+        elif problem:
+            if product_states_share(edge.product, edge.revenue_share):
+                edge.product = edge.dependency_type
+            edge.revenue_share = None
+            counts["concentration_share_cleared"] = counts.get("concentration_share_cleared", 0) + 1
 
-        reason = implausible_share(share, customer.market_cap)
+        reason = implausible_share(edge.revenue_share, customer.market_cap)
         if reason and needs_human_confirmation(edge):
             # Held notes are skipped by the consensus review, so a human decides once
             # instead of the models re-approving what this step keeps holding.
@@ -345,6 +347,7 @@ def cleanup_reviewed_edges():
         # Direction first: the reciprocal check must see the corrected foundry edges.
         correct_foundry_direction(session, counts)
         recheck_concentration_edges(session, counts)
+        session.flush()
         repair_endpoint_products(session, counts)
         resolve_reciprocal_duplicates(session, counts)
         hold_impossible_share_totals(session, counts)

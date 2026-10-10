@@ -261,6 +261,35 @@ def share_class_duplicates(edges):
     return duplicates
 
 
+def is_concentration_edge(edge):
+    """A customer disclosure: typed as one, or carrying a disclosed share whatever the panel relabelled it to."""
+    return edge.dependency_type == "Revenue Concentration" or edge.revenue_share is not None
+
+
+def concentration_share_problems(session, edges):
+    """{edge: ShareProblem} for the stored customer disclosures whose sentence no longer supports the share.
+
+    Cleanup corrects, clears or holds each of these before the audit runs, and a person's
+    verdict is never judged, so the audit asks only about edges `needs_human_confirmation`.
+    """
+    candidates = [edge for edge in edges if is_concentration_edge(edge)]
+    if not candidates:
+        return {}
+    from auto_discover_edges import clean_company_name, known_company_names  # heavy module; import lazily
+    from customer_concentration import share_statement_problem
+
+    # The whole universe, not just this edge's customer: discovery's rules (at most three names
+    # per sentence, peer lists, rating agencies) must apply identically here, or the recheck would
+    # confirm a share discovery would now reject.
+    known = known_company_names(session)
+    problems = {}
+    for edge in candidates:
+        problem = share_statement_problem(edge, known, clean_company_name)
+        if problem:
+            problems[edge] = problem
+    return problems
+
+
 def direction_settled(edge):
     """A filing, a human or a curated seed fixed this edge's direction."""
     return filer_documented_direction(edge) or not model_verdict(edge)
@@ -476,6 +505,9 @@ def audit_database(fail_on_warnings=False):
             unsupported_supplier_edges = [
                 edge for edge in supplier_edges if supplier_statement_problem(edge, index, clean_company_name)
             ]
+        unsupported_share_edges = list(
+            concentration_share_problems(session, [edge for edge in published_edges if needs_human_confirmation(edge)])
+        )
         unsupported_ai_edges = [
             edge for edge in published_edges
             if unsupported_ai_evidence(edge.source_url, edge.evidence_excerpt)
@@ -514,6 +546,7 @@ def audit_database(fail_on_warnings=False):
         print(f"Warrant, preferred or same-company link warnings: {len(non_company_edges)}")
         print(f"Share-class duplicate link warnings: {len(share_class_duplicate_edges)}")
         print(f"Unsupported supplier-statement warnings: {len(unsupported_supplier_edges)}")
+        print(f"Unsupported customer-share warnings: {len(unsupported_share_edges)}")
 
         if duplicate_tickers:
             print("Duplicate ticker examples:", ", ".join(duplicate_tickers[:10]))
@@ -534,6 +567,7 @@ def audit_database(fail_on_warnings=False):
             ("Warrant, preferred or same company", non_company_edges),
             ("Share-class duplicate", share_class_duplicate_edges),
             ("Unsupported supplier statement", unsupported_supplier_edges),
+            ("Unsupported customer share", unsupported_share_edges),
         ):
             for edge in flagged_edges[:10]:
                 source = edge.source_node.ticker if edge.source_node else edge.source_id
@@ -561,6 +595,7 @@ def audit_database(fail_on_warnings=False):
             + len(non_company_edges)
             + len(share_class_duplicate_edges)
             + len(unsupported_supplier_edges)
+            + len(unsupported_share_edges)
         )
         if fail_on_warnings and warning_count:
             raise SystemExit(1)
