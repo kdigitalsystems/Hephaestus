@@ -414,6 +414,41 @@ def relationship_snapshot_entry(key, relationship):
         "last_verified": relationship.get("last_verified") or "N/A",
     }
 
+def link_pair(key):
+    """The supplier->customer pair a relationship_key belongs to (a key without one is its own pair)."""
+    source, target = relationship_direction_from_key(str(key))
+    return (source, target) if source and target else (str(key),)
+
+def diff_link_snapshots(previous_links, current_links):
+    """What changed between two snapshots, by supplier->customer pair.
+
+    relationship_key ends in the dependency type of the highest-ranked merged member, so
+    when another type overtakes it the key changes while the link stays published; 25 of
+    29 daily diffs reported that as one removed link plus one new one. A pair present on
+    both days is therefore never new or removed: its new key is an update, and
+    `retyped` maps it to the key(s) it replaced. Stored keys keep their format.
+    """
+    previous_by_pair, current_by_pair = {}, {}
+    for key in previous_links:
+        previous_by_pair.setdefault(link_pair(key), set()).add(key)
+    for key in current_links:
+        current_by_pair.setdefault(link_pair(key), set()).add(key)
+
+    new_keys = sorted(key for pair in current_by_pair.keys() - previous_by_pair.keys() for key in current_by_pair[pair])
+    removed_keys = sorted(key for pair in previous_by_pair.keys() - current_by_pair.keys() for key in previous_by_pair[pair])
+    changed_keys = {
+        key for key in set(current_links) & set(previous_links)
+        if current_links[key].get("review_status") != previous_links[key].get("review_status")
+        or current_links[key].get("confidence") != previous_links[key].get("confidence")
+    }
+    retyped = {}
+    for pair in current_by_pair.keys() & previous_by_pair.keys():
+        replaced = sorted(previous_by_pair[pair] - current_by_pair[pair])
+        for key in sorted(current_by_pair[pair] - previous_by_pair[pair]):
+            changed_keys.add(key)
+            retyped[key] = replaced
+    return {"new": new_keys, "removed": removed_keys, "changed": sorted(changed_keys), "retyped": retyped}
+
 def build_change_summary(history, current_snapshot, generated_on=None):
     """Diff the current snapshot against the latest snapshot from an earlier date.
 
@@ -428,15 +463,8 @@ def build_change_summary(history, current_snapshot, generated_on=None):
     previous_snapshot = previous_entry.get("links", {}) if previous_entry else {}
     previous_keys = set(previous_snapshot)
     current_keys = set(current_snapshot)
-    new_keys = sorted(current_keys - previous_keys)
-    removed_keys = sorted(previous_keys - current_keys)
-    changed_keys = sorted(
-        key for key in current_keys & previous_keys
-        if (
-            current_snapshot[key].get("review_status") != previous_snapshot[key].get("review_status")
-            or current_snapshot[key].get("confidence") != previous_snapshot[key].get("confidence")
-        )
-    )
+    diff = diff_link_snapshots(previous_snapshot, current_snapshot)
+    new_keys, removed_keys, changed_keys = diff["new"], diff["removed"], diff["changed"]
     rejected_keys = sorted(
         key for key, link in current_snapshot.items()
         if link.get("review_status") == "rejected"
