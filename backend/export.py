@@ -5,6 +5,7 @@ import re
 import tempfile
 from datetime import datetime, timezone
 from database import SessionLocal
+from evidence_quality import requires_source_evidence
 from models import Node, Edge
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -691,13 +692,19 @@ def export_sector(node):
         return FALLBACK_LINKED_SECTOR
     return sector
 
+def is_curated_source(source_url):
+    """A hand-entered provenance label ("Manual System Jumpstart"), which may be published
+    while pending. A URL that merely contains "Manual" is AI-derived evidence and is not;
+    this is evidence_quality's definition, so the export and the evidence checks agree."""
+    return not requires_source_evidence(source_url)
+
 def should_export_edge(edge):
     source_url = edge.source_url or ""
     if edge.review_status == "rejected":
         return False
     if edge.review_status == "approved":
         return True
-    if "Manual" in source_url:
+    if is_curated_source(source_url):
         return True
     if "AI" in source_url and EXPORT_AI_RESEARCH:
         return True
