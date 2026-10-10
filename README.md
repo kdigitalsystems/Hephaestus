@@ -453,7 +453,7 @@ HEPHAESTUS_REVIEW_CONSENSUS_MIN_RATIO=0.66 \
 ./run_pipeline.sh
 ```
 
-By default the reviewer runs three 7B/8B-class models one at a time so they fit on a 12GB GPU. A pending edge is auto-applied only when the configured consensus threshold agrees on the same action and direction. Split votes, low confidence, or direction disagreement stay `pending` instead of being published as approved links.
+By default the reviewer runs three 7B/8B-class models one at a time so they fit on a 12GB GPU. A pending edge is auto-applied only when the configured consensus threshold agrees on the same action and direction. Split votes, low confidence, or direction disagreement stay `pending` instead of being published as approved links; a direction disagreement means any one model voting the opposite direction (two approvals and a reverse), while a dissenting reject does not block a 2-of-3 decision. A model that times out or returns unparsable JSON casts no vote; an edge that no model could answer is retried on up to three runs and then held, and a run stops after three such edges in a row. Fund, ETF, trust, bond-issue and blank-check names are recognised as whole words (`AST SpaceMobile` is not a SPAC), so the vehicle rule no longer rejects them; links an earlier version rejected that way are reopened to `pending` for the panel by the cleanup step.
 
 To skip local AI review during a manual pipeline run:
 

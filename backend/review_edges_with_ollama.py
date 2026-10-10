@@ -1,6 +1,7 @@
 import argparse
 import csv
 import json
+import math
 import os
 import re
 import time
@@ -34,19 +35,14 @@ DEFAULT_MODEL = os.environ.get("HEPHAESTUS_REVIEW_MODEL", "qwen2.5:7b-instruct")
 DEFAULT_MODELS = os.environ.get("HEPHAESTUS_REVIEW_MODELS")
 VALID_ACTIONS = {"approve", "reject", "reverse", "pending"}
 NON_OPERATING_SECTORS = {"financial services", "real estate", "shell companies"}
-NON_OPERATING_NAME_MARKERS = [
-    " fund",
-    " etf",
-    " trust",
-    " tax-free",
-    " municipal",
-    " income",
-    " treasury",
-    " bond",
-    " note",
-    " acquisition corp",
-    " spac",
-]
+# Whole words only: the old substring test (" spac" in " AST SpaceMobile ") rejected AST
+# SpaceMobile, SpaceX and MDA Space as funds, and " note"/" income"/" treasury" had the same
+# problem. These are the words a fund, ETF, trust, bond issue or blank-check company puts in
+# its name; "bond" is plural-only because "Our Bond, Inc." is a software company.
+NON_OPERATING_NAME_PATTERN = re.compile(
+    r"\b(?:funds?|etfs?|etns?|trusts?|bonds|notes|tax-free|spac)\b|\bblank check\b|\bacquisition corp",
+    re.IGNORECASE,
+)
 UNCERTAIN_REASON_MARKERS = [
     "not clear",
     "unclear",
@@ -58,13 +54,22 @@ UNCERTAIN_REASON_MARKERS = [
     "no evidence",
     "unknown",
     "does not",
-    "no direct",
     "not a supply",
     "not explicitly stated",
     "suggesting",
     "would be",
     "would use",
 ]
+
+# The rationale denies the relationship itself ("Ford and Mercury Systems do not have a
+# direct supply relationship"). "TSMC is the sole foundry; no direct alternative exists"
+# says the opposite and must not match.
+DENIES_RELATIONSHIP = re.compile(
+    r"\b(?:do|does|did) not have a direct (?:supply|supplier|customer|business|commercial|operational|relationship|connection|link)"
+    r"|\bnot a direct (?:supplier|customer|supply|relationship)"
+    r"|\bno direct (?:supply|supplier|customer|business|commercial|operational|relationship|connection|link|evidence|mention|indication|documentation)",
+    re.IGNORECASE,
+)
 
 REVIEW_SCHEMA = {
     "type": "object",
@@ -176,15 +181,11 @@ def correct_review_for_reason(edge, review):
     "TSMC manufactures the processors Apple uses ... the edge is backwards" came out as
     approve, and 65 of 344 consensus-approved links carried a rationale calling them
     backwards. A vote that contradicts itself now counts as no vote (pending); nothing
-    here ever changes a vote's direction.
+    here ever changes a vote's direction. (A rationale containing "no direct alternative"
+    also used to turn a pending or approving vote into a rejection at the same confidence;
+    a rationale that denies the relationship is now handled in normalize_review, as no vote.)
     """
     reason = review["reason"].lower()
-
-    if any(marker in reason for marker in ["do not have a direct", "does not have a direct", "not a direct", "no direct"]):
-        review["action"] = "reject"
-        review["supplier_side"] = "neither"
-        review["customer_side"] = "neither"
-        return review
 
     if review.get("direction_fixed"):
         return review
@@ -225,12 +226,11 @@ def is_non_operating_vehicle(node):
         return False
     sector = (node.sector or "").strip().lower()
     industry = (node.industry or "").strip().lower()
-    name = f" {node.name or ''} ".lower()
     if sector in NON_OPERATING_SECTORS:
         return True
     if any(marker in industry for marker in ("asset management", "closed-end fund", "reit", "shell compan")):
         return True
-    return any(marker in name for marker in NON_OPERATING_NAME_MARKERS)
+    return bool(NON_OPERATING_NAME_PATTERN.search(node.name or ""))
 
 
 def deterministic_review(edge):
@@ -331,6 +331,21 @@ def parse_json_response(content):
         return json.loads(match.group(0))
 
 
+def parse_confidence(value):
+    """A confidence on the 0-1 scale the schema asks for, or the 0-100 scale models drift to.
+
+    A value above 1 up to 100 is a percentage (95 -> 0.95); anything unusable (NaN, 250,
+    text) counts as no confidence, where the old clamp turned both 95 and 250 into 1.0.
+    """
+    try:
+        number = float(str(value).strip().rstrip("%")) if isinstance(value, str) else float(value)
+    except (TypeError, ValueError):
+        return 0.0
+    if not math.isfinite(number) or number < 0 or number > 100:
+        return 0.0
+    return number / 100 if number > 1 else number
+
+
 def normalize_review(raw, fixed_direction=False):
     """One model's vote, reconciled from its side fields and its stated action.
 
@@ -381,13 +396,13 @@ def normalize_review(raw, fixed_direction=False):
         action = "reject"
         supplier_side = "neither"
         customer_side = "neither"
-    if action in {"approve", "reverse"} and any(marker in reason_lower for marker in UNCERTAIN_REASON_MARKERS):
+    if action in {"approve", "reverse"} and (
+        any(marker in reason_lower for marker in UNCERTAIN_REASON_MARKERS) or DENIES_RELATIONSHIP.search(reason)
+    ):
+        # An approval whose own rationale denies the relationship is no vote; it is never
+        # promoted to a rejection either.
         action = "pending"
-    try:
-        confidence = float(raw.get("confidence", 0))
-    except (TypeError, ValueError):
-        confidence = 0.0
-    confidence = max(0.0, min(1.0, confidence))
+    confidence = parse_confidence(raw.get("confidence"))
 
     return {
         "action": action,
@@ -468,8 +483,14 @@ def consensus_review(edge, reviews, args):
     avg_confidence = sum(review["confidence"] for review in winning_reviews) / vote_count
     min_confidence = min(review["confidence"] for review in winning_reviews)
     threshold = action_threshold(action, args)
+    # One model saying "reverse" against two saying "approve" (or the reverse) is a
+    # disagreement about the one thing the panel is least reliable at; the published
+    # method promises such links stay pending, where 2/3 used to be enough.
+    opposite = {"approve": "reverse", "reverse": "approve"}.get(action)
+    direction_dissent = [review for review in reviews if opposite and review["action"] == opposite]
     strong_enough = (
         action != "pending"
+        and not direction_dissent
         and vote_count >= min(args.consensus_min_votes, len(reviews))
         and vote_ratio >= args.consensus_min_ratio
         and avg_confidence >= threshold
@@ -490,8 +511,9 @@ def consensus_review(edge, reviews, args):
         action = "pending"
         supplier_side = "unknown"
         customer_side = "unknown"
+        why = "the models disagree on direction" if direction_dissent else "votes, direction or confidence fell short"
         reason = (
-            f"Held for review because model consensus was insufficient. "
+            f"Held for review because model consensus was insufficient ({why}). "
             f"{reason}"
         )
 
@@ -516,13 +538,62 @@ def review_edge(edge, models, args):
         deterministic["model_reviews"] = [dict(deterministic)]
         return deterministic
 
-    reviews = [review_edge_with_model(edge, model) for model in models]
+    reviews = []
+    for model in models:
+        try:
+            reviews.append(review_edge_with_model(edge, model))
+        except Exception as exc:  # a timeout, a dropped connection or unparsable JSON
+            reviews.append(abstention(model, exc))
+    if all(review.get("failed") for review in reviews):
+        review = held_review(edge, "; ".join(review["reason"] for review in reviews))
+        review.update(failed=True, votes="none", model_reviews=reviews)
+        return review
     if len(reviews) == 1:
         review = reviews[0]
         review["votes"] = f"{review['action']}:1"
         review["model_reviews"] = reviews
         return review
     return consensus_review(edge, reviews, args)
+
+
+def abstention(model, exc):
+    """A model that timed out or garbled its answer casts no vote.
+
+    One bad answer used to abort the whole edge with no note, so the edge sat at the head
+    of the confidence-ordered queue and cost up to three 180-second timeouts every night.
+    """
+    return {
+        "action": "pending",
+        "supplier_side": "unknown",
+        "customer_side": "unknown",
+        "confidence": 0.0,
+        "relationship_type": "",
+        "product": "",
+        "reason": f"{model} gave no usable answer ({type(exc).__name__}: {str(exc)[:120]})",
+        "direction_fixed": False,
+        "model": model,
+        "failed": True,
+    }
+
+
+MAX_FAILED_ATTEMPTS = 3
+MAX_CONSECUTIVE_FAILURES = 3
+FAILED_NOTE = re.compile(r"^Ollama review attempt (\d+) of ")
+
+
+def record_failed_attempt(edge, reason):
+    """Count a run on which no model answered; after the third the edge is held, not retried forever.
+
+    The note does not start with HELD_NOTE_PREFIX, so the first attempts keep the edge in
+    the queue; the last one does, which takes it out until a person or --include-held asks.
+    """
+    match = FAILED_NOTE.match(str(edge.review_note or ""))
+    attempt = int(match.group(1)) + 1 if match else 1
+    if attempt >= MAX_FAILED_ATTEMPTS:
+        edge.review_note = f"{HELD_NOTE_PREFIX} hold: no model gave a usable answer on {attempt} runs. {reason}"[:1000]
+    else:
+        edge.review_note = f"Ollama review attempt {attempt} of {MAX_FAILED_ATTEMPTS} found no usable model answer. {reason}"[:1000]
+    return attempt
 
 
 def selected_edges(session, args):
@@ -722,6 +793,7 @@ def main():
     report_rows = []
     counts = {"approve": 0, "reject": 0, "reverse": 0, "pending": 0, "applied": 0, "held": 0, "errors": 0}
     started_at = time.monotonic()
+    consecutive_failures = 0
 
     try:
         register_company_names(session.query(Node.ticker, Node.name).filter(Node.ticker.is_not(None)).all())
@@ -743,6 +815,12 @@ def main():
                 counts[review["action"]] += 1
                 allowed = decision_allowed(review, args)
                 result = "held"
+                if review.get("failed"):
+                    counts["errors"] += 1
+                    consecutive_failures += 1
+                    result = "held_no_model_answer"
+                else:
+                    consecutive_failures = 0
 
                 if args.apply and allowed:
                     result = apply_review(session, edge, review)
@@ -768,7 +846,10 @@ def main():
                     if args.apply and (edge.review_status or "pending") == "pending":
                         # Record why the panel held the edge so it leaves the nightly
                         # queue instead of being re-reviewed every run.
-                        edge.review_note = f"{HELD_NOTE_PREFIX} left pending: {review['reason']}"[:1000]
+                        if review.get("failed"):
+                            record_failed_attempt(edge, review["reason"])
+                        else:
+                            edge.review_note = f"{HELD_NOTE_PREFIX} left pending: {review['reason']}"[:1000]
                         session.commit()
 
                 print(
@@ -793,6 +874,11 @@ def main():
                     "model_reviews": json.dumps(review.get("model_reviews", []), sort_keys=True),
                 })
 
+                if consecutive_failures >= MAX_CONSECUTIVE_FAILURES:
+                    # Every model failed on several edges in a row: the server is down or
+                    # wedged, and each further edge would cost three timeouts for nothing.
+                    print(f"No model answered {consecutive_failures} edges in a row; stopping the run.")
+                    break
                 if args.sleep:
                     time.sleep(args.sleep)
             except Exception as exc:
