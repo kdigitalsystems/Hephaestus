@@ -93,8 +93,68 @@ jobs:
           venv/bin/python -m pytest tests/test_predictions.py -q
           venv/bin/python backend/validate_predictions.py
 
+      # api.github.com was unreachable for about 40 seconds on 2026-10-09 and this step
+      # failed a job whose whole day of work was finished, so nothing was published.
+      # Retry with growing waits (about 15 minutes in all) and publish with whichever
+      # attempt works. Attempt N runs only when attempt N-1 failed: a skipped attempt
+      # (an earlier one succeeded) has outcome 'skipped', which stops the chain.
       - name: Mint fresh publish token
+        # App installation tokens expire after one hour and this job runs for up to
+        # four; the checkout token is stale by the time the results are pushed.
         id: push-token
+        continue-on-error: true
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.HEPHAESTUS_APP_ID }}
+          private-key: ${{ secrets.HEPHAESTUS_APP_PRIVATE_KEY }}
+
+      - name: Wait before minting the publish token again (attempt 2 of 5)
+        if: steps.push-token.outcome == 'failure'
+        run: sleep 60
+
+      - name: Mint fresh publish token (attempt 2 of 5)
+        id: push-token-2
+        if: steps.push-token.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.HEPHAESTUS_APP_ID }}
+          private-key: ${{ secrets.HEPHAESTUS_APP_PRIVATE_KEY }}
+
+      - name: Wait before minting the publish token again (attempt 3 of 5)
+        if: steps.push-token-2.outcome == 'failure'
+        run: sleep 120
+
+      - name: Mint fresh publish token (attempt 3 of 5)
+        id: push-token-3
+        if: steps.push-token-2.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.HEPHAESTUS_APP_ID }}
+          private-key: ${{ secrets.HEPHAESTUS_APP_PRIVATE_KEY }}
+
+      - name: Wait before minting the publish token again (attempt 4 of 5)
+        if: steps.push-token-3.outcome == 'failure'
+        run: sleep 240
+
+      - name: Mint fresh publish token (attempt 4 of 5)
+        id: push-token-4
+        if: steps.push-token-3.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.HEPHAESTUS_APP_ID }}
+          private-key: ${{ secrets.HEPHAESTUS_APP_PRIVATE_KEY }}
+
+      - name: Wait before minting the publish token again (attempt 5 of 5)
+        if: steps.push-token-4.outcome == 'failure'
+        run: sleep 480
+
+      - name: Mint fresh publish token (attempt 5 of 5)
+        id: push-token-5
+        if: steps.push-token-4.outcome == 'failure'
+        continue-on-error: true
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ secrets.HEPHAESTUS_APP_ID }}
@@ -102,8 +162,16 @@ jobs:
 
       - name: Commit and push research signals
         env:
-          PUSH_TOKEN: ${{ steps.push-token.outputs.token }}
+          PUSH_TOKEN: ${{ steps.push-token.outputs.token || steps.push-token-2.outputs.token || steps.push-token-3.outputs.token || steps.push-token-4.outputs.token || steps.push-token-5.outputs.token }}
+          # Five pushes with 45-second steps (7.5 minutes of waiting) instead of three with
+          # 20-second steps: an outage that outlasts a minute should not cost the day.
+          PUSH_ATTEMPTS: "5"
+          PUSH_BACKOFF_SECONDS: "45"
         run: |
+          if [ -z "$PUSH_TOKEN" ]; then
+            echo "::error::No publish token: the GitHub API stayed unreachable through 5 attempts. The next scheduled run regenerates and publishes."
+            exit 1
+          fi
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           # Remove the credential on every exit path: a failed rebase or a rejected
