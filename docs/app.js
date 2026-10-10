@@ -545,9 +545,18 @@ function setRoute(route, push = true) {
     applyRoute(route);
 }
 
+// pushState fires no hashchange, so analytics.js (when a counter is configured) is told
+// about each page the app shows through this event.
+function announceRoute() {
+    if (typeof window.dispatchEvent === 'function' && typeof CustomEvent === 'function') {
+        window.dispatchEvent(new CustomEvent('hephaestus:route'));
+    }
+}
+
 function updateRouteHash(route, push = true) {
     const hash = routeToHash(route);
-    if (push && window.location.hash !== hash) {
+    const pushed = push && window.location.hash !== hash;
+    if (pushed) {
         history.pushState(null, '', hash);
     } else if (!push && window.location.hash !== hash) {
         history.replaceState(null, '', hash);
@@ -557,6 +566,8 @@ function updateRouteHash(route, push = true) {
     lastRoutedHash = window.location.hash;
     currentRoute = route;
     updateActiveNav(route);
+    // Typing in a box rewrites the hash in place; only a new history entry is a new page.
+    if (pushed) announceRoute();
 }
 
 function applyRouteFromHash(push = false) {
@@ -569,6 +580,11 @@ function applyRouteFromHash(push = false) {
 }
 
 function applyRoute(route) {
+    renderRoute(route);
+    announceRoute();
+}
+
+function renderRoute(route) {
     // A search typed moments ago must not fire after the user has navigated away:
     // the callback would re-render the screener over whatever view this route opens.
     window.clearTimeout(searchInputTimer);

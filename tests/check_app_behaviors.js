@@ -1025,3 +1025,15 @@ windowHandlers.storage.forEach((handler) => handler({ key: "something_else" }));
 check(vm.runInContext("[...watchlist].sort().join()", context) === "AMD,NVDA", "other storage keys are ignored");
 vm.runInContext("watchlist = new Set();", context);
 
+// --- analytics.js hears about every page the app shows -------------------------------------
+dispatchedEvents.length = 0;
+vm.runInContext("window.location.hash = '#overview'; setRoute({ view: 'watchlist' });", context);
+check(dispatchedEvents.join() === "hephaestus:route", `a navigation announces itself once: ${dispatchedEvents}`);
+dispatchedEvents.length = 0;
+vm.runInContext("updateRouteHash({ view: 'exposure', ticker: 'TS' }, false);", context);
+check(dispatchedEvents.length === 0, "typing in a box rewrites the hash without announcing a page");
+vm.runInContext("window.location.hash = '#overview'; updateRouteHash({ view: 'companies', query: 'nv' }, true);", context);
+check(dispatchedEvents.join() === "hephaestus:route", "a search that opens the screener is a page");
+dispatchedEvents.length = 0;
+vm.runInContext("window.location.hash = '#predictions'; handleLocationChange();", context);
+check(dispatchedEvents.join() === "hephaestus:route", "Back / Forward through the location guard announces once");
