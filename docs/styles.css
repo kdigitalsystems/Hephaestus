@@ -2875,6 +2875,13 @@ td.muted {
     margin-top: 4px;
 }
 
+/* A long chip ("554 daily signals, 165 counted once per company per window") is wider
+   than a phone; nowrap made it push the whole page sideways at 414px and below. */
+.track-record-chips .source-badge {
+    white-space: normal;
+    line-height: 1.3;
+}
+
 .static-company .static-links {
     list-style: none;
     padding: 0;
@@ -2964,6 +2971,8 @@ td.muted {
     color: var(--text-soft);
     font-size: 0.9rem;
 }
+
+.brief-note { margin: 10px 0 0; }
 
 @media (max-width: 1050px) {
     .topbar { position: static; flex-direction: column; align-items: flex-start; }

@@ -177,6 +177,17 @@ const companyMetrics = (company) => company.investor_metrics || {
     freshness_score: 0
 };
 
+// `concentration_score` is the share of a company's links on its larger side (suppliers
+// or customers), and `risk_score` blends that with unapproved and low-confidence links.
+// Neither says how dependent the company is on one counterparty, and both are 0 when it
+// has no links, which is "not scored" rather than "no risk".
+const SCORE_HELP = {
+    gap: 'Higher when this company\'s tracked links are one-sided, not yet approved, or low-confidence. It scores how complete and verified the tracked links look, not the company\'s business risk.',
+};
+const isScored = (metrics) => Number(metrics.total_links || 0) > 0;
+const formatLargerSide = (metrics) => (isScored(metrics) ? `${Math.round(Number(metrics.concentration_score || 0) * 100)}%` : 'N/A');
+const formatDataGap = (metrics) => (isScored(metrics) ? `${Number(metrics.risk_score || 0)}/100` : 'N/A');
+
 const relationshipStatus = (relationship) => {
     const tokens = String(relationship.review_status || 'pending')
         .toLowerCase()
@@ -1212,8 +1223,8 @@ function renderDecisionBrief(company) {
     watchButton.classList.toggle('active', watchlist.has(company.ticker));
     setText('brief-confidence', Number(metrics.upstream_count || 0).toLocaleString());
     setText('brief-approved', Number(metrics.downstream_count || 0).toLocaleString());
-    setText('brief-concentration', `${Math.round(Number(metrics.concentration_score || 0) * 100)}%`);
-    setText('brief-verified', `${Number(metrics.risk_score || 0)}/100`);
+    setText('brief-concentration', formatLargerSide(metrics));
+    setText('brief-verified', formatDataGap(metrics));
 
     const badges = document.getElementById('detail-risk-badges');
     clearElement(badges);
@@ -1748,27 +1759,27 @@ function renderWatchlistView() {
     const grid = document.getElementById('watchlist-grid');
     clearElement(grid);
     const companies = [...watchlist].map(getCompanyByTicker).filter(Boolean);
-    setText('watchlist-count', `${companies.length} saved`);
+    setText('watchlist-count', `${companies.length} saved${companies.length > 1 ? ' · largest data gap first' : ''}`);
     setPageTitle('Watchlist');
     if (!companies.length) {
         grid.appendChild(makeElement('span', 'empty-state', 'Track companies from a Decision Brief to build a local research queue.'));
         return;
     }
+    // A linked company's gap is never below ~22, so companies without links (no score, 0
+    // here) come last; most linked companies score within a few points, hence the ticker tie-break.
     companies
-        .sort((a, b) => companyMetrics(b).risk_score - companyMetrics(a).risk_score)
+        .sort((a, b) => Number(companyMetrics(b).risk_score || 0) - Number(companyMetrics(a).risk_score || 0)
+            || String(a.ticker).localeCompare(String(b.ticker)))
         .forEach(company => grid.appendChild(renderCompanySignalCard(company)));
 }
 
 const percent = (value) => `${Math.round(Number(value) * 100)}%`;
 
-// The track record is published as-is, including the naive baseline the signals
-// have to beat; a hit rate without that comparison would flatter a rising market.
-function renderTrackRecord(predictionPayload) {
-    const container = document.getElementById('prediction-track-record');
-    if (!container) return;
-    clearElement(container);
+// The track record counts independent windows; the older `calibration` block counts
+// overlapping daily signals, so it only stands in for payloads that predate the record.
+function trackRecordOf(predictionPayload) {
     const calibration = predictionPayload.calibration || {};
-    const record = predictionPayload.track_record || {
+    return predictionPayload.track_record || {
         status: Number(calibration.resolved_predictions || 0) >= 30 ? 'established' : 'experimental',
         minimum_resolved: 30,
         resolved: Number(calibration.resolved_predictions || 0),
@@ -1777,6 +1788,15 @@ function renderTrackRecord(predictionPayload) {
         matured_unresolved: 0,
         by_direction: {},
     };
+}
+
+// The track record is published as-is, including the naive baseline the signals
+// have to beat; a hit rate without that comparison would flatter a rising market.
+function renderTrackRecord(predictionPayload) {
+    const container = document.getElementById('prediction-track-record');
+    if (!container) return;
+    clearElement(container);
+    const record = trackRecordOf(predictionPayload);
     const resolved = Number(record.resolved || 0);
     // A payload that omits the rate entirely must not render as "NaN%" or "0%".
     const hitRate = record.hit_rate === undefined || record.hit_rate === null ? null : record.hit_rate;
@@ -1827,6 +1847,30 @@ function renderTrackRecord(predictionPayload) {
     if (chips.children.length) container.appendChild(chips);
 }
 
+// The strip under the banner must say what the banner says: the same counts, the same
+// status, and the baseline that the hit rate has to be read against.
+function hitRateSummary(record) {
+    const hitRate = record.hit_rate === undefined || record.hit_rate === null ? null : Number(record.hit_rate);
+    const resolved = Number(record.resolved || 0);
+    const periods = record.independent_periods;
+    const established = record.status === 'established';
+    let title = 'Calibrating';
+    if (hitRate !== null) title = established ? `${percent(hitRate)} hit rate` : `Experimental: ${percent(hitRate)} hit rate so far`;
+    let detail = pluralize(resolved, 'resolved signal');
+    if (!established && periods !== undefined && periods !== null) {
+        detail += `, ${periods} of ${record.minimum_periods || 3} independent periods`;
+    }
+    const summary = [title, detail];
+    const baseline = record.always_up_hit_rate;
+    if (hitRate !== null && baseline !== null && baseline !== undefined) {
+        const directions = record.by_direction || {};
+        const onlyUp = Object.keys(directions).filter(key => Number(directions[key]?.resolved) > 0).join() === 'up';
+        const same = percent(baseline) === percent(hitRate);
+        summary.push(`Always saying "up" scores ${same ? 'the same' : percent(baseline)}${same && onlyUp ? ': every scored call so far was "up"' : ''}`);
+    }
+    return summary;
+}
+
 function renderPredictionsView() {
     setPageTitle('Research signals');
     currentRoute = { view: 'predictions' };
@@ -1834,7 +1878,6 @@ function renderPredictionsView() {
     hideAllViews();
     document.getElementById('view-predictions').classList.remove('hidden');
     const predictions = Array.isArray(predictionData.predictions) ? predictionData.predictions : [];
-    const calibration = predictionData.calibration || {};
     renderTrackRecord(predictionData);
     const generatedAt = predictionData.generated_at ? new Date(predictionData.generated_at) : null;
     setText('prediction-updated', generatedAt && !Number.isNaN(generatedAt.valueOf()) ? `Updated ${formatDisplayDate(predictionData.generated_at)}` : 'Awaiting signal run');
@@ -1842,16 +1885,14 @@ function renderPredictionsView() {
 
     const calibrationEl = document.getElementById('prediction-calibration');
     clearElement(calibrationEl);
-    const resolved = Number(calibration.resolved_predictions || 0);
-    const hitRate = calibration.hit_rate === null || calibration.hit_rate === undefined ? 'Calibrating' : `${Math.round(Number(calibration.hit_rate) * 100)}% hit rate`;
     [
         [`Top ${predictionData.universe_size || predictions.length} companies`, `${predictionData.horizon_days || 30}-day horizon`],
-        [hitRate, `${resolved} resolved signal${resolved === 1 ? '' : 's'}`],
+        hitRateSummary(trackRecordOf(predictionData)),
         ['One-hop graph signals', 'Direct inputs + relationship evidence'],
-    ].forEach(([title, detail]) => {
+    ].forEach(([title, ...details]) => {
         const item = makeElement('div', 'prediction-calibration-item');
         item.appendChild(makeElement('strong', '', title));
-        item.appendChild(makeElement('span', '', detail));
+        details.forEach(detail => item.appendChild(makeElement('span', '', detail)));
         calibrationEl.appendChild(item);
     });
 
@@ -1907,9 +1948,13 @@ function renderCompanySignalCard(company) {
     const card = makeElement('article', 'signal-card');
     const header = makeElement('div', 'signal-card-header');
     header.appendChild(makeElement('strong', '', `${company.ticker} - ${displayCompanyName(company.name)}`));
-    header.appendChild(makeElement('span', 'source-badge pending', `Risk ${metrics.risk_score}/100`));
+    const gap = makeElement('span', 'source-badge pending', `Data gap ${formatDataGap(metrics)}`);
+    gap.title = SCORE_HELP.gap;
+    header.appendChild(gap);
     card.appendChild(header);
-    card.appendChild(makeElement('p', '', `${metrics.total_links} tracked links, supplier risk ${metrics.supplier_risk}/100, customer risk ${metrics.customer_risk}/100.`));
+    card.appendChild(makeElement('p', '', isScored(metrics)
+        ? `${pluralize(metrics.total_links, 'tracked link')}: ${pluralize(metrics.upstream_count, 'supplier')}, ${pluralize(metrics.downstream_count, 'customer')}.`
+        : 'No tracked links yet.'));
     const actions = makeElement('div', 'relationship-actions');
     const open = makeElement('button', 'mini-button', 'Open brief');
     open.onclick = () => navigateCompany(company.ticker);
@@ -1938,11 +1983,12 @@ function renderSectorView(sector) {
         ['Companies', companies.length],
         ['Linked companies', linked.length],
         ['Supply links', sectorLinks],
-        ['Avg risk', linked.length ? Math.round(linked.reduce((sum, company) => sum + companyMetrics(company).risk_score, 0) / linked.length) : 0],
-    ].forEach(([label, value]) => {
+        ['Avg data gap', linked.length ? Math.round(linked.reduce((sum, company) => sum + companyMetrics(company).risk_score, 0) / linked.length) : 'N/A', SCORE_HELP.gap],
+    ].forEach(([label, value, help]) => {
         const card = makeElement('article', 'radar-card');
         card.appendChild(makeElement('div', 'radar-card-title', label));
         card.appendChild(makeElement('span', 'stat-value', value.toLocaleString()));
+        if (help) card.title = help;
         summary.appendChild(card);
     });
     const tbody = document.getElementById('sector-company-table-body');
@@ -1971,7 +2017,7 @@ function renderCompareView(updateRoute = true) {
     const grid = document.getElementById('compare-grid');
     clearElement(grid);
     if (!companies.length) {
-        grid.appendChild(makeElement('span', 'empty-state', 'Enter two tickers to compare valuation context and supply-chain risk.'));
+        grid.appendChild(makeElement('span', 'empty-state', 'Enter two tickers to compare valuation context and tracked supply-chain links.'));
         return;
     }
     companies.forEach(company => {
@@ -1981,9 +2027,10 @@ function renderCompareView(updateRoute = true) {
         const rows = [
             ['Market cap', formatNum(company.market_cap)],
             ['Tracked links', metrics.total_links],
-            ['Risk score', `${metrics.risk_score}/100`],
-            ['Supplier risk', `${metrics.supplier_risk}/100`],
-            ['Customer risk', `${metrics.customer_risk}/100`],
+            ['Suppliers', Number(metrics.upstream_count || 0).toLocaleString()],
+            ['Customers', Number(metrics.downstream_count || 0).toLocaleString()],
+            ['Larger-side share', formatLargerSide(metrics)],
+            ['Data gap', formatDataGap(metrics)],
             ['Top supplier', metrics.top_upstream?.[0]?.ticker || 'N/A'],
             ['Top customer', metrics.top_downstream?.[0]?.ticker || 'N/A'],
         ];

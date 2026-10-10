@@ -85,6 +85,10 @@
             <dd>The percentage of the supplier's revenue attributed to that customer, as disclosed by the supplier in its own annual report. Shown only when disclosed.</dd>
             <dt>Verified date</dt>
             <dd>When the relationship was last reviewed or re-confirmed, not when the underlying business relationship began.</dd>
+            <dt id="scores">Larger-side share</dt>
+            <dd>The share of a company's tracked links that sit on its larger side: the larger of its supplier count and its customer count, divided by its total. A company with 9 suppliers and no customers reads 100%; one with 5 of each reads 50%. It describes how one-sided the tracked links are. It does not measure how concentrated a company's suppliers or customers are, or how much it depends on any one of them. Most companies with links read 100%, because the graph usually holds only one side of a company's supply chain. A company with no tracked links shows N/A.</dd>
+            <dt>Data gap</dt>
+            <dd>A 0-100 score that is higher when a company's tracked links are one-sided, not yet approved, or low-confidence: 0.45 &times; larger-side share, plus 0.35 &times; the share of links not approved, plus 0.20 &times; (100 minus average confidence). Every link on the public site is approved, so in practice it moves with one-sidedness and confidence, and most linked companies score within a few points of each other. It scores how complete and verified the tracked links look; it is not a measure of a company's business risk and not a forecast. A company with no tracked links shows N/A, not 0.</dd>
         </dl>
 
         <h2 id="limits">Limits you should know about</h2>

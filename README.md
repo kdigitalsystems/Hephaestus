@@ -314,15 +314,16 @@ The exported dashboard includes review metadata for CI and maintainer workflows.
 The dashboard payload also includes investor-facing derived metrics:
 
 - `investor_metrics.unique_links`, `approved_links`, `pending_links`, and `sector_exposure` summarize the published graph.
-- Each company has `investor_metrics` with upstream/downstream counts, approval counts, top counterparties, average confidence, concentration score, explainable risk scores, and last verified date.
+- Each company has `investor_metrics` with upstream/downstream counts, approval counts, top counterparties, average confidence, a larger-side share (`concentration_score`), explainable scores, and last verified date.
 - `docs/link_history.json` keeps one rolling snapshot per UTC date of published relationship keys so the dashboard can show what changed between daily runs without adding duplicate same-day snapshots. The overview renders that comparison as a "What changed in the graph" panel, and `python3 backend/generate_change_feed.py` derives `docs/changes.json` and an RSS feed (`docs/feed.xml`) from the same snapshots; both pipelines run it after validation.
 - `update_metrics.py` refreshes companies that have supply-chain links before the rest of the universe, so a throttled market-data crawl degrades the long tail rather than the companies people open.
 - The static UI uses those fields for search filters, watchlist cards, comparison views, source/evidence modals, sector pages, and company Decision Briefs.
 
-The risk scores are intentionally simple and explainable:
+The scores are intentionally simple and explainable. They describe the tracked links, not the company's business risk:
 
-- `risk_score` combines concentration risk, incomplete review coverage, and lower confidence.
-- `supplier_risk` and `customer_risk` show whether concentration is mostly upstream or downstream.
+- `concentration_score` is the share of a company's links on its larger side: the larger of its supplier and customer counts, divided by the total. 1.0 means every tracked link is on one side. It does not measure dependence on any one supplier or customer (most linked companies read 1.0, because the graph usually holds one side of a company's supply chain). The site calls it "Larger-side share".
+- `risk_score` is 0.45 x the larger-side share, plus 0.35 x the share of links not approved, plus 0.20 x (100 - average confidence), as a 0-100 number. The site calls it "Data gap" and shows N/A, not 0, for a company without links.
+- `supplier_risk` and `customer_risk` split the larger-side term by side (upstream or downstream share x larger-side share). The site shows the supplier and customer counts instead.
 - `review_score`, `confidence_score`, and `freshness_score` expose the components instead of hiding them behind a black-box AI score.
 
 The website's Supply Links number counts unique stable relationship keys. Relationship rows appear from both sides of a connection, so the raw number of upstream/downstream rows is usually about twice the unique link count.

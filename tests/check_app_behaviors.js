@@ -802,3 +802,94 @@ const independentText = collectText(element("prediction-track-record"));
     throw new Error(`track record must explain overlap and abstentions; missing ${expected}; got ${independentText}`);
   }
 });
+
+function check(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+// --- The strip under the banner agrees with the banner ---------------------------------
+// It used calibration.hit_rate / resolved_predictions (554 overlapping daily signals, 53%)
+// directly under a banner counting 165 independent signals at 54%.
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 554, hit_rate: 0.527 }, track_record: {
+    status: "experimental", minimum_resolved: 30, minimum_periods: 3, independent_periods: 2, resolved: 165, resolved_with_overlap: 554,
+    hits: 89, hit_rate: 0.539, always_up_hit_rate: 0.539, matured_unresolved: 0,
+    by_direction: { up: { resolved: 165, hit_rate: 0.539 } }, latest_evaluated_on: "2026-10-05",
+  } };
+  renderPredictionsView();
+`, context);
+const stripText = collectText(element("prediction-calibration"));
+["Experimental: 54% hit rate so far", "165 resolved signals, 2 of 3 independent periods", 'Always saying "up" scores the same: every scored call so far was "up"'].forEach((expected) => {
+  check(stripText.includes(expected), `prediction strip missing ${expected}; got ${stripText}`);
+});
+check(!stripText.includes("554") && !stripText.includes("53%"), `the strip must not show the overlapping calibration numbers: ${stripText}`);
+
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 250, hit_rate: 0.9 }, track_record: {
+    status: "established", minimum_resolved: 30, resolved: 250, hit_rate: 0.476, always_up_hit_rate: 0.584,
+    by_direction: { up: { resolved: 196, hit_rate: 0.5 }, neutral: { resolved: 0, hit_rate: null } },
+  } };
+  renderPredictionsView();
+`, context);
+const establishedStrip = collectText(element("prediction-calibration"));
+check(establishedStrip.includes("48% hit rate") && !establishedStrip.includes("Experimental") && establishedStrip.includes("250 resolved signals"), `established strip wrong: ${establishedStrip}`);
+check(establishedStrip.includes('Always saying "up" scores 58%') && !establishedStrip.includes("every scored call"), `a different baseline is stated as a number: ${establishedStrip}`);
+
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 4, hit_rate: 0.5 }, track_record: { status: "experimental", resolved: 0, hit_rate: null, by_direction: {} } };
+  renderPredictionsView();
+`, context);
+const calibratingStrip = collectText(element("prediction-calibration"));
+check(calibratingStrip.includes("Calibrating") && !calibratingStrip.includes("%") && !calibratingStrip.includes("Always saying"), `no hit rate means Calibrating: ${calibratingStrip}`);
+
+vm.runInContext(`
+  predictionData = { predictions: [], calibration: { resolved_predictions: 4, hit_rate: 0.5 } };
+  renderPredictionsView();
+`, context);
+const legacyStrip = collectText(element("prediction-calibration"));
+check(legacyStrip.includes("Experimental: 50% hit rate so far") && legacyStrip.includes("4 resolved signals"), `a payload without track_record falls back to calibration: ${legacyStrip}`);
+vm.runInContext("predictionData = { predictions: [], calibration: {} };", context);
+
+// --- "Concentration" and "Risk" say what they measure ------------------------------------
+check(!htmlSource.includes("<small>Concentration</small>") && !htmlSource.includes("<small>Risk</small>"), "the brief must not label link-balance numbers Concentration and Risk");
+check(htmlSource.includes("<small>Larger-side share</small>") && htmlSource.includes("<small>Data gap</small>"), "the brief names what the two numbers are");
+check(htmlSource.includes("Neither measures how dependent the company is on any one supplier or customer"), "the brief explains the numbers in plain text, not only a tooltip");
+
+vm.runInContext(`
+  renderDecisionBrief({ ticker: "AMD", name: "AMD", upstream: [{ ticker: "TSM" }], downstream: [],
+    investor_metrics: { total_links: 1, upstream_count: 1, downstream_count: 0, concentration_score: 1, risk_score: 46 } });
+`, context);
+check(element("brief-concentration").textContent === "100%" && element("brief-verified").textContent === "46/100", "a company with links shows its numbers");
+vm.runInContext(`renderDecisionBrief({ ticker: "AMAT", name: "Applied Materials", upstream: [], downstream: [] });`, context);
+check(element("brief-concentration").textContent === "N/A" && element("brief-verified").textContent === "N/A", `no links is N/A, not 0%: ${element("brief-concentration").textContent} ${element("brief-verified").textContent}`);
+check(collectText(element("detail-risk-badges")).includes("Discovery candidate"), "an unlinked company is still a discovery candidate");
+
+// The watchlist is a research queue sorted by the data gap, with unscored companies after the scored ones.
+vm.runInContext(`
+  const withMetrics = (company, risk) => Object.assign(company, { investor_metrics: { total_links: 1, upstream_count: 1, downstream_count: 0, concentration_score: 1, risk_score: risk } });
+  withMetrics(allCompanies[0], 31);
+  withMetrics(allCompanies[1], 47);
+  watchlist = new Set(["AMAT", "AMD", "ACME"]);
+  renderWatchlistView();
+`, context);
+const queueCards = element("watchlist-grid").children.map(collectText);
+check(queueCards.map((text) => text.split(" - ")[0]).join() === "ACME,AMD,AMAT", `watchlist order: ${queueCards.join(" | ")}`);
+check(queueCards[0].includes("Data gap 47/100") && queueCards[2].includes("Data gap N/A") && queueCards[2].includes("No tracked links yet"), `watchlist cards: ${queueCards.join(" | ")}`);
+check(element("watchlist-count").textContent.includes("largest data gap first"), "the watchlist says how it is sorted");
+check(!queueCards.join(" ").includes("supplier risk") && !queueCards.join(" ").includes("customer risk"), "the watchlist no longer shows supplier/customer risk");
+
+vm.runInContext(`renderSectorView("Consumer");`, context);
+check(collectText(element("sector-summary")).includes("Avg data gap47"), `sector average: ${collectText(element("sector-summary"))}`);
+vm.runInContext(`globalData.Bare = [allCompanies[2]]; renderSectorView("Bare"); delete globalData.Bare;`, context);
+check(collectText(element("sector-summary")).includes("Avg data gapN/A"), `a sector with no linked companies has no average: ${collectText(element("sector-summary"))}`);
+
+element("compare-a").value = "ACME";
+element("compare-b").value = "AMAT";
+vm.runInContext("renderCompareView(false);", context);
+const compareText = collectText(element("compare-grid"));
+["Larger-side share100%", "Data gap47/100", "Data gapN/A", "Suppliers1", "Customers0"].forEach((expected) => {
+  check(compareText.includes(expected), `compare card missing ${expected}; got ${compareText}`);
+});
+check(!/Risk score|Supplier risk|Customer risk/.test(compareText), "compare no longer calls these numbers risk");
+vm.runInContext("watchlist = new Set();", context);
+
