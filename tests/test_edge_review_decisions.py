@@ -160,3 +160,46 @@ def test_a_first_export_creates_the_file(database, tmp_path):
     decisions.export_decisions(str(path))
 
     assert tracked(path) == [("SUP", "CUS", "approved")]
+
+
+def test_a_stale_database_cannot_overwrite_or_erase_newer_decisions(database, tmp_path, monkeypatch):
+    """The dev rebuild exports the old database before deleting it, after a pull has brought in
+    the nightly run's decisions: --only-newer merges instead of replacing."""
+    path = tmp_path / "edge_review_decisions.json"
+    write(path, [
+        decision("SUP", "CUS", label="Components", edge_id=1, reviewed_at="2026-10-05T08:00:00"),       # newer than the database's
+        decision("SUP", "BIZ", label="Parts", edge_id=2, reviewed_at="2026-10-05T08:00:00"),            # database holds it pending
+        decision("SUP", "NEW", label="Cables", edge_id=3, reviewed_at="2026-09-01T08:00:00"),           # database reviewed it later
+        decision("GHOST", "CUS", edge_id=4),
+    ])
+    seed(database, "SUP", "CUS", "BIZ", "NEW")
+    session = database()
+    ids = {t: session.query(Node).filter_by(ticker=t).one().id for t in ("SUP", "CUS", "BIZ", "NEW")}
+    from datetime import datetime
+    session.add_all([
+        # Stale: rejected back in September, then approved on 10-05 by the nightly run.
+        Edge(source_id=ids["SUP"], target_id=ids["CUS"], dependency_type="Components", review_status="rejected",
+             review_note="old", reviewed_at=datetime(2026, 9, 10, 8, 0)),
+        Edge(source_id=ids["SUP"], target_id=ids["BIZ"], dependency_type="Parts", review_status="pending"),
+        Edge(source_id=ids["SUP"], target_id=ids["NEW"], dependency_type="Cables", review_status="rejected",
+             review_note="Human review (2026-10-07): rejected.", reviewed_at=datetime(2026, 10, 7, 8, 0)),
+        Edge(source_id=ids["CUS"], target_id=ids["BIZ"], dependency_type="Brand new", review_status="approved",
+             review_note="Human review (2026-10-07): approved.", reviewed_at=datetime(2026, 10, 7, 9, 0)),
+    ])
+    session.commit()
+    session.close()
+
+    decisions.export_decisions(str(path), only_newer=True)
+
+    rows = {(row["source_ticker"], row["target_ticker"]): row for row in json.loads(path.read_text(encoding="utf-8"))["decisions"]}
+    assert rows[("SUP", "CUS")]["review_status"] == "approved"       # the file's newer verdict stands
+    assert ("SUP", "BIZ") in rows                                     # a pending edge erases nothing
+    assert rows[("SUP", "NEW")]["review_status"] == "rejected"       # the database's later verdict wins
+    assert ("GHOST", "CUS") in rows and ("CUS", "BIZ") in rows       # nothing dropped, new decisions added
+    assert len(rows) == 5
+
+    # The CLI flag reaches it.
+    write(path, [decision("SUP", "CUS", edge_id=1, reviewed_at="2026-10-05T08:00:00")])
+    monkeypatch.setattr(sys, "argv", ["edge_review_decisions.py", "export", "--only-newer", "--path", str(path)])
+    decisions.main()
+    assert ("SUP", "CUS", "approved") in tracked(path)

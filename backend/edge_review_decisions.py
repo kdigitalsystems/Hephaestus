@@ -42,7 +42,32 @@ def load_decisions(path):
     return decisions
 
 
-def export_decisions(path):
+def decision_key(item):
+    return (item.get("source_ticker"), item.get("target_ticker"), item.get("dependency_type"))
+
+
+def merge_newer(existing, decisions):
+    """The tracked decisions with any the database holds a newer verdict on; nothing is dropped.
+
+    For an export from a database that may be older than the file (a dev database before a
+    rebuild, once the nightly run's decisions have been pulled): a stale edge must not
+    overwrite a later decision, and a pending edge must not erase one.
+    """
+    merged = list(existing)
+    index = {decision_key(item): position for position, item in enumerate(merged)}
+    for item in decisions:
+        position = index.get(decision_key(item))
+        if position is None:
+            index[decision_key(item)] = len(merged)
+            merged.append(item)
+            continue
+        stored, fresh = parse_reviewed_at(merged[position].get("reviewed_at")), parse_reviewed_at(item.get("reviewed_at"))
+        if fresh and (not stored or fresh > stored):
+            merged[position] = item
+    return merged
+
+
+def export_decisions(path, only_newer=False):
     # Read first: a refusal must happen before the database is queried or anything written.
     existing = load_decisions(path)
     session = SessionLocal()
@@ -81,10 +106,13 @@ def export_decisions(path):
             if edge.source_node and edge.target_node
         }
         carried = [item for item in existing if (item.get("source_ticker"), item.get("target_ticker")) not in pairs]
-        payload = {"exported_at": datetime.now(timezone.utc).isoformat(), "decisions": decisions + carried}
-        write_json_atomic(path, payload)
-        note = f"; kept {len(carried)} that this database has no edge for" if carried else ""
-        print(f"Exported {len(decisions)} review decision(s) to {path}{note}")
+        merged = merge_newer(existing, decisions) if only_newer else decisions + carried
+        write_json_atomic(path, {"exported_at": datetime.now(timezone.utc).isoformat(), "decisions": merged})
+        if only_newer:
+            print(f"Merged {len(decisions)} review decision(s) into {path}; any the file holds a newer verdict on were kept ({len(merged)} in all)")
+        else:
+            note = f"; kept {len(carried)} that this database has no edge for" if carried else ""
+            print(f"Exported {len(decisions)} review decision(s) to {path}{note}")
     finally:
         session.close()
 
@@ -254,10 +282,13 @@ def main():
     parser = argparse.ArgumentParser(description="Export or apply tracked Hephaestus edge review decisions.")
     parser.add_argument("mode", choices=["export", "apply"])
     parser.add_argument("--path", default=DEFAULT_PATH)
+    parser.add_argument("--only-newer", action="store_true",
+                        help="Export only: merge instead of replace. Adds decisions the file lacks, replaces those the "
+                             "database reviewed later and drops nothing; for a database that may be older than the file.")
     args = parser.parse_args()
 
     if args.mode == "export":
-        export_decisions(args.path)
+        export_decisions(args.path, only_newer=args.only_newer)
     else:
         apply_decisions(args.path)
 

@@ -121,6 +121,8 @@ To rebuild the local database from scratch and refresh dashboard data:
 ./scripts/rebuild_db.sh
 ```
 
+The rebuild runs the same publishing steps in the same order as the scheduled workflow and `run_pipeline.sh` (apply the tracked decisions, apply the review-page decisions, clean up, persist the decisions, audit, export, repair from the persisted decisions). Before it deletes the old database it merges that database's decisions into `data/edge_review_decisions.json` with `edge_review_decisions.py export --only-newer`, which adds or updates but never drops a decision the file holds a newer verdict on. A normal `export` also keeps every decision about a pair the database has no edge for (for example a company missing from a fresh runner), and `apply` warns about each decision it could not apply.
+
 For a limited debug rebuild:
 
 ```bash
