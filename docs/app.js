@@ -652,6 +652,13 @@ window.addEventListener('resize', () => {
     if (summaryClipUpdate) summaryClipUpdate();
 });
 
+// The skip link cannot be a plain #fragment link: the hash is the router.
+function skipToContent(event) {
+    if (event && event.preventDefault) event.preventDefault();
+    const main = document.getElementById('main-content');
+    if (main) main.focus();
+}
+
 function showCompanies() {
     hideAllViews();
     // The filters stay on screen with the results they produced, so a visitor can narrow a
@@ -1090,6 +1097,7 @@ function renderLevel3(company, previousRoute = null) {
     document.getElementById('view-details').classList.remove('hidden');
 
     setText('detail-name', displayCompanyName(company.name));
+    setText('detail-heading', `${displayCompanyName(company.name)} (${company.ticker}) suppliers and customers`);
     setPageTitle(`${displayCompanyName(company.name)} (${company.ticker}) suppliers and customers`);
     setText('detail-ticker', company.ticker || 'N/A');
     setText('detail-industry', company.industry || company.sector || 'Uncategorized');
@@ -1974,6 +1982,7 @@ function renderSectorView(sector) {
     const companies = (globalData[sector] || []).map(company => ({ ...company, sector, connection_count: relationshipCount(company) }));
     const linked = companies.filter(company => relationshipCount(company) > 0);
     setText('sector-title', sector || 'Unknown sector');
+    setText('sector-heading', `${sector || 'Unknown'} sector`);
     setPageTitle(sector ? `${sector} sector` : 'Sector');
     setText('sector-count', pluralize(companies.length, 'company', 'companies'));
     const summary = document.getElementById('sector-summary');

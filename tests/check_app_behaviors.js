@@ -893,3 +893,14 @@ const compareText = collectText(element("compare-grid"));
 check(!/Risk score|Supplier risk|Customer risk/.test(compareText), "compare no longer calls these numbers risk");
 vm.runInContext("watchlist = new Set();", context);
 
+// --- Keyboard and screen-reader structure --------------------------------------------------
+check(/<a class="skip-link" href="#main-content" onclick="skipToContent\(event\)">/.test(htmlSource) && /<main class="container" id="main-content" tabindex="-1">/.test(htmlSource), "a skip link leads to the main area");
+check(htmlSource.indexOf('class="skip-link"') < htmlSource.indexOf('<header class="topbar">'), "the skip link comes before the navigation");
+["sector", "watchlist", "predictions", "compare", "exposure", "companies", "details"].forEach((view) => {
+  const start = htmlSource.indexOf(`<section id="view-${view}"`);
+  check(start > 0 && /^\s*<h1 class="visually-hidden"/.test(htmlSource.slice(htmlSource.indexOf(">", start) + 1, start + 400)), `view-${view} needs a level-one heading`);
+});
+check(/id="detail-summary"[^>]*tabindex="0"/.test(htmlSource), "the scrollable profile must be reachable by keyboard");
+vm.runInContext("globalThis.__skipPrevented = false; skipToContent({ preventDefault() { globalThis.__skipPrevented = true; } });", context);
+check(context.__skipPrevented && context.document.activeElement.id === "main-content", "the skip link moves focus without touching the hash (the hash is the router)");
+

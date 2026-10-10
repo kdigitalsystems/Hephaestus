@@ -2974,6 +2974,38 @@ td.muted {
 
 .brief-note { margin: 10px 0 0; }
 
+/* Keyboard users reach the page behind a navigation bar of a dozen controls; the link is
+   off screen until it takes focus. #main-content is only a focus target, so no ring. */
+.skip-link {
+    position: absolute;
+    top: 0;
+    left: 12px;
+    z-index: 200;
+    padding: 10px 14px;
+    transform: translateY(-120%);
+    border-radius: 0 0 8px 8px;
+    background: var(--text-main);
+    color: var(--bg-color);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.skip-link:focus { transform: translateY(0); }
+#main-content:focus { outline: none; }
+
+/* The scrollable profile is a tab stop so a keyboard can scroll it; the ring sits inside
+   because the fade mask would clip one drawn outside. */
+.profile-summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    border-radius: 4px;
+}
+
+/* Light theme: these three measured 3.6 to 4.1:1 (axe needs 4.5:1 at these sizes). */
+[data-theme="light"] .compact-btn.active { color: #ffffff; }
+[data-theme="light"] .exposure-flag { color: #7a4309; }
+[data-theme="light"] .source-badge.revenue-share { color: var(--accent-strong); }
+
 @media (max-width: 1050px) {
     .topbar { position: static; flex-direction: column; align-items: flex-start; }
     .topbar-actions { width: 100%; justify-content: flex-start; }
