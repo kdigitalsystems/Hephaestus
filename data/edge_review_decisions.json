@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-11T10:30:35.201267+00:00",
+  "exported_at": "2026-10-12T11:53:34.777546+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -60095,6 +60095,74 @@
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reverse:1). Lead rationale from mistral:7b-instruct: Centennial Energy Holdings, a direct wholly owned subsidiary of MDU Resources and the direct parent company of Knife River prior to the Separation indicates an operational supply-chain dependency.",
       "reviewed_at": "2026-10-11T10:23:45.718173"
+    },
+    {
+      "edge_id": 3975,
+      "source_ticker": "BKYI",
+      "target_ticker": "MSFT",
+      "source_name": "BIO-key International, Inc. Common Stock",
+      "target_name": "Microsoft Corporation Common Stock",
+      "dependency_type": "Revenue Concentration",
+      "product": "compact fingerprint scanners",
+      "confidence_score": 0.95,
+      "revenue_share": 22.0,
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1019034/000143774926020446/bkyi20251231c_10k.htm",
+      "source_title": "SEC EDGAR (10-K filed 2026-06-12; customer-concentration disclosure)",
+      "evidence_excerpt": "BIO-key International (BKYI) 10-K filed 2026-06-12: Microsoft Partnership We are a Microsoft Partner and our line of compact fingerprint scanners has been tested and qualified by Microsoft to support Windows Hello and Windows Hello for Business. 4 Table of Contents Hardware Hardware products generated 22% and 9% of our revenue in 2025 and 2024, respectively.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.95; votes approve:2, reject:1). Lead rationale from qwen2.5:7b-instruct: BIO-key International supplies compact fingerprint scanners to Microsoft, not the other way around.",
+      "reviewed_at": "2026-10-12T11:49:29.154634"
+    },
+    {
+      "edge_id": 3976,
+      "source_ticker": "BKYI",
+      "target_ticker": "MOMO",
+      "source_name": "BIO-key International, Inc. Common Stock",
+      "target_name": "Hello Group Inc. American Depositary Shares",
+      "dependency_type": "Revenue Concentration",
+      "product": "Compact fingerprint scanners for Windows Hello and Windows Hello for Business",
+      "confidence_score": 0.925,
+      "revenue_share": 9.0,
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1019034/000143774926020446/bkyi20251231c_10k.htm",
+      "source_title": "SEC EDGAR (10-K filed 2026-06-12; customer-concentration disclosure)",
+      "evidence_excerpt": "BIO-key International (BKYI) 10-K filed 2026-06-12: Microsoft Partnership We are a Microsoft Partner and our line of compact fingerprint scanners has been tested and qualified by Microsoft to support Windows Hello and Windows Hello for Business. 4 Table of Contents Hardware Hardware products generated 22% and 9% of our revenue in 2025 and 2024, respectively.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.93; votes reject:2, pending:1). Lead rationale from mistral:7b-instruct: BIO-key International is a Microsoft Partner and their line of compact fingerprint scanners are used in Microsoft's Windows Hello and Windows Hello for Business. This relationship is operational and real.",
+      "reviewed_at": "2026-10-12T11:49:42.370528"
+    },
+    {
+      "edge_id": 3980,
+      "source_ticker": "LLY",
+      "target_ticker": "ATAI",
+      "source_name": "Eli Lilly & Co.",
+      "target_name": "AtaiBeckley Inc. Common Stock",
+      "dependency_type": "acquisition",
+      "product": "BPL-003 and VLS-01",
+      "confidence_score": 0.9667,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In July 2026, Eli Lilly and Company announced that it would acquire AtaiBeckley for $6.75 per share in cash, an aggregate equity value of approximately $2.8 billion, plus a contingent value right (CVR) of up to $2.50 per share, worth approximately $1.0 billion in aggregate, payable on the initiation of a Phase 3 trial of VLS-01 and on U.S. regulatory approval and Drug Enforcement Administration (DEA) rescheduling of BPL-003 and VLS-01, for a total potential value of up to US$3.8 billion.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 3/3 for reject (avg confidence 0.97; votes reject:3). Lead rationale from qwen2.5:7b-instruct: The relationship is an acquisition, not a supply chain dependency. Eli Lilly & Co. is acquiring AtaiBeckley Inc., so the direction should be reversed.",
+      "reviewed_at": "2026-10-12T11:49:54.800859"
+    },
+    {
+      "edge_id": 3981,
+      "source_ticker": "HIMX",
+      "target_ticker": "GOOG",
+      "source_name": "Himax Technologies, Inc. American Depositary Shares",
+      "target_name": "Alphabet Inc. Class C Capital Stock",
+      "dependency_type": "liquid crystal on silicon chips",
+      "product": "used in Google Glass",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "https://en.wikipedia.org/wiki/Himax",
+      "source_title": "WIKIPEDIA (Page: Himax)",
+      "evidence_excerpt": "On July 22, 2013, it was announced that Google will take a 6.3% stake in Himax Display, a subsidiary of the company which focuses on liquid crystal on silicon chips being used in Google Glass.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a sale, spin-off, fine, hire or similar event, not supply (\"6.3% stake in\").",
+      "reviewed_at": "2026-10-12T11:49:54.826802"
     }
   ]
 }
