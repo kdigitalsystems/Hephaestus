@@ -1,8 +1,40 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-12T11:53:45+00:00",
-  "unique_links": 764,
+  "generated_at": "2026-10-13T10:35:10+00:00",
+  "unique_links": 766,
   "days": [
+    {
+      "date": "2026-10-13",
+      "generated_at": "2026-10-13T10:35:10+00:00",
+      "previous_date": "2026-10-12",
+      "unique_links": 766,
+      "net_change": 2,
+      "new_count": 2,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "GRFS->ADMA:INVENTORY PURCHASES",
+          "source_ticker": "GRFS",
+          "target_ticker": "ADMA",
+          "type": "Inventory Purchases",
+          "product": "plasma",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "PCG->RUN:ENERGY SUPPLY",
+          "source_ticker": "PCG",
+          "target_ticker": "RUN",
+          "type": "Energy Supply",
+          "product": "Solar Energy Services",
+          "review_status": "approved",
+          "confidence": 0.925
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-12",
       "generated_at": "2026-10-12T11:53:45+00:00",
@@ -3679,19 +3711,6 @@
           "confidence": 0.85
         }
       ],
-      "changed_links": []
-    },
-    {
-      "date": "2026-09-28",
-      "generated_at": "2026-09-28T09:03:42+00:00",
-      "previous_date": "2026-09-27",
-      "unique_links": 472,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
       "changed_links": []
     }
   ]

@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-12T11:53:34.777546+00:00",
+  "exported_at": "2026-10-13T10:34:59.525703+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -60163,6 +60163,40 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a sale, spin-off, fine, hire or similar event, not supply (\"6.3% stake in\").",
       "reviewed_at": "2026-10-12T11:49:54.826802"
+    },
+    {
+      "edge_id": 3983,
+      "source_ticker": "GRFS",
+      "target_ticker": "ADMA",
+      "source_name": "Grifols, S.A. American Depositary Shares",
+      "target_name": "ADMA Biologics Inc Common Stock",
+      "dependency_type": "Inventory Purchases",
+      "product": "plasma",
+      "confidence_score": 0.925,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "ADMA: Inventory Purchases Member adma: Grifols Member 2019-01-012019-12-31",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reverse:1). Lead rationale from mistral:7b-instruct: Grifols is a drug manufacturer and ADMA Biologics Inc is in the biotechnology industry. The evidence shows that ADMA purchases inventory from Grifols, specifically plasma, which aligns with the operational supply-chain relationship.",
+      "reviewed_at": "2026-10-13T10:31:03.477431"
+    },
+    {
+      "edge_id": 3984,
+      "source_ticker": "PCG",
+      "target_ticker": "RUN",
+      "source_name": "PG&E Corporation",
+      "target_name": "Sunrun Inc. Common Stock",
+      "dependency_type": "Energy Supply",
+      "product": "Solar Energy Services",
+      "confidence_score": 0.925,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In June 2010, Sunrun struck a deal with PG&E for $100 million.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reverse:1). Lead rationale from mistral:7b-instruct: PG&E Corporation is a utility company and Sunrun Inc. is a solar energy company. In June 2010, they struck a deal for $100 million, which indicates an operational supply-chain relationship.",
+      "reviewed_at": "2026-10-13T10:30:41.910510"
     }
   ]
 }
