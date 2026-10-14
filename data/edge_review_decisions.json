@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-13T10:34:59.525703+00:00",
+  "exported_at": "2026-10-14T09:02:01.059917+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -60197,6 +60197,74 @@
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 0.93; votes approve:2, reverse:1). Lead rationale from mistral:7b-instruct: PG&E Corporation is a utility company and Sunrun Inc. is a solar energy company. In June 2010, they struck a deal for $100 million, which indicates an operational supply-chain relationship.",
       "reviewed_at": "2026-10-13T10:30:41.910510"
+    },
+    {
+      "edge_id": 3987,
+      "source_ticker": "WWW",
+      "target_ticker": "CAT",
+      "source_name": "Wolverine World Wide, Inc.",
+      "target_name": "Caterpillar Inc.",
+      "dependency_type": "Licensing Deal",
+      "product": "Footwear",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In 1994, Wolverine World Wide introduced Cat Footwear, a licensed brand of shoes using the Caterpillar Inc. name.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
+      "reviewed_at": "2026-10-14T08:57:50.067008"
+    },
+    {
+      "edge_id": 3988,
+      "source_ticker": "QTRX",
+      "target_ticker": "ATEX",
+      "source_name": "Quanterix Corporation Common Stock",
+      "target_name": "Anterix Inc. Common Stock",
+      "dependency_type": "grant/funding",
+      "product": "None mentioned",
+      "confidence_score": 0.85,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "QUANTERIX CORPORATION received $18200000.0 from Department of Health and Human Services for Anterix...",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.85; votes reject:2, approve:1). Lead rationale from llama3.1:8b: The edge is not a supply chain relationship, but rather a grant or funding relationship.",
+      "reviewed_at": "2026-10-14T08:58:11.491823"
+    },
+    {
+      "edge_id": 3990,
+      "source_ticker": "VIRT",
+      "target_ticker": "EOSE",
+      "source_name": "Virtu Financial, Inc. Class A",
+      "target_name": "Eos Energy Enterprises, Inc. Class A Common Stock",
+      "dependency_type": "Publicly Traded Company Supplier",
+      "product": "Financial Services",
+      "confidence_score": 0.96,
+      "revenue_share": null,
+      "source_url": "https://en.wikipedia.org/wiki/David_Urban",
+      "source_title": "WIKIPEDIA (Page: David Urban)",
+      "evidence_excerpt": "Urban serves on the boards of directors of publicly traded companies Virtu Financial (NYSE: VIRT)...and Eos Energy Enterprises (NASDAQ: EOSE), as well as the private company SubCom.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: VIRT Virtu Financial, Inc. Class A.",
+      "reviewed_at": "2026-10-14T08:57:30.797566"
+    },
+    {
+      "edge_id": 3991,
+      "source_ticker": "SAIC",
+      "target_ticker": "EOSE",
+      "source_name": "Science Applications International Corporation Common Stock",
+      "target_name": "Eos Energy Enterprises, Inc. Class A Common Stock",
+      "dependency_type": "board member relationship",
+      "product": "Technology Services",
+      "confidence_score": 0.9,
+      "revenue_share": null,
+      "source_url": "https://en.wikipedia.org/wiki/David_Urban",
+      "source_title": "WIKIPEDIA (Page: David Urban)",
+      "evidence_excerpt": "Urban serves on the boards of directors of publicly traded companies Virtu Financial (NYSE: VIRT), SAIC (NASDAQ: SAIC)...and Eos Energy Enterprises (NASDAQ: EOSE), as well as the private company SubCom.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.90; votes reject:2, pending:1). Lead rationale from llama3.1:8b: The edge is based on a board membership, not an operational supply chain dependency.",
+      "reviewed_at": "2026-10-14T08:57:50.058424"
     }
   ]
 }
