@@ -507,10 +507,13 @@ def test_research_queue_reaches_below_one_billion_and_honours_cooldown_and_secto
 
 def test_a_percentage_is_never_guessed_onto_the_wrong_customer():
     """Real RIG wording. With one customer missing from the universe, positional pairing
-    handed Shell the first 22% and Equinor the second, instead of Equinor's 12%."""
+    handed Shell the first 22% and Equinor the second, instead of Equinor's 12%. The missing
+    customer still counts as the first of the three, so each tracked one gets its own figure."""
     known = {"Shell plc": "Shell plc", "Equinor ASA": "Equinor ASA"}
     sentence = "Our customers Petrobras, Shell plc and Equinor ASA represented 22 percent, 22 percent and 12 percent of revenues, respectively."
-    assert extract_disclosures(sentence, known) == []
+    assert {(d.customer_name, d.share_pct) for d in extract_disclosures(sentence, known)} == {("Shell plc", 22.0), ("Equinor ASA", 12.0)}
+    # Three names and two figures cannot be matched one to one: no guess.
+    assert extract_disclosures("Our customers Petrobras, Shell plc and Equinor ASA represented 22 percent and 12 percent of revenues, respectively.", known) == []
     # All three present: a clean one-to-one list still pairs.
     known_all = {**known, "Petroleo Brasileiro": "Petroleo Brasileiro"}
     found = {(d.customer_name, d.share_pct) for d in extract_disclosures(sentence.replace("Petrobras", "Petroleo Brasileiro"), known_all)}

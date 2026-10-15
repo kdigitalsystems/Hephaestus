@@ -69,7 +69,7 @@
             <dt>Deterministic checks</dt>
             <dd>Self-links, missing or placeholder evidence, financial vehicles that are not operating companies, excerpts that do not name both companies, and relationships whose opposite direction is already approved are rejected or held for a person before any model votes.</dd>
             <dt>Consensus panel</dt>
-            <dd>Three independent local models each decide whether the relationship is real, whether its direction is right, and how confident they are. A relationship is approved only when at least two models agree on the same decision <em>and</em> the same direction, with average confidence of at least 0.85. Split votes, low confidence, and direction disagreements stay pending.</dd>
+            <dd>Three independent local models each decide whether the relationship is real, whether its direction is right, and how confident they are. A relationship is approved only when at least two models agree on the same decision <em>and</em> the same direction, with average confidence of at least 0.85. Split votes, low confidence, and direction disagreements stay pending, and one model voting the opposite direction is enough to count as a disagreement. A model that fails to answer casts no vote.</dd>
             <dt>Human review</dt>
             <dd>Maintainers can approve, reject, reverse, or relabel any relationship. Human decisions are persisted and replayed on every run so an automated pass cannot undo them.</dd>
         </dl>
@@ -82,7 +82,7 @@
             <dt>Source</dt>
             <dd>The document the evidence excerpt came from. "AI research, no direct citation" means the relationship was extracted from collected text before source tracking existed, or from a source without a stable URL. Relationships discovered after September 2026 cite their filing directly.</dd>
             <dt>Share of revenue</dt>
-            <dd>The percentage of the supplier's revenue attributed to that customer, as disclosed by the supplier in its own annual report. Shown only when disclosed.</dd>
+            <dd>The percentage of the supplier's revenue attributed to that customer, as disclosed by the supplier in its own annual report. Shown only when the sentence gives that customer its own figure: a figure stated for two customers together, for the five largest in aggregate, or as a range is not shown for any one of them.</dd>
             <dt>Verified date</dt>
             <dd>When the relationship was last reviewed or re-confirmed, not when the underlying business relationship began.</dd>
             <dt id="scores">Larger-side share</dt>
@@ -102,7 +102,8 @@
         </ul>
 
         <h2 id="signals">Research signals</h2>
-        <p>The Predictions view publishes bounded, deterministic research signals for the 50 largest companies in the graph. Each signal combines recent price change, analyst target gap, and analyst recommendation with a dampened one-hop transfer of connected companies' signals through approved relationships. A local model may narrate scenarios but cannot change a direction, a score, or add facts. Signals are evaluated against actual prices when their 30-day horizon matures, and the resulting hit rate is published as it accumulates. They are research tooling, not investment advice or a recommendation to trade.</p>
+        <p>The Predictions view publishes bounded, deterministic research signals for the 50 largest companies in the graph. Each signal combines recent price change, analyst target gap, and analyst recommendation with a dampened one-hop transfer of connected companies' signals through approved relationships. A local model may write scenario prose once the scores are fixed: it cannot change a direction, score or confidence, and its prose is screened for recommendation and price-target language, but it is not checked against the evidence, so read it as commentary and rely on the scores, inputs and cited relationships. Signals are evaluated against actual prices when their 30-day horizon matures. The start and the end of each return are taken from the same split-adjusted price series, each company counts once per 30-day window (the share classes of one company count as one), and a day whose prices merely repeat the previous day's is not counted. The resulting hit rate is published as it accumulates, beside the rate that always saying "up" would have achieved on the same signals.</p>
+        <p>What the record shows so far is limited. The model has made no "down" calls, only "up" and "neutral" ones, so its hit rate equals the "always up" rate by construction and says nothing about skill. The record is labelled experimental until it has 30 independent signals across three non-overlapping 30-day periods, and even then that label only says the sample is large enough: skill would also need correct "down" calls and a hit rate that stays above "always up" across periods. The network part of a score is a sum capped at +/-0.30, and for 10 of the top 50 companies on 8 October 2026 it sat at the cap. These signals are research tooling, not investment advice or a recommendation to trade.</p>
 
         <h2 id="freshness">Freshness and feeds</h2>
         <p>The graph is rebuilt and published daily. The overview shows what changed since the previous run, and the same changes are available as <a href="changes.json">JSON</a> and an <a href="feed.xml">RSS feed</a>. Market data comes from public quote services and may lag or be missing for some companies.</p>

@@ -2,6 +2,8 @@ import argparse
 import csv
 from datetime import datetime, timezone
 
+from sqlalchemy.exc import IntegrityError
+
 from database import SessionLocal
 from evidence_quality import has_non_supply_relationship
 from models import Edge
@@ -25,7 +27,9 @@ def allowed(row, args):
     if action == "approve":
         return confidence >= args.min_approve
     if action == "reverse":
-        return confidence >= args.min_reverse
+        # The nightly reviewer holds every reversal for a human unless a run opts in
+        # (review_edges_with_ollama.decision_allowed); a report must not be a way around that.
+        return getattr(args, "apply_reversals", False) and confidence >= args.min_reverse
     if action == "reject":
         return confidence >= args.min_reject
     return False
@@ -93,9 +97,11 @@ def main():
     parser.add_argument("--min-approve", type=float, default=0.75)
     parser.add_argument("--min-reject", type=float, default=0.85)
     parser.add_argument("--min-reverse", type=float, default=0.75)
+    parser.add_argument("--apply-reversals", action="store_true",
+                        help="Apply reverse verdicts. Off by default, as in the nightly reviewer: reversals are held for a human.")
     args = parser.parse_args()
 
-    counts = {"approved": 0, "rejected": 0, "reversed": 0, "held": 0, "skipped": 0}
+    counts = {"approved": 0, "rejected": 0, "reversed": 0, "held": 0, "skipped": 0, "conflicts": 0}
     session = SessionLocal()
     try:
         with open(args.report, newline="") as handle:
@@ -106,9 +112,17 @@ def main():
                 if not allowed(row, args):
                     counts["skipped"] += 1
                     continue
-                result = apply_row(session, row)
+                # One row at a time: a rename that collides with another edge between the same
+                # two companies (uq_edge_dependency) used to fail the single commit at the end
+                # and lose every verdict in the report.
+                try:
+                    result = apply_row(session, row)
+                    session.commit()
+                except IntegrityError:
+                    session.rollback()
+                    result = "conflicts"
+                    print(f"Edge #{row.get('edge_id')} left as it was: its verdict conflicts with another edge between the same companies.")
                 counts[result] += 1
-        session.commit()
         print("Applied report:", counts)
     finally:
         session.close()
