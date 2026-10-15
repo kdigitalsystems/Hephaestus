@@ -1,3 +1,4 @@
+import math
 import os
 import time
 import argparse
@@ -14,6 +15,29 @@ def module_payload(ticker_data, name):
 
 
 NO_RECOMMENDATION_VALUES = {"", "none", "null", "n/a"}
+
+
+def positive_number(value):
+    """A usable price: a finite number above zero (Yahoo sends None, strings and NaN as well)."""
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value > 0
+
+
+def percent_change_today(price):
+    """How far the price has moved since the previous close, in percent, or None.
+
+    The site calls this "Today's Change", so it is measured from yesterday's close - what
+    Yahoo itself reports - and not from this morning's open: an open of 100, a price of 110
+    and a previous close of 105 is +4.76%, not +10%. The previous close is used instead of
+    Yahoo's regularMarketChangePercent because that field is a fraction in the price module
+    but a percentage in the other endpoints, whereas the two prices are unambiguous, and
+    dividing the stored price by the stored previous close can always be reproduced from the
+    page. With either price missing there is no change to report; defaulting a missing open
+    to 1 once published +25,892% for a $260 stock.
+    """
+    current, previous = price.get('regularMarketPrice'), price.get('regularMarketPreviousClose')
+    if not (positive_number(current) and positive_number(previous)):
+        return None
+    return (current - previous) / previous * 100
 
 
 def ticker_updates(ticker_data):
@@ -34,10 +58,8 @@ def ticker_updates(ticker_data):
     if 'regularMarketPrice' in p:
         updates['current_price'] = p.get('regularMarketPrice')
         updates['market_cap'] = p.get('marketCap')
-        open_price = p.get('regularMarketOpen', 1)
-        current = p.get('regularMarketPrice', 0)
-        if open_price and current:
-            updates['percent_change'] = ((current - open_price) / open_price) * 100
+        # Cleared, not kept, when it cannot be worked out: the stored change belongs to the old price.
+        updates['percent_change'] = percent_change_today(p)
 
     if s:
         updates['dividend_yield'] = f"{s.get('dividendYield', 0) * 100:.2f}%" if s.get('dividendYield') else "N/A"
@@ -142,11 +164,18 @@ def prioritized_nodes(session, limit=None):
     return nodes[:limit] if limit else nodes
 
 
+def stored_market_data(session):
+    """Is there any company a previous run priced? The export needs a price and a cap for each."""
+    return session.query(Node.id).filter(Node.current_price.is_not(None), Node.market_cap.is_not(None)).first() is not None
+
+
 def update_financial_metrics(limit=None):
     print("--- Starting Bulk Deep Financial Metrics Update ---")
     session = SessionLocal()
     updated = 0
     no_data = 0
+    failed_batches = 0
+    failed_companies = 0
     sample_errors = {}
 
     try:
@@ -170,37 +199,58 @@ def update_financial_metrics(limit=None):
                     time.sleep(THROTTLE_PAUSE_SECONDS)
                     dict_data = fetch_batch(tickers, refresh=True)
 
+                # Counted per batch and added only once the batch is committed, so a batch
+                # that fails at the commit does not report companies it never saved.
+                batch_updated = batch_no_data = 0
+                batch_errors = {}
                 for node in batch:
                     ticker_data = dict_data.get(node.ticker, {})
                     if not isinstance(ticker_data, dict):
                         # Yahoo returns an error string ("Quote not found", a throttling
                         # message) instead of a dict; count it instead of hiding it.
-                        no_data += 1
-                        message = str(ticker_data)[:80]
-                        sample_errors.setdefault(message, node.ticker)
+                        batch_no_data += 1
+                        batch_errors.setdefault(str(ticker_data)[:80], node.ticker)
                         continue
                     try:
                         if apply_ticker_modules(node, ticker_data):
-                            updated += 1
+                            batch_updated += 1
                         else:
-                            no_data += 1
+                            batch_no_data += 1
                     except Exception as e:
                         # One malformed symbol must not discard the rest of the batch.
                         print(f"  [-] Skipping {node.ticker}: {e}")
 
                 session.commit()
+                updated += batch_updated
+                no_data += batch_no_data
+                for message, ticker in batch_errors.items():
+                    sample_errors.setdefault(message, ticker)
                 time.sleep(1)
 
             except Exception as e:
                 print(f"  [-] Error processing batch: {e}")
                 session.rollback()
+                failed_batches += 1
+                failed_companies += len(batch)
 
-        print(f"\n--- Bulk Financial Metrics Update Complete: {updated} updated, {no_data} returned no data ---")
+        print(
+            f"\n--- Bulk Financial Metrics Update Complete: {updated} updated, {no_data} returned no data, "
+            f"{failed_companies} lost in {failed_batches} failed batches ---"
+        )
         for message, ticker in list(sample_errors.items())[:5]:
             print(f"  [-] e.g. {ticker}: {message}")
-        if total_nodes and no_data / total_nodes >= THROTTLE_RATIO:
-            print("  [!] Most companies received no market data; the export will shrink until the provider recovers.")
-        
+        if total_nodes and (no_data + failed_companies) / total_nodes >= THROTTLE_RATIO:
+            warning = "Most companies received no market data; prices and changes stay at their last stored values until the provider recovers."
+            print(f"  [!] {warning}")
+            if os.environ.get("GITHUB_ACTIONS"):
+                print(f"::warning title=Market data not refreshed::{updated} of {total_nodes} companies updated, {failed_batches} batches failed. {warning}")
+            # A stale price is better than none: with earlier data stored the run goes on and
+            # publishes the graph. Without any, the export would drop every company that has
+            # no price, and the run would fail at validation hours later.
+            if updated == 0 and not stored_market_data(session):
+                print("  [-] No company has stored market data and none could be fetched; stopping instead of publishing an empty dashboard.", file=sys.stderr)
+                raise SystemExit(1)
+
     except Exception as e:
         session.rollback()
         # A database error is real breakage (a locked or corrupt file), not a flaky
