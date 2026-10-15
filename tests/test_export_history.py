@@ -173,6 +173,33 @@ def test_merged_rows_keep_key_and_edge_id_from_the_same_member_and_fold_case_dup
     assert merged["type"] == "Advanced Silicon Fabrication / foundry services"
 
 
+def test_a_merged_row_keeps_each_source_with_its_own_title():
+    """Sources and titles were de-duplicated separately, so a repeated title shortened one list
+    and every later URL was shown with the title of its neighbour."""
+    def member(edge_id, source, title, confidence):
+        return {"edge_id": edge_id, "ticker": "SVCO", "name": "Silvaco", "type": f"Type {edge_id}", "product": "x", "confidence": confidence,
+                "source_type": "Web Source", "review_status": "approved", "evidence_excerpt": "", "relationship_key": f"NVDA->SVCO:T{edge_id}",
+                "source": source, "source_title": title}
+
+    merged = export.merge_relationships([
+        member(1, "https://silvaco.com", "Company IR / Website", 0.9),
+        member(2, "https://sec.gov/a", "Company IR / Website", 0.8),   # same title, different document
+        member(3, "https://sec.gov/b", "SEC EDGAR (10-K)", 0.7),
+        member(4, "https://SILVACO.com", "Another title", 0.6),         # the same URL again: first title wins
+    ])[0]
+
+    assert merged["source"] == "https://silvaco.com / https://sec.gov/a / https://sec.gov/b"
+    assert merged["source_title"] == "Company IR / Website / Company IR / Website / SEC EDGAR (10-K)"
+    assert merged["sources"] == [
+        {"url": "https://silvaco.com", "title": "Company IR / Website"},
+        {"url": "https://sec.gov/a", "title": "Company IR / Website"},
+        {"url": "https://sec.gov/b", "title": "SEC EDGAR (10-K)"},
+    ]
+    # One source needs no list: the strings are already unambiguous.
+    single = export.merge_relationships([member(1, "https://silvaco.com", "Company IR / Website", 0.9)])[0]
+    assert "sources" not in single and single["source_title"] == "Company IR / Website"
+
+
 def test_rejected_members_never_contribute_to_a_merged_row():
     approved = {"edge_id": 1, "ticker": "TSM", "name": "TSMC", "type": "Foundry", "product": "wafers", "confidence": 0.9,
                 "source_type": "AI Research", "review_status": "approved", "evidence_excerpt": "", "relationship_key": "TSM->AMD:FOUNDRY"}

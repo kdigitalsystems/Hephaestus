@@ -31,38 +31,6 @@ def source_type(source_url):
     return "Source"
 
 
-def blank_company(next_id, ticker, name):
-    return {
-        "id": next_id,
-        "name": name or ticker,
-        "ticker": ticker,
-        "industry": "Reviewed relationship endpoint",
-        "price": None,
-        "change": 0,
-        "market_cap": None,
-        "enterprise_value": None,
-        "trailing_pe": None,
-        "forward_pe": None,
-        "price_to_book": None,
-        "dividend": "N/A",
-        "high_52w": None,
-        "low_52w": None,
-        "revenue": None,
-        "margin": None,
-        "target_price": None,
-        "recommendation": "N/A",
-        "ceo": "N/A",
-        "employees": None,
-        "summary": (
-            "This company is included because it has an approved supply-chain "
-            "relationship, but market metrics were not available in the latest export."
-        ),
-        "last_updated": "N/A",
-        "upstream": [],
-        "downstream": [],
-    }
-
-
 def decision_relationship(decision, connected_ticker, connected_name):
     source_url = decision.get("source_url") or "Unknown"
     reviewed_at = decision.get("reviewed_at") or ""
@@ -114,23 +82,15 @@ def repair_dashboard_from_decisions(dashboard_path=DASHBOARD_PATH, decisions_pat
     industries.setdefault(FALLBACK_LINKED_SECTOR, [])
     companies = [company for sector_companies in industries.values() for company in sector_companies]
     by_ticker = {company.get("ticker"): company for company in companies if company.get("ticker")}
-    next_id = max((int(company.get("id") or 0) for company in companies), default=0)
     for company in companies:
         company["upstream"] = []
         company["downstream"] = []
 
-    def ensure_company(ticker, name):
-        nonlocal next_id
-        if not ticker:
-            return None
-        if ticker in by_ticker:
-            return by_ticker[ticker]
-        next_id += 1
-        company = blank_company(next_id, ticker, name)
-        industries[FALLBACK_LINKED_SECTOR].append(company)
-        by_ticker[ticker] = company
-        return company
-
+    # A company the export left out is left out for a reason (a financial, real-estate or
+    # shell company, or one this database does not hold). This step used to re-add it as a
+    # blank "Reviewed relationship endpoint" page, which published the very companies the
+    # export excludes; it now only attaches links to companies the export published.
+    skipped = []
     for raw_decision in decisions:
         if raw_decision.get("review_status") != "approved":
             continue
@@ -139,9 +99,12 @@ def repair_dashboard_from_decisions(dashboard_path=DASHBOARD_PATH, decisions_pat
         # Directions are corrected in the database before the decisions are exported;
         # flipping them again here published ASML's EUV machines as TSM -> ASML.
         decision = raw_decision
-        source = ensure_company(decision.get("source_ticker"), decision.get("source_name"))
-        target = ensure_company(decision.get("target_ticker"), decision.get("target_name"))
-        if not source or not target or source.get("ticker") == target.get("ticker"):
+        source = by_ticker.get(decision.get("source_ticker"))
+        target = by_ticker.get(decision.get("target_ticker"))
+        if not source or not target:
+            skipped.append(f"{decision.get('source_ticker')}->{decision.get('target_ticker')}")
+            continue
+        if source.get("ticker") == target.get("ticker"):
             continue
         source.setdefault("downstream", []).append(
             decision_relationship(decision, target.get("ticker"), target.get("name"))
@@ -149,6 +112,9 @@ def repair_dashboard_from_decisions(dashboard_path=DASHBOARD_PATH, decisions_pat
         target.setdefault("upstream", []).append(
             decision_relationship(decision, source.get("ticker"), source.get("name"))
         )
+    if skipped:
+        shown = ", ".join(skipped[:10]) + (f" and {len(skipped) - 10} more" if len(skipped) > 10 else "")
+        print(f"Repair left out {len(skipped)} approved decision(s) whose company the export does not publish: {shown}")
 
     for sector, sector_companies in list(industries.items()):
         unique_companies = []

@@ -166,3 +166,41 @@ def test_publish_chain_runs_end_to_end_on_a_fixture_graph(workspace):
     assert (docs / "company-data" / "A.json").exists()
     status = json.loads((docs / "status.json").read_text())
     assert status["unique_links"] == 3 and status["data_as_of"] == dashboard["generated_at"]
+
+
+STALE_DECISION = {
+    "edge_id": 99, "source_ticker": "ACME", "target_ticker": "BOLT", "source_name": "Acme Sensors Inc.", "target_name": "Bolt Motors Corp.",
+    "dependency_type": "Competitor", "product": "Sensors", "confidence_score": 0.9, "revenue_share": None,
+    "source_url": "Manual System Jumpstart", "source_title": "Manual System Jumpstart",
+    "evidence_excerpt": "Acme Sensors and Bolt Motors compete for the same sensor contracts.",
+    "review_status": "approved", "review_note": "Confirmed by hand.", "reviewed_at": "2026-09-01T08:00:00",
+}
+
+
+def published_keys(root, env):
+    run("export", root, env, "backend/export.py")
+    run("repair", root, env, "backend/repair_dashboard_from_decisions.py")
+    dashboard = json.loads((root / "docs" / "dashboard_data.json").read_text())
+    return {
+        link["relationship_key"]
+        for sector in dashboard["industries"].values() for company in sector for link in company["upstream"] + company["downstream"]
+    }
+
+
+def test_repair_must_publish_from_the_decisions_cleanup_has_already_changed(workspace):
+    """rebuild_db.sh used to stop after cleanup: repair then published the stale file and brought
+    back the link cleanup had just rejected (export gave 0 links, repair 1). The order of
+    scripts/rebuild_db.sh from the second apply on is run here."""
+    root, env = workspace
+    run("seed", root, env, "seed_fixture.py")
+    (root / "data" / "edge_review_decisions.json").write_text(json.dumps({"decisions": [STALE_DECISION]}))
+    run("apply decisions", root, env, "backend/edge_review_decisions.py", "apply")
+    run("review page", root, env, "backend/apply_human_review.py")
+    run("cleanup", root, env, "backend/cleanup_reviewed_edges.py")
+
+    # Repairing now would publish from the file as it was before cleanup rejected the link.
+    assert "ACME->BOLT:COMPETITOR" in published_keys(root, env)
+
+    run("export decisions", root, env, "backend/edge_review_decisions.py", "export")
+    run("audit", root, env, "backend/audit_data_quality.py", "--fail-on-warnings")
+    assert published_keys(root, env) == {"COBF->ACME:WAFER FABRICATION"}
