@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-14T09:02:01.059917+00:00",
+  "exported_at": "2026-10-15T11:03:13.482669+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -60265,6 +60265,40 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.90; votes reject:2, pending:1). Lead rationale from llama3.1:8b: The edge is based on a board membership, not an operational supply chain dependency.",
       "reviewed_at": "2026-10-14T08:57:50.058424"
+    },
+    {
+      "edge_id": 3992,
+      "source_ticker": "F",
+      "target_ticker": "RYZ",
+      "source_name": "Ford Motor Company",
+      "target_name": "RYERSON HOLDING CORPORATION",
+      "dependency_type": "Steel Supply",
+      "product": "Steel",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In the early 1900s, when Ford Motor Company started producing vehicles, Ryerson supplied it with steel.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
+      "reviewed_at": "2026-10-15T10:59:28.117048"
+    },
+    {
+      "edge_id": 3993,
+      "source_ticker": "NDAQ",
+      "target_ticker": "AEVA",
+      "source_name": "Nasdaq, Inc. Common Stock",
+      "target_name": "Aeva Technologies, Inc. Common Stock",
+      "dependency_type": "Information/PR Provider",
+      "product": "Interviews with Aeva CEO about 4D LiDAR technology",
+      "confidence_score": 0.96,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "Nasdaq interviews Aeva CEO on 4D LiDAR powering the next wave of AI-driven automation across a broad range of applications",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: NDAQ Nasdaq, Inc. Common Stock.",
+      "reviewed_at": "2026-10-15T10:59:28.144919"
     }
   ]
 }
