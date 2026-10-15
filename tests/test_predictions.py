@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
 from predictions import (
-    HISTORY_RETENTION_LIMIT,
+    SCORED_RETENTION_DAYS,
     calibration_from_history,
     contains_unsafe_language,
     generate_predictions,
@@ -316,9 +316,10 @@ def test_outcome_price_date_reflects_the_session_actually_used():
 
 def test_prune_history_never_drops_unresolved_predictions_before_maturity():
     now = datetime(2026, 6, 1, tzinfo=timezone.utc)
+    # More scored entries than the old 2,000-entry cap allowed: age, not count, decides.
     resolved = [
         {"prediction_id": f"old-{index}", "outcome": "correct", "generated_at": "2026-01-01T00:00:00+00:00"}
-        for index in range(HISTORY_RETENTION_LIMIT)
+        for index in range(2500)
     ]
     fresh = [{"prediction_id": "fresh", "generated_at": "2026-05-20T00:00:00+00:00", "horizon_days": 30}]
     stale = [{"prediction_id": "stale", "generated_at": "2025-01-01T00:00:00+00:00", "horizon_days": 30}]
@@ -330,28 +331,27 @@ def test_prune_history_never_drops_unresolved_predictions_before_maturity():
     assert "fresh" in ids
     assert "legacy" in ids
     assert "stale" not in ids
-    assert len(retained) <= HISTORY_RETENTION_LIMIT + 2
-    assert "old-0" not in ids and f"old-{HISTORY_RETENTION_LIMIT - 1}" in ids
+    assert len(retained) == 2500 + 2
+    assert "old-0" in ids and "old-2499" in ids
 
 
-def test_prune_history_keeps_a_calibration_corpus_when_unresolved_entries_dominate():
-    from predictions import MIN_RESOLVED_HISTORY, calibration_from_history
-
-    now = datetime(2026, 6, 1, tzinfo=timezone.utc)
-    resolved = [
-        {"prediction_id": f"old-{index}", "outcome": "correct", "generated_at": "2026-01-01T00:00:00+00:00", "connection_paths": [{"relationship_type": "Customer"}]}
-        for index in range(3000)
+def test_prune_history_expires_scored_entries_by_age_and_never_for_size():
+    now = datetime(2027, 6, 1, tzinfo=timezone.utc)
+    expiry = now - timedelta(days=SCORED_RETENTION_DAYS)
+    scored = [
+        {"prediction_id": "just-inside", "outcome": "incorrect", "generated_at": (expiry + timedelta(days=1)).isoformat()},
+        {"prediction_id": "just-outside", "outcome": "correct", "generated_at": (expiry - timedelta(days=1)).isoformat()},
+        {"prediction_id": "abstained", "outcome": "no_call", "generated_at": (expiry - timedelta(days=1)).isoformat()},
     ]
     unresolved = [
-        {"prediction_id": f"open-{index}", "generated_at": "2026-05-20T00:00:00+00:00", "horizon_days": 30}
+        {"prediction_id": f"open-{index}", "generated_at": "2027-05-20T00:00:00+00:00", "horizon_days": 30}
         for index in range(4000)
     ]
 
-    retained = prune_history(resolved + unresolved, now)
+    retained = prune_history(scored + unresolved, now)
 
-    assert sum(1 for entry in retained if entry.get("outcome")) == MIN_RESOLVED_HISTORY
+    assert [entry["prediction_id"] for entry in retained if entry.get("outcome")] == ["just-inside"]
     assert sum(1 for entry in retained if not entry.get("outcome")) == 4000
-    assert calibration_from_history(retained)["resolved_predictions"] == MIN_RESOLVED_HISTORY
 
 
 def test_scenario_parser_skips_an_unterminated_brace_before_the_answer():
