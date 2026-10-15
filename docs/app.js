@@ -75,6 +75,10 @@ const changeClassName = (company) => {
 // Synthetic buckets created by the repair step for approved counterparties that lack
 // market data. They are browsable, but they are not sectors for aggregate statistics.
 const SYNTHETIC_SECTORS = new Set(['Linked Companies']);
+// globalData is a plain object, so a route like #sector?sector=constructor would find
+// Object.prototype members; only the dashboard's own sector lists count.
+const realSector = (sector) => Object.prototype.hasOwnProperty.call(globalData, sector)
+    && Array.isArray(globalData[sector]) && !SYNTHETIC_SECTORS.has(sector);
 // Without a relationship_key the identity must be the same from both endpoints, so
 // the pair of tickers is sorted before it is combined with the type.
 const relationshipIdentity = (company, link) => {
@@ -177,6 +181,17 @@ const companyMetrics = (company) => company.investor_metrics || {
     freshness_score: 0
 };
 
+// `concentration_score` is the share of a company's links on its larger side (suppliers
+// or customers), and `risk_score` blends that with unapproved and low-confidence links.
+// Neither says how dependent the company is on one counterparty, and both are 0 when it
+// has no links, which is "not scored" rather than "no risk".
+const SCORE_HELP = {
+    gap: 'Higher when this company\'s tracked links are one-sided, not yet approved, or low-confidence. It scores how complete and verified the tracked links look, not the company\'s business risk.',
+};
+const isScored = (metrics) => Number(metrics.total_links || 0) > 0;
+const formatLargerSide = (metrics) => (isScored(metrics) ? `${Math.round(Number(metrics.concentration_score || 0) * 100)}%` : 'N/A');
+const formatDataGap = (metrics) => (isScored(metrics) ? `${Number(metrics.risk_score || 0)}/100` : 'N/A');
+
 const relationshipStatus = (relationship) => {
     const tokens = String(relationship.review_status || 'pending')
         .toLowerCase()
@@ -204,6 +219,19 @@ function loadWatchlist() {
 function saveWatchlist() {
     writeStoredValue('hephaestus_watchlist', JSON.stringify([...watchlist].sort()));
 }
+
+// Tabs share one watchlist; saving this tab's copy as it was loaded would erase a company
+// another tab tracked in the meantime. Other tabs' changes are shown as they happen.
+window.addEventListener('storage', event => {
+    if (event.key !== 'hephaestus_watchlist' && event.key !== null) return;
+    loadWatchlist();
+    if (currentRoute.view === 'watchlist') {
+        renderWatchlistView();
+    } else if (currentRoute.view === 'company') {
+        const company = getCompanyByTicker(currentRoute.ticker);
+        if (company) renderDecisionBrief(company);
+    }
+});
 
 function applyTheme(theme) {
     currentTheme = theme === 'light' ? 'light' : 'dark';
@@ -464,7 +492,8 @@ function navigateCompanies(route = {}, push = true) {
 
 function navigateCompany(ticker) {
     if (!ticker) return;
-    setRoute({ view: 'company', ticker, previous: currentRoute });
+    // From one company to a related one, "Back" still means the list the visitor came from.
+    setRoute({ view: 'company', ticker, previous: currentRoute.view === 'company' ? currentRoute.previous : currentRoute });
 }
 
 function navigateExposure(ticker = '') {
@@ -516,9 +545,18 @@ function setRoute(route, push = true) {
     applyRoute(route);
 }
 
+// pushState fires no hashchange, so analytics.js (when a counter is configured) is told
+// about each page the app shows through this event.
+function announceRoute() {
+    if (typeof window.dispatchEvent === 'function' && typeof CustomEvent === 'function') {
+        window.dispatchEvent(new CustomEvent('hephaestus:route'));
+    }
+}
+
 function updateRouteHash(route, push = true) {
     const hash = routeToHash(route);
-    if (push && window.location.hash !== hash) {
+    const pushed = push && window.location.hash !== hash;
+    if (pushed) {
         history.pushState(null, '', hash);
     } else if (!push && window.location.hash !== hash) {
         history.replaceState(null, '', hash);
@@ -528,6 +566,8 @@ function updateRouteHash(route, push = true) {
     lastRoutedHash = window.location.hash;
     currentRoute = route;
     updateActiveNav(route);
+    // Typing in a box rewrites the hash in place; only a new history entry is a new page.
+    if (pushed) announceRoute();
 }
 
 function applyRouteFromHash(push = false) {
@@ -540,9 +580,16 @@ function applyRouteFromHash(push = false) {
 }
 
 function applyRoute(route) {
+    renderRoute(route);
+    announceRoute();
+}
+
+function renderRoute(route) {
     // A search typed moments ago must not fire after the user has navigated away:
     // the callback would re-render the screener over whatever view this route opens.
     window.clearTimeout(searchInputTimer);
+    // The dialog describes a link on the view being left; Back must not leave it open over the next one.
+    if (isEvidenceModalOpen()) closeEvidenceModal(false);
     lastRoutedHash = window.location.hash;
     currentRoute = route;
     updateActiveNav(route);
@@ -602,7 +649,17 @@ function applyRoute(route) {
     }
 
     if (route.view === 'sector') {
-        renderSectorView(route.sector || '');
+        if (realSector(route.sector)) {
+            renderSectorView(route.sector);
+            return;
+        }
+        if (allCompanies.length) {
+            // Same as an unknown ticker: say so instead of rendering an empty sector page.
+            setRoute({ view: 'overview' }, false);
+            showRouteNotice(`No sector in the dataset is named "${String(route.sector || '').slice(0, 60)}". Showing the overview instead.`);
+            return;
+        }
+        renderLevel1();
         return;
     }
 
@@ -640,6 +697,13 @@ window.addEventListener('hashchange', handleLocationChange);
 window.addEventListener('resize', () => {
     if (summaryClipUpdate) summaryClipUpdate();
 });
+
+// The skip link cannot be a plain #fragment link: the hash is the router.
+function skipToContent(event) {
+    if (event && event.preventDefault) event.preventDefault();
+    const main = document.getElementById('main-content');
+    if (main) main.focus();
+}
 
 function showCompanies() {
     hideAllViews();
@@ -873,7 +937,9 @@ function clearFilters() {
     document.getElementById('sector-filter').value = '';
     document.getElementById('dependency-filter').value = '';
     document.getElementById('connected-filter').checked = false;
-    navigateCompanies({}, false);
+    // From the overview this opens the screener, so it is a new history entry; replacing the
+    // overview's would make Back leave the site.
+    navigateCompanies({}, currentRoute.view !== 'companies');
 }
 
 function clearSearchInput() {
@@ -925,11 +991,13 @@ function applyFilters(updateRoute = true, committedSearch = false, openExactTick
         return;
     }
 
-    if (query && query.length < LIVE_SEARCH_MIN_CHARS && !exactTicker && !tickerPrefixSearch && !hasStructuredFilter) {
+    // "Keep typing" only applies to a search being typed. A short query in a link
+    // (#companies?query=zz) is a request for those results, not a prompt; showing the
+    // overview under a Screener URL and tab was neither.
+    if (updateRoute && query && query.length < LIVE_SEARCH_MIN_CHARS && !exactTicker && !tickerPrefixSearch && !hasStructuredFilter) {
         currentCompaniesList = [];
         if (currentRoute.view !== 'overview') {
-            if (updateRoute) updateRouteHash({ view: 'overview' }, false);
-            else currentRoute = { view: 'overview' };
+            updateRouteHash({ view: 'overview' }, false);
             renderLevel1();
         }
         updateSearchHelper();
@@ -1036,9 +1104,11 @@ function renderCompanyTableRow(company) {
     nameLink.href = routeToHash({ view: 'company', ticker: company.ticker });
     nameLink.appendChild(makeElement('strong', '', displayCompanyName(company.name)));
     nameLink.onclick = (event) => {
+        // The row navigates on any click that reaches it; a modified click belongs to the
+        // browser (new tab or window), so it must not bubble up and navigate this tab too.
+        if (event.stopPropagation) event.stopPropagation();
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button) return;
         if (event.preventDefault) event.preventDefault();
-        if (event.stopPropagation) event.stopPropagation();
         navigateCompany(company.ticker);
     };
     nameWrap.appendChild(nameLink);
@@ -1079,6 +1149,7 @@ function renderLevel3(company, previousRoute = null) {
     document.getElementById('view-details').classList.remove('hidden');
 
     setText('detail-name', displayCompanyName(company.name));
+    setText('detail-heading', `${displayCompanyName(company.name)} (${company.ticker}) suppliers and customers`);
     setPageTitle(`${displayCompanyName(company.name)} (${company.ticker}) suppliers and customers`);
     setText('detail-ticker', company.ticker || 'N/A');
     setText('detail-industry', company.industry || company.sector || 'Uncategorized');
@@ -1124,6 +1195,7 @@ function updateDetailBackLabel(previousRoute) {
         sector: 'Back to sector',
         compare: 'Back to compare',
         watchlist: 'Back to watchlist',
+        predictions: 'Back to predictions',
         exposure: 'Back to exposure',
     };
     button.textContent = labels[previousRoute?.view] || 'Back to screener';
@@ -1212,8 +1284,8 @@ function renderDecisionBrief(company) {
     watchButton.classList.toggle('active', watchlist.has(company.ticker));
     setText('brief-confidence', Number(metrics.upstream_count || 0).toLocaleString());
     setText('brief-approved', Number(metrics.downstream_count || 0).toLocaleString());
-    setText('brief-concentration', `${Math.round(Number(metrics.concentration_score || 0) * 100)}%`);
-    setText('brief-verified', `${Number(metrics.risk_score || 0)}/100`);
+    setText('brief-concentration', formatLargerSide(metrics));
+    setText('brief-verified', formatDataGap(metrics));
 
     const badges = document.getElementById('detail-risk-badges');
     clearElement(badges);
@@ -1245,6 +1317,7 @@ function renderDecisionBrief(company) {
 function toggleCurrentWatchlist() {
     const ticker = currentRoute.ticker;
     if (!ticker) return;
+    loadWatchlist();
     if (watchlist.has(ticker)) watchlist.delete(ticker);
     else watchlist.add(ticker);
     saveWatchlist();
@@ -1548,12 +1621,19 @@ function handleModalKeydown(event) {
     }
 }
 
-function closeEvidenceModal() {
+// A node that is detached or inside a hidden view cannot take focus; focus would fall to <body>.
+const isRendered = (node) => Boolean(node) && node.isConnected !== false
+    && (typeof node.getClientRects !== 'function' || node.getClientRects().length > 0);
+
+function closeEvidenceModal(returnToOpener = true) {
     const modal = document.getElementById('evidence-modal');
     if (!modal) return;
     modal.classList.add('hidden');
-    const target = modalReturnFocus;
+    const opener = modalReturnFocus;
     modalReturnFocus = null;
+    // The opener may be gone: the profile finishing its load redraws the relationship
+    // cards, and a route change hides the whole view. The page's main area is the fallback.
+    const target = returnToOpener && isRendered(opener) ? opener : document.getElementById('main-content');
     if (target && typeof target.focus === 'function') target.focus();
 }
 
@@ -1708,6 +1788,8 @@ function renderExposureView(updateRoute = true) {
     const sectorCounts = new Map();
     downstream.forEach(entry => {
         const sector = entry.company && entry.company.sector ? entry.company.sector : 'Unknown';
+        // A chip opens the sector page, so only sectors that have one get a chip.
+        if (!realSector(sector)) return;
         sectorCounts.set(sector, (sectorCounts.get(sector) || 0) + 1);
     });
     if (sectorCounts.size) {
@@ -1748,27 +1830,27 @@ function renderWatchlistView() {
     const grid = document.getElementById('watchlist-grid');
     clearElement(grid);
     const companies = [...watchlist].map(getCompanyByTicker).filter(Boolean);
-    setText('watchlist-count', `${companies.length} saved`);
+    setText('watchlist-count', `${companies.length} saved${companies.length > 1 ? ' · largest data gap first' : ''}`);
     setPageTitle('Watchlist');
     if (!companies.length) {
         grid.appendChild(makeElement('span', 'empty-state', 'Track companies from a Decision Brief to build a local research queue.'));
         return;
     }
+    // A linked company's gap is never below ~22, so companies without links (no score, 0
+    // here) come last; most linked companies score within a few points, hence the ticker tie-break.
     companies
-        .sort((a, b) => companyMetrics(b).risk_score - companyMetrics(a).risk_score)
+        .sort((a, b) => Number(companyMetrics(b).risk_score || 0) - Number(companyMetrics(a).risk_score || 0)
+            || String(a.ticker).localeCompare(String(b.ticker)))
         .forEach(company => grid.appendChild(renderCompanySignalCard(company)));
 }
 
 const percent = (value) => `${Math.round(Number(value) * 100)}%`;
 
-// The track record is published as-is, including the naive baseline the signals
-// have to beat; a hit rate without that comparison would flatter a rising market.
-function renderTrackRecord(predictionPayload) {
-    const container = document.getElementById('prediction-track-record');
-    if (!container) return;
-    clearElement(container);
+// The track record counts independent windows; the older `calibration` block counts
+// overlapping daily signals, so it only stands in for payloads that predate the record.
+function trackRecordOf(predictionPayload) {
     const calibration = predictionPayload.calibration || {};
-    const record = predictionPayload.track_record || {
+    return predictionPayload.track_record || {
         status: Number(calibration.resolved_predictions || 0) >= 30 ? 'established' : 'experimental',
         minimum_resolved: 30,
         resolved: Number(calibration.resolved_predictions || 0),
@@ -1777,6 +1859,15 @@ function renderTrackRecord(predictionPayload) {
         matured_unresolved: 0,
         by_direction: {},
     };
+}
+
+// The track record is published as-is, including the naive baseline the signals
+// have to beat; a hit rate without that comparison would flatter a rising market.
+function renderTrackRecord(predictionPayload) {
+    const container = document.getElementById('prediction-track-record');
+    if (!container) return;
+    clearElement(container);
+    const record = trackRecordOf(predictionPayload);
     const resolved = Number(record.resolved || 0);
     // A payload that omits the rate entirely must not render as "NaN%" or "0%".
     const hitRate = record.hit_rate === undefined || record.hit_rate === null ? null : record.hit_rate;
@@ -1827,6 +1918,30 @@ function renderTrackRecord(predictionPayload) {
     if (chips.children.length) container.appendChild(chips);
 }
 
+// The strip under the banner must say what the banner says: the same counts, the same
+// status, and the baseline that the hit rate has to be read against.
+function hitRateSummary(record) {
+    const hitRate = record.hit_rate === undefined || record.hit_rate === null ? null : Number(record.hit_rate);
+    const resolved = Number(record.resolved || 0);
+    const periods = record.independent_periods;
+    const established = record.status === 'established';
+    let title = 'Calibrating';
+    if (hitRate !== null) title = established ? `${percent(hitRate)} hit rate` : `Experimental: ${percent(hitRate)} hit rate so far`;
+    let detail = pluralize(resolved, 'resolved signal');
+    if (!established && periods !== undefined && periods !== null) {
+        detail += `, ${periods} of ${record.minimum_periods || 3} independent periods`;
+    }
+    const summary = [title, detail];
+    const baseline = record.always_up_hit_rate;
+    if (hitRate !== null && baseline !== null && baseline !== undefined) {
+        const directions = record.by_direction || {};
+        const onlyUp = Object.keys(directions).filter(key => Number(directions[key]?.resolved) > 0).join() === 'up';
+        const same = percent(baseline) === percent(hitRate);
+        summary.push(`Always saying "up" scores ${same ? 'the same' : percent(baseline)}${same && onlyUp ? ': every scored call so far was "up"' : ''}`);
+    }
+    return summary;
+}
+
 function renderPredictionsView() {
     setPageTitle('Research signals');
     currentRoute = { view: 'predictions' };
@@ -1834,7 +1949,6 @@ function renderPredictionsView() {
     hideAllViews();
     document.getElementById('view-predictions').classList.remove('hidden');
     const predictions = Array.isArray(predictionData.predictions) ? predictionData.predictions : [];
-    const calibration = predictionData.calibration || {};
     renderTrackRecord(predictionData);
     const generatedAt = predictionData.generated_at ? new Date(predictionData.generated_at) : null;
     setText('prediction-updated', generatedAt && !Number.isNaN(generatedAt.valueOf()) ? `Updated ${formatDisplayDate(predictionData.generated_at)}` : 'Awaiting signal run');
@@ -1842,16 +1956,14 @@ function renderPredictionsView() {
 
     const calibrationEl = document.getElementById('prediction-calibration');
     clearElement(calibrationEl);
-    const resolved = Number(calibration.resolved_predictions || 0);
-    const hitRate = calibration.hit_rate === null || calibration.hit_rate === undefined ? 'Calibrating' : `${Math.round(Number(calibration.hit_rate) * 100)}% hit rate`;
     [
         [`Top ${predictionData.universe_size || predictions.length} companies`, `${predictionData.horizon_days || 30}-day horizon`],
-        [hitRate, `${resolved} resolved signal${resolved === 1 ? '' : 's'}`],
+        hitRateSummary(trackRecordOf(predictionData)),
         ['One-hop graph signals', 'Direct inputs + relationship evidence'],
-    ].forEach(([title, detail]) => {
+    ].forEach(([title, ...details]) => {
         const item = makeElement('div', 'prediction-calibration-item');
         item.appendChild(makeElement('strong', '', title));
-        item.appendChild(makeElement('span', '', detail));
+        details.forEach(detail => item.appendChild(makeElement('span', '', detail)));
         calibrationEl.appendChild(item);
     });
 
@@ -1907,9 +2019,13 @@ function renderCompanySignalCard(company) {
     const card = makeElement('article', 'signal-card');
     const header = makeElement('div', 'signal-card-header');
     header.appendChild(makeElement('strong', '', `${company.ticker} - ${displayCompanyName(company.name)}`));
-    header.appendChild(makeElement('span', 'source-badge pending', `Risk ${metrics.risk_score}/100`));
+    const gap = makeElement('span', 'source-badge pending', `Data gap ${formatDataGap(metrics)}`);
+    gap.title = SCORE_HELP.gap;
+    header.appendChild(gap);
     card.appendChild(header);
-    card.appendChild(makeElement('p', '', `${metrics.total_links} tracked links, supplier risk ${metrics.supplier_risk}/100, customer risk ${metrics.customer_risk}/100.`));
+    card.appendChild(makeElement('p', '', isScored(metrics)
+        ? `${pluralize(metrics.total_links, 'tracked link')}: ${pluralize(metrics.upstream_count, 'supplier')}, ${pluralize(metrics.downstream_count, 'customer')}.`
+        : 'No tracked links yet.'));
     const actions = makeElement('div', 'relationship-actions');
     const open = makeElement('button', 'mini-button', 'Open brief');
     open.onclick = () => navigateCompany(company.ticker);
@@ -1926,9 +2042,10 @@ function renderSectorView(sector) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     hideAllViews();
     document.getElementById('view-sector').classList.remove('hidden');
-    const companies = (globalData[sector] || []).map(company => ({ ...company, sector, connection_count: relationshipCount(company) }));
+    const companies = (realSector(sector) ? globalData[sector] : []).map(company => ({ ...company, sector, connection_count: relationshipCount(company) }));
     const linked = companies.filter(company => relationshipCount(company) > 0);
     setText('sector-title', sector || 'Unknown sector');
+    setText('sector-heading', `${sector || 'Unknown'} sector`);
     setPageTitle(sector ? `${sector} sector` : 'Sector');
     setText('sector-count', pluralize(companies.length, 'company', 'companies'));
     const summary = document.getElementById('sector-summary');
@@ -1938,11 +2055,12 @@ function renderSectorView(sector) {
         ['Companies', companies.length],
         ['Linked companies', linked.length],
         ['Supply links', sectorLinks],
-        ['Avg risk', linked.length ? Math.round(linked.reduce((sum, company) => sum + companyMetrics(company).risk_score, 0) / linked.length) : 0],
-    ].forEach(([label, value]) => {
+        ['Avg data gap', linked.length ? Math.round(linked.reduce((sum, company) => sum + companyMetrics(company).risk_score, 0) / linked.length) : 'N/A', SCORE_HELP.gap],
+    ].forEach(([label, value, help]) => {
         const card = makeElement('article', 'radar-card');
         card.appendChild(makeElement('div', 'radar-card-title', label));
         card.appendChild(makeElement('span', 'stat-value', value.toLocaleString()));
+        if (help) card.title = help;
         summary.appendChild(card);
     });
     const tbody = document.getElementById('sector-company-table-body');
@@ -1971,7 +2089,7 @@ function renderCompareView(updateRoute = true) {
     const grid = document.getElementById('compare-grid');
     clearElement(grid);
     if (!companies.length) {
-        grid.appendChild(makeElement('span', 'empty-state', 'Enter two tickers to compare valuation context and supply-chain risk.'));
+        grid.appendChild(makeElement('span', 'empty-state', 'Enter two tickers to compare valuation context and tracked supply-chain links.'));
         return;
     }
     companies.forEach(company => {
@@ -1981,9 +2099,10 @@ function renderCompareView(updateRoute = true) {
         const rows = [
             ['Market cap', formatNum(company.market_cap)],
             ['Tracked links', metrics.total_links],
-            ['Risk score', `${metrics.risk_score}/100`],
-            ['Supplier risk', `${metrics.supplier_risk}/100`],
-            ['Customer risk', `${metrics.customer_risk}/100`],
+            ['Suppliers', Number(metrics.upstream_count || 0).toLocaleString()],
+            ['Customers', Number(metrics.downstream_count || 0).toLocaleString()],
+            ['Larger-side share', formatLargerSide(metrics)],
+            ['Data gap', formatDataGap(metrics)],
             ['Top supplier', metrics.top_upstream?.[0]?.ticker || 'N/A'],
             ['Top customer', metrics.top_downstream?.[0]?.ticker || 'N/A'],
         ];

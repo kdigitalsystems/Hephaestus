@@ -34,11 +34,12 @@
         }
     </script>
     <link rel="alternate" type="application/rss+xml" title="Hephaestus supply-chain changes" href="feed.xml">
-    <link rel="stylesheet" href="styles.css?v=20260929-ui9">
+    <link rel="stylesheet" href="styles.css?v=20261009-ui10">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js" defer></script>
-    <script src="analytics.js?v=20260929-ui9" defer></script>
+    <script src="analytics.js?v=20261009-ui10" defer></script>
 </head>
 <body>
+    <a class="skip-link" href="#main-content" onclick="skipToContent(event)">Skip to main content</a>
     <header class="topbar">
         <button class="brand-button" onclick="navigateOverview()">
             <span class="brand-mark">H</span>
@@ -65,7 +66,7 @@
         </nav>
     </header>
 
-    <main class="container">
+    <main class="container" id="main-content" tabindex="-1">
         <section class="overview-brief" id="view-hero">
             <div>
                 <p class="eyebrow">Public Market Supply Chain Map</p>
@@ -133,6 +134,7 @@
         </section>
 
         <section id="view-sector" class="hidden">
+            <h1 class="visually-hidden" id="sector-heading">Sector</h1>
             <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
             <div class="table-header">
                 <div>
@@ -169,6 +171,7 @@
         </section>
 
         <section id="view-watchlist" class="hidden">
+            <h1 class="visually-hidden">Watchlist</h1>
             <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
             <div class="table-header">
                 <div>
@@ -181,6 +184,7 @@
         </section>
 
         <section id="view-predictions" class="hidden">
+            <h1 class="visually-hidden">Research signals</h1>
             <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
             <div class="table-header">
                 <div>
@@ -196,6 +200,7 @@
         </section>
 
         <section id="view-compare" class="hidden">
+            <h1 class="visually-hidden">Compare companies</h1>
             <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
             <div class="table-header">
                 <div>
@@ -218,6 +223,7 @@
         </section>
 
         <section id="view-exposure" class="hidden">
+            <h1 class="visually-hidden">Exposure</h1>
             <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
             <div class="table-header">
                 <div>
@@ -241,6 +247,7 @@
         <section id="view-quality" class="hidden"></section>
 
         <section id="view-companies" class="hidden">
+            <h1 class="visually-hidden">Company screener</h1>
             <button class="btn-back" onclick="navigateOverview()">Back to overview</button>
             <div class="table-header">
                 <div>
@@ -268,6 +275,7 @@
         </section>
 
         <section id="view-details" class="hidden">
+            <h1 class="visually-hidden" id="detail-heading">Company brief</h1>
             <button class="btn-back" id="detail-back-button" onclick="navigateBackToCompanies()">Back to screener</button>
 
             <div class="detail-header">
@@ -299,9 +307,10 @@
                     <div class="brief-grid">
                         <div><span id="brief-confidence">-</span><small>Suppliers</small></div>
                         <div><span id="brief-approved">-</span><small>Customers</small></div>
-                        <div><span id="brief-concentration">-</span><small>Concentration</small></div>
-                        <div><span id="brief-verified">-</span><small>Risk</small></div>
+                        <div title="The share of this company's tracked links that sit on its larger side, suppliers or customers."><span id="brief-concentration">-</span><small>Larger-side share</small></div>
+                        <div title="Higher when this company's tracked links are one-sided, not yet approved, or low-confidence."><span id="brief-verified">-</span><small>Data gap</small></div>
                     </div>
+                    <p class="field-helper brief-note">Larger-side share is the part of a company's tracked links that sit on its larger side, suppliers or customers; 100% means they are all on one side. Data gap is higher when links are one-sided, not yet approved, or low-confidence. Neither measures how dependent the company is on any one supplier or customer. <a href="methodology.html#scores" target="_blank" rel="noopener">How they are calculated</a></p>
                     <div id="detail-risk-badges" class="badge-row"></div>
                     <div id="detail-related" class="related-links"></div>
                 </section>
@@ -342,7 +351,7 @@
                     <h3>Corporate Profile</h3>
                     <p><span>CEO:</span> <strong id="detail-ceo">-</strong></p>
                     <p><span>Employees:</span> <strong id="detail-emp">-</strong></p>
-                    <div id="detail-summary" class="profile-summary">Summary...</div>
+                    <div id="detail-summary" class="profile-summary" tabindex="0" role="region" aria-label="Company profile">Summary...</div>
                 </section>
 
                 <section class="metrics-section full-width">
@@ -379,6 +388,6 @@
         </section>
     </div>
 
-    <script src="app.js?v=20260929-ui9"></script>
+    <script src="app.js?v=20261009-ui10"></script>
 </body>
 </html>
