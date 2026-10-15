@@ -115,6 +115,25 @@ def revenue_share_text(link, side):
     return f"{value} of revenue" if side == "downstream" else f"{value} of {link.get('ticker') or 'supplier'} revenue"
 
 
+def link_sources(link):
+    """(source, title) pairs of a relationship.
+
+    A merged relationship lists its pairs in `sources`. Without it there is one source, and
+    its whole title belongs to it even when the title contains " / " ("Company IR / Website"
+    was cut to "Company IR"); a joined string of several sources is paired by position only
+    when the counts agree, since independently de-duplicated lists cannot be lined up.
+    """
+    listed = link.get("sources")
+    if isinstance(listed, list) and listed:
+        return [(str(item.get("url") or "").strip(), str(item.get("title") or "").strip()) for item in listed if isinstance(item, dict)]
+    source, title = str(link.get("source") or "").strip(), str(link.get("source_title") or "").strip()
+    if " / " not in source:
+        return [(source, title)] if source else []
+    urls = [part.strip() for part in source.split(" / ") if part.strip()]
+    titles = [part.strip() for part in title.split(" / ") if part.strip()]
+    return [(url, titles[index] if len(titles) == len(urls) else "") for index, url in enumerate(urls)]
+
+
 def render_link(link, side, known_tickers):
     ticker = str(link.get("ticker") or "").upper()
     name = display_name(link.get("name") or ticker)
@@ -132,14 +151,10 @@ def render_link(link, side, known_tickers):
     # The product text of a concentration link often already states the share.
     if share and share.lower() not in product.lower():
         details.append(escape(share))
-    # Merged relationships join their members with " / ", so the field can hold several
-    # sources; each URL becomes its own link and non-URL tokens are dropped.
-    sources = [part.strip() for part in str(link.get("source") or "").split(" / ") if part.strip()]
-    titles = [part.strip() for part in str(link.get("source_title") or "").split(" / ") if part.strip()]
-    for index, source in enumerate(sources):
+    # Each URL becomes its own link and non-URL tokens are dropped.
+    for source, title in link_sources(link):
         if not source.startswith(("http://", "https://")):
             continue
-        title = titles[index] if index < len(titles) else ""
         title = title if title and title != source else "Source document"
         details.append(f'<a href="{escape(source)}" rel="noopener noreferrer">{escape(title)}</a>')
     evidence = " ".join(str(link.get("evidence_excerpt") or "").split())

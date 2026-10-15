@@ -9,6 +9,8 @@ from evidence_quality import unsupported_ai_evidence
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATA_PATH = ROOT / "docs" / "dashboard_data.json"
 
+BLANK_PLACEHOLDER_INDUSTRY = "Reviewed relationship endpoint"
+
 REQUIRED_COMPANY_FIELDS = {
     "id",
     "name",
@@ -114,6 +116,9 @@ def validate_dashboard_data(data):
             errors.append(f"{sector}/{company.get('name', '<unknown>')} has no ticker")
         else:
             tickers.append(ticker)
+        if company.get("industry") == BLANK_PLACEHOLDER_INDUSTRY:
+            # What the repair step used to invent for a company the export had excluded.
+            errors.append(f"{sector}/{ticker or company.get('name')} is a blank placeholder company with no market data of its own")
 
         metrics = company.get("investor_metrics")
         if not isinstance(metrics, dict):

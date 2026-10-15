@@ -195,7 +195,8 @@ def needs_human_confirmation(edge):
 
 
 def is_published(edge):
-    return edge.review_status != "rejected" and (edge.review_status == "approved" or "Manual" in (edge.source_url or ""))
+    # Mirrors export.should_export_edge: only a curated label is published while pending.
+    return edge.review_status != "rejected" and (edge.review_status == "approved" or not requires_source_evidence(edge.source_url))
 
 
 def direction_contested(edge):

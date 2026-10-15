@@ -162,3 +162,59 @@ def test_a_collector_outage_leaves_the_queue_researchable(tmp_path, monkeypatch)
     assert [node.last_researched_at for node in checked.query(Node).all()] == [None, None]
     assert summaries[-1]["no_source_companies"] == 2
     assert summaries[-1]["companies_analyzed"] == 0
+
+
+# The steps every publishing path shares, in the order that keeps the published links honest:
+# decisions are applied before anything reviews them, cleanup runs before the decisions are
+# persisted and before the audit gate, and the export is repaired from the persisted file.
+PUBLISH_ORDER = [
+    "edge_review_decisions apply",
+    "apply_human_review",
+    "cleanup_reviewed_edges",
+    "edge_review_decisions export",
+    "audit_data_quality",
+    "export",
+    "repair_dashboard_from_decisions",
+    "validate_dashboard_data",
+    "generate_change_feed",
+    "generate_static_pages",
+    "split_dashboard",
+    "write_status",
+]
+
+
+def pipeline_steps(path):
+    """The backend scripts a shell script or workflow runs, in order ('edge_review_decisions export')."""
+    import re
+
+    steps = []
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        if line.strip().startswith("#"):
+            continue
+        match = re.search(r"(?:python3|venv/bin/python)\s+backend/(\w+)\.py(?:\s+(apply|export))?", line)
+        if match:
+            name, mode = match.groups()
+            steps.append(f"{name} {mode}" if name == "edge_review_decisions" else name)
+    return steps
+
+
+@pytest.mark.parametrize("path", ["scripts/rebuild_db.sh", "run_pipeline.sh", ".github/workflows/gpu_pipeline.yml"])
+def test_every_publishing_path_runs_the_shared_steps_in_the_same_order(path):
+    """rebuild_db.sh never persisted after cleanup, so repair published the pre-cleanup file and
+    brought back links cleanup had rejected, and it skipped the review-page decisions."""
+    steps = pipeline_steps(ROOT / path)
+    # The pre-rebuild persist in rebuild_db.sh runs before the database exists; only the
+    # steps after the first apply are compared.
+    steps = steps[steps.index("edge_review_decisions apply"):]
+    shared = [step for step in steps if step in PUBLISH_ORDER]
+    assert shared == PUBLISH_ORDER, f"{path}: {shared}"
+
+
+def test_the_dev_rebuild_cannot_overwrite_newer_decisions_with_an_older_database():
+    text = (ROOT / "scripts" / "rebuild_db.sh").read_text(encoding="utf-8")
+    persist = [line.strip() for line in text.splitlines() if "edge_review_decisions.py export" in line]
+    # Before the database is deleted the export only merges; the later one is authoritative
+    # because the decisions were applied first.
+    assert persist == ["python3 backend/edge_review_decisions.py export --only-newer", "python3 backend/edge_review_decisions.py export"]
+    assert text.index("export --only-newer") < text.index("rm -f backend/supply_chain.db")
+    subprocess.run(["bash", "-n", str(ROOT / "scripts" / "rebuild_db.sh")], check=True, capture_output=True)
