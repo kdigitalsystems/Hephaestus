@@ -1,8 +1,170 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-15T11:03:25+00:00",
-  "unique_links": 766,
+  "generated_at": "2026-10-16T08:07:08+00:00",
+  "unique_links": 754,
   "days": [
+    {
+      "date": "2026-10-16",
+      "generated_at": "2026-10-16T08:07:08+00:00",
+      "previous_date": "2026-10-15",
+      "unique_links": 754,
+      "net_change": -12,
+      "new_count": 1,
+      "removed_count": 13,
+      "changed_count": 2,
+      "new_links": [
+        {
+          "relationship_key": "AMZN->EDN:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "AMZN",
+          "target_ticker": "EDN",
+          "type": "Cloud Infrastructure Provider",
+          "product": "AWS Cloud Services",
+          "review_status": "approved",
+          "confidence": 0.9333
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "AIRT->FDX:REVENUE CONCENTRATION",
+          "source_ticker": "AIRT",
+          "target_ticker": "FDX",
+          "type": "Revenue Concentration",
+          "product": "Dry-lease agreements for aircraft",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "BKYI->MSFT:SUPPLY CHAIN",
+          "source_ticker": "BKYI",
+          "target_ticker": "MSFT",
+          "type": "supply chain / Revenue Concentration",
+          "product": "compact fingerprint scanners",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "EVO->MSTR:REVENUE CONCENTRATION",
+          "source_ticker": "EVO",
+          "target_ticker": "MSTR",
+          "type": "Revenue Concentration",
+          "product": "Drug Manufacturing Services",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "HZO->BC:OPERATIONAL SUPPLY CHAIN",
+          "source_ticker": "HZO",
+          "target_ticker": "BC",
+          "type": "operational supply chain / Revenue Concentration",
+          "product": "new Brunswick boats and yachts",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "IA->TXT:REVENUE CONCENTRATION",
+          "source_ticker": "IA",
+          "target_ticker": "TXT",
+          "type": "Revenue Concentration",
+          "product": "Services for Aerospace & Defense Industry",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "KMDA->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "KMDA",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "Not specified in the provided context, but likely related to medical products or services given the industry.",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "LPG->POOL:REVENUE CONCENTRATION",
+          "source_ticker": "LPG",
+          "target_ticker": "POOL",
+          "type": "Revenue Concentration",
+          "product": "LPG (liquefied petroleum gas)",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "NEON->CVGI:REVENUE CONCENTRATION",
+          "source_ticker": "NEON",
+          "target_ticker": "CVGI",
+          "type": "Revenue Concentration",
+          "product": "Neonode's products",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "PNR->POOL:REVENUE CONCENTRATION",
+          "source_ticker": "PNR",
+          "target_ticker": "POOL",
+          "type": "Revenue Concentration",
+          "product": "Water treatment and filtration systems, pumps, and related products/services for the pool industry.",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "TBPH->VTRS:REVENUE CONCENTRATION",
+          "source_ticker": "TBPH",
+          "target_ticker": "VTRS",
+          "type": "Revenue Concentration",
+          "product": "R&D services, revenue from collaboration agreement",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "TX->SO:REVENUE CONCENTRATION",
+          "source_ticker": "TX",
+          "target_ticker": "SO",
+          "type": "Revenue Concentration",
+          "product": "16% of TX revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "WKEY->LAES:REVENUE CONCENTRATION",
+          "source_ticker": "WKEY",
+          "target_ticker": "LAES",
+          "type": "Revenue Concentration",
+          "product": "60% of WKEY revenue",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "WLY->RSSS:REVENUE CONCENTRATION",
+          "source_ticker": "WLY",
+          "target_ticker": "RSSS",
+          "type": "Revenue Concentration",
+          "product": "Research Solutions products and services",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "changed_links": [
+        {
+          "relationship_key": "CWEN->PCG:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "source_ticker": "CWEN",
+          "target_ticker": "PCG",
+          "type": "operational supply-chain dependency / Revenue Concentration",
+          "product": "16% of CWEN revenue",
+          "review_status": "approved",
+          "confidence": 1.0,
+          "previous_type": "Revenue Concentration / operational supply-chain dependency"
+        },
+        {
+          "relationship_key": "MBC->HD:REVENUE CONCENTRATION",
+          "source_ticker": "MBC",
+          "target_ticker": "HD",
+          "type": "Revenue Concentration / retail supply chain",
+          "product": "Revenue Concentration / retail supply chain",
+          "review_status": "approved",
+          "confidence": 0.9667,
+          "previous_type": "retail supply chain / Revenue Concentration"
+        }
+      ]
+    },
     {
       "date": "2026-10-15",
       "generated_at": "2026-10-15T11:03:25+00:00",
@@ -1732,9 +1894,9 @@
       "previous_date": "2026-10-01",
       "unique_links": 647,
       "net_change": 143,
-      "new_count": 147,
-      "removed_count": 4,
-      "changed_count": 0,
+      "new_count": 145,
+      "removed_count": 2,
+      "changed_count": 2,
       "new_links": [
         {
           "relationship_key": "ABBV->IRWD:SUPPLY RELATIONSHIP",
@@ -2205,510 +2367,30 @@
           "product": "Software - Application (specifically for automobile manufacturers)",
           "review_status": "approved",
           "confidence": 0.9667
-        },
+        }
+      ],
+      "changed_links": [
         {
-          "relationship_key": "HBB->AMZN:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "relationship_key": "HBB->AMZN:SALES/REVENUE CONTRIBUTION",
           "source_ticker": "HBB",
           "target_ticker": "AMZN",
-          "type": "operational supply chain dependency",
-          "product": "19% of HBB revenue",
+          "type": "Sales/Revenue Contribution / operational supply chain dependency",
+          "product": "Electrical appliances, small kitchen appliances, and related products / 19% of HBB revenue",
           "review_status": "approved",
-          "confidence": 1.0
+          "confidence": 1.0,
+          "previous_type": "operational supply chain dependency"
         },
         {
-          "relationship_key": "TWI->DE:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
+          "relationship_key": "TWI->DE:REVENUE CONCENTRATION",
           "source_ticker": "TWI",
           "target_ticker": "DE",
-          "type": "operational supply-chain dependency",
+          "type": "Revenue Concentration / operational supply-chain dependency",
           "product": "farm & heavy construction machinery tires and components",
           "review_status": "approved",
-          "confidence": 0.9667
+          "confidence": 1.0,
+          "previous_type": "operational supply-chain dependency"
         }
-      ],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-01",
-      "generated_at": "2026-10-01T10:49:00+00:00",
-      "previous_date": "2026-09-30",
-      "unique_links": 504,
-      "net_change": 140,
-      "new_count": 142,
-      "removed_count": 2,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "A->WGS:SUPPLY RELATIONSHIP",
-          "source_ticker": "A",
-          "target_ticker": "WGS",
-          "type": "Supply Relationship",
-          "product": "laboratory reagents, sequencers and other equipment and materials",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AA->KALU:SUPPLY RELATIONSHIP",
-          "source_ticker": "AA",
-          "target_ticker": "KALU",
-          "type": "supply relationship",
-          "product": "certain resources essential to the day-to-day operation of Kaiser Aluminum's business at Warrick",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "ABBV->IRON:SUPPLY RELATIONSHIP",
-          "source_ticker": "ABBV",
-          "target_ticker": "IRON",
-          "type": "supply relationship",
-          "product": "DISC-0974 monoclonal antibody",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "ABT->GRFS:SUPPLY RELATIONSHIP",
-          "source_ticker": "ABT",
-          "target_ticker": "GRFS",
-          "type": "Supply Relationship",
-          "product": "antigens",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "ACN->NATL:SUPPLY RELATIONSHIP",
-          "source_ticker": "ACN",
-          "target_ticker": "NATL",
-          "type": "supply relationship",
-          "product": "transaction processing services",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "AMZN->APPN:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "APPN",
-          "type": "cloud infrastructure provider",
-          "product": "AWS cloud offering",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "AMZN->BILL:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "BILL",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Services provided by AWS (Amazon Web Services)",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->BLLN:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "BLLN",
-          "type": "Cloud Infrastructure Provider",
-          "product": "AWS (Amazon Web Services)",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "AMZN->BRZE:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "BRZE",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Amazon Web Services",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->BULL:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "BULL",
-          "type": "Cloud Infrastructure Provider",
-          "product": "data centers provided by Amazon Web Services, or AWS",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "AMZN->CLOV:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "CLOV",
-          "type": "Cloud Infrastructure Provider",
-          "product": "cloud computing infrastructure",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "AMZN->CZR:SUPPLY RELATIONSHIP",
-          "source_ticker": "AMZN",
-          "target_ticker": "CZR",
-          "type": "Supply Relationship",
-          "product": "Amazon Web Services and other third-party technology, platforms and services",
-          "review_status": "approved",
-          "confidence": 0.975
-        },
-        {
-          "relationship_key": "AMZN->DLO:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "DLO",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Cloud computing, storage, processing and other related services",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->DOCS:SUPPLY RELATIONSHIP",
-          "source_ticker": "AMZN",
-          "target_ticker": "DOCS",
-          "type": "Supply Relationship",
-          "product": "Computing and storage capacity, collaboration tools (implied from context)",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->EXTR:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "EXTR",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Supplier named in EXTR's 10-K (AWS, GCP, and Azure)",
-          "review_status": "approved",
-          "confidence": 0.9167
-        },
-        {
-          "relationship_key": "AMZN->FLYW:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "FLYW",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Public cloud hosting with AWS",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->FRSH:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "FRSH",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Hosting services on AWS",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->FSLY:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "FSLY",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Amazon Web Services (AWS)",
-          "review_status": "approved",
-          "confidence": 0.9167
-        },
-        {
-          "relationship_key": "AMZN->GRAL:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "GRAL",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Supplier named in GRAL's 10-K",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "AMZN->HTFL:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "HTFL",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Cloud Storage and Telecommunications services",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->INFQ:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "INFQ",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Supplier named in INFQ's 10-K (Amazon AWS)",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->LIF:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "LIF",
-          "type": "Cloud Infrastructure Provider",
-          "product": "computing, network, database, software development platforms and software infrastructure",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "AMZN->LRN:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "LRN",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Cloud infrastructure services",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->LYFT:TECHNOLOGY SERVICES",
-          "source_ticker": "AMZN",
-          "target_ticker": "LYFT",
-          "type": "Technology Services",
-          "product": "Amazon Web Services (AWS) cloud services",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "AMZN->MNDY:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "MNDY",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Virtual cloud infrastructure hosted in AWS",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->NN:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "NN",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Amazon Web Services",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->RGTI:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "RGTI",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Cloud Infrastructure",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "AMZN->RNG:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "RNG",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Amazon Web Services",
-          "review_status": "approved",
-          "confidence": 0.9167
-        },
-        {
-          "relationship_key": "AMZN->RXRX:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "RXRX",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Cloud Infrastructure Services such as Amazon Web Services",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->SRAD:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "SRAD",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Computing infrastructure operated by Amazon Web Services (AWS)",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->STUB:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "STUB",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Third-party cloud infrastructure services (Amazon Web Services)",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->TENB:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "TENB",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Tenable One (hosted on AWS)",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->VIA:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "VIA",
-          "type": "cloud infrastructure provider",
-          "product": "datacenters provided by third-party service providers of cloud infrastructure services, including but not limited to Amazon Web Services (\u201cAWS\u201d)",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "AMZN->WIX:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "WIX",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Data Center Services",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->WK:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "WK",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Technology provided by AWS (Amazon Web Services)",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->WRBY:SUPPLY RELATIONSHIP",
-          "source_ticker": "AMZN",
-          "target_ticker": "WRBY",
-          "type": "Supply Relationship",
-          "product": "Amazon Web Services",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->XMTR:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
-          "source_ticker": "AMZN",
-          "target_ticker": "XMTR",
-          "type": "operational supply-chain dependency",
-          "product": "Amazon Web Services (cloud services)",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "AMZN->YOU:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "YOU",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Amazon Web Services (AWS)",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->Z:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "Z",
-          "type": "Cloud Infrastructure Provider",
-          "product": "AWS cloud services",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "AMZN->ZG:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "ZG",
-          "type": "Cloud Infrastructure Provider",
-          "product": "cloud infrastructure services",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "AVGO->EXTR:SUPPLY RELATIONSHIP",
-          "source_ticker": "AVGO",
-          "target_ticker": "EXTR",
-          "type": "supply relationship",
-          "product": "merchant silicon vendors",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "AZN->ARQT:SUPPLY RELATIONSHIP",
-          "source_ticker": "AZN",
-          "target_ticker": "ARQT",
-          "type": "supply relationship",
-          "product": "intellectual property rights covering ZORYVE",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "BA->AERO:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
-          "source_ticker": "BA",
-          "target_ticker": "AERO",
-          "type": "operational supply-chain dependency",
-          "product": "aircraft manufactured by Boeing",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "BLBD->RUSHA:SUPPLY RELATIONSHIP",
-          "source_ticker": "BLBD",
-          "target_ticker": "RUSHA",
-          "type": "Supply Relationship",
-          "product": "Blue Bird Corporation Common Stock",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "BRKR->VCYT:SUPPLY RELATIONSHIP",
-          "source_ticker": "BRKR",
-          "target_ticker": "VCYT",
-          "type": "supply relationship",
-          "product": "certain components and raw materials for the Prosigna test and nCounter service kits",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "CAT->USAC:SUPPLY RELATIONSHIP",
-          "source_ticker": "CAT",
-          "target_ticker": "USAC",
-          "type": "Supply Relationship",
-          "product": "Engines manufactured by Caterpillar Inc.",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "CLF->ATKR:STEEL SUPPLIER RELATIONSHIP",
-          "source_ticker": "CLF",
-          "target_ticker": "ATKR",
-          "type": "Steel Supplier Relationship",
-          "product": "Supplier named in ATKR's 10-K",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "CMC->BCC:SUPPLY RELATIONSHIP",
-          "source_ticker": "CMC",
-          "target_ticker": "BCC",
-          "type": "supply relationship",
-          "product": "building materials",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "CMI->USAC:SUPPLY RELATIONSHIP",
-          "source_ticker": "CMI",
-          "target_ticker": "USAC",
-          "type": "Supply Relationship",
-          "product": "Supplier named in USAC's 10-K",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "CR->CXT:SUPPLY RELATIONSHIP",
-          "source_ticker": "CR",
-          "target_ticker": "CXT",
-          "type": "Supply Relationship",
-          "product": "Tax Opinion services",
-          "review_status": "approved",
-          "confidence": 0.925
-        }
-      ],
-      "removed_links": [
-        {
-          "relationship_key": "EPC->WMT:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
-          "source_ticker": "EPC",
-          "target_ticker": "WMT",
-          "type": "operational supply chain dependency",
-          "product": "17.4% of EPC revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "WERN->DG:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
-          "source_ticker": "WERN",
-          "target_ticker": "DG",
-          "type": "operational supply chain dependency",
-          "product": "logistics services",
-          "review_status": "approved",
-          "confidence": 1.0
-        }
-      ],
-      "changed_links": []
+      ]
     }
   ]
 }
