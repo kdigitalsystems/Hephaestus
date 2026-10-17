@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-16T08:04:54.989379+00:00",
+  "exported_at": "2026-10-17T09:29:41.132568+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -4218,6 +4218,23 @@
       "reviewed_at": "2026-09-02T07:56:38.998606"
     },
     {
+      "edge_id": 311,
+      "source_ticker": "UCFI",
+      "target_ticker": "JBHT",
+      "source_name": "CN Healthy Food Tech Group Corp. Common Stock",
+      "target_name": "J.B. Hunt Transport Services, Inc. Common Stock",
+      "dependency_type": "Intermodal Service",
+      "product": "",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": null,
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: AI-derived relationship has no usable excerpt from the collected source text.",
+      "reviewed_at": "2026-10-17T09:24:34.470652"
+    },
+    {
       "edge_id": 313,
       "source_ticker": "DD",
       "target_ticker": "Q",
@@ -5287,6 +5304,23 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.88; votes reject:2, approve:1). Lead rationale from llama3.1:8b: The relationship is a partnership for IoT software development, not an operational supply-chain dependency.",
       "reviewed_at": "2026-09-02T07:56:33.380965"
+    },
+    {
+      "edge_id": 388,
+      "source_ticker": "SPCX",
+      "target_ticker": "PLTR",
+      "source_name": "Space Exploration Technologies Corp. Class A Common Stock",
+      "target_name": "Palantir Technologies Inc. Class A Common Stock",
+      "dependency_type": "Logistics Partner",
+      "product": "",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": null,
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: AI-derived relationship has no usable excerpt from the collected source text.",
+      "reviewed_at": "2026-10-17T09:24:52.594843"
     },
     {
       "edge_id": 389,
@@ -8213,6 +8247,23 @@
       "reviewed_at": "2026-09-02T07:56:38.896963"
     },
     {
+      "edge_id": 569,
+      "source_ticker": "SPCX",
+      "target_ticker": "ECHO",
+      "source_name": "Space Exploration Technologies Corp. Class A Common Stock",
+      "target_name": "EchoStar Corporation Common Stock",
+      "dependency_type": "Satellite Manufacturing",
+      "product": "EchoStar XXIII Satellite",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In March 2017, after two delays caused by weather concerns, SpaceX delivered EchoStar XXIII into orbit.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt never refers to SPCX.",
+      "reviewed_at": "2026-10-17T09:24:52.603169"
+    },
+    {
       "edge_id": 570,
       "source_ticker": "NSC",
       "target_ticker": "JBHT",
@@ -8245,6 +8296,74 @@
       "review_status": "rejected",
       "review_note": "Ollama review: The source is a financial instrument (fixed-income security) and the target is a logistics company. There is no operational supply-chain relationship between them.",
       "reviewed_at": "2026-09-02T07:56:39.036598"
+    },
+    {
+      "edge_id": 572,
+      "source_ticker": "ERIC",
+      "target_ticker": "ASTS",
+      "source_name": "Ericsson American Depositary Shares",
+      "target_name": "AST SpaceMobile, Inc. Class A Common Stock",
+      "dependency_type": "Supply of Telecommunications Expertise",
+      "product": "Telecommunications Technology and Expertise",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": null,
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: AI-derived relationship has no usable excerpt from the collected source text.",
+      "reviewed_at": "2026-10-17T09:24:52.611511"
+    },
+    {
+      "edge_id": 573,
+      "source_ticker": "GOOG",
+      "target_ticker": "ASTS",
+      "source_name": "Alphabet Inc. Class C Capital Stock",
+      "target_name": "AST SpaceMobile, Inc. Class A Common Stock",
+      "dependency_type": "Partner",
+      "product": "Partner",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": null,
+      "evidence_excerpt": null,
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: AI-derived relationship has no usable excerpt from the collected source text.",
+      "reviewed_at": "2026-10-17T09:24:52.616945"
+    },
+    {
+      "edge_id": 574,
+      "source_ticker": "T",
+      "target_ticker": "ASTS",
+      "source_name": "AT&T Inc.",
+      "target_name": "AST SpaceMobile, Inc. Class A Common Stock",
+      "dependency_type": "Partner",
+      "product": "Telecommunications Network Services and Expertise",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": null,
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: AI-derived relationship has no usable excerpt from the collected source text.",
+      "reviewed_at": "2026-10-17T09:24:52.622520"
+    },
+    {
+      "edge_id": 575,
+      "source_ticker": "VZ",
+      "target_ticker": "ASTS",
+      "source_name": "Verizon Communications",
+      "target_name": "AST SpaceMobile, Inc. Class A Common Stock",
+      "dependency_type": "Partner",
+      "product": "Telecommunications Network Services and Expertise",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": null,
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: AI-derived relationship has no usable excerpt from the collected source text.",
+      "reviewed_at": "2026-10-17T09:24:52.627926"
     },
     {
       "edge_id": 576,
@@ -12242,6 +12361,23 @@
       "reviewed_at": "2026-09-02T07:56:46.899015"
     },
     {
+      "edge_id": 821,
+      "source_ticker": "ECHO",
+      "target_ticker": "SPCX",
+      "source_name": "EchoStar Corporation Common Stock",
+      "target_name": "Space Exploration Technologies Corp. Class A Common Stock",
+      "dependency_type": "Launch Services",
+      "product": "Satellite Launch",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": null,
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: AI-derived relationship has no usable excerpt from the collected source text.",
+      "reviewed_at": "2026-10-17T09:24:52.633522"
+    },
+    {
       "edge_id": 822,
       "source_ticker": "PBA",
       "target_ticker": "CNQ",
@@ -14195,6 +14331,23 @@
       "review_status": "rejected",
       "review_note": "Ollama review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: AMT American Tower Corporation, ASTS AST SpaceMobile, Inc. Class A Common Stock.",
       "reviewed_at": "2026-09-02T07:56:49.697756"
+    },
+    {
+      "edge_id": 939,
+      "source_ticker": "VOD",
+      "target_ticker": "ASTS",
+      "source_name": "Vodafone Group Plc American Depositary Shares",
+      "target_name": "AST SpaceMobile, Inc. Class A Common Stock",
+      "dependency_type": "Investment Partnership",
+      "product": "Funding Support",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In March 2020, AST & Science LLC announced a Series B investment round, led by Vodafone and Rakuten.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt never refers to ASTS.",
+      "reviewed_at": "2026-10-17T09:24:52.639334"
     },
     {
       "edge_id": 940,
@@ -16492,6 +16645,23 @@
       "reviewed_at": "2026-09-02T07:56:54.012318"
     },
     {
+      "edge_id": 1081,
+      "source_ticker": "BA",
+      "target_ticker": "SPCX",
+      "source_name": "Boeing Company",
+      "target_name": "Space Exploration Technologies Corp. Class A Common Stock",
+      "dependency_type": "Engineering Talent",
+      "product": "",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": null,
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: AI-derived relationship has no usable excerpt from the collected source text.",
+      "reviewed_at": "2026-10-17T09:24:52.644786"
+    },
+    {
       "edge_id": 1082,
       "source_ticker": "NASA",
       "target_ticker": "SPCX",
@@ -17544,6 +17714,23 @@
       "review_status": "rejected",
       "review_note": "Ollama review: Relationship label or evidence describes a non-operational relationship, not a supply-chain dependency.",
       "reviewed_at": "2026-09-02T07:56:55.937370"
+    },
+    {
+      "edge_id": 1145,
+      "source_ticker": "PLTR",
+      "target_ticker": "SPCX",
+      "source_name": "Palantir Technologies Inc. Class A Common Stock",
+      "target_name": "Space Exploration Technologies Corp. Class A Common Stock",
+      "dependency_type": "Defense Contracting Partner",
+      "product": "None specified",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In later 2024, there were reportedly building and leading a consortium with another dozen contractors, including SpaceX, OpenAI, and Saronic, to challenge the domination of the traditional 'primes'.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt never refers to PLTR.",
+      "reviewed_at": "2026-10-17T09:24:52.650923"
     },
     {
       "edge_id": 1146,
@@ -32062,6 +32249,23 @@
       "review_status": "rejected",
       "review_note": "Automated cleanup: 'Facility Sale' is not an operational supply-chain relationship.",
       "reviewed_at": "2026-09-06T22:44:07.762415"
+    },
+    {
+      "edge_id": 2017,
+      "source_ticker": "TSAT",
+      "target_ticker": "MDA",
+      "source_name": "Telesat Corporation Class A Common Shares and Class B Variable Voting Shares",
+      "target_name": "MDA Space Ltd.",
+      "dependency_type": "Contractor",
+      "product": "Contractor",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": null,
+      "evidence_excerpt": null,
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: AI-derived relationship has no usable excerpt from the collected source text.",
+      "reviewed_at": "2026-10-17T09:24:52.656516"
     },
     {
       "edge_id": 2018,
@@ -54946,6 +55150,23 @@
       "reviewed_at": "2026-10-03T09:36:44.668798"
     },
     {
+      "edge_id": 3670,
+      "source_ticker": "SLNG",
+      "target_ticker": "SPCX",
+      "source_name": "Stabilis Solutions, Inc. Common Stock",
+      "target_name": "Space Exploration Technologies Corp. Class A Common Stock",
+      "dependency_type": "Revenue Concentration",
+      "product": "Services and products related to energy solutions",
+      "confidence_score": 1.0,
+      "revenue_share": 10.0,
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1043186/000143774926007090/slng20251231_10k.htm",
+      "source_title": "SEC EDGAR (10-K filed 2026-03-05; customer-concentration disclosure)",
+      "evidence_excerpt": "Stabilis Solutions (SLNG) 10-K filed 2026-03-05: For the year ended December 31, 2025, Carnival Corporation, Aggreko Plc and Space Exploration Technologies Corp each accounted for more than 10% of our revenues.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 2/3 for approve (avg confidence 1.00; votes approve:2, reject:1). Lead rationale from qwen2.5:7b-instruct: The proposed edge is a revenue concentration relationship, which indicates that Space Exploration Technologies Corp (SPCX) is a significant customer of Stabilis Solutions, Inc. (SLNG). However, the direction in the proposal is reversed.",
+      "reviewed_at": "2026-10-17T09:25:10.934506"
+    },
+    {
       "edge_id": 3671,
       "source_ticker": "AMZN",
       "target_ticker": "CHGG",
@@ -56559,6 +56780,40 @@
       "review_status": "rejected",
       "review_note": "Automated cleanup: the filing sentence does not support this supplier link (the filing sentence does not read as a supplier statement under the current rules).",
       "reviewed_at": "2026-10-10T10:53:41.628231"
+    },
+    {
+      "edge_id": 3777,
+      "source_ticker": "AMZN",
+      "target_ticker": "OBAI",
+      "source_name": "Amazon.com, Inc. Common Stock",
+      "target_name": "Our Bond, Inc. Common Stock",
+      "dependency_type": "cloud infrastructure provider",
+      "product": "AWS servers",
+      "confidence_score": 0.9833,
+      "revenue_share": null,
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1756064/000149315226014133/form10-k.htm",
+      "source_title": "SEC EDGAR (10-K filed 2026-03-31; supplier-dependence disclosure)",
+      "evidence_excerpt": "Our Bond (OBAI) 10-K filed 2026-03-31: We depend on AWS servers to operate our Bond Preventative Personal Security Platform with online features and our online services.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.98; votes approve:3). Lead rationale from llama3.1:8b: The text explicitly states that OBAI depends on AWS to operate their online services, making it a clear operational supply-chain dependency.",
+      "reviewed_at": "2026-10-17T09:25:23.441765"
+    },
+    {
+      "edge_id": 3778,
+      "source_ticker": "BAND",
+      "target_ticker": "OBAI",
+      "source_name": "Bandwidth Inc. Class A Common Stock",
+      "target_name": "Our Bond, Inc. Common Stock",
+      "dependency_type": "Cloud Infrastructure Provider",
+      "product": "Services provided by Bandwidth Inc.",
+      "confidence_score": 0.9167,
+      "revenue_share": null,
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1756064/000149315226014133/form10-k.htm",
+      "source_title": "SEC EDGAR (10-K filed 2026-03-31; supplier-dependence disclosure)",
+      "evidence_excerpt": "Our Bond (OBAI) 10-K filed 2026-03-31: Our business partially depends on services provided by, and relationships with, various third parties, including Twilio, Bandwidth, cloud hosting, app stores provided by Google Play and Apple, and broadband providers, among others.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.92; votes approve:3). Lead rationale from mistral:7b-instruct: The evidence excerpt clearly states that Our Bond (OBAI) depends on services provided by Bandwidth Inc., making it a downstream customer of Bandwidth Inc. in the supply chain.",
+      "reviewed_at": "2026-10-17T09:25:41.304774"
     },
     {
       "edge_id": 3779,
@@ -59823,6 +60078,23 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the companies are only listed side by side; nothing relates them.",
       "reviewed_at": "2026-10-16T08:01:03.036863"
+    },
+    {
+      "edge_id": 4000,
+      "source_ticker": "IMMX",
+      "target_ticker": "GL",
+      "source_name": "Immix Biopharma, Inc. Common Stock",
+      "target_name": "Globe Life Inc.",
+      "dependency_type": "Financial Partner",
+      "product": "None",
+      "confidence_score": 0.96,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "She serves as a Director for AGF Management (TSE:AGF.B) and IMMIX Biopharma (NASDAQ: IMMX) and retired as a director of Globe Life (NYSE:GL) (2005\u20132024) due to term limits.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: GL Globe Life Inc..",
+      "reviewed_at": "2026-10-17T09:24:34.462381"
     }
   ]
 }
