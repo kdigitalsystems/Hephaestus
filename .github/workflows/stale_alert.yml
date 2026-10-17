@@ -1,0 +1,49 @@
+name: Pipeline staleness alert
+
+# The pipeline runs only on the self-hosted runner server1, which waits in the queue while it
+# is offline (2026-10-09/10: two days without a publish; 2026-10-17: hours). This runs on a
+# GitHub-hosted machine, so it still works when the runner does not, and opens an issue when
+# docs/status.json is more than 36 hours old and closes it when the data moves again.
+on:
+  schedule:
+    # Off the top of the hour, four times a day.
+    - cron: '17 1,7,13,19 * * *'
+  workflow_dispatch:
+    inputs:
+      stale_after_hours:
+        description: 'Hours of silence that count as stale (default 36). A tiny value opens the issue as a test; run again with the default to close it.'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  issues: write
+
+# Its own group: it must never wait behind the publisher, which is the thing being watched.
+concurrency:
+  group: hephaestus-stale-alert
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the status file and the script
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            scripts/stale_alert.py
+            docs/status.json
+          sparse-checkout-cone-mode: false
+
+      - name: Open or close the staleness issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          STALE_AFTER_HOURS: ${{ inputs.stale_after_hours }}
+        run: python3 scripts/stale_alert.py
