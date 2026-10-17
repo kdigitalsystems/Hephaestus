@@ -411,17 +411,44 @@ fetch('status.json')
     .then(status => renderPipelineStatus(status))
     .catch(error => console.warn('Run status load failed:', error));
 
-function pipelineStatusLabel(status) {
+// The daily update publishes once a day; a data date older than this means it has stopped
+// (server1 was offline on 2026-10-17 and nothing on the site said so).
+const STALE_DATA_HOURS = 48;
+
+function dataAgeHours(status, now = Date.now()) {
+    const asOf = status && (status.data_as_of || status.generated_at);
+    const time = asOf ? new Date(asOf).getTime() : NaN;
+    return Number.isNaN(time) ? null : (now - time) / 3600000;
+}
+
+function pipelineStatusIsStale(status, now = Date.now()) {
+    const age = dataAgeHours(status, now);
+    return age !== null && age > STALE_DATA_HOURS;
+}
+
+function pipelineStatusLabel(status, now = Date.now()) {
     // "Updated Sep 7, 2026 · 158 companies researched · 14 new links · 300 filings swept"
     if (!status || typeof status !== 'object') return '';
     const parts = [];
     const asOf = status.data_as_of || status.generated_at;
     if (asOf) parts.push(`Updated ${formatDisplayDate(asOf)}`);
+    if (pipelineStatusIsStale(status, now)) {
+        const days = Math.floor(dataAgeHours(status, now) / 24);
+        parts.push(`data is ${days} days old: the daily update has not published`);
+    }
     const count = (value, singular, plural) => (typeof value === 'number' ? `${value.toLocaleString()} ${value === 1 ? singular : plural}` : null);
     const researched = count(status.companies_researched, 'company researched', 'companies researched');
     const fresh = count(status.new_links, 'new link', 'new links');
     const swept = count(status.filings_swept, 'filing swept', 'filings swept');
     [researched, fresh, swept].forEach(part => { if (part) parts.push(part); });
+    // write_status.py says which of three things happened to discovery, so old counts are
+    // never shown as today's: it ran, it did not finish (no counts), or it was not part of
+    // this run (the last counts are kept, dated).
+    if (status.discovery === 'stale') {
+        parts.push(status.discovery_at ? `discovery did not finish (last completed ${formatDisplayDate(status.discovery_at)})` : 'discovery did not finish');
+    } else if (status.discovery === 'not_run' && status.discovery_at) {
+        parts.push(`discovery counts from ${formatDisplayDate(status.discovery_at)}`);
+    }
     return parts.join(' \u00b7 ');
 }
 
@@ -431,6 +458,7 @@ function renderPipelineStatus(status) {
     if (!element) return;
     element.textContent = label;
     element.hidden = !label;
+    element.classList.toggle('stale', Boolean(pipelineStatusIsStale(status) || (status && status.discovery === 'stale')));
 }
 
 fetch('predictions.json')

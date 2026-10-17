@@ -1037,3 +1037,33 @@ check(dispatchedEvents.join() === "hephaestus:route", "a search that opens the s
 dispatchedEvents.length = 0;
 vm.runInContext("window.location.hash = '#predictions'; handleLocationChange();", context);
 check(dispatchedEvents.join() === "hephaestus:route", "Back / Forward through the location guard announces once");
+
+// --- the status line says when the daily update has stopped or discovery did not finish ------
+// server1 was offline on 2026-10-17 and the site gave no sign that its data had stopped moving.
+const statusNow = Date.parse("2026-10-17T12:00:00Z");
+const statusLabel = (status) => context.pipelineStatusLabel(status, statusNow);
+const freshStatus = { data_as_of: "2026-10-17T08:00:00+00:00", companies_researched: 86, new_links: 1, filings_swept: 1000, discovery: "ran", discovery_at: "2026-10-17T07:50:00+00:00" };
+check(statusLabel(freshStatus) === "Updated Oct 17, 2026 · 86 companies researched · 1 new link · 1,000 filings swept", `a fresh run reads as before: ${statusLabel(freshStatus)}`);
+check(!context.pipelineStatusIsStale(freshStatus, statusNow), "a run from this morning is not stale");
+const dayOld = { ...freshStatus, data_as_of: "2026-10-16T08:07:08+00:00" };
+check(!context.pipelineStatusIsStale(dayOld, statusNow) && !/old/.test(statusLabel(dayOld)), "yesterday's publish is normal (the retry run can be hours late)");
+const threeDaysOld = { ...freshStatus, data_as_of: "2026-10-14T09:00:00+00:00" };
+check(context.pipelineStatusIsStale(threeDaysOld, statusNow), "data older than 48 hours is stale");
+check(/data is 3 days old: the daily update has not published/.test(statusLabel(threeDaysOld)), `a stale label names the age: ${statusLabel(threeDaysOld)}`);
+check(!context.pipelineStatusIsStale({ data_as_of: "2026-10-15T13:00:00Z" }, statusNow) && context.pipelineStatusIsStale({ data_as_of: "2026-10-15T11:00:00Z" }, statusNow), "the limit is 48 hours");
+check(!context.pipelineStatusIsStale({}, statusNow) && !context.pipelineStatusIsStale({ data_as_of: "not a date" }, statusNow) && !context.pipelineStatusIsStale(null, statusNow), "a missing or unreadable date is never reported as stale");
+const unfinished = { ...freshStatus, discovery: "stale", discovery_at: "2026-10-09T21:00:00+00:00", companies_researched: null, filings_swept: null };
+check(/discovery did not finish \(last completed Oct 9, 2026\)/.test(statusLabel(unfinished)) && !/researched|swept/.test(statusLabel(unfinished)), `an unfinished discovery shows no counts and says so: ${statusLabel(unfinished)}`);
+check(/discovery did not finish$/.test(statusLabel({ ...unfinished, discovery_at: null })), "an unfinished discovery without a date still says so");
+check(/discovery counts from Oct 8, 2026/.test(statusLabel({ ...freshStatus, discovery: "not_run", discovery_at: "2026-10-08T07:50:00Z" })), "a run without a discovery step dates the carried-over counts");
+check(!/discovery/.test(statusLabel({ data_as_of: "2026-10-17T08:00:00Z", discovery: "not_run" })), "carried-over counts with no date say nothing more");
+check(statusLabel(null) === "" && statusLabel("x") === "", "no status, no line");
+const statusLine = element("pipeline-status");
+context.renderPipelineStatus({ ...freshStatus, data_as_of: new Date().toISOString() });
+check(!statusLine.classList.contains("stale") && statusLine.hidden === false, "a fresh status is plain text");
+context.renderPipelineStatus({ ...freshStatus, data_as_of: "2026-01-01T00:00:00Z" });
+check(statusLine.classList.contains("stale"), "a stopped update is highlighted");
+context.renderPipelineStatus({ ...freshStatus, data_as_of: new Date().toISOString(), discovery: "stale" });
+check(statusLine.classList.contains("stale"), "an unfinished discovery is highlighted");
+context.renderPipelineStatus(null);
+check(statusLine.hidden === true && !statusLine.classList.contains("stale"), "no status hides the line and clears the highlight");
