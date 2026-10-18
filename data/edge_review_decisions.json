@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-17T09:29:41.132568+00:00",
+  "exported_at": "2026-10-18T08:18:35.514326+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -60095,6 +60095,40 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: GL Globe Life Inc..",
       "reviewed_at": "2026-10-17T09:24:34.462381"
+    },
+    {
+      "edge_id": 4002,
+      "source_ticker": "CRM",
+      "target_ticker": "SPT",
+      "source_name": "Salesforce, Inc.",
+      "target_name": "Sprout Social, Inc Class A Common Stock",
+      "dependency_type": "Enterprise Software/Infrastructure",
+      "product": "Customer Relationship Management Platform",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "Among others, the Sprout Social platform integrates with websites such as Salesforce.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes an integration, collaboration, availability or rivalry, not supply.",
+      "reviewed_at": "2026-10-18T08:15:04.268842"
+    },
+    {
+      "edge_id": 4003,
+      "source_ticker": "RYN",
+      "target_ticker": "RYAM",
+      "source_name": "Rayonier Inc.",
+      "target_name": "Rayonier Advanced Materials Inc.",
+      "dependency_type": "Parent-Subsidiary Relationship",
+      "product": "Management Services",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "Before June 27, 2014, we consisted of Rayonier Inc.'s wholly-owned performance fibers business, which was primarily engaged in producing cellulose specialties.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt never refers to RYAM.",
+      "reviewed_at": "2026-10-18T08:15:04.279106"
     }
   ]
 }
