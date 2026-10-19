@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-18T08:18:35.514326+00:00",
+  "exported_at": "2026-10-19T08:37:26.434644+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -60129,6 +60129,57 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt never refers to RYAM.",
       "reviewed_at": "2026-10-18T08:15:04.279106"
+    },
+    {
+      "edge_id": 4006,
+      "source_ticker": "BAX",
+      "target_ticker": "CERS",
+      "source_name": "Baxter International Inc.",
+      "target_name": "Cerus Corporation Common Stock",
+      "dependency_type": "Manufacturing Partner",
+      "product": "Intercept Platelet blood screening system",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "https://en.wikipedia.org/wiki/Cerus_Corporation",
+      "source_title": "WIKIPEDIA (Page: Cerus Corporation)",
+      "evidence_excerpt": "In December 2001, the Helinx process was incorporated into a medical device called Intercept Platelet blood screening system, and Cerus entered an agreement with Baxter International Inc to jointly commercialize the device in the European Union healthcare market and gain regulatory approvals.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
+      "reviewed_at": "2026-10-19T08:33:09.559315"
+    },
+    {
+      "edge_id": 4008,
+      "source_ticker": "NDAQ",
+      "target_ticker": "ADUR",
+      "source_name": "Nasdaq, Inc. Common Stock",
+      "target_name": "Aduro Clean Technologies Inc. Common Stock",
+      "dependency_type": "Stock Exchange",
+      "product": "Trading Platform",
+      "confidence_score": 0.96,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "The Nasdaq Stock Market LLC Securities registered or to be registered pursuant to Section 12(b) of the Securities Exchange Act of 1934 (\"Exchange Act\"): Title of each class Trading Symbol(s) Name of each exchange on which registered Common Shares Without Par Value ADUR The Nasdaq Stock Market LLC",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: NDAQ Nasdaq, Inc. Common Stock.",
+      "reviewed_at": "2026-10-19T08:33:28.208728"
+    },
+    {
+      "edge_id": 4010,
+      "source_ticker": "WIT",
+      "target_ticker": "ALIT",
+      "source_name": "Wipro Limited",
+      "target_name": "Alight, Inc.",
+      "dependency_type": "sale of implementation services",
+      "product": "Workday and Cornerstone OnDemand Implementations",
+      "confidence_score": 0.95,
+      "revenue_share": null,
+      "source_url": "https://en.wikipedia.org/wiki/Alight_Solutions",
+      "source_title": "WIKIPEDIA (Page: Alight Solutions)",
+      "evidence_excerpt": "In February 2019 Wipro went on to sell their Workday and Cornerstone OnDemand installations to Alight Solutions for $110 million.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.95; votes reject:2, approve:1). Lead rationale from qwen2.5:7b-instruct: Wipro is selling their Workday and Cornerstone OnDemand implementations to Alight Solutions, which means Wipro should be the supplier and Alight Solutions should be the customer.",
+      "reviewed_at": "2026-10-19T08:33:54.412424"
     }
   ]
 }
