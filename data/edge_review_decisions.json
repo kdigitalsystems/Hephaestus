@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-19T08:37:26.434644+00:00",
+  "exported_at": "2026-10-20T08:37:58.906072+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -60180,6 +60180,23 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.95; votes reject:2, approve:1). Lead rationale from qwen2.5:7b-instruct: Wipro is selling their Workday and Cornerstone OnDemand implementations to Alight Solutions, which means Wipro should be the supplier and Alight Solutions should be the customer.",
       "reviewed_at": "2026-10-19T08:33:54.412424"
+    },
+    {
+      "edge_id": 4011,
+      "source_ticker": "RNGR",
+      "target_ticker": "CVX",
+      "source_name": "Ranger Energy Services, Inc.",
+      "target_name": "Chevron Corporation",
+      "dependency_type": "Service Contract",
+      "product": "Coiled Tubing Assets",
+      "confidence_score": 0.9667,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "Ranger Energy Services Announces Contract with Chevron to Build Three Additional ECHO Hybrid Rigs",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.97; votes approve:3). Lead rationale from qwen2.5:7b-instruct: Ranger Energy Services has a contract with Chevron to build additional ECHO Hybrid Rigs, indicating Ranger is providing services to Chevron.",
+      "reviewed_at": "2026-10-20T08:34:25.141004"
     }
   ]
 }
