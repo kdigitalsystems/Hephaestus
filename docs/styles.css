@@ -2925,6 +2925,12 @@ td.muted {
     color: var(--text-muted);
 }
 
+/* A stopped daily update, or a discovery step that did not finish, must not read like a quiet day. */
+.pipeline-status.stale {
+    color: var(--accent-3);
+    font-weight: 700;
+}
+
 /* --- Interface polish (browser audit, Sep 2026) --------------------------------- */
 
 /* Navigation wraps instead of running off-screen between 1051px and 1440px, and a
