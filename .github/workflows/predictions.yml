@@ -2,6 +2,11 @@ name: Hephaestus Research Signals
 
 on:
   workflow_dispatch:
+    inputs:
+      allow_stale_dashboard:
+        description: 'Generate even if the dashboard has not been refreshed since the previous run. The scheduled run never does; use this only for a deliberate manual re-run.'
+        type: boolean
+        default: false
   schedule:
     - cron: '30 4 * * 1-5'
 
@@ -81,12 +86,20 @@ jobs:
           fi
 
       - name: Generate bounded research signals
+        env:
+          # Empty on a scheduled run, so only a person ticking the box can set it.
+          ALLOW_STALE_DASHBOARD: ${{ inputs.allow_stale_dashboard }}
         run: |
+          extra=()
+          if [ "$ALLOW_STALE_DASHBOARD" = "true" ]; then
+            extra+=(--allow-stale-dashboard)
+          fi
           venv/bin/python backend/generate_predictions.py \
             --limit 50 \
             --use-ollama \
             --require-ollama \
-            --ollama-model "$HEPHAESTUS_PREDICTION_MODEL"
+            --ollama-model "$HEPHAESTUS_PREDICTION_MODEL" \
+            "${extra[@]}"
 
       - name: Validate prediction export
         run: |
