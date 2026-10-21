@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-20T08:37:58.906072+00:00",
+  "exported_at": "2026-10-21T08:55:54.558755+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -60197,6 +60197,23 @@
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.97; votes approve:3). Lead rationale from qwen2.5:7b-instruct: Ranger Energy Services has a contract with Chevron to build additional ECHO Hybrid Rigs, indicating Ranger is providing services to Chevron.",
       "reviewed_at": "2026-10-20T08:34:25.141004"
+    },
+    {
+      "edge_id": 4014,
+      "source_ticker": "BW",
+      "target_ticker": "BWXT",
+      "source_name": "Babcock & Wilcox Enterprises, Inc.",
+      "target_name": "BWX Technologies, Inc.",
+      "dependency_type": "Parent Company",
+      "product": "Nuclear Components and Fuel",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "After Babcock & Wilcox emerged from bankruptcy in 2006, that company and BWX Technologies (both subsidiaries of McDermott International, Inc.) consolidated operations as The Babcock & Wilcox Companies headed by President John Fees.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
+      "reviewed_at": "2026-10-21T08:52:19.767355"
     }
   ]
 }
