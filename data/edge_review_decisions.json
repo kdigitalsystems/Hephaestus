@@ -54614,12 +54614,12 @@
       "dependency_type": "Revenue Concentration",
       "product": "Services or Products provided by Precision BioSciences to TG Therapeutics",
       "confidence_score": 0.9667,
-      "revenue_share": 77.0,
+      "revenue_share": 12.0,
       "source_url": "https://www.sec.gov/Archives/edgar/data/1357874/000162828026017019/dtil-20251231.htm",
       "source_title": "SEC EDGAR (10-K filed 2026-03-12; customer-concentration disclosure)",
       "evidence_excerpt": "Precision BioSciences (DTIL) 10-K filed 2026-03-12: (\u201cPrevail\u201d) and TG Therapeutics (as defined below) accounted for 77 % and 12 % of revenue during the year ended December 31, 2024, respectively.",
       "review_status": "approved",
-      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.97; votes approve:3). Lead rationale from qwen2.5:7b-instruct: The proposed direction is backwards. TG Therapeutics is the customer, and Precision BioSciences is the supplier based on the revenue concentration disclosure.",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.97; votes approve:3). Lead rationale from qwen2.5:7b-instruct: The proposed direction is backwards. TG Therapeutics is the customer, and Precision BioSciences is the supplier based on the revenue concentration disclosure. Share corrected by hand to 12%: the sentence reads '(\u201cPrevail\u201d) and TG Therapeutics ... accounted for 77 % and 12 % of revenue ... respectively', so 77% is Prevail's and 12% is TG Therapeutics'; the stored excerpt starts mid-sentence, so the automatic re-check cannot judge it.",
       "reviewed_at": "2026-10-02T09:44:33.554141"
     },
     {
