@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import re
+from contextlib import contextmanager
 from types import SimpleNamespace
 from datetime import datetime, timezone
+
+from private_companies import is_private, node_aliases
 
 
 # Phrases that mark an excerpt as model commentary rather than a quote from the
@@ -387,7 +390,8 @@ def strong_aliases(node):
         return []
     aliases = []
     ticker = str(node.ticker or "").strip().lower()
-    if len(ticker) >= 3:
+    # A private company's id is a registry key, not a symbol anyone prints.
+    if len(ticker) >= 3 and not is_private(node):
         aliases.append(ticker)
     cleaned = cleaned_company_name(node)
     if cleaned:
@@ -396,6 +400,8 @@ def strong_aliases(node):
         if len(words) >= 2:
             aliases.append(" ".join(words[:2]))
     aliases.extend(KNOWN_ALIASES.get(str(node.ticker or "").upper(), ()))
+    # The exact strings filings use for a private company ("OpenAI Global, LLC").
+    aliases.extend(normalize_for_alias_match(alias) for alias in node_aliases(node))
     return [alias for alias in dict.fromkeys(aliases) if len(alias) >= 2]
 
 
@@ -850,6 +856,18 @@ def register_company_names(rows) -> None:
         cleaned = cleaned_company_name(SimpleNamespace(name=name, ticker=ticker))
         if cleaned:
             _NAME_OWNERS.setdefault(cleaned, set()).add(str(ticker or "").upper())
+
+
+@contextmanager
+def registered_company_names(rows):
+    """register_company_names for the length of a block, then the previous registration again."""
+    saved = {alias: set(owners) for alias, owners in _NAME_OWNERS.items()}
+    register_company_names(rows)
+    try:
+        yield
+    finally:
+        _NAME_OWNERS.clear()
+        _NAME_OWNERS.update(saved)
 
 
 def owned_by_another(alias: str, node: object) -> bool:

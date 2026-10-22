@@ -11,6 +11,8 @@ import os
 import sys
 from datetime import datetime, timezone
 
+from private_companies import is_private_entry
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_DASHBOARD_PATH = os.path.join(BASE_DIR, "docs", "dashboard_data.json")
 DEFAULT_SUMMARY_PATH = os.path.join(BASE_DIR, "reports", "discovery_summary.json")
@@ -59,7 +61,15 @@ def build_status(dashboard, discovery=None, previous=None, now=None):
     status = {
         "generated_at": now.isoformat(timespec="seconds"),
         "data_as_of": dashboard.get("generated_at"),
+        # Every company the dashboard publishes, as before; private ones are among them, and
+        # "private_companies" says how many (public = companies - private_companies).
         "companies": metrics.get("company_count"),
+        "private_companies": sum(
+            1
+            for companies in (dashboard.get("industries") or {}).values()
+            for company in (companies if isinstance(companies, list) else [])
+            if is_private_entry(company)
+        ),
         "unique_links": metrics.get("unique_links"),
         "linked_companies": metrics.get("linked_companies"),
         "new_links": change.get("new_count"),

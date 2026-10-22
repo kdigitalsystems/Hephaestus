@@ -165,6 +165,11 @@ jobs:
             venv/bin/python backend/seed_db.py
           fi
           
+          # Private companies and their curated edges: after the universe exists, before
+          # discovery and before review decisions about them are replayed.
+          echo "Seeding private companies..."
+          venv/bin/python backend/seed_private_companies.py
+
           echo "Updating live financial metrics..."
           venv/bin/python backend/update_metrics.py
 

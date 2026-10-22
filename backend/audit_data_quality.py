@@ -22,6 +22,7 @@ from evidence_quality import (
     requires_source_evidence,
     unsupported_ai_evidence,
 )
+from private_companies import is_private
 from supplier_dependence import company_key, is_non_common_security, same_company
 from thefuzz import fuzz
 
@@ -226,7 +227,8 @@ def non_company_reason(edge):
     if source is None or target is None:
         return None
     for node in (source, target):
-        if is_non_common_security(node.name):
+        # A registry company is vetted by hand: "Preferred Networks" is not a preferred share.
+        if not is_private(node) and is_non_common_security(node.name):
             return f"{node.ticker} ({node.name}) is a warrant, preferred or rights line, not a company"
     if source.id != target.id and same_company(source.name, target.name):
         return f"{source.ticker} and {target.ticker} are two listings of one company"
