@@ -29,6 +29,7 @@ from evidence_quality import (  # noqa: F401  (mentions_company is re-exported f
 )
 from customer_concentration import filer_documented_direction
 from models import Edge, Node
+from private_companies import is_private
 
 
 DEFAULT_MODEL = os.environ.get("HEPHAESTUS_REVIEW_MODEL", "qwen2.5:7b-instruct")
@@ -125,7 +126,10 @@ def node_label(node):
     if not node:
         return "Unknown"
     parts = [node.name or "Unknown"]
-    if node.ticker:
+    if is_private(node):
+        # The id is a registry key, not a symbol: say what the company is instead.
+        parts.append("private company (no stock listing)")
+    elif node.ticker:
         parts.append(f"ticker {node.ticker}")
     if node.sector:
         parts.append(f"sector {node.sector}")
@@ -230,7 +234,8 @@ def is_non_operating_vehicle(node):
         return True
     if any(marker in industry for marker in ("asset management", "closed-end fund", "reit", "shell compan")):
         return True
-    return bool(NON_OPERATING_NAME_PATTERN.search(node.name or ""))
+    # The name test reads fund, trust and SPAC wording; a registry company is vetted by hand.
+    return not is_private(node) and bool(NON_OPERATING_NAME_PATTERN.search(node.name or ""))
 
 
 def deterministic_review(edge):

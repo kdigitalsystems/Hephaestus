@@ -5,6 +5,7 @@ import argparse
 import sys
 from database import SessionLocal
 from models import Edge, Node
+from private_companies import PRIVATE_ENTITY_TYPE
 from yahooquery import Ticker
 
 
@@ -159,7 +160,10 @@ def prioritized_nodes(session, limit=None):
     head so a throttled run degrades the long tail, not TSM and AMD.
     """
     linked = linked_node_ids(session)
-    nodes = session.query(Node).filter(Node.ticker.is_not(None)).order_by(Node.id.asc()).all()
+    # A private company has no listing to price: no Yahoo lookup, no "returned no data" count.
+    nodes = session.query(Node).filter(
+        Node.ticker.is_not(None), Node.entity_type != PRIVATE_ENTITY_TYPE
+    ).order_by(Node.id.asc()).all()
     nodes.sort(key=lambda node: (node.id not in linked, node.id))
     return nodes[:limit] if limit else nodes
 

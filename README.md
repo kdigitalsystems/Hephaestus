@@ -21,12 +21,15 @@ backend/
   main.py                 URL scrape -> LLM parse -> database workflow
   models.py               Node and Edge ORM models
   parser.py               Ollama structured extraction prompt/schema
+  private_companies.py    Private-company registry: validation, helpers, `validate` command
   repair_dashboard_from_decisions.py
                           Restores approved links into the published dashboard export
   scraper.py              Web article text extraction
   sec_sources.py          SEC filing and material-contract exhibit collectors
   seed_db.py              Alpaca equity universe seeding
   seed_edges.py           Manual starter relationships
+  seed_private_companies.py
+                          Registry companies and their curated edges into the database
   update_metrics.py       YahooQuery financial/profile enrichment
 docs/
   DATA_SOURCES.md         Source inventory and source-quality guidance
@@ -342,6 +345,35 @@ Links the pipeline cannot settle on its own (a reversed direction, a relationshi
 
 `backend/review_queue.py` writes the page's data, `docs/review_queue.json`, during export: every pending link with its category, suggestion, the two companies' market caps, and any link running the other way between the same two companies. Links to the largest companies come first (the larger endpoint's market cap), because their pages get the most visits; the page can also sort oldest or newest first. Held links whose excerpt the evidence rules classify as junk are rejected during cleanup, so the queue holds only what needs a person.
 
+## Private Companies
+
+Companies without a stock listing (AI labs, payment processors, data vendors) are tracked as nodes of the graph, so a relationship between a public company and a private one - a cloud provider supplying a lab, a processor serving a retailer - appears like any other. They are marked **private** on the site.
+
+**What is shown:** the name, sector and industry, a one-sentence description, headquarters, founding year and website from a reviewed registry, and the relationships involving the company, each with its verbatim evidence excerpt and verification label. **What is not:** price, market capitalization, valuation, funding rounds, revenue or headcount. None can be verified from free sources and all go stale, so none is stored or shown. A private company is never sent to the market-data crawl (`update_metrics.py` skips it, so it does not count as "returned no data"), has no price chart, and is not part of the research signals, which rank companies by market capitalization.
+
+**How a company is added (by pull request).** Add an entry to `data/private_companies.json`:
+
+```json
+{"id": "OPENAI", "name": "OpenAI",
+ "aliases": ["OpenAI, Inc.", "OpenAI Global, LLC"],
+ "sector": "Technology", "industry": "Artificial Intelligence",
+ "description": "AI research and products company; maker of ChatGPT and the GPT model family.",
+ "website": "https://openai.com", "hq": "San Francisco, California, USA", "founded": 2015,
+ "sources": ["https://..."], "checked": "2026-10-22", "listed_as": null}
+```
+
+- `id` is 6-14 capital letters or digits starting with a letter. It is stored as the node's ticker; every US-listed ticker is at most five characters, so it can never be a real one.
+- `aliases` are the exact strings filings use for the company, legal names included; the display name is always matched too. An alias must be distinctive: use `Scale AI`, not `Scale`.
+- `sector` must be one the export publishes (not Financial Services, Real Estate or Shell Companies; a payments company is Technology / Payments Infrastructure).
+- `description` is one neutral factual sentence of at most 280 characters, with no valuation, funding, revenue or headcount figures and no superlatives. `sources` are the pages that back the name, headquarters, founding year and website, and `checked` is the date they were verified; neither is published.
+- A company that is already public (same ticker, name or alias after legal forms and share classes are ignored) must not be in the registry.
+
+Supply relationships that are known from a primary source can be seeded in `data/private_seed_edges.json`: `source` is the supplier and `target` the customer (either may be a registry `id`), with the real `source_url`, its title and the verbatim excerpt, which must name both companies by name or alias. Investments, ownership and plain partnerships are not supply relationships. Seeded edges enter as *pending* and are judged by the review panel like any other; edges that already exist are left alone. Run `python3 backend/private_companies.py validate` before opening the pull request; CI runs the same checks.
+
+`backend/seed_private_companies.py` writes both files into the database. It runs after the public universe is seeded and before `update_metrics.py`, discovery and the replay of review decisions (a decision about a private company needs its node), in `run_pipeline.sh`, `scripts/rebuild_db.sh` and the scheduled workflow. It is idempotent: a run with nothing new writes nothing, so `last_updated` keeps meaning "the registry changed". An entry that turns out to be a public company already in the database is refused with a warning rather than duplicated, a seed edge that cannot be used is skipped and reported, and empty files are a no-op. A private node whose entry was deleted from the registry is reported and left alone; `python3 backend/seed_private_companies.py --prune-orphans` deletes it with its edges.
+
+**When a private company goes public.** Set its `listed_as` to the new ticker. Once that ticker is in the database, the next run moves the private node's edges to the public company (where both have the same link the better-reviewed one is kept), carries its review decisions over to the new ticker in `data/edge_review_decisions.json`, and deletes the private node. The entry can then be removed in a later pull request.
+
 ## Getting Found
 
 Every page carries a canonical URL, a description, and link-preview tags (Open Graph and Twitter card) with a shared 1200×630 image, `docs/og-image.png` (source `scripts/og_image.html`; re-render with `node scripts/render_og_image.js`). The generated company pages are the indexable content: one per company with tracked links, listed in `docs/sitemap.xml`.
@@ -448,7 +480,7 @@ Run a limited debug pipeline:
 ./run_pipeline.sh 25
 ```
 
-The pipeline checks local database readiness, initializes the SQLite schema if needed, reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with an Ollama consensus panel, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard, link-history, and review-decision changes. It refuses to run on any branch other than `main`, and it stops with an error when `ollama` is installed but the daemon is not responding, so an unreviewed batch can never be published as if it had been reviewed.
+The pipeline checks local database readiness, initializes the SQLite schema if needed, seeds the private-company registry, reapplies persisted edge decisions, reviews a bounded batch of pending AI edges with an Ollama consensus panel, exports the dashboard, repairs approved links from persisted decisions, validates the published JSON, fails fast if any step fails, and commits dashboard, link-history, and review-decision changes. It refuses to run on any branch other than `main`, and it stops with an error when `ollama` is installed but the daemon is not responding, so an unreviewed batch can never be published as if it had been reviewed.
 
 Review behavior can be tuned with environment variables:
 
@@ -492,6 +524,7 @@ python3 backend/validate_dashboard_data.py
 
 - `name`
 - `ticker`
+- `entity_type`: `Company`, or `Private Company` for a registry company (its `ticker` is the registry id and its profile is in `metadata_json`; it never has market data)
 - `sector`
 - `industry`
 - market and valuation metrics

@@ -1,0 +1,62 @@
+{
+  "generated_at": "2026-10-22T05:00:00+00:00",
+  "industries": {
+    "Technology": [
+      {
+        "id": 1, "name": "Advanced Micro Devices, Inc. Common Stock", "ticker": "AMD", "industry": "Semiconductors", "market_cap": 250000000000,
+        "upstream": [
+          {"edge_id": 1, "relationship_key": "TSM->AMD:FOUNDRY", "name": "Taiwan Semiconductor <Manufacturing>", "ticker": "TSM", "type": "Foundry", "product": "wafers",
+           "source": "https://www.sec.gov/Archives/edgar/data/1/10k.htm", "source_title": "SEC EDGAR (10-K filed 2025-10-31)", "source_type": "Web Source",
+           "review_status": "approved", "review_summary": {"method": "consensus", "label": "Consensus panel 3/3 models"}, "revenue_share": 12.5,
+           "evidence_excerpt": "TSMC fabricates AMD's <processors> & sells them."}
+        ],
+        "downstream": []
+      },
+      {
+        "id": 2, "name": "Taiwan Semiconductor <Manufacturing>", "ticker": "TSM", "industry": "Semiconductors", "market_cap": null,
+        "upstream": [],
+        "downstream": [
+          {"edge_id": 1, "relationship_key": "TSM->AMD:FOUNDRY", "name": "Advanced Micro Devices, Inc. Common Stock", "ticker": "AMD", "type": "Foundry", "product": "wafers",
+           "source": "AI Multi-Source Research", "source_type": "AI Research", "review_status": "approved", "revenue_share": 12.5,
+           "evidence_excerpt": "TSMC fabricates AMD's <processors> & sells them."},
+          {"edge_id": 2, "relationship_key": "TSM->AAPL:FOUNDRY", "name": "Apple Inc. Common Stock", "ticker": "AAPL", "type": "Foundry", "product": "Foundry",
+           "source": "https://a.example/x / https://b.example/y", "source_title": "Doc A / Doc B", "source_type": "Web Source", "review_status": "approved",
+           "sources": [{"url": "https://a.example/x", "title": "Doc A"}, {"url": "https://b.example/y", "title": "Doc B"}],
+           "evidence_excerpt": "Apple designs the chips that TSMC manufactures."}
+        ]
+      },
+      {
+        "id": 3, "name": "Apple Inc. Common Stock", "ticker": "AAPL", "industry": "Consumer Electronics", "market_cap": 3500000000000,
+        "upstream": [
+          {"edge_id": 2, "relationship_key": "TSM->AAPL:FOUNDRY", "name": "Taiwan Semiconductor <Manufacturing>", "ticker": "TSM", "type": "Foundry", "product": "Foundry",
+           "source": "https://a.example/x", "source_title": "Doc A", "source_type": "Web Source", "review_status": "pending",
+           "evidence_excerpt": "Apple designs the chips that TSMC manufactures."}
+        ],
+        "downstream": []
+      },
+      {"id": 4, "name": "Lonely Corp", "ticker": "LNLY", "industry": "Software", "market_cap": 1000000000, "upstream": [], "downstream": []}
+    ],
+    "Communication Services": [
+      {
+        "id": 5, "name": "AT&T Inc.", "ticker": "T", "industry": "Telecom Services", "market_cap": 150000000000,
+        "upstream": [
+          {"edge_id": 3, "relationship_key": "ERIC->T:RADIO", "name": "Ericsson \"B\" ADS", "ticker": "ERIC", "type": "Radio Equipment", "product": "5G radios",
+           "source": "https://www.sec.gov/Archives/edgar/data/2/10k.htm", "source_type": "Web Source", "review_status": "approved",
+           "evidence_excerpt": "Ericsson supplies 5G radio equipment to AT&T."}
+        ],
+        "downstream": []
+      }
+    ],
+    "Linked Companies": [
+      {
+        "id": 6, "name": "Ericsson \"B\" ADS", "ticker": "ERIC", "industry": "Reviewed relationship endpoint", "market_cap": null,
+        "upstream": [],
+        "downstream": [
+          {"edge_id": 3, "relationship_key": "ERIC->T:RADIO", "name": "AT&T Inc.", "ticker": "T", "type": "Radio Equipment", "product": "5G radios",
+           "source": "https://www.sec.gov/Archives/edgar/data/2/10k.htm", "source_type": "Web Source", "review_status": "approved",
+           "evidence_excerpt": "Ericsson supplies 5G radio equipment to AT&T."}
+        ]
+      }
+    ]
+  }
+}
