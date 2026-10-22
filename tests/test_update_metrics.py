@@ -251,3 +251,102 @@ def test_failed_batches_count_with_the_throttled_ones(monkeypatch, capsys):
     assert "50 updated, 100 returned no data, 100 lost in 1 failed batches" in out
     assert "Most companies received no market data" in out
     assert "::warning" not in out, "annotations are for the runner only"
+
+
+class Timeout(Exception):
+    pass
+
+
+def test_a_timed_out_request_is_retried_with_growing_pauses_and_a_fresh_client(monkeypatch, capsys):
+    calls, pauses = [], []
+
+    def flaky(tickers, refresh=False):
+        calls.append(refresh)
+        if len(calls) < 3:
+            raise Timeout("curl: (28) Connection timed out after 30000 milliseconds")
+        return {ticker: {"price": {"regularMarketPrice": 1.0}} for ticker in tickers}
+
+    monkeypatch.setattr(update_metrics, "fetch_batch", flaky)
+    monkeypatch.setattr(update_metrics, "THROTTLE_PAUSE_SECONDS", 20)
+    monkeypatch.setattr(update_metrics, "FETCH_ATTEMPTS", 3)
+    monkeypatch.setattr(update_metrics.time, "sleep", pauses.append)
+    assert update_metrics.fetch_batch_resilient(["A", "B"]) == {"A": {"price": {"regularMarketPrice": 1.0}}, "B": {"price": {"regularMarketPrice": 1.0}}}
+    assert calls == [False, True, True]  # the first try is as before; each retry rebuilds the client
+    assert pauses == [20, 40]
+    assert capsys.readouterr().out.count("Batch request failed") == 2
+
+
+def test_a_request_that_keeps_failing_still_raises_after_the_last_attempt(monkeypatch):
+    calls = []
+
+    def always(tickers, refresh=False):
+        calls.append(1)
+        raise Timeout("down")
+
+    monkeypatch.setattr(update_metrics, "fetch_batch", always)
+    monkeypatch.setattr(update_metrics, "FETCH_ATTEMPTS", 3)
+    monkeypatch.setattr(update_metrics.time, "sleep", lambda _seconds: None)
+    with pytest.raises(Timeout):
+        update_metrics.fetch_batch_resilient(["A"])
+    assert len(calls) == 3
+
+
+def test_a_single_attempt_setting_means_no_retry(monkeypatch):
+    calls = []
+
+    def always(tickers, refresh=False):
+        calls.append(1)
+        raise Timeout("down")
+
+    monkeypatch.setattr(update_metrics, "fetch_batch", always)
+    monkeypatch.setattr(update_metrics, "FETCH_ATTEMPTS", 1)
+    with pytest.raises(Timeout):
+        update_metrics.fetch_batch_resilient(["A"])
+    assert len(calls) == 1
+
+
+def test_a_batch_that_recovers_on_retry_is_updated_not_lost(monkeypatch, capsys):
+    """The 2026-10-16 failure: a throttled first answer, then the retry timed out. Now it recovers."""
+    metrics_db(monkeypatch, priced=True)
+    monkeypatch.setattr(update_metrics, "THROTTLE_PAUSE_SECONDS", 0)
+    monkeypatch.setattr(update_metrics, "FETCH_ATTEMPTS", 3)
+    answers = iter(["throttled", "timeout", "ok"])
+
+    def scripted(tickers, refresh=False):
+        kind = next(answers, "ok")
+        if kind == "throttled":
+            return {ticker: "Too Many Requests" for ticker in tickers}
+        if kind == "timeout":
+            raise Timeout("curl: (28) Connection timed out")
+        return {ticker: {"price": {"regularMarketPrice": 2.0, "marketCap": 5e9}} for ticker in tickers}
+
+    monkeypatch.setattr(update_metrics, "fetch_batch", scripted)
+    update_metrics.update_financial_metrics()
+    out = capsys.readouterr().out
+    assert "0 lost in 0 failed batches" in out
+    assert "Batch request failed" in out
+
+
+def test_the_retry_count_can_be_set_from_the_environment():
+    source = (Path(update_metrics.__file__)).read_text(encoding="utf-8")
+    assert 'HEPHAESTUS_YAHOO_FETCH_ATTEMPTS' in source
+
+
+def test_three_attempts_is_the_default():
+    assert update_metrics.FETCH_ATTEMPTS == 3
+
+
+def test_a_batch_whose_first_request_times_out_recovers_too(monkeypatch, capsys):
+    metrics_db(monkeypatch, priced=True)
+    monkeypatch.setattr(update_metrics, "THROTTLE_PAUSE_SECONDS", 0)
+    monkeypatch.setattr(update_metrics, "FETCH_ATTEMPTS", 3)
+    answers = iter(["timeout", "ok"])
+
+    def scripted(tickers, refresh=False):
+        if next(answers, "ok") == "timeout":
+            raise Timeout("curl: (28) Connection timed out")
+        return {ticker: {"price": {"regularMarketPrice": 2.0, "marketCap": 5e9}} for ticker in tickers}
+
+    monkeypatch.setattr(update_metrics, "fetch_batch", scripted)
+    update_metrics.update_financial_metrics()
+    assert "0 lost in 0 failed batches" in capsys.readouterr().out
