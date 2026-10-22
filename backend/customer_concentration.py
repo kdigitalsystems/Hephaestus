@@ -39,6 +39,9 @@ CONTEXT_AFTER = re.compile(
     r"|,?\s+(?:accounted|represented|represents|comprised|constituted|contributed|and|which|who)\b)",
     re.IGNORECASE,
 )
+# A private company's one-word name also counts when a list of names goes on after it
+# ("OpenAI, xAI and Anthropic accounted for ..."); the first of the list has nothing before it.
+LIST_CONTINUES = re.compile(r"^(?:,\s+|\s+(?:and|or|&)\s+)(?:(?:and|or)\s+)?(?:the\s+)?[a-z]{0,2}[A-Z]")
 CONTEXT_BEFORE = re.compile(
     r"(?:\b(?:sales|revenue|revenues|shipments|billings|receivable)\s+(?:to|from)\s+$"
     r"|\b(?:customers?|distributors?|including|namely|such\s+as|and|with)\s+$"
@@ -46,6 +49,8 @@ CONTEXT_BEFORE = re.compile(
     re.IGNORECASE,
 )
 MIN_NAME_LENGTH = 4
+# A private company's name can be shorter when its own casing makes it unmistakable ("xAI").
+MIN_PRIVATE_NAME_LENGTH = 3
 MAX_SENTENCE_LENGTH = 700
 # A genuine disclosure names one to three customers; a longer list is a peer group,
 # an index constituent list, or a remuneration benchmark.
@@ -195,16 +200,22 @@ BRACKET_START = re.compile(r"^\(")
 LEGAL_ABBREVIATION_END = re.compile(r"\b(?:Inc|Corp|Co|Ltd|Cos|LLC|L\.P|S\.A|N\.V|plc)\.$")
 
 
-def disclosure_sentences(text):
-    """The sentences of a filing as the concentration reader sees them."""
-    cleaned = PAGE_FOOTER.sub(" ", ZERO_WIDTH.sub(" ", str(text or "")))
+def merge_bracket_continuations(sentences):
+    """Join a sentence that begins with a bracket to the one before it when that ends in a legal
+    abbreviation: ("Prevail") belongs to "Prevail Therapeutics Inc."."""
     merged = []
-    for sentence in split_sentences(cleaned):
+    for sentence in sentences:
         if merged and BRACKET_START.match(sentence) and LEGAL_ABBREVIATION_END.search(merged[-1]):
             merged[-1] = f"{merged[-1]} {sentence}"
         else:
             merged.append(sentence)
     return merged
+
+
+def disclosure_sentences(text):
+    """The sentences of a filing as the concentration reader sees them."""
+    cleaned = PAGE_FOOTER.sub(" ", ZERO_WIDTH.sub(" ", str(text or "")))
+    return merge_bracket_continuations(split_sentences(cleaned))
 
 
 def starts_mid_sentence(sentence):
@@ -316,11 +327,79 @@ def name_pattern(name):
     return re.compile(r"(?<![A-Za-z0-9])" + re.escape(name) + r"(?![A-Za-z0-9])")
 
 
-def is_part_of_a_longer_name(sentence, start, end, cleaned):
+class KnownNames(dict):
+    """Display name -> cleaned name, plus what the plain mapping cannot carry about private companies.
+
+    A company without a stock listing (OpenAI, Anthropic, Stripe) is a node of the graph with a
+    registry of aliases ("OpenAI, Inc.") and no market cap. Every reader builds its name list the
+    same way (`auto_discover_edges.known_company_names`), so a statement that names one is read
+    identically at discovery and when cleanup and the audit read the stored sentence again. A plain
+    dict still works everywhere: it simply has no private companies.
+    """
+
+    def __init__(self, *args, aliases=None, private=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aliases = {display: tuple(values) for display, values in (aliases or {}).items()}
+        self.private = frozenset(private)
+
+
+def private_names(known_names):
+    return getattr(known_names, "private", frozenset())
+
+
+def name_variants(known_names, display_name):
+    """Every spelling the sentence may use for this company: its cleaned name and, for a private
+    company, the registry's aliases (longest first, so "OpenAI Global" beats "OpenAI")."""
+    cleaned = str(known_names[display_name] or "").strip()
+    if display_name not in private_names(known_names):
+        return [cleaned] if cleaned else []
+    variants = {cleaned, *(str(alias or "").strip() for alias in getattr(known_names, "aliases", {}).get(display_name, ()))}
+    return sorted((variant for variant in variants if variant), key=lambda variant: (-len(variant), variant))
+
+
+# "Lucyd.co", "stripe.com": a web address, not the company.
+DOMAIN_TAIL = re.compile(r"^\.(?:com|co|net|org|io|ai|app|us|uk|de|fr|cn|jp|tv|me)\b", re.IGNORECASE)
+
+
+def is_single_word(name):
+    return len(re.findall(r"[A-Za-z0-9]+", name)) == 1
+
+
+URL_OR_ADDRESS = re.compile(r"\S*[./@]\S*")
+
+
+def lowercase_words(text):
+    """Words the document uses in lower case: common nouns, not company names.
+
+    Web and email addresses are dropped first, or "investor.nvidia.com" would make
+    "nvidia" look like an ordinary word.
+    """
+    return set(re.findall(r"(?<![A-Za-z0-9&])[a-z][a-z0-9&]*", URL_OR_ADDRESS.sub(" ", str(text or ""))))
+
+
+def has_mixed_case(name):
+    """"xAI", "iRobot", "OpenAI": a spelling no ordinary word has."""
+    return any(c.islower() for c in name) and any(c.isupper() for c in name[1:])
+
+
+def is_ambiguous(variant, private=False, common_words=frozenset()):
+    """An everyday word that is also a name needs corporate context. A private company's one-word
+    name is one when the same filing also uses the word in lower case ("ramp up", "to scale"):
+    the filing itself says it is an ordinary word."""
+    if variant.lower() in AMBIGUOUS_NAMES:
+        return True
+    # A very short name in capitals is an acronym until the sentence gives it corporate context.
+    return private and is_single_word(variant) and (variant.lower() in common_words or (variant.isupper() and len(variant) <= 4))
+
+
+def is_part_of_a_longer_name(sentence, start, end, cleaned, ambiguous=False, brand=False):
     """The match is a word of something else: a modifier ("the Pool business", "Research Solutions
     products", "Southern Region"), a longer proper noun ("Commercial Vehicle OEM", "the Helios
-    Pool", "City of New York"), or a product sold ("sales of new Brunswick boats")."""
+    Pool", "City of New York"), or a product sold ("sales of new Brunswick boats"). `brand`: a private
+    company's one-word name, which a capitalised word on either side makes a product or a place
+    ("Plaid Link", "the Nagoya Anthropic Board", "Perplexity of New York")."""
     after = sentence[end:end + 40]
+    ambiguous = ambiguous or brand or cleaned.lower() in AMBIGUOUS_NAMES
     if DESCRIPTOR_AFTER.match(after) or PRODUCT_SOLD.search(sentence[max(0, start - 40):start]):
         return True
     follower = FOLLOWING_WORD.match(after)
@@ -329,9 +408,11 @@ def is_part_of_a_longer_name(sentence, start, end, cleaned):
         # A short all-caps word after a name ("Commercial Vehicle OEM") is a category, not a company form.
         if word.isupper() and 2 <= len(word) <= 5 and word.lower() not in NON_NAME_WORDS | LEGAL_WORDS:
             return True
-        if follower.group(1) and cleaned.lower() in AMBIGUOUS_NAMES:
+        if follower.group(1) and ambiguous:
             return True  # "City of New York"
-    if cleaned.lower() in AMBIGUOUS_NAMES:
+        if brand and word[:1].isupper() and word[1:].islower() and word.lower() not in NON_NAME_WORDS | LEGAL_WORDS:
+            return True  # "Plaid Link"
+    if ambiguous:
         # An everyday word that is also a company name is the company only when nothing
         # capitalised leads into it: "the Helios Pool" and "Windows Hello" are other things.
         preceding = PRECEDING_WORD.search(sentence[max(0, start - 30):start])
@@ -340,30 +421,42 @@ def is_part_of_a_longer_name(sentence, start, end, cleaned):
     return False
 
 
-def mentioned_names(sentence, known_names, exclude=()):
+def mentioned_names(sentence, known_names, exclude=(), common_words=frozenset()):
     """Known company names that appear in the sentence, in order of appearance.
 
     `known_names` maps a display name to its cleaned form; ambiguous names (Target,
-    Apple, Shell) need corporate context so "our target market" is not a customer.
+    Apple, Shell) need corporate context so "our target market" is not a customer. A private
+    company is also found by its registry aliases and, being written the way the registry spells
+    it (case-sensitively, so "stripe" is not Stripe and "xAI" is), needs no market cap to count.
     """
     lowered_exclusions = {str(value or "").lower() for value in exclude}
+    private = private_names(known_names)
     found = []
-    for display_name, cleaned in known_names.items():
-        cleaned = str(cleaned or "").strip()
-        if len(cleaned) < MIN_NAME_LENGTH or cleaned.lower() in lowered_exclusions:
-            continue
-        for match in name_pattern(cleaned).finditer(sentence):
-            if RATING_CONTEXT.search(sentence[max(0, match.start() - 60):match.end() + 60]):
+    for display_name in known_names:
+        is_private = display_name in private
+        best = None
+        for variant in name_variants(known_names, display_name):
+            if is_private and any(DOMAIN_TAIL.match(sentence[m.end():]) for m in name_pattern(variant).finditer(sentence)):
+                continue  # "Lucyd.co": the sentence is about the filer's own web address and brand
+            too_short = len(variant) < (MIN_PRIVATE_NAME_LENGTH if is_private and has_mixed_case(variant) else MIN_NAME_LENGTH)
+            if too_short or variant.lower() in lowered_exclusions:
                 continue
-            if cleaned.lower() in AMBIGUOUS_NAMES:
-                before = sentence[max(0, match.start() - 24):match.start()]
-                after = sentence[match.end():match.end() + 24]
-                if not (CONTEXT_AFTER.search(after) or CONTEXT_BEFORE.search(before)):
+            ambiguous = is_ambiguous(variant, is_private, common_words)
+            for match in name_pattern(variant).finditer(sentence):
+                if RATING_CONTEXT.search(sentence[max(0, match.start() - 60):match.end() + 60]):
                     continue
-            if is_part_of_a_longer_name(sentence, match.start(), match.end(), cleaned):
-                continue
-            found.append((match.start(), display_name, cleaned))
-            break
+                if ambiguous:
+                    before = sentence[max(0, match.start() - 24):match.start()]
+                    after = sentence[match.end():match.end() + 24]
+                    if not (CONTEXT_AFTER.search(after) or CONTEXT_BEFORE.search(before) or (is_private and LIST_CONTINUES.search(after))):
+                        continue
+                if is_part_of_a_longer_name(sentence, match.start(), match.end(), variant, ambiguous, brand=is_private and is_single_word(variant)):
+                    continue
+                candidate = (match.start(), -len(variant), variant)
+                best = candidate if best is None else min(best, candidate)
+                break
+        if best:
+            found.append((best[0], display_name, best[2]))
     found.sort()
     # Prefer the longest match when one cleaned name contains another ("Coca-Cola" vs
     # "Coca-Cola Consolidated"). Comparing display names instead dropped both, because
@@ -378,7 +471,8 @@ def mentioned_names(sentence, known_names, exclude=()):
 
 # --- lists of names ---------------------------------------------------------------------------
 
-NAME_WORD = r"(?:[A-Z][\w&.\u2019'\u00ae\u2122/-]*|\d+[A-Z][\w&.\u2019'\u00ae\u2122/-]*)"
+# A name starts with a capital, a digit, or a short lower-case prefix before a capital ("xAI", "eBay").
+NAME_WORD = r"(?:[A-Z][\w&.\u2019'\u00ae\u2122/-]*|\d+[A-Z][\w&.\u2019'\u00ae\u2122/-]*|[a-z]{1,2}[A-Z][\w&.\u2019'\u00ae\u2122/-]*)"
 NAME_CHUNK = re.compile(
     rf"(?<![\w\u2019'])(?:the\s+)?{NAME_WORD}"
     rf"(?:\s+(?:&\s+)?{NAME_WORD}|\s+(?:of|de|du|la|van|von|der|den|do|da|dos|das|del|di|el)\s+{NAME_WORD}|\s*\([^()0-9%]{{1,40}}\)\s+{NAME_WORD})*"
@@ -677,6 +771,12 @@ def is_revenue_figure(sentence, figure, figs=()):
     return bool(CONCENTRATION_PATTERN.search(before) or REVENUE_PATTERN.search(after[:min(cuts)]))
 
 
+def matched_length(sentence, position, name, known_names):
+    """How much of the sentence the name found at `position` covers: its cleaned name or, for a
+    private company, the longest alias spelled there."""
+    return max((len(variant) for variant in name_variants(known_names, name) if sentence.startswith(variant, position)), default=len(str(known_names[name]).strip()))
+
+
 def read_shares(sentence, positioned_names, known_names):
     """[(name, share, reason)] for each customer named in a concentration sentence.
 
@@ -695,7 +795,7 @@ def read_shares(sentence, positioned_names, known_names):
     other_names = [position for position, _ in positioned_names]
     readings = []
     for position, name in sorted(positioned_names):
-        end = position + len(str(known_names[name]).strip())
+        end = position + matched_length(sentence, position, name, known_names)
         share, reason = read_one(sentence, figs, runs, chunk_starts, other_names, position, end)
         readings.append((name, share, reason))
     return readings
@@ -711,6 +811,8 @@ def read_disclosures(text, known_names, filer_names=(), require_customer_cue=Tru
     disclosures = []
     seen = set()
     previous = ""
+    # Only a private company's name is judged by the document's own use of the word.
+    common_words = lowercase_words(text) if private_names(known_names) else frozenset()
     for sentence in disclosure_sentences(text):
         context = f"{previous} {sentence}"
         previous = sentence
@@ -718,7 +820,7 @@ def read_disclosures(text, known_names, filer_names=(), require_customer_cue=Tru
             continue
         if require_customer_cue and not CUSTOMER_CUE.search(context):
             continue
-        positioned = mentioned_names(sentence, known_names, filer_names)
+        positioned = mentioned_names(sentence, known_names, filer_names, common_words)
         if not positioned or len(positioned) > MAX_NAMES_PER_SENTENCE:
             continue
         names = subject_names(sentence, positioned)

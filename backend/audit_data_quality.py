@@ -501,10 +501,10 @@ def audit_database(fail_on_warnings=False):
         unsupported_supplier_edges = []
         if supplier_edges:
             # The sweep's own reader, run on each stored sentence (heavy import, so only here).
-            from auto_discover_edges import clean_company_name, known_company_caps, known_company_names
-            from supplier_dependence import NameIndex, supplier_statement_problem
+            from auto_discover_edges import build_supplier_index, clean_company_name
+            from supplier_dependence import supplier_statement_problem
 
-            index = NameIndex(known_company_names(session), known_company_caps(session))
+            index = build_supplier_index(session)
             unsupported_supplier_edges = [
                 edge for edge in supplier_edges if supplier_statement_problem(edge, index, clean_company_name)
             ]

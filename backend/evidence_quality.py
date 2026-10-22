@@ -401,7 +401,11 @@ def strong_aliases(node):
             aliases.append(" ".join(words[:2]))
     aliases.extend(KNOWN_ALIASES.get(str(node.ticker or "").upper(), ()))
     # The exact strings filings use for a private company ("OpenAI Global, LLC").
-    aliases.extend(normalize_for_alias_match(alias) for alias in node_aliases(node))
+    for alias in node_aliases(node):
+        aliases.append(normalize_for_alias_match(alias))
+        # The filing readers match an alias without its legal form too ("Anysphere" for "Anysphere, Inc."),
+        # so the name check must know that spelling or it holds every link the readers make.
+        aliases.append(cleaned_company_name(SimpleNamespace(name=alias, ticker=None)))
     return [alias for alias in dict.fromkeys(aliases) if len(alias) >= 2]
 
 

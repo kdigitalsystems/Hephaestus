@@ -316,10 +316,12 @@ def recheck_supplier_statements(session, counts):
     rejected = [edge for edge in rejected if str(edge.review_note or "").startswith(SUPPLIER_REJECTION_NOTE)]
     if not (live or rejected):
         return
-    from auto_discover_edges import clean_company_name, known_company_caps, known_company_names  # heavy module; import lazily
-    from supplier_dependence import NameIndex, supplier_statement_problem
+    from auto_discover_edges import build_supplier_index, clean_company_name  # heavy module; import lazily
+    from supplier_dependence import supplier_statement_problem
 
-    index = NameIndex(known_company_names(session), known_company_caps(session))
+    # The index discovery reads filings with, private companies included: a statement naming one
+    # must survive this re-read exactly as one naming a listed company does.
+    index = build_supplier_index(session)
     for edge in live:
         if not needs_human_confirmation(edge) and edge.review_status != "pending":
             continue  # a person approved it
