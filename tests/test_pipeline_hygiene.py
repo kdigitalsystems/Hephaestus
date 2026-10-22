@@ -210,6 +210,28 @@ def test_every_publishing_path_runs_the_shared_steps_in_the_same_order(path):
     assert shared == PUBLISH_ORDER, f"{path}: {shared}"
 
 
+@pytest.mark.parametrize("path", ["scripts/rebuild_db.sh", "run_pipeline.sh", ".github/workflows/gpu_pipeline.yml"])
+def test_private_companies_are_seeded_before_anything_reads_or_replays_them(path):
+    """A review decision about a private company needs its node, the market-data crawl must find the node already
+    marked private, and discovery looks the registry's names up; so seeding follows the public universe and precedes
+    all three, in every path that publishes."""
+    steps = pipeline_steps(ROOT / path)
+    assert steps.count("seed_private_companies") == 1, f"{path}: {steps}"
+    seeded = steps.index("seed_private_companies")
+    assert steps.index("seed_db") < seeded, "the public universe is seeded first"
+    for later in ("update_metrics", "auto_discover_edges", "edge_review_decisions apply", "apply_human_review", "cleanup_reviewed_edges", "export"):
+        if later in steps:
+            assert seeded < steps.index(later), f"{path}: seed_private_companies must run before {later}"
+    assert "update_metrics" in steps and "edge_review_decisions apply" in steps
+
+
+def test_the_private_company_files_ship():
+    registry = json.loads((ROOT / "data" / "private_companies.json").read_text(encoding="utf-8"))
+    edges = json.loads((ROOT / "data" / "private_seed_edges.json").read_text(encoding="utf-8"))
+    assert registry["version"] == 1 and isinstance(registry["companies"], list)
+    assert edges["version"] == 1 and isinstance(edges["edges"], list)
+
+
 def test_the_dev_rebuild_cannot_overwrite_newer_decisions_with_an_older_database():
     text = (ROOT / "scripts" / "rebuild_db.sh").read_text(encoding="utf-8")
     persist = [line.strip() for line in text.splitlines() if "edge_review_decisions.py export" in line]

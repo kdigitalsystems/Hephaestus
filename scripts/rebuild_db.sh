@@ -24,6 +24,8 @@ rm -f backend/supply_chain.db backend/supply_chain.db-wal backend/supply_chain.d
 
 python3 backend/database.py
 python3 backend/seed_db.py "${LIMIT_ARG[@]}"
+# Before the decisions are replayed below: a decision about a private company needs its node.
+python3 backend/seed_private_companies.py
 python3 backend/update_metrics.py "${LIMIT_ARG[@]}"
 python3 backend/seed_edges.py
 

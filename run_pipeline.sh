@@ -38,6 +38,11 @@ fi
 echo "Ensuring core companies are tracked..."
 python3 backend/seed_db.py "${LIMIT_ARG[@]}"
 
+# Private companies need their nodes before review decisions about them are replayed, and
+# update_metrics skips them (they have no listing to price).
+echo "Seeding private companies and their curated edges..."
+python3 backend/seed_private_companies.py
+
 echo "Updating live financial metrics..."
 python3 backend/update_metrics.py "${LIMIT_ARG[@]}"
 

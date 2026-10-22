@@ -1,9 +1,19 @@
 import argparse
 import json
 from collections import Counter
+from datetime import date
 from pathlib import Path
 
 from evidence_quality import unsupported_ai_evidence
+from private_companies import (
+    FIRST_FOUNDING_YEAR,
+    ID_PATTERN,
+    PRIVATE_MARKET_FIELDS,
+    PRIVATE_ONLY_KEYS,
+    PRIVATE_PLACEHOLDER_FIELDS,
+    http_url,
+    is_private_entry,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -75,6 +85,38 @@ def iter_companies(data):
             yield sector, company
 
 
+def private_company_problems(company):
+    """What a company entry gets wrong about being private, or about not being.
+
+    A private company has no listing, so it must carry no market data (a price next to it
+    would be invented or stale), and a public company must carry none of the private-only
+    keys (the site reads "listing" to decide what to show).
+    """
+    if not is_private_entry(company):
+        stray = [key for key in PRIVATE_ONLY_KEYS if key in company]
+        return [f"is a public company but carries private-company key(s) {stray}"] if stray else []
+    problems = []
+    if not ID_PATTERN.match(str(company.get("ticker") or "")):
+        problems.append(f"is a private company with ticker {company.get('ticker')!r}; a registry id is 6-14 capital letters or digits")
+    market = {field: company[field] for field in PRIVATE_MARKET_FIELDS if company.get(field) is not None}
+    if market:
+        problems.append(f"is a private company but carries market data {market}")
+    for field in PRIVATE_PLACEHOLDER_FIELDS:
+        if company.get(field) not in (None, "N/A"):
+            problems.append(f"is a private company but carries {field} {company[field]!r}")
+    if company.get("website") is not None and http_url(company["website"], https_only=True) is None:
+        problems.append(f"has website {company['website']!r}, which is not an https URL")
+    if company.get("hq") is not None and not isinstance(company["hq"], str):
+        problems.append("has an hq that is not text")
+    founded = company.get("founded")
+    if founded is not None and (isinstance(founded, bool) or not isinstance(founded, int) or not FIRST_FOUNDING_YEAR <= founded <= date.today().year):
+        problems.append(f"has founded {founded!r}, which is not a year")
+    aliases = company.get("aliases")
+    if aliases is not None and not (isinstance(aliases, list) and aliases and all(isinstance(alias, str) and alias for alias in aliases)):
+        problems.append("has aliases that are not a non-empty list of names (the key is omitted when there are none)")
+    return problems
+
+
 def validate_dashboard_data(data):
     errors = []
 
@@ -116,6 +158,7 @@ def validate_dashboard_data(data):
             errors.append(f"{sector}/{company.get('name', '<unknown>')} has no ticker")
         else:
             tickers.append(ticker)
+        errors.extend(f"{sector}/{ticker or company.get('name')} {problem}" for problem in private_company_problems(company))
         if company.get("industry") == BLANK_PLACEHOLDER_INDUSTRY:
             # What the repair step used to invent for a company the export had excluded.
             errors.append(f"{sector}/{ticker or company.get('name')} is a blank placeholder company with no market data of its own")
@@ -191,6 +234,7 @@ def validate_dashboard_data(data):
             for _, company in companies
             if company.get("upstream") or company.get("downstream")
         ),
+        "private_companies": sum(1 for _, company in companies if is_private_entry(company)),
     }
 
 
@@ -205,6 +249,7 @@ def main():
         f"{summary['companies']} companies, "
         f"{summary['sectors']} sectors, "
         f"{summary['linked_companies']} linked companies"
+        + (f", {summary['private_companies']} of them private" if summary["private_companies"] else "")
     )
 
 

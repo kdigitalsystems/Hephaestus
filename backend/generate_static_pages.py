@@ -16,9 +16,10 @@ import re
 from html import escape
 from pathlib import Path
 
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 from generate_change_feed import SITE_URL, write_text_atomic
+from private_companies import http_url, is_private_entry
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -134,10 +135,12 @@ def link_sources(link):
     return [(url, titles[index] if len(titles) == len(urls) else "") for index, url in enumerate(urls)]
 
 
-def render_link(link, side, known_tickers):
+def render_link(link, side, known_tickers, private_tickers=frozenset()):
     ticker = str(link.get("ticker") or "").upper()
     name = display_name(link.get("name") or ticker)
     label = f"{name} ({ticker})" if ticker else name
+    if ticker in private_tickers:
+        label = f"{name} (private)"  # its id is a registry key, not a symbol
     if ticker in known_tickers:
         heading = f'<a href="{escape(page_filename(ticker))}">{escape(label)}</a>'
     else:
@@ -192,36 +195,78 @@ def theme_bootstrap():
     )
 
 
-def render_company_page(company, generated_on, known_tickers):
+def private_profile(company, name):
+    """The "About" block of a private company's page: its description and the registry's facts.
+
+    Only what the registry holds is shown, and never a price, valuation or funding figure.
+    The website is a link only when it is an http(s) URL, and carries nofollow because the
+    page vouches for what the registry says about the company, not for the company's site.
+    """
+    items = []
+    hq = " ".join(str(company.get("hq") or "").split())
+    if hq:
+        items.append(f"<li>Headquarters: {escape(hq)}</li>")
+    founded = company.get("founded")
+    if isinstance(founded, int) and not isinstance(founded, bool):
+        items.append(f"<li>Founded: {founded}</li>")
+    website = http_url(company.get("website"))
+    if website:
+        host = (urlparse(website).hostname or website).removeprefix("www.")
+        items.append(f'<li>Website: <a href="{escape(website)}" rel="noopener noreferrer nofollow">{escape(host)}</a></li>')
+    summary = meaningful(company.get("summary"))
+    html = f"<h2>About {escape(name)}</h2>\n"
+    if summary and summary != "No summary available.":
+        html += f"<p>{escape(summary)}</p>\n"
+    if items:
+        html += f"<ul>{''.join(items)}</ul>\n"
+    html += (
+        f"<p><small>{escape(name)} is a private company: it has no stock price or market capitalisation here, and "
+        "Hephaestus does not track valuations, funding or revenue for private companies.</small></p>\n"
+    )
+    return html
+
+
+def render_company_page(company, generated_on, known_tickers, private_tickers=frozenset()):
     ticker = str(company["ticker"]).upper()
     name = display_name(company.get("name"))
+    private = is_private_entry(company)
+    # A private company's ticker is a registry id, not a symbol, so its page speaks of the name alone.
+    subject = name if private else f"{name} ({ticker})"
+    handle = name if private else ticker
     upstream = company.get("upstream") or []
     downstream = company.get("downstream") or []
     sector = meaningful(company.get("sector"))
     industry = meaningful(company.get("industry"))
     supplier_names = sentence_list(upstream[:4])
     customer_names = sentence_list(downstream[:4])
-    description_parts = [f"{name} ({ticker}) has {len(upstream)} tracked supplier{'s' if len(upstream) != 1 else ''} and {len(downstream)} tracked customer{'s' if len(downstream) != 1 else ''} in the Hephaestus supply-chain graph."]
+    counts = f"{len(upstream)} tracked supplier{'s' if len(upstream) != 1 else ''} and {len(downstream)} tracked customer{'s' if len(downstream) != 1 else ''} in the Hephaestus supply-chain graph."
+    description_parts = [f"{name} is a private company with {counts}" if private else f"{name} ({ticker}) has {counts}"]
     if supplier_names:
         description_parts.append(f"Suppliers include {supplier_names}.")
     if customer_names:
         description_parts.append(f"Customers include {customer_names}.")
     description = " ".join(description_parts)
     canonical = f"{SITE_URL}company/{page_filename(ticker)}"
-    market_cap = format_market_cap(company.get("market_cap"))
+    market_cap = None if private else format_market_cap(company.get("market_cap"))
     facts = [item for item in (
+        "Private company" if private else "",
         f"Sector: {sector}" if sector else "",
         f"Industry: {industry}" if industry else "",
         f"Market cap: {market_cap}" if market_cap else "",
     ) if item]
-    json_ld = json.dumps({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": name,
-        "tickerSymbol": ticker,
-        "url": canonical,
-        "description": description,
-    }, ensure_ascii=True)
+    if private:
+        # An Organization with no tickerSymbol: there is no exchange listing to describe.
+        structured = {"@context": "https://schema.org", "@type": "Organization", "name": name, "url": canonical, "description": description}
+        founded = company.get("founded")
+        if isinstance(founded, int) and not isinstance(founded, bool):
+            structured["foundingDate"] = str(founded)
+        if str(company.get("hq") or "").strip():
+            structured["location"] = " ".join(str(company["hq"]).split())
+        if http_url(company.get("website")):
+            structured["sameAs"] = company["website"]
+    else:
+        structured = {"@context": "https://schema.org", "@type": "Organization", "name": name, "tickerSymbol": ticker, "url": canonical, "description": description}
+    json_ld = json.dumps(structured, ensure_ascii=True)
     # json.dumps does not escape "<", so a name containing "</script>" would end the
     # JSON-LD element and the rest would be parsed as HTML.
     json_ld = json_ld.replace("<", "\\u003c")
@@ -229,16 +274,16 @@ def render_company_page(company, generated_on, known_tickers):
     def section(title, links, side, empty_text):
         if not links:
             return f"<h2>{escape(title)}</h2><p>{escape(empty_text)}</p>"
-        items = "".join(render_link(link, side, known_tickers) for link in links)
+        items = "".join(render_link(link, side, known_tickers, private_tickers) for link in links)
         return f"<h2>{escape(title)} ({len(links)})</h2><ul class=\"static-links\">{items}</ul>"
 
     return (
         "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n"
         "<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-        f"<title>{escape(name)} ({escape(ticker)}) suppliers and customers | Hephaestus</title>\n"
+        f"<title>{escape(subject)} suppliers and customers | Hephaestus</title>\n"
         f"<meta name=\"description\" content=\"{escape(description)}\">\n"
         f"<link rel=\"canonical\" href=\"{escape(canonical)}\">\n"
-        f"{social_meta(f'{name} ({ticker}) suppliers and customers', description, canonical)}"
+        f"{social_meta(f'{subject} suppliers and customers', description, canonical)}"
         f"{theme_bootstrap()}\n"
         "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Hephaestus supply-chain changes\" href=\"../feed.xml\">\n"
         f"<link rel=\"icon\" href=\"{FAVICON_HREF}\">\n"
@@ -246,15 +291,16 @@ def render_company_page(company, generated_on, known_tickers):
         f"<script src=\"../analytics.js?v={STYLESHEET_VERSION}\" defer></script>\n"
         f"<script type=\"application/ld+json\">{json_ld}</script>\n"
         "</head>\n<body>\n<main class=\"methodology-page static-company\">\n"
-        f"<a class=\"back-link\" href=\"../#company?ticker={escape(ticker)}\">&larr; Open the interactive brief for {escape(ticker)}</a>\n"
+        f"<a class=\"back-link\" href=\"../#company?ticker={escape(ticker)}\">&larr; Open the interactive brief for {escape(handle)}</a>\n"
         f"<p class=\"eyebrow\">{escape(' · '.join(facts) if facts else 'Supply-chain relationships')}</p>\n"
-        f"<h1>{escape(name)} ({escape(ticker)})</h1>\n"
+        f"<h1>{escape(subject)}</h1>\n"
         f"<p>{escape(description)} Every relationship below was extracted from public text, reviewed, and is shown with its verification label and evidence excerpt. Data as of {escape(generated_on)}.</p>\n"
+        f"{private_profile(company, name) if private else ''}"
         f"{section('Suppliers', upstream, 'upstream', f'No tracked suppliers for {name} yet.')}\n"
         f"{section('Customers', downstream, 'downstream', f'No tracked customers for {name} yet.')}\n"
         "<h2>Explore further</h2>\n<ul>\n"
-        f"<li><a href=\"../#exposure?ticker={escape(ticker)}\">Who is exposed to {escape(ticker)}</a> — dependents two hops deep</li>\n"
-        f"<li><a href=\"../#company?ticker={escape(ticker)}\">Interactive company brief</a> — market data, chart, and evidence dialogs</li>\n"
+        f"<li><a href=\"../#exposure?ticker={escape(ticker)}\">Who is exposed to {escape(handle)}</a> — dependents two hops deep</li>\n"
+        f"<li><a href=\"../#company?ticker={escape(ticker)}\">Interactive company brief</a> — {'profile and evidence dialogs' if private else 'market data, chart, and evidence dialogs'}</li>\n"
         "<li><a href=\"index.html\">All companies with tracked relationships</a></li>\n"
         "<li><a href=\"../methodology.html\">How relationships are found and verified</a></li>\n"
         "</ul>\n"
@@ -270,13 +316,15 @@ def render_index_page(companies, generated_on):
     sections = []
     for sector in sorted(by_sector):
         items = "".join(
-            f'<li><a href="{escape(page_filename(company["ticker"]))}">{escape(display_name(company.get("name")))} ({escape(str(company["ticker"]).upper())})</a>'
+            f'<li><a href="{escape(page_filename(company["ticker"]))}">{escape(display_name(company.get("name")))} ({"private" if is_private_entry(company) else escape(str(company["ticker"]).upper())})</a>'
             f" — {len(company.get('upstream') or [])} supplier{'s' if len(company.get('upstream') or []) != 1 else ''}, "
             f"{len(company.get('downstream') or [])} customer{'s' if len(company.get('downstream') or []) != 1 else ''}</li>"
             for company in sorted(by_sector[sector], key=lambda item: str(item["ticker"]).upper())
         )
         sections.append(f"<h2>{escape(sector)} ({len(by_sector[sector])})</h2><ul>{items}</ul>")
-    description = f"{len(companies)} public companies with reviewed supplier and customer relationships in the Hephaestus supply-chain graph."
+    private_count = sum(1 for company in companies if is_private_entry(company))
+    kinds = f"{len(companies)} companies ({len(companies) - private_count} public, {private_count} private)" if private_count else f"{len(companies)} public companies"
+    description = f"{kinds} with reviewed supplier and customer relationships in the Hephaestus supply-chain graph."
     return (
         "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n"
         "<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
@@ -321,13 +369,14 @@ def generate_static_pages(dashboard_path=DEFAULT_DASHBOARD_PATH, output_dir=DEFA
     generated_on = str(dashboard.get("generated_at") or "")[:10] or "unknown date"
     companies = linked_companies(dashboard)
     known_tickers = {str(company["ticker"]).upper() for company in companies}
+    private_tickers = {str(company["ticker"]).upper() for company in companies if is_private_entry(company)}
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     written = set()
     for company in companies:
         filename = page_filename(company["ticker"])
-        write_text_atomic(output_dir / filename, render_company_page(company, generated_on, known_tickers))
+        write_text_atomic(output_dir / filename, render_company_page(company, generated_on, known_tickers, private_tickers))
         written.add(filename)
     write_text_atomic(output_dir / "index.html", render_index_page(companies, generated_on))
     written.add("index.html")
