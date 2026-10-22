@@ -17,7 +17,16 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from customer_concentration import MAX_SENTENCE_LENGTH, SUPPLIER_TITLE_MARKER, disclosure_sentence, split_sentences
+from customer_concentration import (
+    DOMAIN_TAIL,
+    MAX_SENTENCE_LENGTH,
+    SUPPLIER_TITLE_MARKER,
+    disclosure_sentence,
+    lowercase_words,
+    merge_bracket_continuations,
+    private_names,
+    split_sentences,
+)
 
 FIRST_PERSON = re.compile(r"\b(?:we|our|us)\b", re.IGNORECASE)
 # What may sit between "we" and the verb: "we currently rely", "we are required to buy",
@@ -31,6 +40,8 @@ SKIP_SENTENCE = re.compile(
     r"\b(?:do|does|did)\s+not\s+(?:\w+\s+)?(?:rely|depend)|\bnot\s+(?:\w+ly\s+)?(?:be\s+)?(?:dependent|reliant)\b"
     r"|\bno\s+(?:single|one|individual)\s+(?:supplier|source|vendor|manufacturer)\b|\bnone\s+of\s+our\s+(?:suppliers|vendors)\b"
     r"|\bno\s+longer\b|\bpreviously\b|\bformerly\b|\bceased\b|\btransition(?:ed|ing)?\s+away\s+from\b"
+    # A supplier that is only imagined: "the services provided by a replacement for Stripe or PayPal may not meet our expectations".
+    r"|\b(?:replacements?|substitutes?|successors?)\s+(?:for|of)\b|\balternatives?\s+to\b|\bswitch(?:ed|ing)?\s+(?:away\s+)?from\b"
     r"|\bmultiple\s+(?:sources|suppliers)\b|\balternative\s+(?:sources|suppliers)\s+(?:are|is)\s+(?:readily\s+)?available\b"
     # The stock-performance graph: "Underlying data provided by Nasdaq Global Indexes".
     r"|\bstock\s+performance\b|\btotal\s+(?:shareholder|stockholder)\s+return\b|\bcumulative\s+(?:total\s+)?return\b"
@@ -43,23 +54,32 @@ SKIP_SENTENCE = re.compile(
     # platforms manufactured by third parties, such as Sony's PlayStation".
     r"|\bderive[sd]?\s+(?:\w+\s+){0,4}?(?:revenues?|sales)\b|\b(?:portion|percent|%)\s+of\s+our\s+(?:net\s+|total\s+)?(?:revenues?|sales)\b"
     # The auditor is not a supplier: "services provided by CBIZ CPAs P.C. and Marcum LLP".
-    r"|\b(?:independent\s+registered\s+public\s+accounting|accounting\s+firm|audit\s+(?:committee|services|fees)|auditors?)\b"
+    r"|\b(?:independent\s+registered\s+public\s+accounting|accounting\s+firm|accountants?|PCAOB|audit(?:s|ed|ing|ors?)?)\b"
     # A source cited for a market size, not a supplier: "forecasts provided by Gartner".
     r"|\bmarket\s+(?:sizing|intelligence)\b|\bindustry\s+(?:publications|reports|surveys)\b|\bthird-party\s+sources\b"
     r"|\bderived\s+(?:and\s+extrapolated\s+)?from\b|\bestimates\s+and\s+forecasts\b"
     # Money in, not goods: financings, the parent's cash, loans and floor-plan lenders.
     r"|\b(?:gross|net)\s+proceeds\b|\bcompleted\s+a\s+(?:\w+\s+)?financing\b|\bprivate\s+placement\b|\bsources?\s+of\s+(?:funds?|funding|cash|liquidity)\b"
     r"|\bcredit\s+(?:agreements?|facilit(?:y|ies))\b|\brevolving\b|\bfloor\s*plan\b|\bmortgage\b|\bloans?\b"
+    # The bank that sells the filer's shares or advises it is not a supplier: "the decision to engage Guggenheim
+    # Securities, LLC to sell the Company's Class A Common Stock under at-the-market equity program".
+    r"|\bat[-\s]the[-\s]market\b|\bequity\s+(?:offerings?|distribution|program)\b|\bunderwrit\w+|\bplacement\s+agents?\b|\bsales\s+agents?\b|\bfinancial\s+advis\w+|\binvestment\s+banks?\b"
     # Legal paperwork: "The Tax Opinion relied on certain facts, representations ... from us and Crane Company".
     r"|\btax\s+opinion\b|\blegal\s+opinion\b|\brepresentations\s+(?:and|or)\s+(?:warranties|undertakings)\b"
     # Rivals' products, and what the filer's own product is built to work with.
-    r"|\bcompete\b[^.;]{0,60}\bagainst\b|\bcompete\s+with\b|\bsources?\s+of\s+competition\b|\badvantages\s+over\b"
+    r"|\bcompete\b[^.;]{0,60}\bagainst\b|\bcompete\s+with\b|\bsources?\s+of\s+competition\b|\badvantages\s+over\b|\bcompetition\s+from\b"
     r"|\bdesigned\s+to\s+(?:support|work\s+with|be\s+compatible)\b|\bcompatible\s+with\b"
     # Courts, tax rulings and pay consultants: "relying on the reasoning in Amgen", "the IRS Ruling relied on
     # representations from us and MasterBrand", "the compensation analysis provided by Meridian".
     r"|\bindemnit\w+|\bthe\s+competition\b|\bindebtedness\b|\bscheduled\s+payments\b|\bdebt\s+service\b|\bletter\s+ruling\b|\bIRS\b|\btax\s+(?:counsel|advisors?)\b|\bfacts,\s+assumptions\b|\bcourt\s+decisions?\b|\bprecedential\b"
-    r"|\bPFIC\b|\bcompensation\s+(?:committee|analysis|consultant)\b|\bnamed\s+executive\s+officers\b"
+    r"|\bPFIC\b|\bcompensation\s+(?:committee|analysis|consultants?|arrangements?|decisions?|programs?|plans?|packages?|practices|philosophy)\b|\bnamed\s+executive\s+officers\b"
     r"|\bcommercially\s+available\b|\bside\s+effects\b"
+    # Data a trustee or an insurer supplies for the filer's reports and cover is not goods: "costs provided by Argent
+    # Trust Company", "insurance provided by Nuclear Electric Insurance Limited".
+    r"|\bestimated\s+using\b|\binsurance\s+(?:provided|issued|underwritten)\s+by\b"
+    # A source cited, and the audit committee's approvals: "according to Bloomberg ...", "All services provided by Deloitte
+    # for our fiscal year ended December 31, 2025 were approved by our Board".
+    r"|\baccording\s+to\s+(?-i:[A-Z])|\bapproved\s+by\s+(?:our|the)\s+(?:board|committee|audit)\b|\bpre-?approv\w+"
     # The filer is the supplier: "We are a primary supplier of driveline components to GM",
     # "TSMC designates us as its preferred provider", "we receive a 15% royalty".
     r"|\bwe\s+(?:are|were|serve\s+as)\s+(?:a|an|the)\s+(?:\w+\s+){0,2}?(?:supplier|provider|manufacturer|vendor|source)\b"
@@ -76,6 +96,10 @@ SKIP_SENTENCE = re.compile(
     r"|\bcontinue\s+as\s+(?:a|an|the)?\s*(?:\w+\s+)?(?:supplier|provider|manufacturer)\b"
     # What the filer sells on someone's platform: "We offer our QCaaS on public clouds provided by AWS".
     r"|\boffer(?:s|ed)?\b[^.;]{0,60}\bon\s+(?:\w+\s+){0,2}?(?:clouds?|marketplaces?)\b"
+    # The same, said the other way round: "We rely on third-party platforms, such as Steam and the Epic Games Store, to
+    # distribute our games and collect revenues".
+    r"|\bto\s+(?:distribute|sell|market)\s+(?:\w+\s+){0,3}?(?:our|the\s+company\u2019?s)\s+(?:\w+\s+){0,2}?(?:games?|products?|apps?|applications?|content|titles)\b"
+    r"|\bfor\s+the\s+(?:sale|distribution|marketing)\b[^.;]{0,40}?\bof\s+(?:\w+\s+){0,5}?(?:games?|products?|content|apps?|applications?|titles)\b"
     r"|\(located\s+in\s+[A-Z]|\bterms\s+of\s+use\b|\bupdates?\s+provided\s+by\b|\bwith\s+which\s+we\s+partner\b|\bearlier\b",
     re.IGNORECASE,
 )
@@ -121,7 +145,7 @@ NOT_A_SUPPLIER = re.compile(
     r"users?|subscribers?|members?|sales|revenues?|markets?|ability|abilities|employees?|personnel|management|officers?|"
     r"founders?|safe\s+harbors?|laws?|regulations?|acquisitions?|financing|capital|liquidity|tenants?|lessees?|"
     r"franchisees?|borrowers?|lenders?|underwriters?|collaborat\w*|co-?promot\w*|joint\s+ventures?|partnerships?|approvals?|"
-    r"success|efforts?|performance|reputation|brands?|(?:delivery|distribution)\s+platforms?|storefronts?|app\s+stores?|marketplaces?|"
+    r"success|efforts?|performance|reputation|brands?|consents?|permissions?|(?:delivery|distribution)\s+platforms?|storefronts?|app\s+stores?|marketplaces?|"
     # Sales and marketing channels: "social media platforms such as Instagram and Pinterest",
     # "third-party ecommerce platforms, such as Amazon", "visits from Pinterest".
     r"search\s+engines?|social\s+media|e-?commerce|visits|traffic|marketing|sell(?:s|ing)?|"
@@ -129,7 +153,9 @@ NOT_A_SUPPLIER = re.compile(
     r"funding|funds|cash|proceeds|dividends?|involvement|compliance|obligations?|"
     # Customers that go by other names, investors, and things that are not companies.
     r"merchants|investors?|reasoning|actions?|decisions?|application\s+of|authorit\w+|agenc\w+|distributions?|our\s+(?:wholly[\s-]owned\s+)?subsidiar\w+|"
-    r"commerciali[sz]\w*)\b",
+    r"commerciali[sz]\w*|"
+    # What the filer sends to the name: "doré bars, which are delivered to Rand Refinery".
+    r"(?:delivered|sold|shipped|sent|exported|distributed)\s+to)\b",
     re.IGNORECASE,
 )
 # "depends partially on Microsoft designing its operating systems to run on our
@@ -253,7 +279,6 @@ SENTENCE_STARTERS = {
 NUMBER = re.compile(r"(?<![A-Za-z])\d[\d,.]*(?![A-Za-z])")
 TABLE_NUMBERS = 10
 TOKEN = re.compile(r"[A-Za-z0-9&]+")
-URL_OR_ADDRESS = re.compile(r"\S*[./@]\S*")
 
 
 def normalize(text):
@@ -292,15 +317,6 @@ def defined_acronyms(text):
                 found.setdefault(acronym.upper(), " ".join(suffix).lower())
                 break
     return found
-
-
-def lowercase_words(text):
-    """Words the document uses in lower case: common nouns, not company names.
-
-    Web and email addresses are dropped first, or "investor.nvidia.com" would make
-    "nvidia" look like an ordinary word.
-    """
-    return set(re.findall(r"(?<![A-Za-z0-9&])[a-z][a-z0-9&]*", URL_OR_ADDRESS.sub(" ", str(text or ""))))
 
 
 # A warrant, a preferred line or a right is a security of a company, not a company: the
@@ -346,9 +362,20 @@ class NameIndex:
     Only whole names count; a first word alone ("Korea", "Research", "Enterprise") names
     a place or a common noun far more often than the company, and a name two listed
     companies share ("Toro") names neither.
+
+    Private companies (OpenAI, Anthropic, Stripe: a node with no listing and no market cap) are
+    indexed too, under the names and aliases the registry gives them. The market-cap guard below
+    has nothing to say about them, so they are held to the registry's own spelling instead: the
+    sentence must write the name exactly as the registry does ("xAI", not "Xai"; "stripe" and
+    "plaid" are never read), capitals only for a name long enough to be no acronym, and a name a
+    listed company also carries is the listed company's.
     """
 
     MAX_WORDS = 8
+    # Punctuation that cannot sit inside one name: "Together, AI will ..." is two phrases.
+    NAME_GAP = re.compile(r"[ \t\-&./\u2019']*")
+    SHORT_CAPITALS = 6  # an all-capitals spelling of a private name needs this many letters
+    SHORT_ACRONYM = 4  # a private name registered in capitals this short is an acronym unless a legal form follows
 
     def __init__(self, known_names, market_caps=None):
         """`market_caps` maps a display name to its market cap; it lets a short all-caps
@@ -358,6 +385,7 @@ class NameIndex:
         by_key, self.spelling, self.cap, owners = {}, {}, {}, {}
         self.aliases = {tuple(alias.split()) for alias in SUPPLIER_ALIASES}
         market_caps = market_caps or {}
+        private = private_names(known_names)
 
         def add(key, display, cleaned, cap):
             by_key.setdefault(key, display)
@@ -366,6 +394,8 @@ class NameIndex:
             owners.setdefault(key, set()).add(company_key(display))
 
         for display, cleaned in known_names.items():
+            if display in private:
+                continue
             key = tuple(normalize(cleaned).split())
             if key:
                 add(key, display, cleaned, market_caps.get(display) or 0)
@@ -388,6 +418,39 @@ class NameIndex:
             if display:
                 self.index.setdefault(tuple(alias.split()), display)
                 self.company_words[tuple(alias.split())] = set(company) | set(normalize(display).split())
+        self.private_forms = {}
+        self.add_private_names(known_names, private, by_key)
+
+    def add_private_names(self, known_names, private, public_keys):
+        """Index each private company under its cleaned name, its display name and its aliases.
+
+        A key the listed companies hold (or two private companies share) is left out, so a private
+        alias can neither take a listed company's name nor make one ambiguous."""
+        claimed = {}
+        for display in sorted(private):
+            if display not in known_names:
+                continue
+            spellings = [known_names[display], display, *getattr(known_names, "aliases", {}).get(display, ())]
+            for spelling in spellings:
+                words = tuple(TOKEN.findall(str(spelling or "")))
+                lowered = tuple(word.lower() for word in words)
+                for cut in {len(words), len(without_legal_suffix(lowered))}:
+                    if not cut:
+                        continue
+                    key, form = lowered[:cut], words[:cut]
+                    claimed.setdefault(key, {}).setdefault(display, set()).add(form)
+        for key, holders in claimed.items():
+            if (
+                len(holders) != 1  # two private companies share the name
+                or key in public_keys or key in self.index or key in self.aliases  # a listed company has it
+                or sum(len(word) for word in key) < 3
+                or (len(key) == 1 and key[0] in UNSAFE_SINGLE_WORDS)
+            ):
+                continue
+            (display, forms), = holders.items()
+            self.index[key] = display
+            self.company_words[key] = set(key)
+            self.private_forms[key] = forms
 
     def find(self, sentence, common_words=frozenset(), defined=None):
         """(start, end, display name) for each company named, longest name first.
@@ -397,12 +460,18 @@ class NameIndex:
         maps acronyms the document defines to their expansions (see defined_acronyms).
         """
         tokens = [(match.group(0), match.start(), match.end()) for match in TOKEN.finditer(sentence)]
-        found, i = [], 0
+        found, i, web_addresses = [], 0, set()
         while i < len(tokens):
             for length in range(min(self.MAX_WORDS, len(tokens) - i), 0, -1):
                 key = tuple(token.lower() for token, _, _ in tokens[i:i + length])
                 display = self.index.get(key)
-                if not display or not (tokens[i][0][0].isupper() or tokens[i][0][0].isdigit()):
+                if not display:
+                    continue
+                forms = self.private_forms.get(key)
+                if forms is not None:
+                    if not self.private_spelling(sentence, tokens[i:i + length], forms):
+                        continue  # "stripe", "Xai": not the way the registry writes the company
+                elif not (tokens[i][0][0].isupper() or tokens[i][0][0].isdigit()):
                     continue  # a proper noun: "Micron", not "micron-scale"
                 end = tokens[i + length - 1][2]
                 if tokens[i][1] and sentence[tokens[i][1] - 1] == "-":
@@ -410,20 +479,37 @@ class NameIndex:
                 if tokens[i][0].isdigit() and self.after_a_label(sentence, tokens, i):
                     continue  # "Tier 1 automotive": a grade or a part number, not "1 Automotive"
                 tail = sentence[end:]
-                if (length == 1 and PRODUCT_CODE_TAIL.match(tail)) or PART_NUMBER_TAIL.match(tail):
-                    continue  # a product code: "ATI-052", "Lucid-MS" are drugs, not ATI Inc. or Lucid; "F-36"
-                if length > 1 and not self.written_as_a_name(tokens[i:i + length], key):
+                if ((length == 1 or forms is not None) and PRODUCT_CODE_TAIL.match(tail)) or PART_NUMBER_TAIL.match(tail):
+                    continue  # a product code: "ATI-052", "Lucid-MS" are drugs, not ATI Inc. or Lucid; "F-36"; "OpenAI-compatible"
+                if forms is not None and DOMAIN_TAIL.match(tail):
+                    web_addresses.add(display)  # "Lucyd.co", "stripe.com": the sentence is about a web address
+                    continue
+                if forms is None and length > 1 and not self.written_as_a_name(tokens[i:i + length], key):
                     continue  # "Commercial vehicle ADAS" is not the company "Commercial Vehicle Group"
                 if self.other_acronym(tokens[i][0], key, defined):
                     continue  # the filing says "AMD" is a disease, "IDT" a DNA firm
-                if length == 1 and not self.single_word_name(sentence, tokens, i, common_words):
+                if length == 1 and not self.single_word_name(sentence, tokens, i, common_words, private=forms is not None):
                     continue
                 found.append((tokens[i][1], end, display))
                 i += length
                 break
             else:
                 i += 1
-        return found
+        return [item for item in found if item[2] not in web_addresses]
+
+    def private_spelling(self, sentence, tokens, forms):
+        """The words are written as the registry writes this private company: its spelling
+        exactly, or in capitals when the name has letters enough to be no acronym; and as one
+        phrase, not two clauses ("Together, AI ...")."""
+        surface = tuple(token for token, _, _ in tokens)
+        for (_, _, previous_end), (_, next_start, _) in zip(tokens, tokens[1:]):
+            if not self.NAME_GAP.fullmatch(sentence[previous_end:next_start]):
+                return False
+        if surface in forms:
+            return True
+        return sum(len(word) for word in surface) >= self.SHORT_CAPITALS and any(
+            surface == tuple(word.upper() for word in form) for form in forms
+        )
 
     @staticmethod
     def after_a_label(sentence, tokens, i):
@@ -459,7 +545,7 @@ class NameIndex:
         expansion = defined.get(word.upper()) if defined and word.isalnum() else None
         return bool(expansion) and not (set(expansion.split()) & self.company_words.get(key, set()))
 
-    def single_word_name(self, sentence, tokens, i, common_words):
+    def single_word_name(self, sentence, tokens, i, common_words, private=False):
         word = tokens[i][0]
         key = (word.lower(),)
         if key in self.aliases:
@@ -472,6 +558,15 @@ class NameIndex:
             return following.lower() in CORPORATE_WORDS  # "111, Inc.", not "111 million"
         if word.lower() in CALENDAR_WORDS and not word.isupper():
             return False
+        if private:
+            # The spelling was checked against the registry's; there is no market cap to weigh. A very
+            # short name in capitals is an acronym ("SSI") unless a legal form follows, as for a listed
+            # company, and a name followed by a comma and another name is a list ("OpenAI, Anthropic and
+            # Perplexity"), not a longer proper noun.
+            if word.isupper() and len(word) <= self.SHORT_ACRONYM and following.lower() not in LEGAL_FORMS:
+                return False
+            gap = sentence[tokens[i][2]:tokens[i + 1][1]] if i + 1 < len(tokens) else ""
+            return self.stands_alone(sentence, tokens, i, following if not gap.strip() else "")
         spelling = self.spelling.get(key, word)
         # The company's own spelling, or capitals, or a long brand in camel case ("SportRadar",
         # "NeuroPace"); the listing may itself be in capitals ("ABBVIE INC."). A short word
@@ -491,6 +586,10 @@ class NameIndex:
                     return False
             elif len(word) <= 3 or self.cap.get(key, 0) < ACRONYM_MIXED_MIN_MARKET_CAP:
                 return False  # "API" for APi Group, "OPERA" for Opera: capitals of a mixed-case name need a big company
+        return self.stands_alone(sentence, tokens, i, following)
+
+    def stands_alone(self, sentence, tokens, i, following):
+        """Nothing capitalised leads into the name or follows it as part of a longer name."""
         # A capitalised word right before the name makes it part of a product or brand:
         # "MiniMed Flex pumps", "launch vehicle VMS Eve". A comma or "and" in between
         # ("Huawei, Ericsson") does not.
@@ -568,7 +667,8 @@ def extract_supplier_dependencies(text, index, filer_names=()):
     common_words = lowercase_words(text)
     defined = defined_acronyms(text)
     results, seen = [], set()
-    for sentence in split_sentences(text):
+    # "Acme Inc. (“Acme”), is our single source" is one sentence, not two.
+    for sentence in merge_bracket_continuations(split_sentences(text)):
         if len(sentence) > MAX_SENTENCE_LENGTH or not FIRST_PERSON.search(sentence):
             continue
         if len(NUMBER.findall(sentence)) >= TABLE_NUMBERS:

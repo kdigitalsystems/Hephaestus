@@ -1,0 +1,3090 @@
+{
+ "about": "Private companies (OpenAI, Stripe, Catalent ...) named in real SEC annual reports, read by hand. links: every link the filing readers produced for a scratch registry of private companies over 1,150 annual reports (the sentence is quoted from the filing; label right = the sentence makes the private company the filer's supplier, or its customer with the stated share, wrong = it does not, doubtful = plausible but not settled by the sentence). near_misses: sentences that name a private company and must not produce a link (competitor lists, investments, auditors, pay consultants, underwriters, hypotheticals, sales channels, vendor-concentration figures). known_misses: true statements the readers do not read yet (recall). set: tuning = the filings the rules were tuned on (so a ceiling), cold = filings read before any rule was written for them. The registry is a scratch registry for the evaluation, not the real one.",
+ "minimum_right": 71,
+ "minimum_near_misses": 42,
+ "registry": [
+  {
+   "id": "OPENAI",
+   "name": "OpenAI",
+   "aliases": [
+    "OpenAI, Inc.",
+    "OpenAI Global, LLC",
+    "OpenAI OpCo, LLC",
+    "OpenAI Group PBC"
+   ]
+  },
+  {
+   "id": "ANTHROPIC",
+   "name": "Anthropic",
+   "aliases": [
+    "Anthropic, PBC",
+    "Anthropic PBC"
+   ]
+  },
+  {
+   "id": "XAICORP",
+   "name": "xAI",
+   "aliases": [
+    "xAI Corp.",
+    "X.AI Corp.",
+    "xAI Holdings"
+   ]
+  },
+  {
+   "id": "DATABRICKS",
+   "name": "Databricks",
+   "aliases": [
+    "Databricks, Inc."
+   ]
+  },
+  {
+   "id": "STRIPE",
+   "name": "Stripe",
+   "aliases": [
+    "Stripe, Inc."
+   ]
+  },
+  {
+   "id": "PERPLEXITY",
+   "name": "Perplexity",
+   "aliases": [
+    "Perplexity AI",
+    "Perplexity AI, Inc."
+   ]
+  },
+  {
+   "id": "ANDURIL",
+   "name": "Anduril",
+   "aliases": [
+    "Anduril Industries",
+    "Anduril Industries, Inc."
+   ]
+  },
+  {
+   "id": "CRUSOE",
+   "name": "Crusoe",
+   "aliases": [
+    "Crusoe Energy Systems",
+    "Crusoe Cloud"
+   ]
+  },
+  {
+   "id": "EPICGAMES",
+   "name": "Epic Games",
+   "aliases": [
+    "Epic Games, Inc."
+   ]
+  },
+  {
+   "id": "CANVA",
+   "name": "Canva",
+   "aliases": [
+    "Canva Pty Ltd"
+   ]
+  },
+  {
+   "id": "FANATICS",
+   "name": "Fanatics",
+   "aliases": [
+    "Fanatics, Inc.",
+    "Fanatics Holdings, Inc.",
+    "Fanatics Commerce"
+   ]
+  },
+  {
+   "id": "BYTEDANCE",
+   "name": "ByteDance",
+   "aliases": [
+    "ByteDance Ltd.",
+    "ByteDance Ltd"
+   ]
+  },
+  {
+   "id": "FIGUREAI",
+   "name": "Figure AI",
+   "aliases": [
+    "Figure AI, Inc."
+   ]
+  },
+  {
+   "id": "SPACEX",
+   "name": "SpaceX",
+   "aliases": [
+    "Space Exploration Technologies Corp."
+   ]
+  },
+  {
+   "id": "CARGILL",
+   "name": "Cargill",
+   "aliases": [
+    "Cargill, Incorporated",
+    "Cargill Incorporated"
+   ]
+  },
+  {
+   "id": "ALDIINC",
+   "name": "Aldi",
+   "aliases": [
+    "ALDI Inc.",
+    "ALDI"
+   ]
+  },
+  {
+   "id": "EPICSYSTEMS",
+   "name": "Epic Systems",
+   "aliases": [
+    "Epic Systems Corporation"
+   ]
+  },
+  {
+   "id": "STAPLESINC",
+   "name": "Staples",
+   "aliases": [
+    "Staples, Inc."
+   ]
+  },
+  {
+   "id": "CHICKFILA",
+   "name": "Chick-fil-A",
+   "aliases": [
+    "Chick-fil-A, Inc."
+   ]
+  },
+  {
+   "id": "DELOITTE",
+   "name": "Deloitte",
+   "aliases": [
+    "Deloitte & Touche LLP"
+   ]
+  },
+  {
+   "id": "KPMGLLP",
+   "name": "KPMG",
+   "aliases": [
+    "KPMG LLP"
+   ]
+  },
+  {
+   "id": "ERNSTYOUNG",
+   "name": "Ernst & Young",
+   "aliases": [
+    "Ernst & Young LLP"
+   ]
+  },
+  {
+   "id": "FIDELITY",
+   "name": "Fidelity",
+   "aliases": [
+    "Fidelity Investments"
+   ]
+  },
+  {
+   "id": "BLOOMBERG",
+   "name": "Bloomberg",
+   "aliases": [
+    "Bloomberg L.P."
+   ]
+  },
+  {
+   "id": "BITMAIN",
+   "name": "Bitmain",
+   "aliases": [
+    "Bitmain Technologies Delaware Limited",
+    "Bitmain Technologies Limited"
+   ]
+  },
+  {
+   "id": "CHEMSPEC",
+   "name": "ChemSpec",
+   "aliases": [
+    "ChemSpec USA, LLC"
+   ]
+  },
+  {
+   "id": "LIEBFOODS",
+   "name": "Lieb Foods",
+   "aliases": [
+    "Lieb Foods, LLC"
+   ]
+  },
+  {
+   "id": "PORTLANDBOTTLING",
+   "name": "Portland Bottling",
+   "aliases": [
+    "Portland Bottling Co"
+   ]
+  },
+  {
+   "id": "LUMINANTET",
+   "name": "Luminant",
+   "aliases": [
+    "Luminant ET Services Company LLC"
+   ]
+  },
+  {
+   "id": "CONFLUENTMEDICAL",
+   "name": "Confluent Medical Technologies",
+   "aliases": [
+    "Confluent Medical Technologies, Inc."
+   ]
+  },
+  {
+   "id": "ACUITAS",
+   "name": "Acuitas Therapeutics",
+   "aliases": [
+    "Acuitas Therapeutics Inc."
+   ]
+  },
+  {
+   "id": "CELLSCRIPT",
+   "name": "CellScript",
+   "aliases": [
+    "CellScript LLC"
+   ]
+  },
+  {
+   "id": "MRNARIBO",
+   "name": "mRNA RiboTherapeutics",
+   "aliases": [
+    "mRNA RiboTherapeutics, Inc."
+   ]
+  },
+  {
+   "id": "YOUFEISHUKE",
+   "name": "Tianjin Youfei Shuke Technology",
+   "aliases": [
+    "Tianjin Youfei Shuke Technology Group"
+   ]
+  },
+  {
+   "id": "TEMELECTRONICS",
+   "name": "TEM Electronics",
+   "aliases": [
+    "TEM Electronics (Jiangmen) Co Ltd"
+   ]
+  },
+  {
+   "id": "LPWELECTRONICS",
+   "name": "LPW Electronics",
+   "aliases": [
+    "LPW Electronics Co Ltd"
+   ]
+  },
+  {
+   "id": "BAPTRADING",
+   "name": "BAP Trading",
+   "aliases": [
+    "BAP Trading Co Ltd"
+   ]
+  },
+  {
+   "id": "SUGARHOUSE",
+   "name": "Sugar House HSP Gaming",
+   "aliases": [
+    "Sugar House HSP Gaming, LP"
+   ]
+  },
+  {
+   "id": "RIVERSIP",
+   "name": "Rivers IP Holdings",
+   "aliases": [
+    "Rivers IP Holdings, LLC"
+   ]
+  },
+  {
+   "id": "THERMOTEK",
+   "name": "Thermotek",
+   "aliases": [
+    "Thermotek, Inc."
+   ]
+  },
+  {
+   "id": "BIOSIONUSA",
+   "name": "Biosion",
+   "aliases": [
+    "Biosion USA, Inc."
+   ]
+  },
+  {
+   "id": "NANJINGANJI",
+   "name": "Nanjing Anji Biotechnology",
+   "aliases": [
+    "Nanjing Anji Biotechnology Co., Ltd."
+   ]
+  },
+  {
+   "id": "GROUPLOTUS",
+   "name": "Group Lotus",
+   "aliases": [
+    "Group Lotus Limited"
+   ]
+  },
+  {
+   "id": "VIRGINENT",
+   "name": "Virgin Enterprises",
+   "aliases": [
+    "Virgin Enterprises Limited"
+   ]
+  },
+  {
+   "id": "GUGGENHEIMSEC",
+   "name": "Guggenheim Securities",
+   "aliases": [
+    "Guggenheim Securities, LLC"
+   ]
+  },
+  {
+   "id": "BELLERIVE",
+   "name": "Bellerive Trust",
+   "aliases": [
+    "Bellerive Trust Limited"
+   ]
+  },
+  {
+   "id": "COMPENSIA",
+   "name": "Compensia",
+   "aliases": [
+    "Compensia, Inc."
+   ]
+  },
+  {
+   "id": "CATALENT",
+   "name": "Catalent",
+   "aliases": [
+    "Catalent Pharma Solutions, Inc."
+   ]
+  },
+  {
+   "id": "VETTER",
+   "name": "Vetter Pharma",
+   "aliases": [
+    "Vetter Pharma-Fertigung GmbH & Co. KG"
+   ]
+  },
+  {
+   "id": "BVIELECTRICITY",
+   "name": "BVI Electricity Corporation",
+   "aliases": []
+  },
+  {
+   "id": "VIROVEK",
+   "name": "Virovek",
+   "aliases": [
+    "Virovek, Inc."
+   ]
+  },
+  {
+   "id": "TAIWANPOWER",
+   "name": "Taiwan Power Company",
+   "aliases": []
+  },
+  {
+   "id": "SPHAERAPHARMA",
+   "name": "Sphaera Pharma",
+   "aliases": [
+    "Sphaera Pharmaceutical Private Limited",
+    "Sphaera Pharma Pte Ltd"
+   ]
+  },
+  {
+   "id": "RANDREFINERY",
+   "name": "Rand Refinery",
+   "aliases": [
+    "Rand Refinery Proprietary Limited"
+   ]
+  },
+  {
+   "id": "PULMOKINE",
+   "name": "Pulmokine",
+   "aliases": [
+    "Pulmokine, Inc."
+   ]
+  },
+  {
+   "id": "NOVOHOLDINGS",
+   "name": "Novo Holdings",
+   "aliases": [
+    "Novo Holdings A/S"
+   ]
+  },
+  {
+   "id": "MEDICALMURRAY",
+   "name": "Medical Murray",
+   "aliases": [
+    "Medical Murray, Inc."
+   ]
+  },
+  {
+   "id": "MCGRATHTONNER",
+   "name": "McGrath Tonner Corporate Services",
+   "aliases": [
+    "McGrath Tonner Corporate Services Limited"
+   ]
+  },
+  {
+   "id": "MANUNOR",
+   "name": "Manunor",
+   "aliases": [
+    "Manunor Inc"
+   ]
+  },
+  {
+   "id": "LUCYDLTD",
+   "name": "Lucyd",
+   "aliases": [
+    "Lucyd Ltd."
+   ]
+  },
+  {
+   "id": "BAHAMASPOWER",
+   "name": "Bahamas Power and Light",
+   "aliases": [
+    "Bahamas Power and Light Company"
+   ]
+  },
+  {
+   "id": "LAIZHOUSHENGFU",
+   "name": "Laizhou Shengfu Chemical",
+   "aliases": [
+    "Laizhou Shengfu Chemical Company Limited"
+   ]
+  },
+  {
+   "id": "WEIFANGWANHONG",
+   "name": "Weifang Wanhong Chemical",
+   "aliases": [
+    "Weifang Wanhong Chemical Company Limited"
+   ]
+  },
+  {
+   "id": "JUNIPERTECH",
+   "name": "Juniper Technologies",
+   "aliases": [
+    "Juniper Technologies Corporation"
+   ]
+  },
+  {
+   "id": "ISOTOPIA",
+   "name": "Isotopia Molecular Imaging",
+   "aliases": [
+    "Isotopia Molecular Imaging Ltd."
+   ]
+  },
+  {
+   "id": "IGLPHARMA",
+   "name": "IGL Pharma",
+   "aliases": [
+    "IGL Pharma, Inc"
+   ]
+  },
+  {
+   "id": "FULLYSTARISE",
+   "name": "Fully Starise",
+   "aliases": [
+    "Fully Starise Limited"
+   ]
+  },
+  {
+   "id": "EUREKATHERA",
+   "name": "Eureka Therapeutics",
+   "aliases": [
+    "Eureka Therapeutics, Inc."
+   ]
+  },
+  {
+   "id": "DEPCLCORP",
+   "name": "Depcl",
+   "aliases": [
+    "Depcl Corp."
+   ]
+  },
+  {
+   "id": "CONSOLIDATEDELEC",
+   "name": "Consolidated Electrical Distributors",
+   "aliases": [
+    "Consolidated Electrical Distributors, Inc."
+   ]
+  },
+  {
+   "id": "CIRCLEMEDIA",
+   "name": "Circle Media Labs",
+   "aliases": [
+    "Circle Media Labs, Inc."
+   ]
+  },
+  {
+   "id": "CENEXI",
+   "name": "Cenexi-Laboratories Thissen",
+   "aliases": [
+    "Cenexi-Laboratories Thissen s.a."
+   ]
+  },
+  {
+   "id": "ARGENTTRUST",
+   "name": "Argent Trust Company",
+   "aliases": []
+  },
+  {
+   "id": "AGGIAFZ",
+   "name": "Aggia",
+   "aliases": [
+    "Aggia LLC FZ"
+   ]
+  },
+  {
+   "id": "ANAZAOHEALTH",
+   "name": "AnazaoHealth",
+   "aliases": [
+    "AnazaoHealth Corporation"
+   ]
+  },
+  {
+   "id": "RIGHTVALUEDRUG",
+   "name": "Right Value Drug Stores",
+   "aliases": [
+    "Right Value Drug Stores, LLC"
+   ]
+  },
+  {
+   "id": "XIAMENINNOLABS",
+   "name": "Xiamen Innolabs Technology",
+   "aliases": [
+    "Xiamen Innolabs Technology Co., Ltd"
+   ]
+  },
+  {
+   "id": "NUCLEARELECTRIC",
+   "name": "Nuclear Electric Insurance Limited",
+   "aliases": []
+  }
+ ],
+ "universe": [
+  {
+   "name": "Accenture PLC",
+   "ticker": "ACN",
+   "market_cap": 147025199104.0
+  },
+  {
+   "name": "Aclaris Therapeutics, Inc. Common Stock",
+   "ticker": "ACRS",
+   "market_cap": 560827776.0
+  },
+  {
+   "name": "Advanced Micro Devices, Inc. Common Stock",
+   "ticker": "AMD",
+   "market_cap": 902301548544.0
+  },
+  {
+   "name": "Amphastar Pharmaceuticals, Inc. Common Stock",
+   "ticker": "AMPH",
+   "market_cap": 1114494208.0
+  },
+  {
+   "name": "Amazon.com, Inc. Common Stock",
+   "ticker": "AMZN",
+   "market_cap": 2830004912128.0
+  },
+  {
+   "name": "Asana, Inc. Class A Common Stock",
+   "ticker": "ASAN",
+   "market_cap": 2534699008.0
+  },
+  {
+   "name": "Astrotech Corporation (DE) Common Stock",
+   "ticker": "ASTC",
+   "market_cap": 10671373.0
+  },
+  {
+   "name": "Aether Holdings, Inc. Common Stock",
+   "ticker": "ATHR",
+   "market_cap": 30839908.0
+  },
+  {
+   "name": "Aurinia Pharmaceuticals Inc Ordinary Shares",
+   "ticker": "AUPH",
+   "market_cap": 2248564736.0
+  },
+  {
+   "name": "AeroVironment, Inc. Common Stock",
+   "ticker": "AVAV",
+   "market_cap": 5971940864.0
+  },
+  {
+   "name": "Boeing Company",
+   "ticker": "BA",
+   "market_cap": 151972347904.0
+  },
+  {
+   "name": "Backblaze, Inc. Class A Common Stock",
+   "ticker": "BLZE",
+   "market_cap": 578145984.0
+  },
+  {
+   "name": "Beamr Imaging Ltd. Ordinary Share",
+   "ticker": "BMR",
+   "market_cap": 23294782.0
+  },
+  {
+   "name": "Barnes & Noble Education, Inc",
+   "ticker": "BNED",
+   "market_cap": 476643488.0
+  },
+  {
+   "name": "BioNTech SE American Depositary Share",
+   "ticker": "BNTX",
+   "market_cap": 22932447232.0
+  },
+  {
+   "name": "Dutch Bros Inc.",
+   "ticker": "BROS",
+   "market_cap": 7412252672.0
+  },
+  {
+   "name": "Biote Corp. Class A Common Stock",
+   "ticker": "BTMD",
+   "market_cap": 36780676.0
+  },
+  {
+   "name": "Carnival Corporation Ltd.",
+   "ticker": "CCL",
+   "market_cap": 36707856384.0
+  },
+  {
+   "name": "CareDx, Inc. Common Stock",
+   "ticker": "CDNA",
+   "market_cap": 3659678976.0
+  },
+  {
+   "name": "CDW Corporation Common Stock",
+   "ticker": "CDW",
+   "market_cap": 19787757568.0
+  },
+  {
+   "name": "Cipher Digital Inc. Common Stock",
+   "ticker": "CIFR",
+   "market_cap": 3789230592.0
+  },
+  {
+   "name": "Core Scientific, Inc. Common Stock",
+   "ticker": "CORZ",
+   "market_cap": 4579101184.0
+  },
+  {
+   "name": "Freightos Limited Ordinary shares",
+   "ticker": "CRGO",
+   "market_cap": 39575848.0
+  },
+  {
+   "name": "Salesforce, Inc.",
+   "ticker": "CRM",
+   "market_cap": 198984941568.0
+  },
+  {
+   "name": "CrowdStrike Holdings, Inc. Class A Common Stock",
+   "ticker": "CRWD",
+   "market_cap": 245068562432.0
+  },
+  {
+   "name": "CoreWeave, Inc. Class A Common Stock",
+   "ticker": "CRWV",
+   "market_cap": 34095990784.0
+  },
+  {
+   "name": "Torrid Holdings Inc.",
+   "ticker": "CURV",
+   "market_cap": 218385568.0
+  },
+  {
+   "name": "Consolidated Water Co. Ltd. Ordinary Shares",
+   "ticker": "CWCO",
+   "market_cap": 434749280.0
+  },
+  {
+   "name": "DoorDash, Inc. Class A Common Stock",
+   "ticker": "DASH",
+   "market_cap": 79921807360.0
+  },
+  {
+   "name": "Dropbox, Inc. Class A Common Stock",
+   "ticker": "DBX",
+   "market_cap": 7956225536.0
+  },
+  {
+   "name": "Dragonfly Energy Holdings Corp. Common Stock (NV)",
+   "ticker": "DFLI",
+   "market_cap": 5074068.0
+  },
+  {
+   "name": "DiaMedica Therapeutics Inc. Common Stock",
+   "ticker": "DMAC",
+   "market_cap": 468614272.0
+  },
+  {
+   "name": "DRDGOLD Ltd.",
+   "ticker": "DRD",
+   "market_cap": 2250948352.0
+  },
+  {
+   "name": "Dynatrace, Inc.",
+   "ticker": "DT",
+   "market_cap": 18801025024.0
+  },
+  {
+   "name": "Duolingo, Inc. Class A Common Stock",
+   "ticker": "DUOL",
+   "market_cap": 6398167040.0
+  },
+  {
+   "name": "Edible Garden AG Incorporated Common Stock",
+   "ticker": "EDBL",
+   "market_cap": 1701520.0
+  },
+  {
+   "name": "eGain Corporation Common Stock",
+   "ticker": "EGAN",
+   "market_cap": 148392224.0
+  },
+  {
+   "name": "Estrella Immunopharma, Inc. Common Stock",
+   "ticker": "ESLA",
+   "market_cap": 23923826.0
+  },
+  {
+   "name": "Elbit Systems Ltd. Ordinary Shares",
+   "ticker": "ESLT",
+   "market_cap": 34808602624.0
+  },
+  {
+   "name": "EVERTEC, INC.",
+   "ticker": "EVTC",
+   "market_cap": 1928214656.0
+  },
+  {
+   "name": "Expensify, Inc. Class A Common Stock",
+   "ticker": "EXFY",
+   "market_cap": 237997184.0
+  },
+  {
+   "name": "Figma, Inc.",
+   "ticker": "FIG",
+   "market_cap": 12248565760.0
+  },
+  {
+   "name": "Fidelity National Information Services, Inc.",
+   "ticker": "FIS",
+   "market_cap": 18782009344.0
+  },
+  {
+   "name": "Five9, Inc. Common Stock",
+   "ticker": "FIVN",
+   "market_cap": 2636993280.0
+  },
+  {
+   "name": "Fly-E Group, Inc. Common Stock",
+   "ticker": "FLYE",
+   "market_cap": 3379039.0
+  },
+  {
+   "name": "Funko, Inc. Class A Common Stock",
+   "ticker": "FNKO",
+   "market_cap": 385250880.0
+  },
+  {
+   "name": "General Dynamics Corporation",
+   "ticker": "GD",
+   "market_cap": 93263765504.0
+  },
+  {
+   "name": "G-III Apparel Group, LTD. Common Stock",
+   "ticker": "GIII",
+   "market_cap": 1219407872.0
+  },
+  {
+   "name": "Genelux Corporation Common Stock",
+   "ticker": "GNLX",
+   "market_cap": 93657840.0
+  },
+  {
+   "name": "Gossamer Bio, Inc. Common Stock",
+   "ticker": "GOSS",
+   "market_cap": 59879468.0
+  },
+  {
+   "name": "Global Payments, Inc.",
+   "ticker": "GPN",
+   "market_cap": 22103572480.0
+  },
+  {
+   "name": "Globalstar, Inc. Common Stock",
+   "ticker": "GSAT",
+   "market_cap": 10808177664.0
+  },
+  {
+   "name": "Gulf Resources, Inc. (NV) Common Stock",
+   "ticker": "GURE",
+   "market_cap": 5603810.0
+  },
+  {
+   "name": "Halozyme Therapeutics, Inc. Common Stock",
+   "ticker": "HALO",
+   "market_cap": 14167955456.0
+  },
+  {
+   "name": "Helport AI Limited Ordinary Shares",
+   "ticker": "HPAI",
+   "market_cap": 11000428.0
+  },
+  {
+   "name": "HUBSPOT, INC.",
+   "ticker": "HUBS",
+   "market_cap": 12792557568.0
+  },
+  {
+   "name": "Humacyte, Inc. Common Stock",
+   "ticker": "HUMA",
+   "market_cap": 114230584.0
+  },
+  {
+   "name": "International Business Machines Corporation",
+   "ticker": "IBM",
+   "market_cap": 236909117440.0
+  },
+  {
+   "name": "Infosys Limited American Depositary Shares",
+   "ticker": "INFY",
+   "market_cap": 51642105856.0
+  },
+  {
+   "name": "Intrusion Inc. Common Stock",
+   "ticker": "INTZ",
+   "market_cap": 13726344.0
+  },
+  {
+   "name": "Jazz Pharmaceuticals plc Common Stock (Ireland)",
+   "ticker": "JAZZ",
+   "market_cap": 13759942656.0
+  },
+  {
+   "name": "Jupiter Neurosciences, Inc. Common Stock",
+   "ticker": "JUNS",
+   "market_cap": 3665488.0
+  },
+  {
+   "name": "Kyndryl Holdings, Inc.",
+   "ticker": "KD",
+   "market_cap": 3125692160.0
+  },
+  {
+   "name": "Kodiak AI, Inc. Common Stock",
+   "ticker": "KDK",
+   "market_cap": 232717072.0
+  },
+  {
+   "name": "Korea Electric Power Corp",
+   "ticker": "KEP",
+   "market_cap": 13776548864.0
+  },
+  {
+   "name": "The Kraft Heinz Company Common Stock",
+   "ticker": "KHC",
+   "market_cap": 27866857472.0
+  },
+  {
+   "name": "K-Tech Solutions Company Limited Class A Ordinary Shares",
+   "ticker": "KMRK",
+   "market_cap": 28907000.0
+  },
+  {
+   "name": "Coca-Cola FEMSA, S.A.B DE C.V",
+   "ticker": "KOF",
+   "market_cap": 0
+  },
+  {
+   "name": "KVH Industries, Inc. Common Stock",
+   "ticker": "KVHI",
+   "market_cap": 118823304.0
+  },
+  {
+   "name": "L3Harris Technologies, Inc.",
+   "ticker": "LHX",
+   "market_cap": 46097432576.0
+  },
+  {
+   "name": "LightInTheBox Holding Co., Ltd. American Depositary Shares, each representing twelve ordinary shares",
+   "ticker": "LITB",
+   "market_cap": 55234428.0
+  },
+  {
+   "name": "Lockheed Martin Corp.",
+   "ticker": "LMT",
+   "market_cap": 127283412992.0
+  },
+  {
+   "name": "Linkers Industries Limited Class A Ordinary Shares",
+   "ticker": "LNKS",
+   "market_cap": 1102939.0
+  },
+  {
+   "name": "Lotus Technology Inc. American Depositary Shares",
+   "ticker": "LOT",
+   "market_cap": 328945536.0
+  },
+  {
+   "name": "Innovative Eyewear, Inc. Common Stock",
+   "ticker": "LUCY",
+   "market_cap": 7561373.0
+  },
+  {
+   "name": "Intuitive Machines, Inc. Class A Common Stock",
+   "ticker": "LUNR",
+   "market_cap": 1761015424.0
+  },
+  {
+   "name": "Mattel, Inc. Common Stock",
+   "ticker": "MAT",
+   "market_cap": 4842615296.0
+  },
+  {
+   "name": "Mobileye Global Inc. Class A Common Stock",
+   "ticker": "MBLY",
+   "market_cap": 5968316928.0
+  },
+  {
+   "name": "MDA Space Ltd.",
+   "ticker": "MDA",
+   "market_cap": 4656396288.0
+  },
+  {
+   "name": "MongoDB, Inc. Class A Common Stock",
+   "ticker": "MDB",
+   "market_cap": 31428775936.0
+  },
+  {
+   "name": "McGraw Hill, Inc.",
+   "ticker": "MH",
+   "market_cap": 2777804032.0
+  },
+  {
+   "name": "MINISO Group Holding Limited American Depositary Shares, each representing four Ordinary Shares",
+   "ticker": "MNSO",
+   "market_cap": 2881555456.0
+  },
+  {
+   "name": "Marqeta, Inc. Class A Common Stock",
+   "ticker": "MQ",
+   "market_cap": 1957057920.0
+  },
+  {
+   "name": "Microsoft Corporation Common Stock",
+   "ticker": "MSFT",
+   "market_cap": 3957444575232.0
+  },
+  {
+   "name": "The Marzetti Company Common Stock",
+   "ticker": "MZTI",
+   "market_cap": 2874561024.0
+  },
+  {
+   "name": "Nebius Group N.V. Class A Ordinary Shares",
+   "ticker": "NBIS",
+   "market_cap": 46642204672.0
+  },
+  {
+   "name": "Neurogene Inc. Common Stock",
+   "ticker": "NGNE",
+   "market_cap": 521896832.0
+  },
+  {
+   "name": "Northrop Grumman Corp.",
+   "ticker": "NOC",
+   "market_cap": 76616007680.0
+  },
+  {
+   "name": "SERVICENOW, INC.",
+   "ticker": "NOW",
+   "market_cap": 158304944128.0
+  },
+  {
+   "name": "Energy Vault Holdings, Inc.",
+   "ticker": "NRGV",
+   "market_cap": 498240416.0
+  },
+  {
+   "name": "NETGEAR, Inc. Common Stock",
+   "ticker": "NTGR",
+   "market_cap": 618594496.0
+  },
+  {
+   "name": "NVIDIA Corporation Common Stock",
+   "ticker": "NVDA",
+   "market_cap": 5359909470208.0
+  },
+  {
+   "name": "BeOne Medicines Ltd. American Depositary Shares",
+   "ticker": "ONC",
+   "market_cap": 43966971904.0
+  },
+  {
+   "name": "Oracle Corp",
+   "ticker": "ORCL",
+   "market_cap": 391457734656.0
+  },
+  {
+   "name": "Passage Bio, Inc. Common Stock",
+   "ticker": "PASG",
+   "market_cap": 11551938.0
+  },
+  {
+   "name": "Phathom Pharmaceuticals, Inc. Common Stock",
+   "ticker": "PHAT",
+   "market_cap": 568733568.0
+  },
+  {
+   "name": "PicS N.V. Class A Common Shares",
+   "ticker": "PICS",
+   "market_cap": 1784420480.0
+  },
+  {
+   "name": "Pyxis Oncology, Inc. Common Stock",
+   "ticker": "PYXS",
+   "market_cap": 210242496.0
+  },
+  {
+   "name": "Erayak Power Solution Group Inc. Class A Ordinary Shares",
+   "ticker": "RAYA",
+   "market_cap": 1432401.0
+  },
+  {
+   "name": "Roblox Corporation",
+   "ticker": "RBLX",
+   "market_cap": 37540454400.0
+  },
+  {
+   "name": "RedCloud Holdings plc Ordinary Shares",
+   "ticker": "RCT",
+   "market_cap": 6203678.0
+  },
+  {
+   "name": "Reddit, Inc.",
+   "ticker": "RDDT",
+   "market_cap": 29490536448.0
+  },
+  {
+   "name": "Redwire Corporation",
+   "ticker": "RDW",
+   "market_cap": 2139936768.0
+  },
+  {
+   "name": "RINGCENTRAL, INC.",
+   "ticker": "RNG",
+   "market_cap": 6882577408.0
+  },
+  {
+   "name": "RenovoRx, Inc. Common Stock",
+   "ticker": "RNXT",
+   "market_cap": 55509296.0
+  },
+  {
+   "name": "Roper Technologies, Inc. Common Stock",
+   "ticker": "ROP",
+   "market_cap": 39319031808.0
+  },
+  {
+   "name": "Rush Street Interactive, Inc.",
+   "ticker": "RSI",
+   "market_cap": 4115562496.0
+  },
+  {
+   "name": "Sabine Royalty Trust",
+   "ticker": "SBR",
+   "market_cap": 1059189440.0
+  },
+  {
+   "name": "Sadot Group Inc. Common Stock",
+   "ticker": "SDOT",
+   "market_cap": 12892297.0
+  },
+  {
+   "name": "SolarEdge Technologies, Inc. Common Stock",
+   "ticker": "SEDG",
+   "market_cap": 2042039552.0
+  },
+  {
+   "name": "Sweetgreen, Inc.",
+   "ticker": "SG",
+   "market_cap": 1209459712.0
+  },
+  {
+   "name": "Super Group (SGHC) Limited",
+   "ticker": "SGHC",
+   "market_cap": 5654894592.0
+  },
+  {
+   "name": "Bit Origin Limited Class A Ordinary Shares",
+   "ticker": "SGRX",
+   "market_cap": 814855.0
+  },
+  {
+   "name": "SharonAI Holdings, Inc. Class A Common Stock",
+   "ticker": "SHAZ",
+   "market_cap": 1002498112.0
+  },
+  {
+   "name": "Seanergy Maritime Holdings Corp. Common Stock",
+   "ticker": "SHIP",
+   "market_cap": 343866368.0
+  },
+  {
+   "name": "Shopify Inc. Class A subordinate voting shares",
+   "ticker": "SHOP",
+   "market_cap": 226168225792.0
+  },
+  {
+   "name": "Stabilis Solutions, Inc. Common Stock",
+   "ticker": "SLNG",
+   "market_cap": 85078072.0
+  },
+  {
+   "name": "Snail, Inc. Class A Common Stock",
+   "ticker": "SNAL",
+   "market_cap": 20240132.0
+  },
+  {
+   "name": "Snap Inc.",
+   "ticker": "SNAP",
+   "market_cap": 10739104768.0
+  },
+  {
+   "name": "Sony Group Corporation American Depositary Shares (Each Representing One Share of Dollar Validated Common Stock)",
+   "ticker": "SONY",
+   "market_cap": 146544869376.0
+  },
+  {
+   "name": "SoundHound AI, Inc Class A Common Stock",
+   "ticker": "SOUN",
+   "market_cap": 2047357056.0
+  },
+  {
+   "name": "Virgin Galactic Holdings, Inc.",
+   "ticker": "SPCE",
+   "market_cap": 369894016.0
+  },
+  {
+   "name": "Space Exploration Technologies Corp. Class A Common Stock",
+   "ticker": "SPCX",
+   "market_cap": 2099989315584.0
+  },
+  {
+   "name": "Spotify Technology S.A.",
+   "ticker": "SPOT",
+   "market_cap": 108001615872.0
+  },
+  {
+   "name": "AT&T Inc.",
+   "ticker": "T",
+   "market_cap": 150135767040.0
+  },
+  {
+   "name": "Tactile Systems Technology, Inc. Common Stock",
+   "ticker": "TCMD",
+   "market_cap": 527345248.0
+  },
+  {
+   "name": "Atlassian Corporation Class A Common Stock",
+   "ticker": "TEAM",
+   "market_cap": 57084071936.0
+  },
+  {
+   "name": "Telix Pharmaceuticals Limited American Depositary Shares",
+   "ticker": "TLX",
+   "market_cap": 3408036352.0
+  },
+  {
+   "name": "Toast, Inc.",
+   "ticker": "TOST",
+   "market_cap": 18808121344.0
+  },
+  {
+   "name": "Taysha Gene Therapies, Inc. Common Stock",
+   "ticker": "TSHA",
+   "market_cap": 1342434176.0
+  },
+  {
+   "name": "Tesla, Inc. Common Stock",
+   "ticker": "TSLA",
+   "market_cap": 1526381674496.0
+  },
+  {
+   "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+   "ticker": "TSM",
+   "market_cap": 2239986401280.0
+  },
+  {
+   "name": "TOWNSQUARE MEDIA, INC.",
+   "ticker": "TSQ",
+   "market_cap": 69644864.0
+  },
+  {
+   "name": "ServiceTitan, Inc. Class A Common Stock",
+   "ticker": "TTAN",
+   "market_cap": 7941237760.0
+  },
+  {
+   "name": "Textron, Inc.",
+   "ticker": "TXT",
+   "market_cap": 13291148288.0
+  },
+  {
+   "name": "Unity Software Inc.",
+   "ticker": "U",
+   "market_cap": 18136064000.0
+  },
+  {
+   "name": "Frontier Group Holdings, Inc. Common Stock",
+   "ticker": "ULCC",
+   "market_cap": 1160287488.0
+  },
+  {
+   "name": "United Microelectronic Corp.",
+   "ticker": "UMC",
+   "market_cap": 49706745856.0
+  },
+  {
+   "name": "Unicycive Therapeutics, Inc. Common Stock",
+   "ticker": "UNCY",
+   "market_cap": 106011016.0
+  },
+  {
+   "name": "UroGen Pharma Ltd. Ordinary Shares",
+   "ticker": "URGN",
+   "market_cap": 1734282368.0
+  },
+  {
+   "name": "CONTROLADORA VUELA COMPAniA DE AVIACIoN, S.A.B. DE C.V.",
+   "ticker": "VLRS",
+   "market_cap": 650624704.0
+  },
+  {
+   "name": "Vision Marine Technologies Inc. Common Shares",
+   "ticker": "VMAR",
+   "market_cap": 4832540.0
+  },
+  {
+   "name": "Vistra Corp.",
+   "ticker": "VST",
+   "market_cap": 52406079488.0
+  },
+  {
+   "name": "Workday, Inc. Class A Common Stock",
+   "ticker": "WDAY",
+   "market_cap": 48913362944.0
+  },
+  {
+   "name": "Weave Communications, Inc.",
+   "ticker": "WEAV",
+   "market_cap": 594528768.0
+  },
+  {
+   "name": "Wix.com Ltd. Ordinary Shares",
+   "ticker": "WIX",
+   "market_cap": 3295230464.0
+  },
+  {
+   "name": "Warby Parker Inc.",
+   "ticker": "WRBY",
+   "market_cap": 3168074496.0
+  },
+  {
+   "name": "Xenetic Biosciences, Inc. Common Stock",
+   "ticker": "XBIO",
+   "market_cap": 4733225.0
+  },
+  {
+   "name": "X4 Pharmaceuticals, Inc. Common Stock",
+   "ticker": "XFOR",
+   "market_cap": 298431712.0
+  },
+  {
+   "name": "Xometry, Inc. Class A Common Stock",
+   "ticker": "XMTR",
+   "market_cap": 5098358784.0
+  },
+  {
+   "name": "Xencor, Inc. Common Stock",
+   "ticker": "XNCR",
+   "market_cap": 1870731520.0
+  },
+  {
+   "name": "Zeo Energy Corporation Class A Common Stock",
+   "ticker": "ZEO",
+   "market_cap": 24723736.0
+  }
+ ],
+ "links": [
+  {
+   "set": "tuning",
+   "filer": "Cipher Digital Inc. Common Stock",
+   "private": "LUMINANTET",
+   "direction": "supplier",
+   "label": "right",
+   "why": "power for the Odessa facility is supplied by Luminant under a power purchase agreement",
+   "sentence": "The power at the Odessa Facility is supplied by Luminant ET Services Company LLC (“Luminant”) under a power purchase agreement, pursuant to which we have access, until at least July 2027, to electricity at a cost of approximately 2.7 c/kWh, subject to certain increases related to certain tariffs, price increased in October 2025 to 2.8 c/kWh.",
+   "type": "Supply Relationship",
+   "filer_ticker": "CIFR",
+   "id": 1
+  },
+  {
+   "set": "tuning",
+   "filer": "DoorDash, Inc. Class A Common Stock",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "DoorDash relies on Stripe among its payment vendors (the relationship type 'Cloud Infrastructure Provider' comes from AWS in the same list and is wrong for Stripe)",
+   "sentence": "We also have integrations with or otherwise utilize or rely on PayPal, Stripe, Olo, Google Maps, Amazon Web Services (\"AWS\"), and a variety of other third-party vendors.",
+   "type": "Cloud Infrastructure Provider",
+   "filer_ticker": "DASH",
+   "id": 2
+  },
+  {
+   "set": "tuning",
+   "filer": "SoundHound AI, Inc Class A Common Stock",
+   "private": "GUGGENHEIMSEC",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "an investment bank engaged to sell shares under an at-the-market programme is not a supplier (rule added: financing agents)",
+   "sentence": "Our board member did not participate in the Company’s decision to engage Guggenheim Securities, LLC to sell the Company's Class A Common Stock under at-the-market equity program and disclosed the fact that his brother would be involved in the services to be provided by Guggenheim Securities, LLC to the Company in advance of the determination by the Company to engage Guggenheim Securities, LLC.",
+   "type": "Supply Relationship",
+   "filer_ticker": "SOUN",
+   "id": 3
+  },
+  {
+   "set": "tuning",
+   "filer": "Spotify Technology S.A.",
+   "private": "COMPENSIA",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "a pay consultant whose data informs the board's compensation (rule added: compensation arrangements)",
+   "sentence": "The compensation arrangements have been influenced by a variety of factors, including, but not limited to: • our financial condition and available resources; • our need for that particular position to be filled; • our board of directors’ evaluation of the competitive market based on the third-party data provided by Compensia, Inc.",
+   "type": "Supply Relationship",
+   "filer_ticker": "SPOT",
+   "id": 4
+  },
+  {
+   "set": "tuning",
+   "filer": "Virgin Galactic Holdings, Inc.",
+   "private": "VIRGINENT",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "'dependent upon the consent of' a trademark licensor is an approval right, not supply (rule added: consent)",
+   "sentence": "Further, under the terms of an amended and restated trademark license agreement (the “Amended TMLA”), our ability to operationalize some of the technologies may be dependent upon the consent of Virgin Enterprises Limited (“VEL”).",
+   "type": "Supply Relationship",
+   "filer_ticker": "SPCE",
+   "id": 5
+  },
+  {
+   "set": "tuning",
+   "filer": "Rush Street Interactive, Inc.",
+   "private": "RIVERSIP",
+   "direction": "supplier",
+   "label": "right",
+   "why": "an affiliated entity in-licenses its trademarks to the filer",
+   "sentence": "We have a license agreement, as may be amended from time to time, with Rivers IP Holdings, LLC, an affiliated entity, pursuant to which it granted to us a fully paid-up, exclusive license for the use of the trademarks “Rivers,” “BetRivers,” and “Bet Rivers” used alone or in combination with other words, and domain names incorporating any of these trademarks, in each case in connection with real-money gaming and fantasy sports (subject to obtaining certain gaming approvals) and play-for-fun or free-to-play offerings (anywhere in the world).",
+   "type": "Supply Relationship",
+   "filer_ticker": "RSI",
+   "id": 6
+  },
+  {
+   "set": "tuning",
+   "filer": "Rush Street Interactive, Inc.",
+   "private": "SUGARHOUSE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "trademark in-licence",
+   "sentence": "We also have similar license agreements, as may be amended from time to time, with Sugar House HSP Gaming, LP, pursuant to which we can use the “Sugarhouse” and “playsugarhouse” marks and related domains in the jurisdictions in which they are used.",
+   "type": "Supply Relationship",
+   "filer_ticker": "RSI",
+   "id": 7
+  },
+  {
+   "set": "tuning",
+   "filer": "Super Group (SGHC) Limited",
+   "private": "BELLERIVE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer procures management and company secretarial services from Bellerive Trust (a related party)",
+   "sentence": "Master Services Agreement with Bellerive Trust Limited Under the terms of a Master Services Agreement dated January 19, 2021 (as amended), we procure management personnel services and company secretarial services from Bellerive Trust Limited and other entities within the Bellerive Group, which is wholly owned by Bellerive Group Holdings (\"Bellerive Group\").",
+   "type": "Supply Relationship",
+   "filer_ticker": "SGHC",
+   "id": 8
+  },
+  {
+   "set": "tuning",
+   "filer": "Amphastar Pharmaceuticals, Inc. Common Stock",
+   "private": "NANJINGANJI",
+   "direction": "supplier",
+   "label": "right",
+   "why": "in-licence of product candidates",
+   "sentence": "We have licensed several peptide proprietary product candidates from Nanjing Anji Biotechnology Co., Ltd., or Anji, and Nanjing Hanxin Pharmaceutical Technology Co., Ltd., or Hanxin.",
+   "type": "Supply Relationship",
+   "filer_ticker": "AMPH",
+   "id": 9
+  },
+  {
+   "set": "tuning",
+   "filer": "BioNTech SE American Depositary Share",
+   "private": "ACUITAS",
+   "direction": "supplier",
+   "label": "right",
+   "why": "in-licence of patent rights",
+   "sentence": "For example, we have obtained licenses from Acuitas Therapeutics Inc., or Acuitas, CellScript LLC, or CellScript, and its affiliate, mRNA RiboTherapeutics, Inc ., to patent rights claiming certain uses of modified RNA, as well as licenses from certain other parties for intellectual property useful in pharmaceutical formulations.",
+   "type": "Supply Relationship",
+   "filer_ticker": "BNTX",
+   "id": 10
+  },
+  {
+   "set": "tuning",
+   "filer": "BioNTech SE American Depositary Share",
+   "private": "CELLSCRIPT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "in-licence of patent rights",
+   "sentence": "For example, we have obtained licenses from Acuitas Therapeutics Inc., or Acuitas, CellScript LLC, or CellScript, and its affiliate, mRNA RiboTherapeutics, Inc ., to patent rights claiming certain uses of modified RNA, as well as licenses from certain other parties for intellectual property useful in pharmaceutical formulations.",
+   "type": "Supply Relationship",
+   "filer_ticker": "BNTX",
+   "id": 11
+  },
+  {
+   "set": "tuning",
+   "filer": "BioNTech SE American Depositary Share",
+   "private": "MRNARIBO",
+   "direction": "supplier",
+   "label": "right",
+   "why": "in-licence of patent rights",
+   "sentence": "For example, we have obtained licenses from Acuitas Therapeutics Inc., or Acuitas, CellScript LLC, or CellScript, and its affiliate, mRNA RiboTherapeutics, Inc ., to patent rights claiming certain uses of modified RNA, as well as licenses from certain other parties for intellectual property useful in pharmaceutical formulations.",
+   "type": "Supply Relationship",
+   "filer_ticker": "BNTX",
+   "id": 12
+  },
+  {
+   "set": "tuning",
+   "filer": "Dutch Bros Inc.",
+   "private": "PORTLANDBOTTLING",
+   "direction": "supplier",
+   "label": "right",
+   "why": "co-packer that blends, packages and warehouses the filer's drinks",
+   "sentence": "For certain products, we may rely on one or very few suppliers, such as for our proprietary Dutch Bros Rebel energy drinks, where we rely on relationships with our co-packers, Portland Bottling Co. and Lieb Foods, LLC to blend, package, label, and warehouse these drinks.",
+   "type": "Contract Manufacturing",
+   "filer_ticker": "BROS",
+   "id": 13
+  },
+  {
+   "set": "tuning",
+   "filer": "Dutch Bros Inc.",
+   "private": "LIEBFOODS",
+   "direction": "supplier",
+   "label": "right",
+   "why": "co-packer that blends, packages and warehouses the filer's drinks",
+   "sentence": "For certain products, we may rely on one or very few suppliers, such as for our proprietary Dutch Bros Rebel energy drinks, where we rely on relationships with our co-packers, Portland Bottling Co. and Lieb Foods, LLC to blend, package, label, and warehouse these drinks.",
+   "type": "Contract Manufacturing",
+   "filer_ticker": "BROS",
+   "id": 14
+  },
+  {
+   "set": "tuning",
+   "filer": "Helport AI Limited Ordinary Shares",
+   "private": "YOUFEISHUKE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer relies on this developer partner to build the AI products of its own platform",
+   "sentence": "We currently rely on one key developer partner, Tianjin Youfei Shuke Technology Group (“Youfei Shuke”), to develop AI-driven products applied to our contact center solutions and our BPO platform.",
+   "type": "Supply Relationship",
+   "filer_ticker": "HPAI",
+   "id": 15
+  },
+  {
+   "set": "tuning",
+   "filer": "Jazz Pharmaceuticals plc Common Stock (Ireland)",
+   "private": "CHEMSPEC",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer sources the API from ChemSpec",
+   "sentence": "We source the API of Modeyso from ChemSpec USA, LLC.",
+   "type": "Supply Relationship",
+   "filer_ticker": "JAZZ",
+   "id": 16
+  },
+  {
+   "set": "tuning",
+   "filer": "Linkers Industries Limited Class A Ordinary Shares",
+   "private": "TEMELECTRONICS",
+   "direction": "supplier",
+   "label": "right",
+   "why": "related-party supplier of wires and cables",
+   "sentence": "We are of the opinion that the cost of the wires and cables provided by TEM Electronics (Jiangmen) Co Ltd and other terms were negotiated at arm’s-length.",
+   "type": "Supply Relationship",
+   "filer_ticker": "LNKS",
+   "id": 17
+  },
+  {
+   "set": "tuning",
+   "filer": "Linkers Industries Limited Class A Ordinary Shares",
+   "private": "BAPTRADING",
+   "direction": "supplier",
+   "label": "right",
+   "why": "related-party supplier of connectors and terminals",
+   "sentence": "We are of the opinion that the cost of the connectors and terminals provided by BAP Trading Co Ltd and other terms were negotiated at arm’s-length.",
+   "type": "Supply Relationship",
+   "filer_ticker": "LNKS",
+   "id": 18
+  },
+  {
+   "set": "tuning",
+   "filer": "Linkers Industries Limited Class A Ordinary Shares",
+   "private": "LPWELECTRONICS",
+   "direction": "supplier",
+   "label": "right",
+   "why": "related-party supplier of connectors and terminals",
+   "sentence": "We are of the opinion that the cost of the connectors and terminals provided by LPW Electronics Co Ltd and other terms were negotiated at arm’s-length.",
+   "type": "Supply Relationship",
+   "filer_ticker": "LNKS",
+   "id": 19
+  },
+  {
+   "set": "tuning",
+   "filer": "Lotus Technology Inc. American Depositary Shares",
+   "private": "GROUPLOTUS",
+   "direction": "supplier",
+   "label": "right",
+   "why": "trademark in-licence from a related party",
+   "sentence": "We obtained licenses from Group Lotus Limited to use the trademarks in the “Lotus” brand on lifestyle vehicles, parts and components.",
+   "type": "Supply Relationship",
+   "filer_ticker": "LOT",
+   "id": 20
+  },
+  {
+   "set": "tuning",
+   "filer": "Pyxis Oncology, Inc. Common Stock",
+   "private": "BIOSIONUSA",
+   "direction": "supplier",
+   "label": "right",
+   "why": "in-licence of PYX-106",
+   "sentence": "We licensed worldwide rights other than in Greater China (mainland China, Hong Kong, Macau and Taiwan) to PYX-106 from Biosion.",
+   "type": "Supply Relationship",
+   "filer_ticker": "PYXS",
+   "id": 21
+  },
+  {
+   "set": "tuning",
+   "filer": "Tactile Systems Technology, Inc. Common Stock",
+   "private": "THERMOTEK",
+   "direction": "supplier",
+   "label": "doubtful",
+   "why": "a 2013 device 'was manufactured by Thermotek'; the next sentence says the filer later obtained its own clearance, so it is probably no longer a supplier",
+   "sentence": "We introduced the Entre system in the United States in February 2013, this device was manufactured by Thermotek, Inc. and received FDA clearance in 2010.",
+   "type": "Supply Relationship",
+   "filer_ticker": "TCMD",
+   "id": 22
+  },
+  {
+   "set": "tuning",
+   "filer": "Humacyte, Inc. Common Stock",
+   "private": "CONFLUENTMEDICAL",
+   "direction": "supplier",
+   "label": "right",
+   "why": "Confluent is the current single-source supplier of the polymer mesh the filer uses",
+   "sentence": "SeraCare, which was subsequently acquired by LGC Clinical Diagnostics, Inc. (“SeraCare”), is the current single source supplier of human plasma used in our manufacturing process and Confluent Medical Technologies, Inc. (“Confluent”) is the current single source supplier of the polymer mesh we use.",
+   "type": "Supply Relationship",
+   "filer_ticker": "HUMA",
+   "id": 23
+  },
+  {
+   "set": "cold",
+   "filer": "Taiwan Semiconductor Manufacturing Company Ltd.",
+   "private": "DELOITTE",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "the auditor's fees (rule added: audit and accountant wording)",
+   "sentence": "PRINCIPAL ACCOUNTANT FEES AND SERVICES The table below summarizes the fees that we paid for services provided by Deloitte & Touche (PCAOB ID No. 1060 ) and its affiliated firms (the “Deloitte Entities”) for the years ended December 31, 2024 and 2025 .",
+   "type": "Supply Relationship",
+   "filer_ticker": "TSM",
+   "id": 24
+  },
+  {
+   "set": "cold",
+   "filer": "Aclaris Therapeutics, Inc. Common Stock",
+   "private": "BIOSIONUSA",
+   "direction": "supplier",
+   "label": "right",
+   "why": "in-licence of bosakitug",
+   "sentence": "We exclusively license global rights (excluding Mainland China, Macau, Hong Kong and Taiwan (“Greater China”)) to bosakitug from Biosion, Inc. (“Biosion”).",
+   "type": "Supply Relationship",
+   "filer_ticker": "ACRS",
+   "id": 25
+  },
+  {
+   "set": "cold",
+   "filer": "ServiceTitan, Inc. Class A Common Stock",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer's AI solutions rely on LLMs provided by Microsoft and OpenAI",
+   "sentence": "Further, our AI solutions rely on third-party proprietary machine learning algorithms and LLMs provided by third parties, such as Microsoft and OpenAI.",
+   "type": "Supply Relationship",
+   "filer_ticker": "TTAN",
+   "id": 26
+  },
+  {
+   "set": "cold",
+   "filer": "Aurinia Pharmaceuticals Inc Ordinary Shares",
+   "private": "CATALENT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "Catalent is the sole supplier for the preparation of voclosporin capsules",
+   "sentence": "Aurinia pays a quarterly fixed facility fee of 3.6 million Swiss Francs for the exclusive right to use the Monoplant through March 31, 2030. 13 Encapsulation Catalent Pharma Solutions (“Catalent”) is currently the sole supplier for the preparation of our voclosporin capsules.",
+   "type": "Supply Relationship",
+   "filer_ticker": "AUPH",
+   "id": 27
+  },
+  {
+   "set": "cold",
+   "filer": "Jupiter Neurosciences, Inc. Common Stock",
+   "private": "CATALENT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer relies entirely on Aquanova and Catalent to manufacture its trial supplies",
+   "sentence": "We lack the internal infrastructure to manufacture our product candidates for development and commercialization, relying entirely on Aquanova and Catalent to manufacture our preclinical and clinical trial supplies of JOTROL™.",
+   "type": "Supply Relationship",
+   "filer_ticker": "JUNS",
+   "id": 28
+  },
+  {
+   "set": "cold",
+   "filer": "Coca-Cola FEMSA, S.A.B DE C.V",
+   "private": "CARGILL",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer buys HFCS from Cargill de Mexico (a Cargill company)",
+   "sentence": "We purchase HFCS from Ingredion México, S.A. de C.V., Cargill de Mexico, S.A. de C.V. and Almidones Mexicanos, S.A. de C.V., known as Almex.",
+   "type": "Supply Relationship",
+   "filer_ticker": "KOF",
+   "id": 29
+  },
+  {
+   "set": "cold",
+   "filer": "The Marzetti Company Common Stock",
+   "private": "CHICKFILA",
+   "direction": "customer",
+   "label": "right",
+   "why": "sales to Chick-fil-A, mostly through distributors, are 23% of net sales",
+   "sentence": "Sales to Chick-fil-A in our Foodservice segment, which are primarily made indirectly through several foodservice distributors, represented 23% and 21% of consolidated net sales for the years ended June 30, 2026 and 2025, respectively.",
+   "type": "Revenue Concentration",
+   "filer_ticker": "MZTI",
+   "id": 30
+  },
+  {
+   "set": "cold",
+   "filer": "Snail, Inc. Class A Common Stock",
+   "private": "EPICGAMES",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "the Epic Games Store is a channel that sells the filer's games, not a supplier (rule added: sales-channel wording)",
+   "sentence": "We rely on third-party platforms, such as Xbox Live and Game Pass, PlayStation Network, Steam, Epic Games Store, My Nintendo Store, the Apple App Store, the Google Play Store, and the Amazon Appstore, to distribute our games and collect revenues generated on such platforms and rely on third-party payment service providers to collect revenues generated on our own platforms.",
+   "type": "Supply Relationship",
+   "filer_ticker": "SNAL",
+   "id": 31
+  },
+  {
+   "set": "cold",
+   "filer": "Taysha Gene Therapies, Inc. Common Stock",
+   "private": "CATALENT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "Catalent is one of the filer's contract manufacturers",
+   "sentence": "We currently rely on third-party contract manufacturing organizations, or CMOs, including Catalent, to manufacture our product candidates.",
+   "type": "Contract Manufacturing",
+   "filer_ticker": "TSHA",
+   "id": 32
+  },
+  {
+   "set": "cold",
+   "filer": "Weave Communications, Inc.",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer relies on Stripe for point-of-sale devices and payment processing",
+   "sentence": "In particular, we rely on single-source suppliers for phones and point-of-sale terminals, such as Yealink to supply phones for our platform and Stripe Inc. (“Stripe”) to provide point-of-sale devices and payment processing services for Weave Payments.",
+   "type": "Supply Relationship",
+   "filer_ticker": "WEAV",
+   "id": 33
+  },
+  {
+   "set": "cold",
+   "filer": "Snail, Inc. Class A Common Stock",
+   "private": "EPICGAMES",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "the Epic Games Store is a channel that sells the filer's games, not a supplier (rule added: sales-channel wording)",
+   "sentence": "Conversely, if we overestimate the amount of server capacity required by our business, we may incur additional operating costs. 16 We also rely on platforms and networks operated by third parties, such as Xbox Live and Game Pass, PlayStation Network, Steam, My Nintendo Store and Epic Games Store for the sale and digital delivery of downloadable console and PC game content, the functionality of our games with online features.",
+   "type": "Supply Relationship",
+   "filer_ticker": "SNAL",
+   "id": 34
+  },
+  {
+   "set": "cold",
+   "filer": "Passage Bio, Inc. Common Stock",
+   "private": "CATALENT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "Catalent Maryland provides external manufacturing",
+   "sentence": "Our internal manufacturing and quality experts oversee external manufacturing and supply chain operations provided by third-party strategic relationships, such as Catalent Maryland, a unit of Catalent, Inc. acquired by Novo Holdings A/S, or Catalent.",
+   "type": "Supply Relationship",
+   "filer_ticker": "PASG",
+   "id": 35
+  },
+  {
+   "set": "cold",
+   "filer": "Phathom Pharmaceuticals, Inc. Common Stock",
+   "private": "CATALENT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "Catalent supplies drug product under a supply agreement",
+   "sentence": "If Catalent, Evonik or Sandoz fails to fulfill its obligations under its respective supply agreement, or if any of the vonoprazan drug product or drug substance supplied by Catalent or Evonik cannot be utilized due to quality or cGMP or similar concerns, adverse findings during regulatory inspections or other reasons, our commercialization of vonoprazan, and any ongoing or future development plans, could be significantly adversely affected.",
+   "type": "Supply Relationship",
+   "filer_ticker": "PHAT",
+   "id": 36
+  },
+  {
+   "set": "cold",
+   "filer": "Reddit, Inc.",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "an AI lab named as a competitor ('LLMs ... built by Google, Meta, OpenAI and Anthropic'), (rule added: competition from)",
+   "sentence": "In addition, we face competition from large language models (“LLMs”) and other AI models that retrieve and synthesize information, such as those built by 15 Table of Contents Google, Meta, OpenAI, and Anthropic; Redditors may choose to find information using AI tools, which in some cases may have been trained using Reddit content, instead of visiting Reddit directly.",
+   "type": "Supply Relationship",
+   "filer_ticker": "RDDT",
+   "id": 37
+  },
+  {
+   "set": "cold",
+   "filer": "Reddit, Inc.",
+   "private": "ANTHROPIC",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "an AI lab named as a competitor (rule added: competition from)",
+   "sentence": "In addition, we face competition from large language models (“LLMs”) and other AI models that retrieve and synthesize information, such as those built by 15 Table of Contents Google, Meta, OpenAI, and Anthropic; Redditors may choose to find information using AI tools, which in some cases may have been trained using Reddit content, instead of visiting Reddit directly.",
+   "type": "Supply Relationship",
+   "filer_ticker": "RDDT",
+   "id": 38
+  },
+  {
+   "set": "cold",
+   "filer": "Xometry, Inc. Class A Common Stock",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer relies on Stripe to process payments",
+   "sentence": "We rely on a third-party payment processor, Stripe, to process payments made by buyers and payments made to suppliers.",
+   "type": "Supply Relationship",
+   "filer_ticker": "XMTR",
+   "id": 39
+  },
+  {
+   "set": "cold",
+   "filer": "Biote Corp. Class A Common Stock",
+   "private": "ANAZAOHEALTH",
+   "direction": "supplier",
+   "label": "right",
+   "why": "outsourcing facility the filer contracts with",
+   "sentence": "A majority of the bioidentical compounded hormone pellets used by Biote-certified practitioners as part of the Biote Method are manufactured by our 503B outsourcing facility, Asteria Health, and we also contract with certain third-party operators of FDA-registered 503B outsourcing facilities, namely AnazaoHealth Corporation (“AnazaoHealth”), and Right Value Drug Stores, LLC d/b/a Carie Boyd’s Prescription Shop (“Carie Boyd’s”).",
+   "type": "Supply Relationship",
+   "filer_ticker": "BTMD",
+   "id": 40
+  },
+  {
+   "set": "cold",
+   "filer": "Biote Corp. Class A Common Stock",
+   "private": "RIGHTVALUEDRUG",
+   "direction": "supplier",
+   "label": "right",
+   "why": "outsourcing pharmacy the filer relies on",
+   "sentence": "See also “ If a compounded drug formulation provided through an outsourcing facility or a compounding pharmacy leads to patient injury or death or results in a product recall, we may be exposed to significant liabilities and reputational harm. ” and “— Product liability lawsuits against us could cause us to incur substantial liabilities and to limit commercialization of any products that we offer or may develop .” We and Biote-certified practitioners and Biote-partnered clinics are reliant on AnazaoHealth Corporation, Right Value Drug Stores, LLC, and Biote-owned Asteria Health to support the manufacturing of bioidentical hormones for prescribers.",
+   "type": "Supply Relationship",
+   "filer_ticker": "BTMD",
+   "id": 41
+  },
+  {
+   "set": "cold",
+   "filer": "Consolidated Water Co. Ltd. Ordinary Shares",
+   "private": "BAHAMASPOWER",
+   "direction": "supplier",
+   "label": "right",
+   "why": "electricity for the plant is supplied by BPL",
+   "sentence": "Electricity for the remainder of our plant operations is supplied by Bahamas Power and Light Company (“BPL”).",
+   "type": "Supply Relationship",
+   "filer_ticker": "CWCO",
+   "id": 42
+  },
+  {
+   "set": "cold",
+   "filer": "Consolidated Water Co. Ltd. Ordinary Shares",
+   "private": "BVIELECTRICITY",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer buys electricity from the BVI Electricity Corporation",
+   "sentence": "We purchase electrical power to operate this plant from the BVI Electricity Corporation. ​ Reverse Osmosis Technology ​ The conversion of seawater to potable water is called desalination.",
+   "type": "Supply Relationship",
+   "filer_ticker": "CWCO",
+   "id": 43
+  },
+  {
+   "set": "cold",
+   "filer": "DRDGOLD Ltd.",
+   "private": "RANDREFINERY",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "the filer's doré bars are delivered TO Rand Refinery, which is a customer, not a supplier (rule added: delivered to)",
+   "sentence": "Gold-bearing material produced by our operations is smelted into doré bars, which are delivered to Rand Refinery Proprietary Limited (\" Rand Refinery \") for assaying and refining.",
+   "type": "Supply Relationship",
+   "filer_ticker": "DRD",
+   "id": 44
+  },
+  {
+   "set": "cold",
+   "filer": "Estrella Immunopharma, Inc. Common Stock",
+   "private": "EUREKATHERA",
+   "direction": "supplier",
+   "label": "right",
+   "why": "exclusive in-licence from the parent",
+   "sentence": "Our Technology Platform: The ARTEMIS® T-Cell Receptor System We hold an exclusive license from Eureka Therapeutics (“Eureka”) to utilize the proprietary ARTEMIS® Cell Receptor platform to develop and commercialize T-cell therapies targeting CD19 and CD22 for the treatment of hematologic malignancies.",
+   "type": "Supply Relationship",
+   "filer_ticker": "ESLA",
+   "id": 45
+  },
+  {
+   "set": "cold",
+   "filer": "Fly-E Group, Inc. Common Stock",
+   "private": "DEPCLCORP",
+   "direction": "supplier",
+   "label": "right",
+   "why": "principal vendor, 32% of components",
+   "sentence": "During the year ended March 31, 2025, our top two principal vendors included Depcl Corp and XFT, each of which respectively supplied approximately 32% and 42% accessories and components.",
+   "type": "Supply Relationship",
+   "filer_ticker": "FLYE",
+   "id": 46
+  },
+  {
+   "set": "cold",
+   "filer": "Fly-E Group, Inc. Common Stock",
+   "private": "XIAMENINNOLABS",
+   "direction": "supplier",
+   "label": "right",
+   "why": "principal vendor",
+   "sentence": "Effective management of payroll expenses remains crucial to our ability to grow revenue and enhance our financial results, especially as we navigate a reduced workforce. 39 Vendor and Supply Management During the year ended March 31, 2026, we worked with two principal vendors, Depcl Corp. and Xiamen Innolabs Technology Co., Ltd, each of which respectively supplied approximately 70.3% and 19.2% of the accessories and components used in all our products.",
+   "type": "Supply Relationship",
+   "filer_ticker": "FLYE",
+   "id": 47
+  },
+  {
+   "set": "cold",
+   "filer": "Gossamer Bio, Inc. Common Stock",
+   "private": "PULMOKINE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "in-licence of seralutinib",
+   "sentence": "We in-licensed seralutinib from Pulmokine, Inc.",
+   "type": "Supply Relationship",
+   "filer_ticker": "GOSS",
+   "id": 48
+  },
+  {
+   "set": "cold",
+   "filer": "Gulf Resources, Inc. (NV) Common Stock",
+   "private": "LAIZHOUSHENGFU",
+   "direction": "supplier",
+   "label": "right",
+   "why": "principal external supplier",
+   "sentence": "Principal Suppliers Our principal external suppliers are Laizhou Shengfu Chemical Company Limited, Weifang Wanhong Chemical Company Limited, Shandong Xinlong International Trade Company Limited, Shouguang Runfeng trading Company Limited.",
+   "type": "Supply Relationship",
+   "filer_ticker": "GURE",
+   "id": 49
+  },
+  {
+   "set": "cold",
+   "filer": "Gulf Resources, Inc. (NV) Common Stock",
+   "private": "WEIFANGWANHONG",
+   "direction": "supplier",
+   "label": "right",
+   "why": "principal external supplier",
+   "sentence": "Principal Suppliers Our principal external suppliers are Laizhou Shengfu Chemical Company Limited, Weifang Wanhong Chemical Company Limited, Shandong Xinlong International Trade Company Limited, Shouguang Runfeng trading Company Limited.",
+   "type": "Supply Relationship",
+   "filer_ticker": "GURE",
+   "id": 50
+  },
+  {
+   "set": "cold",
+   "filer": "K-Tech Solutions Company Limited Class A Ordinary Shares",
+   "private": "FULLYSTARISE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "manufactures and supplies most of the filer's products",
+   "sentence": "We have developed a nimble and low-fixed cost business model whereby our products are mostly manufactured and supplied by Fully Starise Limited (“ Fully Starise ”) which represents approximately 82.42% of our cost of revenue.",
+   "type": "Supply Relationship",
+   "filer_ticker": "KMRK",
+   "id": 51
+  },
+  {
+   "set": "cold",
+   "filer": "Innovative Eyewear, Inc. Common Stock",
+   "private": "LUCYDLTD",
+   "direction": "customer",
+   "label": "wrong",
+   "why": "'Lucyd.co' is the filer's own web store, and Lucyd is the filer's own brand (rule added: a web address is not a company)",
+   "sentence": "Slightly higher discounts in the current year primarily reflected our go-to-market strategy for new product lines, which included (i) introductory promotions and bundles for the Reebok ® Powered by Lucyd launch to accelerate awareness and trial, and (ii) targeted clearance of older frame styles as we rationalized the assortment ahead of the November Lucyd Armor line expansion. 45 For the year ended December 31, 2025, approximately 51% of sales were processed on our online store (Lucyd.co), 40% on Amazon.com, and 8% through reseller partners, with approximately 1% of our net revenues generated from Lucyd “Pro” app subscriptions.",
+   "type": "Revenue Concentration",
+   "filer_ticker": "LUCY",
+   "id": 52
+  },
+  {
+   "set": "cold",
+   "filer": "Innovative Eyewear, Inc. Common Stock",
+   "private": "LUCYDLTD",
+   "direction": "supplier",
+   "label": "right",
+   "why": "technology in-licence from Lucyd Ltd.",
+   "sentence": "Risks Related to our Intellectual Property ● We license some of our technology from Lucyd Ltd. and from a third party.",
+   "type": "Supply Relationship",
+   "filer_ticker": "LUCY",
+   "id": 53
+  },
+  {
+   "set": "cold",
+   "filer": "Neurogene Inc. Common Stock",
+   "private": "VIROVEK",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer depends on its licence with Virovek",
+   "sentence": "We depend on, and will continue to depend on, our current licenses with the University of Edinburgh, Virovek, Inc. (“Virovek”), Sigma-Aldrich Co.",
+   "type": "Supply Relationship",
+   "filer_ticker": "NGNE",
+   "id": 54
+  },
+  {
+   "set": "cold",
+   "filer": "NETGEAR, Inc. Common Stock",
+   "private": "CIRCLEMEDIA",
+   "direction": "supplier",
+   "label": "right",
+   "why": "software licensed from Circle Media Labs",
+   "sentence": "For example, we license software from Bitdefender for our NETGEAR Armor cybersecurity services offering and we license software from Circle Media Labs, Inc., a wholly owned subsidiary of Aura, for our parental controls service offering.",
+   "type": "Supply Relationship",
+   "filer_ticker": "NTGR",
+   "id": 55
+  },
+  {
+   "set": "cold",
+   "filer": "Passage Bio, Inc. Common Stock",
+   "private": "NOVOHOLDINGS",
+   "direction": "supplier",
+   "label": "doubtful",
+   "why": "Novo Holdings is named as the acquirer of the supplier Catalent, i.e. its parent, not the supplier itself",
+   "sentence": "Our internal manufacturing and quality experts oversee external manufacturing and supply chain operations provided by third-party strategic relationships, such as Catalent Maryland, a unit of Catalent, Inc. acquired by Novo Holdings A/S, or Catalent.",
+   "type": "Supply Relationship",
+   "filer_ticker": "PASG",
+   "id": 56
+  },
+  {
+   "set": "cold",
+   "filer": "RenovoRx, Inc. Common Stock",
+   "private": "MEDICALMURRAY",
+   "direction": "supplier",
+   "label": "right",
+   "why": "single-source contract manufacturer",
+   "sentence": "Manufacturing and Supply For the catheter component of IAG, as well as for standalone RenovoCath supply for our commercial efforts, we currently rely on a single-source contract U.S. manufacturer, Medical Murray, Inc. of North Barrington, IL.",
+   "type": "Supply Relationship",
+   "filer_ticker": "RNXT",
+   "id": 57
+  },
+  {
+   "set": "cold",
+   "filer": "Sabine Royalty Trust",
+   "private": "ARGENTTRUST",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "the trust's trustee supplies figures for a reserve estimate (rule added: estimated using)",
+   "sentence": "Historical records of net production and revenue and our general knowledge of producing characteristics in the areas involved were used in evaluating these grouped properties. 24 Table of Contents Primary Economic Assumptions Revenue values in this report were estimated using initial prices, expenses, and costs provided by Argent Trust Company.",
+   "type": "Supply Relationship",
+   "filer_ticker": "SBR",
+   "id": 58
+  },
+  {
+   "set": "cold",
+   "filer": "Sadot Group Inc. Common Stock",
+   "private": "AGGIAFZ",
+   "direction": "supplier",
+   "label": "doubtful",
+   "why": "'historically relied on' as consultants; the sentence does not say it continues",
+   "sentence": "Our Sadot Agri-Foods operations have historically relied on Aggia LLC FZ (“Aggia”) as third-party consultants to execute commodity trades and conduct farming operations.",
+   "type": "Supply Relationship",
+   "filer_ticker": "SDOT",
+   "id": 59
+  },
+  {
+   "set": "cold",
+   "filer": "Bit Origin Limited Class A Ordinary Shares",
+   "private": "MCGRATHTONNER",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer's registered office is provided by this firm (a trivial service, but a supplier)",
+   "sentence": "Our registered office in the Cayman Islands is provided by McGrath Tonner Corporate Services Limited and located at 5th Floor, Genesis Close, George Town, PO Box 446, Grand Cayman, KYl-1106, Cayman Islands.",
+   "type": "Supply Relationship",
+   "filer_ticker": "SGRX",
+   "id": 60
+  },
+  {
+   "set": "cold",
+   "filer": "Telix Pharmaceuticals Limited American Depositary Shares",
+   "private": "IGLPHARMA",
+   "direction": "supplier",
+   "label": "right",
+   "why": "in-licensed patent families",
+   "sentence": "TLX090-Tx ( 153 Sm-DOTMP) We have in-licensed three patent families from IGL Pharma, Inc in connection with our acquisition of QSAM Biosciences, Inc., which are directed to methods of manufacturing TLX090 -Tx , kits comprising TLX090 -Tx , and its use in treatment. 121 The portfolio includes five U.S.-issued patents, 39 foreign-issued patents in Canada, Germany, France, Great Britain, Hungary, Ireland, Iceland, Italy, Luxembourg, the Netherlands, Norway, Austria, Belgium, Bulgaria, the Czech Republic, Denmark, Finland, Poland, Portugal, Slovakia, Slovenia, Sweden, Switzerland, Türkiye and Japan, and three pending foreign patent applications in Japan and Europe.",
+   "type": "Supply Relationship",
+   "filer_ticker": "TLX",
+   "id": 61
+  },
+  {
+   "set": "cold",
+   "filer": "United Microelectronic Corp.",
+   "private": "TAIWANPOWER",
+   "direction": "supplier",
+   "label": "right",
+   "why": "electricity supplied by Taiwan Power Company",
+   "sentence": "We also use substantial amounts of dual loop electricity supplied by Taiwan Power Company in the manufacturing process.",
+   "type": "Supply Relationship",
+   "filer_ticker": "UMC",
+   "id": 62
+  },
+  {
+   "set": "cold",
+   "filer": "Unicycive Therapeutics, Inc. Common Stock",
+   "private": "SPHAERAPHARMA",
+   "direction": "supplier",
+   "label": "right",
+   "why": "in-licence of UNI-494",
+   "sentence": "Our technology for UNI-494 is licensed from Sphaera Pharmaceutical Private Limited, a Singapore-based company (“Sphaera”), with offices in India and the U.S. We have the global, exclusive license to UNI-494.",
+   "type": "Supply Relationship",
+   "filer_ticker": "UNCY",
+   "id": 63
+  },
+  {
+   "set": "cold",
+   "filer": "UroGen Pharma Ltd. Ordinary Shares",
+   "private": "CENEXI",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer relies on it for bulk mitomycin",
+   "sentence": "We currently rely on Cenexi-Laboratories Thissen s.a. for the bulk mitomycin contained in Jelmyto and Zusduri .",
+   "type": "Supply Relationship",
+   "filer_ticker": "URGN",
+   "id": 64
+  },
+  {
+   "set": "cold",
+   "filer": "UroGen Pharma Ltd. Ordinary Shares",
+   "private": "ISOTOPIA",
+   "direction": "supplier",
+   "label": "right",
+   "why": "single contracted supplier of the hydrogel",
+   "sentence": "We depend on Isotopia Molecular Imaging Ltd. as our single contracted suppliers for the hydrogel contained in Jelmyto and Zusduri .",
+   "type": "Supply Relationship",
+   "filer_ticker": "URGN",
+   "id": 65
+  },
+  {
+   "set": "cold",
+   "filer": "CONTROLADORA VUELA COMPAniA DE AVIACIoN, S.A.B. DE C.V.",
+   "private": "JUNIPERTECH",
+   "direction": "supplier",
+   "label": "right",
+   "why": "software licensed from this vendor",
+   "sentence": "We operate software products under licenses from our vendors, including Jeppesen Systems AB, Navitaire LLC, Juniper Technologies Corporation, Despegar.com México, S.A. de C.V. and Loyalty Juggernaut.",
+   "type": "Supply Relationship",
+   "filer_ticker": "VLRS",
+   "id": 66
+  },
+  {
+   "set": "cold",
+   "filer": "Vision Marine Technologies Inc. Common Shares",
+   "private": "MANUNOR",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer buys all of its hulls from Manunor",
+   "sentence": "The most significant parts and components used in manufacturing our boats are: ● engines – we use one supplier of engines, E-Propulsion (for the Quietude, the Fantail 217 and the Volt 180) in addition to our use of our E-Motion™ for the Volt; ● lithium-ion batteries – we source duplicate suppliers for our lithium-ion batteries, including Neogy and Octillion and believe that we could source batteries at a similar price from the market were these suppliers unable to meet our demand; and ● hulls – we purchase all of our hulls from Manunor Inc.",
+   "type": "Supply Relationship",
+   "filer_ticker": "VMAR",
+   "id": 67
+  },
+  {
+   "set": "cold",
+   "filer": "Vistra Corp.",
+   "private": "NUCLEARELECTRIC",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "an insurer's cover is not a supply relationship (rule added: insurance provided by)",
+   "sentence": "Such accidents could also result in property damage to our nuclear plant and equipment, which could exceed coverage available under insurance provided by Nuclear Electric Insurance Limited.",
+   "type": "Supply Relationship",
+   "filer_ticker": "VST",
+   "id": 68
+  },
+  {
+   "set": "cold",
+   "filer": "Zeo Energy Corporation Class A Common Stock",
+   "private": "CONSOLIDATEDELEC",
+   "direction": "supplier",
+   "label": "right",
+   "why": "primary supplier, 46% of installed equipment",
+   "sentence": "Our primary supplier is Consolidated Electrical Distributors, Inc. (d/b/a Greentech Renewables) (“ Greentech ”), from which we purchased at least approximately 46% of the equipment that we installed in 2025.",
+   "type": "Supply Relationship",
+   "filer_ticker": "ZEO",
+   "id": 69
+  },
+  {
+   "set": "cold",
+   "filer": "Aether Holdings, Inc. Common Stock",
+   "private": "BLOOMBERG",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer's platform uses data provided by Bloomberg (the type 'Cloud Infrastructure Provider' comes from the sentence merged in before it and is wrong)",
+   "sentence": "We currently use industry leading service providers for our customer relationship management, email delivery, subscription billing, data warehouse and data center. 17 Our platform and analysts utilize data provided by Bloomberg, Chicago Board Options Exchange, Consensus, Commodity Futures Trading Commission, End of Day Historical Data and Intercontinental Exchange.",
+   "type": "Cloud Infrastructure Provider",
+   "filer_ticker": "ATHR",
+   "id": 70
+  },
+  {
+   "set": "cold",
+   "filer": "Backblaze, Inc. Class A Common Stock",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "payments are processed by Stripe",
+   "sentence": "We rely on internal systems as well as those of third parties, including Stripe, to process payments.",
+   "type": "Supply Relationship",
+   "filer_ticker": "BLZE",
+   "id": 71
+  },
+  {
+   "set": "cold",
+   "filer": "CareDx, Inc. Common Stock",
+   "private": "EPICSYSTEMS",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer depends on software provided by Epic Systems",
+   "sentence": "We are highly dependent on information technology, or IT, networks and systems for significant elements of our operations, including our laboratory information management system and certain software provided by Epic Systems Corporation.",
+   "type": "Supply Relationship",
+   "filer_ticker": "CDNA",
+   "id": 72
+  },
+  {
+   "set": "cold",
+   "filer": "DiaMedica Therapeutics Inc. Common Stock",
+   "private": "CATALENT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "Catalent procures raw materials and produces the API for the trials",
+   "sentence": "We rely on Catalent Pharma Solutions, LLC (Catalent), a contract development and manufacturing organization (CDMO) with proven GMP experience in the manufacturing of recombinant proteins for clinical trials, for procuring all of our required raw materials and producing active pharmaceutical ingredient for our clinical trials.",
+   "type": "Supply Relationship",
+   "filer_ticker": "DMAC",
+   "id": 73
+  },
+  {
+   "set": "cold",
+   "filer": "eGain Corporation Common Stock",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer relies in part on AI technologies provided by OpenAI",
+   "sentence": "We also rely in part on third-party AI technologies, such as those provided by OpenAI and other partners.",
+   "type": "Supply Relationship",
+   "filer_ticker": "EGAN",
+   "id": 74
+  },
+  {
+   "set": "cold",
+   "filer": "Kodiak AI, Inc. Common Stock",
+   "private": "DELOITTE",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "the auditor's services approved by the board (rule added: the audit committee's approvals)",
+   "sentence": "All services provided by Deloitte for our fiscal year ended December 31, 2025 were approved by our Board.",
+   "type": "Supply Relationship",
+   "filer_ticker": "KDK",
+   "id": 75
+  },
+  {
+   "set": "cold",
+   "filer": "Korea Electric Power Corp",
+   "private": "BLOOMBERG",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "Bloomberg is cited as the source of a crude oil price (rule added: according to <Name>)",
+   "sentence": "The prices of oil and LNG are substantially dependent on the price of crude oil, and according to Bloomberg (Bloomberg Ticker: PGCRDUBA), the average daily spot price of Dubai crude oil decreased from US$79.67 per barrel in 2024 to US$$68.37 per barrel in 2025 and increased to US$89.55 per barrel as of April 10, 2026.",
+   "type": "Supply Relationship",
+   "filer_ticker": "KEP",
+   "id": 76
+  },
+  {
+   "set": "cold",
+   "filer": "LightInTheBox Holding Co., Ltd. American Depositary Shares, each representing twelve ordinary shares",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "payment processing by Stripe and others",
+   "sentence": "As we offer new payment options to our customers, we may be subject to additional regulations, compliance requirements and fraud risk. ​ We rely on third parties, such as PayPal, Checkout, Stripe, Klarna, Apple Pay and Shop Pay to provide certain payment processing services, including the processing of credit card and debit card transactions.",
+   "type": "Supply Relationship",
+   "filer_ticker": "LITB",
+   "id": 77
+  },
+  {
+   "set": "cold",
+   "filer": "SolarEdge Technologies, Inc. Common Stock",
+   "private": "CONSOLIDATEDELEC",
+   "direction": "customer",
+   "label": "right",
+   "why": "one of the filer's customers, 18.6% of revenues",
+   "sentence": "In 2025, one of our customers, Consolidated Electrical Distributors, Inc, represented 18.6% of our revenues.",
+   "type": "Revenue Concentration",
+   "filer_ticker": "SEDG",
+   "id": 78
+  },
+  {
+   "set": "cold",
+   "filer": "Seanergy Maritime Holdings Corp. Common Stock",
+   "private": "FIDELITY",
+   "direction": "supplier",
+   "label": "wrong",
+   "why": "'Fidelity' here is another company (a ship manager) that shares a short name with the registry's Fidelity; no sentence rule can see that, a registry must not list a bare common brand",
+   "sentence": "Our operational success partly depends upon V.Ships Greece’s, Global Seaways’, Navilands’ and Fidelity’s satisfactory performance of these services.",
+   "type": "Supply Relationship",
+   "filer_ticker": "SHIP",
+   "id": 79
+  },
+  {
+   "set": "cold",
+   "filer": "Stabilis Solutions, Inc. Common Stock",
+   "private": "SPACEX",
+   "direction": "customer",
+   "label": "right",
+   "why": "each of three customers accounted for more than 10% of revenues (the stored share is the 10% threshold)",
+   "sentence": "For the year ended December 31, 2025, Carnival Corporation, Aggreko Plc and Space Exploration Technologies Corp each accounted for more than 10% of our revenues.",
+   "type": "Revenue Concentration",
+   "filer_ticker": "SLNG",
+   "id": 80
+  },
+  {
+   "set": "cold",
+   "filer": "Warby Parker Inc.",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "payment processing by Stripe",
+   "sentence": "We rely on third parties, including Stripe, Inc., Affirm, Inc., and PayPal Holdings, Inc. for elements of our payment processing infrastructure to accept payments from customers and Coupa Software Incorporated, in connection with our banking partners, to remit payments to suppliers.",
+   "type": "Supply Relationship",
+   "filer_ticker": "WRBY",
+   "id": 81
+  },
+  {
+   "set": "cold",
+   "filer": "X4 Pharmaceuticals, Inc. Common Stock",
+   "private": "CATALENT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "Catalent is the sole manufacturer of the capsule formulation",
+   "sentence": "We also have a master services agreement in place with Catalent Inc. (“Catalent”), which is our sole manufacturer for the final capsule drug product formulation of mavorixafor.",
+   "type": "Supply Relationship",
+   "filer_ticker": "XFOR",
+   "id": 82
+  },
+  {
+   "set": "cold",
+   "filer": "Beamr Imaging Ltd. Ordinary Share",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "Stripe is a vendor that processes the filer's data (the type comes from AWS in the same list)",
+   "sentence": "We engage third-party vendors and service providers, such as AWS and Stripe, Inc. that have comprehensive internal policies, to store and otherwise process some of our and our customers’ data, including personal, confidential, sensitive, and other information about individuals.",
+   "type": "Cloud Infrastructure Provider",
+   "filer_ticker": "BMR",
+   "id": 83
+  },
+  {
+   "set": "cold",
+   "filer": "Expensify, Inc. Class A Common Stock",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "right",
+   "why": "AI technologies licensed from OpenAI and Anthropic",
+   "sentence": "We use AI Technologies licensed from third parties, such as OpenAI and Anthropic, in our technologies and our ability to continue to use such technologies at the scale we need may be dependent on access to such specific third parties' software and infrastructure.",
+   "type": "Supply Relationship",
+   "filer_ticker": "EXFY",
+   "id": 84
+  },
+  {
+   "set": "cold",
+   "filer": "Expensify, Inc. Class A Common Stock",
+   "private": "ANTHROPIC",
+   "direction": "supplier",
+   "label": "right",
+   "why": "AI technologies licensed from OpenAI and Anthropic",
+   "sentence": "We use AI Technologies licensed from third parties, such as OpenAI and Anthropic, in our technologies and our ability to continue to use such technologies at the scale we need may be dependent on access to such specific third parties' software and infrastructure.",
+   "type": "Supply Relationship",
+   "filer_ticker": "EXFY",
+   "id": 85
+  },
+  {
+   "set": "cold",
+   "filer": "PicS N.V. Class A Common Shares",
+   "private": "DATABRICKS",
+   "direction": "supplier",
+   "label": "right",
+   "why": "one of the vendors the filer relies on",
+   "sentence": "We also rely on other vendors, such as MongoDB, Dynatrace, New Relic, Splunk, Databricks, Cloudflare, CrowdStrike, among others.",
+   "type": "Cloud Infrastructure Provider",
+   "filer_ticker": "PICS",
+   "id": 86
+  },
+  {
+   "set": "cold",
+   "filer": "RedCloud Holdings plc Ordinary Shares",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "payment processing infrastructure",
+   "sentence": "We rely on third parties, including CoralPay, DLocal, Pay@ and Stripe, for elements of our payment processing infrastructure to process payments for the sale and purchase of goods and services between registered users on Red101 by accepting payments from retailers and remitting payments to distributors and or brands.",
+   "type": "Supply Relationship",
+   "filer_ticker": "RCT",
+   "id": 87
+  },
+  {
+   "set": "cold",
+   "filer": "Roper Technologies, Inc. Common Stock",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer relies on AI platforms provided by OpenAI, Anthropic and others",
+   "sentence": "We rely on third-party AI platforms and services, including proprietary and open-source large language models and other AI technologies provided by companies such as OpenAI, Anthropic, Google, and Microsoft.",
+   "type": "Supply Relationship",
+   "filer_ticker": "ROP",
+   "id": 88
+  },
+  {
+   "set": "cold",
+   "filer": "Roper Technologies, Inc. Common Stock",
+   "private": "ANTHROPIC",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the filer relies on AI platforms provided by OpenAI, Anthropic and others",
+   "sentence": "We rely on third-party AI platforms and services, including proprietary and open-source large language models and other AI technologies provided by companies such as OpenAI, Anthropic, Google, and Microsoft.",
+   "type": "Supply Relationship",
+   "filer_ticker": "ROP",
+   "id": 89
+  }
+ ],
+ "near_misses": [
+  {
+   "set": "tuning",
+   "filer": "NVIDIA Corporation Common Stock",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "none",
+   "why": "an investment, not supply",
+   "sentence": "We are finalizing an investment and partnership agreement with OpenAI.",
+   "filer_ticker": "NVDA",
+   "id": 90
+  },
+  {
+   "set": "tuning",
+   "filer": "Microsoft Corporation Common Stock",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "none",
+   "why": "an investor",
+   "sentence": "Microsoft is a major investor in OpenAI and will continue to receive revenue-sharing payments.",
+   "filer_ticker": "MSFT",
+   "id": 91
+  },
+  {
+   "set": "tuning",
+   "filer": "Amazon.com, Inc. Common Stock",
+   "private": "ANTHROPIC",
+   "direction": "supplier",
+   "label": "none",
+   "why": "the filer invested in convertible notes from Anthropic",
+   "sentence": "From Q3 2023 to Q4 2024, we invested $ 5.3 billion in convertible notes from Anthropic, which are classified as available-for-sale and as Level 3 assets, and as of December 31, 2024 had an estimated fair value of approximately $ 13.8 billion.",
+   "filer_ticker": "AMZN",
+   "id": 92
+  },
+  {
+   "set": "tuning",
+   "filer": "Nebius Group N.V. Class A Ordinary Shares",
+   "private": "CRUSOE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "competitors",
+   "sentence": "For our core AI infrastructure business, our key competitors are specialized cloud service providers focused on AI, including CoreWeave, Crusoe and Lambda.",
+   "filer_ticker": "NBIS",
+   "id": 93
+  },
+  {
+   "set": "tuning",
+   "filer": "DoorDash, Inc. Class A Common Stock",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a hypothetical replacement",
+   "sentence": "Further, the software and services provided by a replacement for Stripe or PayPal may not meet our expectations, may contain errors or vulnerabilities, and could be compromised or experience outages.",
+   "filer_ticker": "DASH",
+   "id": 94
+  },
+  {
+   "set": "tuning",
+   "filer": "MongoDB, Inc. Class A Common Stock",
+   "private": "DELOITTE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "channel partners",
+   "sentence": "We have also expanded our existing partnerships with independent software vendors and global systems integrators including IBM, Accenture, Infosys, Capgemini, Confluent, HCL, Wipro, Cognizant, Deloitte and Tata Consultancy Services.",
+   "filer_ticker": "MDB",
+   "id": 95
+  },
+  {
+   "set": "tuning",
+   "filer": "SERVICENOW, INC.",
+   "private": "DELOITTE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "channel partners",
+   "sentence": "Additionally, our relationships with global system integrators such as Accenture, Cognizant, Deloitte, EY, Infosys and KPMG, among others, continue to help us expand our business by offering ServiceNow solutions to their customers.",
+   "filer_ticker": "NOW",
+   "id": 96
+  },
+  {
+   "set": "tuning",
+   "filer": "Oracle Corp",
+   "private": "ERNSTYOUNG",
+   "direction": "supplier",
+   "label": "none",
+   "why": "the auditor's report",
+   "sentence": "We involved our tax subject matter professionals in assessing these positions and used our knowledge of relevant tax laws and experience with related taxing authorities. /s/ Ernst & Young LLP We have served as the Company’s auditor since 2002.",
+   "filer_ticker": "ORCL",
+   "id": 97
+  },
+  {
+   "set": "tuning",
+   "filer": "SoundHound AI, Inc Class A Common Stock",
+   "private": "COMPENSIA",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a pay consultant",
+   "sentence": "Role of Compensation Consultant Our Compensation Committee has engaged Compensia (“Compensia” or the “Compensation Consultant”), most recently in July 2025, to provide executive compensation consulting services.",
+   "filer_ticker": "SOUN",
+   "id": 98
+  },
+  {
+   "set": "tuning",
+   "filer": "Genelux Corporation Common Stock",
+   "private": "GUGGENHEIMSEC",
+   "direction": "supplier",
+   "label": "none",
+   "why": "an at-the-market offering agent",
+   "sentence": "In February 2024, we entered into a sales agreement with Guggenheim Securities, LLC (Guggenheim) (the 2024 Sales Agreement) implementing an “at-the-market” offering program (the ATM).",
+   "filer_ticker": "GNLX",
+   "id": 99
+  },
+  {
+   "set": "tuning",
+   "filer": "Snap Inc.",
+   "private": "BYTEDANCE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "competitors",
+   "sentence": "Many of these companies, such as Alphabet (including Google and YouTube), Apple, ByteDance (TikTok and affiliated joint ventures), Meta (including Facebook, Instagram, Threads, and WhatsApp), Pinterest, Reddit and X (formerly Twitter), may have greater financial and human resources and, in some cases, larger user bases.",
+   "filer_ticker": "SNAP",
+   "id": 100
+  },
+  {
+   "set": "tuning",
+   "filer": "Tesla, Inc. Common Stock",
+   "private": "XAICORP",
+   "direction": "supplier",
+   "label": "none",
+   "why": "an officer's other roles",
+   "sentence": "For example: Mr. Musk also currently holds management positions at Space Exploration Technologies Corp., X.AI Holdings Corp. (“xAI”), Neuralink Corp. and The Boring Company, and is involved in other ventures.",
+   "filer_ticker": "TSLA",
+   "id": 101
+  },
+  {
+   "set": "tuning",
+   "filer": "Roblox Corporation",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "distribution channels through which the filer is paid",
+   "sentence": "We utilize these distribution channels, such as Amazon, Apple, Blackhawk, ePay, Google, Incomm, PayPal, Stripe, Microsoft, Sony’s PlayStation Network, and Xsolla, to receive cash proceeds from purchases of Robux.",
+   "filer_ticker": "RBLX",
+   "id": 102
+  },
+  {
+   "set": "tuning",
+   "filer": "Duolingo, Inc. Class A Common Stock",
+   "private": "STRIPE",
+   "direction": "customer",
+   "label": "none",
+   "why": "payment processors' share of revenue, not customers",
+   "sentence": "Year Ended December 31, (In thousands) 2025 2024 2023 Advertising $ 79,725 $ 54,907 $ 49,858 Duolingo English Test 42,006 45,640 41,212 IAPs 40,479 38,653 34,673 Other 1,937 1,293 682 Total other revenue $ 164,147 $ 140,493 $ 126,425 Three service providers Apple, Google, and Stripe processed 61.6 %, 23.4 %, and 10.3 % of total revenues for the year ended December 31, 2025, respectively.",
+   "filer_ticker": "DUOL",
+   "id": 103
+  },
+  {
+   "set": "tuning",
+   "filer": "Unity Software Inc.",
+   "private": "EPICGAMES",
+   "direction": "supplier",
+   "label": "none",
+   "why": "competitor",
+   "sentence": "Most of these competitors offer point solutions that represent a subset of the offerings on our platform: • Create Solutions: We primarily compete against proprietary game engines built in-house by large game studios, as well as Cocos2d-x (Chukong Technologies), Godot, and Unreal Engine (Epic Games), which offer game development tools primarily serving the PC games and mobile games sectors, and, in the case of Unreal Engine (Epic Games), industries beyond gaming, as well as with various social entertainment platforms.",
+   "filer_ticker": "U",
+   "id": 104
+  },
+  {
+   "set": "tuning",
+   "filer": "AeroVironment, Inc. Common Stock",
+   "private": "ANDURIL",
+   "direction": "supplier",
+   "label": "none",
+   "why": "competitors",
+   "sentence": "Our current principal competitors include Elbit Systems Ltd., Quantum-Systems, Inc., Redwire Corporation, Teledyne Technologies, Inc., Sierra Nevada Corporation, Lockheed Martin Corporation, The Boeing Company, Textron, Inc., Shield AI, Inc., Northrop Grumman Corporation, Griffon Aerospace, Inc., L3Harris Technologies, Inc., Anduril Industries, Inc., Airbus SE and Israeli Aircraft Industries.",
+   "filer_ticker": "AVAV",
+   "id": 105
+  },
+  {
+   "set": "tuning",
+   "filer": "HUBSPOT, INC.",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "an integration exposed to misuse",
+   "sentence": "Additionally, our end-to-end payment solution, as well as our Stripe payment processing integration (“Payments”), are both built within Commerce Hub and are susceptible to potentially illegal or improper uses, including money laundering, terrorist financing, fraudulent or illegal sales of goods or services, piracy of software, movies, music, and other copyrighted or trademarked information, bank fraud, securities fraud, pyramid or ponzi schemes, or the facilitation of other illegal or improper activity.",
+   "filer_ticker": "HUBS",
+   "id": 106
+  },
+  {
+   "set": "tuning",
+   "filer": "Mobileye Global Inc. Class A Common Stock",
+   "private": "FIGUREAI",
+   "direction": "supplier",
+   "label": "none",
+   "why": "competitors",
+   "sentence": "We face competition from other humanoid robotics developers such as Tesla, Figure AI, Sanctuary AI, PAL Robotics, Agility Robotics and Boston Dynamics, as well as additional emerging players (including a number of Chinese robotics companies) seeking to commercialize similar capabilities.",
+   "filer_ticker": "MBLY",
+   "id": 107
+  },
+  {
+   "set": "tuning",
+   "filer": "G-III Apparel Group, LTD. Common Stock",
+   "private": "FANATICS",
+   "direction": "customer",
+   "label": "none",
+   "why": "a customer named without a share",
+   "sentence": "In addition, we sell to leading online retail partners such as Amazon, Fanatics, Zalando and Zappos.",
+   "filer_ticker": "GIII",
+   "id": 108
+  },
+  {
+   "set": "tuning",
+   "filer": "Spotify Technology S.A.",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a partnership",
+   "sentence": "On October 6, 2025, we announced a new partnership with OpenAI, extending our ubiquity strategy into emerging agentic AI.",
+   "filer_ticker": "SPOT",
+   "id": 109
+  },
+  {
+   "set": "tuning",
+   "filer": "Funko, Inc. Class A Common Stock",
+   "private": "FANATICS",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a director's other roles",
+   "sentence": "Mr. Edwards currently serves on the board of directors of VF Corporation, a leading apparel, footwear and accessories company, and Fanatics Inc., a global digital sports platform, and previously served on the board of directors of Mattel Inc. from 2012 to 2018.",
+   "filer_ticker": "FNKO",
+   "id": 110
+  },
+  {
+   "set": "tuning",
+   "filer": "Shopify Inc. Class A subordinate voting shares",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a joint purchase commitment",
+   "sentence": "Shopify is also a founding member of Frontier, alongside Stripe, Alphabet and McKinsey, among others, with a goal to collectively purchase over $1 billion of permanent carbon removal by the end of 2030.",
+   "filer_ticker": "SHOP",
+   "id": 111
+  },
+  {
+   "set": "tuning",
+   "filer": "Atlassian Corporation Class A Common Stock",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "none",
+   "why": "an integration list",
+   "sentence": "These same integration pathways extend to AI agents, which can participate in workflows alongside human teammates – for example, an agent assigned a task in Jira can draw on connected context from Confluence, Loom, and third-party tools to complete its work within the governed workflow. • Open and Extensible with a Vast Ecosystem - We are dedicated to making our apps open and interoperable with a wide range of other platforms and applications that customers use, such as Microsoft, Zoom, Anthropic, Cursor, OpenAI, Salesforce, Workday, and Dropbox.",
+   "filer_ticker": "TEAM",
+   "id": 112
+  },
+  {
+   "set": "cold",
+   "filer": "Global Payments, Inc.",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "competitors",
+   "sentence": "In the United States, we compete with a large number of providers, including but not limited to Fiserv, Inc. (\"Fiserv\"), Chase Paymentech Solutions, LLC, Elavon, Inc., a subsidiary of U.S. Bancorp, Bank of America Merchant Services, Wells Fargo Merchant Services, Toast, Inc., Stripe, Inc. (\"Stripe\"), Shopify Inc. and Block Inc. (\"Block\").",
+   "filer_ticker": "GPN",
+   "id": 113
+  },
+  {
+   "set": "cold",
+   "filer": "Wix.com Ltd. Ordinary Shares",
+   "private": "CANVA",
+   "direction": "supplier",
+   "label": "none",
+   "why": "competitors",
+   "sentence": "Providers of these point products vary and include: • DIY template-based and other website design companies that enable website creation such as Squarespace and Webflow; • Versatile, web-based, and app-based graphic design platforms such as Canva and Figma; • offerings that provide e-commerce software enabling a merchant to sell goods online such as Shopify and BigCommerce; • software that enables a business to take and manage appointments and/or reservation schedules online, such as Mindbody; • content management systems that help users build and manage content for a website such as WordPress.org and Drupal; • solutions that help businesses market themselves online such as search engine marketing, or SEM, and SEO providers, e-mail marketing solutions and online directory listing services; and • “vibe coding” solutions for developers, such as Claude Code, Cursor and Replit, and AI-powered low-code/no-code application builders, such as Lovable, Google AI Studio, Bolt.new, and V0 which may be competitive with our Base44 offering.",
+   "filer_ticker": "WIX",
+   "id": 114
+  },
+  {
+   "set": "cold",
+   "filer": "L3Harris Technologies, Inc.",
+   "private": "ANDURIL",
+   "direction": "supplier",
+   "label": "none",
+   "why": "competitors",
+   "sentence": "We compete domestically and internationally against large defense companies; principally BAE Systems, Boeing, General Dynamics, Lockheed Martin, Northrop Grumman, RTX, Thales and non-traditional defense contractors, such as Anduril, Ursa Major and Silvus Technologies.",
+   "filer_ticker": "LHX",
+   "id": 115
+  },
+  {
+   "set": "cold",
+   "filer": "Energy Vault Holdings, Inc.",
+   "private": "CRUSOE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a partnership framework",
+   "sentence": "In connection with this initiative, we have entered into a strategic framework agreement with Crusoe to pursue modular data center projects, which we expect to enable phased deployments beginning in 2026.",
+   "filer_ticker": "NRGV",
+   "id": 116
+  },
+  {
+   "set": "cold",
+   "filer": "TOWNSQUARE MEDIA, INC.",
+   "private": "PERPLEXITY",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a rival source of traffic",
+   "sentence": "The popularity of Artificial Intelligence (“AI”) driven news aggregation websites, customized news feeds 18 (often free to users), and AI driven content, including Chat GPT, Perplexity, and Google’s Gemini, has and may continue to reduce our traffic levels by creating a disincentive for the audience to visit our websites or use our mobile applications.",
+   "filer_ticker": "TSQ",
+   "id": 117
+  },
+  {
+   "set": "cold",
+   "filer": "The Kraft Heinz Company Common Stock",
+   "private": "STAPLESINC",
+   "direction": "supplier",
+   "label": "none",
+   "why": "the Consumer Staples index in a performance graph",
+   "sentence": "Kraft Heinz S&P 500 S&P Consumer Staples Food and Soft Drink Products December 24, 2020 $ 100.00 $ 100.00 $ 100.00 December 23, 2021 105.08 129.44 113.81 December 30, 2022 126.55 106.92 125.59 December 29, 2023 120.16 135.03 119.76 December 27, 2024 104.46 171.35 117.44 December 26, 2025 86.97 201.42 121.63 The above performance graph shall not be deemed to be “soliciting material” or to be “filed” with the SEC or subject to Regulation 14A or 14C, or to the liabilities of Section 18 of the Exchange Act. 26 Issuer Purchases of Equity Securities During the Three Months Ended December 27, 2025 Our share repurchase activity in the three months ended December 27, 2025 was: Total Number of Shares Purchased (a) Average Price Paid Per Share Total Number of Shares Purchased as Part of Publicly Announced Plans or Programs (b) Approximate Dollar Value of Shares that May Yet Be Purchased Under the Plans or Programs (in millions) 9/28/2025 — 11/01/2025 4,121 $ 25.61 — $ 1,502 11/02/2025 — 11/29/2025 8,483 25.65 — 1,502 11/30/2025 — 12/27/2025 148 24.56 — 1,502 Total 12,752 — (a) Includes shares withheld for tax liabilities associated with the vesting of RSUs.",
+   "filer_ticker": "KHC",
+   "id": 118
+  },
+  {
+   "set": "cold",
+   "filer": "Intrusion Inc. Common Stock",
+   "private": "BLOOMBERG",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a price source",
+   "sentence": "Shares of common stock issued pursuant to SEPA will be purchased at a price equal to 95% of the lowest daily volume-weighted average price of our common on the Nasdaq Stock Market during the three consecutive trading days during regular trading hours, as reported by Bloomberg L.P. beginning on the date we deliver an advance notice.",
+   "filer_ticker": "INTZ",
+   "id": 119
+  },
+  {
+   "set": "cold",
+   "filer": "McGraw Hill, Inc.",
+   "private": "COMPENSIA",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a pay consultant",
+   "sentence": "Role of Compensation Consultant The Company has engaged Compensia, Inc., a nationally recognized compensation consulting firm (“Compensia”), to serve as its independent compensation consultant and advise our Compensation Committee with respect to the structure of our executive and equity compensation programs and the compensation levels for our executive officers when compared to our peers and to provide other advice with respect to our executive officer and director compensation programs.",
+   "filer_ticker": "MH",
+   "id": 120
+  },
+  {
+   "set": "cold",
+   "filer": "Dragonfly Energy Holdings Corp. Common Stock (NV)",
+   "private": "COMPENSIA",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a pay consultant",
+   "sentence": "Compensia, Inc. viewed both executive and director compensation and did not provide us any other services.",
+   "filer_ticker": "DFLI",
+   "id": 121
+  },
+  {
+   "set": "cold",
+   "filer": "Lotus Technology Inc. American Depositary Shares",
+   "private": "KPMGLLP",
+   "direction": "supplier",
+   "label": "none",
+   "why": "the former auditor",
+   "sentence": "We provided a copy of the foregoing disclosure in Item 16F to KPMG and requested that KPMG furnish a letter addressed to the SEC stating whether it agrees with the above statements, and if not, stating the respects in which it does not agree.",
+   "filer_ticker": "LOT",
+   "id": 122
+  },
+  {
+   "set": "cold",
+   "filer": "MINISO Group Holding Limited American Depositary Shares, each representing four Ordinary Shares",
+   "private": "KPMGLLP",
+   "direction": "supplier",
+   "label": "none",
+   "why": "the former auditor",
+   "sentence": "We provided KPMG Huazhen LLP with a copy of the foregoing disclosure and requested from KPMG Huazhen LLP a letter addressed to the SEC indicating whether it agrees with such disclosure.",
+   "filer_ticker": "MNSO",
+   "id": 123
+  },
+  {
+   "set": "cold",
+   "filer": "EVERTEC, INC.",
+   "private": "FIDELITY",
+   "direction": "supplier",
+   "label": "none",
+   "why": "competitors",
+   "sentence": "In payment services, we compete with several other third-party card processors, debit networks, and financial technology providers, including Tecnocom Telecomunicaciones y Energía, S.A., Galileo Financial Technologies, LLC, Marqeta, Inc., Fidelity National Information Services, Inc., Fiserv, Inc., Total System Services, Inc., MasterCard, Inc., Visa, Inc., American Express, Discover, Global Payments, Inc., dLocal Corp.",
+   "filer_ticker": "EVTC",
+   "id": 124
+  },
+  {
+   "set": "cold",
+   "filer": "Astrotech Corporation (DE) Common Stock",
+   "private": "SPACEX",
+   "direction": "supplier",
+   "label": "none",
+   "why": "a competitor",
+   "sentence": "For example, Space Exploration Technologies Corp. (“SpaceX”) is substantially better capitalized than us and possesses substantial vertical integration across launch, spacecraft manufacturing and mission operations, which provides it with significant cost and schedule advantages that could enable it to offer competing lunar infrastructure services at lower prices or on faster timelines than we are able to achieve.",
+   "filer_ticker": "ASTC",
+   "id": 125
+  },
+  {
+   "set": "cold",
+   "filer": "Edible Garden AG Incorporated Common Stock",
+   "private": "FIDELITY",
+   "direction": "supplier",
+   "label": "none",
+   "why": "'Fidelity Paper & Supply' is another company",
+   "sentence": "We source the raw materials for production from multiple suppliers, including Ball Horticulture, Fidelity Paper & Supply, Coastal Container, Gristmill, Griffin Supplies, East Jordan Plastics, Caney Forks Farm, Jacobs Del Cabo and Sun Gro Horticulture, and expect that those supplies will continue to be available for our use.",
+   "filer_ticker": "EDBL",
+   "id": 126
+  },
+  {
+   "set": "cold",
+   "filer": "Dynatrace, Inc.",
+   "private": "DELOITTE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "channel partners",
+   "sentence": "We work closely with a number of strategic GSIs, including Accenture, Atos, Deloitte, DXC, and Kyndryl, to help customers digitally transform their businesses and reduce cloud complexity.",
+   "filer_ticker": "DT",
+   "id": 127
+  },
+  {
+   "set": "cold",
+   "filer": "Five9, Inc. Common Stock",
+   "private": "DELOITTE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "channel partners",
+   "sentence": "We have built a robust ecosystem of partners including a variety of leading CRM software vendors such as Microsoft, Oracle, Salesforce, ServiceNow and Zendesk; WEM vendors such as Calabrio, Inc., or Calabrio, and Verint Systems Inc., or Verint; unified communications vendors such as Microsoft Teams, RingCentral and Zoom; system integrators such as Accenture PLC, Deloitte Consulting LLP, Ernst & Young, IBM, Kyndryl, Inc., PwC LLP and Slalom Consulting, LLC; technology solution distributors such as Avant, LLC, Intelysis, Sandler Partners, Telarus, Amplix and Bridgepoint Technologies; value-added resellers such as AT&T Inc., Babble Cloud, British Telecom, Connect Managed Services (UK) Limited, CDW Corporation, NWN Carousel, Opus Technology and TELUS Communications; software vendors such as Cresta AI, Pindrop, Blackchair, Level AI, Calabrio and its recently acquired subsidiary, Verint; and telephony providers.",
+   "filer_ticker": "FIVN",
+   "id": 128
+  },
+  {
+   "set": "cold",
+   "filer": "Snail, Inc. Class A Common Stock",
+   "private": "EPICGAMES",
+   "direction": "supplier",
+   "label": "none",
+   "why": "the Epic Games Store sells the filer's games",
+   "sentence": "Conversely, if we overestimate the amount of server capacity required by our business, we may incur additional operating costs. 16 We also rely on platforms and networks operated by third parties, such as Xbox Live and Game Pass, PlayStation Network, Steam, My Nintendo Store and Epic Games Store for the sale and digital delivery of downloadable console and PC game content, the functionality of our games with online features.",
+   "filer_ticker": "SNAL",
+   "id": 129
+  },
+  {
+   "set": "cold",
+   "filer": "Snail, Inc. Class A Common Stock",
+   "private": "EPICGAMES",
+   "direction": "supplier",
+   "label": "none",
+   "why": "the Epic Games Store sells the filer's games",
+   "sentence": "We rely on third-party platforms, such as Xbox Live and Game Pass, PlayStation Network, Steam, Epic Games Store, My Nintendo Store, the Apple App Store, the Google Play Store, and the Amazon Appstore, to distribute our games and collect revenues generated on such platforms and rely on third-party payment service providers to collect revenues generated on our own platforms.",
+   "filer_ticker": "SNAL",
+   "id": 130
+  },
+  {
+   "set": "cold",
+   "filer": "Taiwan Semiconductor Manufacturing Company Ltd.",
+   "private": "DELOITTE",
+   "direction": "supplier",
+   "label": "none",
+   "why": "the auditor's fees",
+   "sentence": "PRINCIPAL ACCOUNTANT FEES AND SERVICES The table below summarizes the fees that we paid for services provided by Deloitte & Touche (PCAOB ID No. 1060 ) and its affiliated firms (the “Deloitte Entities”) for the years ended December 31, 2024 and 2025 .",
+   "filer_ticker": "TSM",
+   "id": 131
+  }
+ ],
+ "known_misses": [
+  {
+   "set": "tuning",
+   "filer": "Microsoft Corporation Common Stock",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "right",
+   "why": "an in-licence worded 'hold rights to', no dependence cue",
+   "sentence": "We hold rights to OpenAI’s intellectual property, including models and infrastructure, for integration into our products. 34 PART II Item 7 Economic Conditions, Challenges, and Risks The markets for software, devices, and cloud-based services are dynamic and highly competitive.",
+   "filer_ticker": "MSFT",
+   "id": 132
+  },
+  {
+   "set": "tuning",
+   "filer": "Advanced Micro Devices, Inc. Common Stock",
+   "private": "OPENAI",
+   "direction": "customer",
+   "label": "right",
+   "why": "a customer named without a share of revenue",
+   "sentence": "In October 2025, we entered into a product purchase agreement with OpenAI OpCo, LLC, (OpenAI) to deploy 6 gigawatts of AMD GPUs, with the deployment of the first gigawatt of capacity powered by our AMD Instinct MI450 series products.",
+   "filer_ticker": "AMD",
+   "id": 133
+  },
+  {
+   "set": "tuning",
+   "filer": "CoreWeave, Inc. Class A Common Stock",
+   "private": "OPENAI",
+   "direction": "customer",
+   "label": "right",
+   "why": "a significant customer named without a share of revenue",
+   "sentence": "In May 2025, we entered into a master services agreement with OpenAI OpCo, LLC (\"OpenAI\") and in September 2025, we entered into an order form under this master services agreement pursuant to which OpenAI has committed to pay us up to approximately $6.5 billion through May 31, 2031 and, as a result, we expect OpenAI to be a significant customer in future periods.",
+   "filer_ticker": "CRWV",
+   "id": 134
+  },
+  {
+   "set": "tuning",
+   "filer": "Tesla, Inc. Common Stock",
+   "private": "XAICORP",
+   "direction": "customer",
+   "label": "right",
+   "why": "revenue from xAI stated in dollars, not as a share",
+   "sentence": "During the year ended December 31, 2025, we recognized $ 430 million of revenues and $ 285 million of cost of revenues from xAI for its purchase of our Megapack products in the ordinary course of business.",
+   "filer_ticker": "TSLA",
+   "id": 135
+  },
+  {
+   "set": "tuning",
+   "filer": "DoorDash, Inc. Class A Common Stock",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "'merchants' after the name reads as a sales channel (a rule for listed names too)",
+   "sentence": "We primarily rely on a third-party payment processor, Stripe, to process payments made to merchants and Dashers and third-party payment processors to process payments made by consumers, primarily Stripe and PayPal.",
+   "filer_ticker": "DASH",
+   "id": 136
+  },
+  {
+   "set": "tuning",
+   "filer": "Snap Inc.",
+   "private": "PERPLEXITY",
+   "direction": "supplier",
+   "label": "right",
+   "why": "a dependence worded as a risk, no 'rely' cue",
+   "sentence": "If Perplexity or other third-party AI providers experience service outages, significant latency, or otherwise fail to scale their systems to meet our traffic demands, users may experience a degraded version of our products and services, which could result in a negative user experience, decreased engagement, and a loss of trust.",
+   "filer_ticker": "SNAP",
+   "id": 137
+  },
+  {
+   "set": "tuning",
+   "filer": "Intuitive Machines, Inc. Class A Common Stock",
+   "private": "SPACEX",
+   "direction": "supplier",
+   "label": "right",
+   "why": "'our launch provider, SpaceX' is an appositive with no dependence cue",
+   "sentence": "Prior to commencing missions, we must complete internal integration activities as well as launch vehicle integration with our launch provider, SpaceX.",
+   "filer_ticker": "LUNR",
+   "id": 138
+  },
+  {
+   "set": "tuning",
+   "filer": "Globalstar, Inc. Common Stock",
+   "private": "SPACEX",
+   "direction": "supplier",
+   "label": "right",
+   "why": "an agreement for a service, with no dependence cue",
+   "sentence": "In each of August 2023 and June 2025, we entered into a Launch Services Agreement with Space Exploration Technologies Corp. (“SpaceX”) and certain related ancillary agreements (collectively, the “Launch Services Agreements”), providing for two launches of the replacement satellites that we are acquiring pursuant to the 2022 satellite procurement agreement with MDA Space.",
+   "filer_ticker": "GSAT",
+   "id": 139
+  },
+  {
+   "set": "tuning",
+   "filer": "KVH Industries, Inc. Common Stock",
+   "private": "SPACEX",
+   "direction": "supplier",
+   "label": "right",
+   "why": "'acquire ... from' is not a cue",
+   "sentence": "We acquire satellite service capacity from a small number of available providers, primarily SpaceX's Starlink, SES and Eutelsat OneWeb, and seek to generate a profit primarily by purchasing these services in bulk or at wholesale prices that we anticipate will allow us to resell those services to our customers at higher prices.",
+   "filer_ticker": "KVHI",
+   "id": 140
+  },
+  {
+   "set": "tuning",
+   "filer": "Core Scientific, Inc. Common Stock",
+   "private": "BITMAIN",
+   "direction": "supplier",
+   "label": "right",
+   "why": "'have sourced' is a past participle and 'historically' says it may have ended",
+   "sentence": "Historically, we have sourced substantially all of our miners from Bitmain Technologies Limited (“Bitmain”), one of the leading manufacturers of digital asset mining equipment.",
+   "filer_ticker": "CORZ",
+   "id": 141
+  },
+  {
+   "set": "tuning",
+   "filer": "Sweetgreen, Inc.",
+   "private": "STRIPE",
+   "direction": "supplier",
+   "label": "right",
+   "why": "'began using' is not a cue",
+   "sentence": "Beginning in the fourth quarter of fiscal year 2023, we began using Stripe for customer account management and payment processing through our smartphone application.",
+   "filer_ticker": "SG",
+   "id": 142
+  },
+  {
+   "set": "tuning",
+   "filer": "BeOne Medicines Ltd. American Depositary Shares",
+   "private": "CATALENT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "a supply agreement, no dependence cue",
+   "sentence": "For example, we have entered into a commercial supply agreement for TEVIMBRA with Boehringer Ingelheim Biopharmaceuticals (China) Ltd. (“Boehringer Ingelheim”) and entered into a commercial supply agreement for BRUKINSA with Catalent Pharma Solutions, LLC (“Catalent”).",
+   "filer_ticker": "ONC",
+   "id": 143
+  },
+  {
+   "set": "tuning",
+   "filer": "Xenetic Biosciences, Inc. Common Stock",
+   "private": "CATALENT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "a statement of work, no dependence cue",
+   "sentence": "Catalent Pharma Solutions LLC (“Catalent”) On June 30, 2022, we entered into a Statement of Work (the “SOW”) with Catalent to outline the general scope of work, timeline, and pricing pursuant to which Catalent will provide certain services to the Company to perform current Good Manufacturing Practices (“cGMP”) manufacturing of the Company’s recombinant protein, Human DNase I. The parties agreed to enter into a Master Services Agreement that will contain terms and conditions to govern the project contemplated by the SOW and that will supersede the addendum to the SOW containing Catalent’s standard terms and conditions. 7 Other Agreements We have also entered into various research, development, license and supply agreements with Serum Institute of India (“Serum Institute”), Pharmsynthez and SynBio, a wholly owned subsidiary of Pharmsynthez.",
+   "filer_ticker": "XBIO",
+   "id": 144
+  },
+  {
+   "set": "cold",
+   "filer": "Torrid Holdings Inc.",
+   "private": "STAPLESINC",
+   "direction": "supplier",
+   "label": "right",
+   "why": "'is one of our suppliers' needs a sole or primary",
+   "sentence": "Staples, Inc., an entity indirectly controlled by affiliates of Sycamore, is one of our suppliers.",
+   "filer_ticker": "CURV",
+   "id": 145
+  },
+  {
+   "set": "cold",
+   "filer": "Barnes & Noble Education, Inc",
+   "private": "FANATICS",
+   "direction": "supplier",
+   "label": "right",
+   "why": "a service provider, no dependence cue",
+   "sentence": "Fanatics operates as our service provider, including processing consumer personal information on our behalf, using their cutting-edge e-commerce and technology expertise to offer our campus store websites expanded product selection, a world-class online and mobile experience, and a progressive direct-to-consumer platform.",
+   "filer_ticker": "BNED",
+   "id": 146
+  },
+  {
+   "set": "cold",
+   "filer": "Xencor, Inc. Common Stock",
+   "private": "VETTER",
+   "direction": "supplier",
+   "label": "right",
+   "why": "the supplier is the subject: 'X manufactures for us'",
+   "sentence": "Vetter Pharma International GmbH currently manufactures drug products for our XmAb819 and XmAb541 programs.",
+   "filer_ticker": "XNCR",
+   "id": 147
+  },
+  {
+   "set": "cold",
+   "filer": "Halozyme Therapeutics, Inc. Common Stock",
+   "private": "CATALENT",
+   "direction": "supplier",
+   "label": "right",
+   "why": "supply agreements, no dependence cue",
+   "sentence": "We have existing supply agreements with contract manufacturing organizations Avid Bioservices, Inc. (“Avid”), Catalent Indiana LLC (“Catalent”) and Lonza Sales AG (“Lonza”) to produce supplies of bulk rHuPH20.",
+   "filer_ticker": "HALO",
+   "id": 148
+  },
+  {
+   "set": "cold",
+   "filer": "Asana, Inc. Class A Common Stock",
+   "private": "OPENAI",
+   "direction": "supplier",
+   "label": "right",
+   "why": "model providers named as partners that power the filer's AI features",
+   "sentence": "We have expanded this ecosystem through strategic partnerships with leading foundational model providers, including OpenAI and Anthropic, to power our AI features with state-of-the-art intelligence.",
+   "filer_ticker": "ASAN",
+   "id": 149
+  },
+  {
+   "set": "cold",
+   "filer": "Freightos Limited Ordinary shares",
+   "private": "ANTHROPIC",
+   "direction": "supplier",
+   "label": "right",
+   "why": "'our use of' is not a cue",
+   "sentence": "Our use of Anthropic’s AI models in certain parts of our business subjects us to significant regulatory and political risk following Anthropic’s recent designation as a “supply chain risk” by the U.S. Department of Defense and the current US administration’s directive to phase out its use across federal agencies.",
+   "filer_ticker": "CRGO",
+   "id": 150
+  },
+  {
+   "set": "cold",
+   "filer": "SharonAI Holdings, Inc. Class A Common Stock",
+   "private": "CANVA",
+   "direction": "customer",
+   "label": "right",
+   "why": "a customer named without a share",
+   "sentence": "Recent commercial wins with high-growth AI native Canva and industry participant GMI Cloud US Inc., demonstrating our ability to serve customers that have large, sophisticated AI and HPC requirements.",
+   "filer_ticker": "SHAZ",
+   "id": 151
+  },
+  {
+   "set": "cold",
+   "filer": "Erayak Power Solution Group Inc. Class A Ordinary Shares",
+   "private": "ALDIINC",
+   "direction": "customer",
+   "label": "right",
+   "why": "'we are a supplier for' reads as the filer being the supplier, and gives no share",
+   "sentence": "Furthermore, we are a supplier for many international companies, including Einhell Germany AG, Canadian Tire Corporation Limited, ALDI Inc., Steren Electronics International, LLC, etc.",
+   "filer_ticker": "RAYA",
+   "id": 152
+  }
+ ]
+}

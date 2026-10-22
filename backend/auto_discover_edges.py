@@ -7,7 +7,7 @@ import argparse
 from datetime import datetime, timedelta, timezone
 import wikipedia
 import warnings
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, func, or_
 from sqlalchemy.exc import IntegrityError
 from thefuzz import fuzz
 
@@ -17,8 +17,16 @@ from parser import extract_dependencies
 from yahooquery import search as yq_search, Ticker
 from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_text, latest_annual_filing
 from additional_sources import get_additional_supply_chain_text
-from customer_concentration import SUPPLIER_TITLE_MARKER, describe_share, extract_disclosures, filer_documented_direction
-from supplier_dependence import NameIndex, company_key, extract_supplier_dependencies, is_non_common_security, same_company
+from customer_concentration import SUPPLIER_TITLE_MARKER, KnownNames, describe_share, extract_disclosures, filer_documented_direction
+from supplier_dependence import (
+    NameIndex,
+    company_key,
+    extract_supplier_dependencies,
+    is_non_common_security,
+    normalize,
+    same_company,
+    without_legal_suffix,
+)
 from evidence_quality import (
     GENERIC_NAME_WORDS,
     has_non_supply_relationship,
@@ -28,6 +36,7 @@ from evidence_quality import (
     is_role_label,
     is_supplier_role_label,
 )
+from private_companies import PRIVATE_ENTITY_TYPE, is_private, node_aliases
 
 # --- CONFIGURATION ---
 wikipedia.set_user_agent("HephaestusTerminal/1.0 (research@saqibdesktop.local)")
@@ -65,10 +74,13 @@ RESEARCH_COOLDOWN_DAYS = float(os.environ.get("HEPHAESTUS_RESEARCH_COOLDOWN_DAYS
 CONCENTRATION_SWEEP_LIMIT = int(os.environ.get("HEPHAESTUS_CONCENTRATION_SWEEP_LIMIT", "0"))
 CONCENTRATION_SWEEP_MAX_SECONDS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_SWEEP_MAX_SECONDS", "900"))
 CONCENTRATION_RECHECK_DAYS = float(os.environ.get("HEPHAESTUS_CONCENTRATION_RECHECK_DAYS", "120"))
-# A filing read before this moment was read by older rules (no supplier statements), so
-# it is due again once, largest companies first, whatever its recheck interval says.
+# A filing read before this moment was read by older rules (2026-10-08: no supplier statements;
+# 2026-10-23: no private companies, which the readers could not name), so it is due again once,
+# largest companies first, whatever its recheck interval says. A later registry change makes
+# filings due again by itself (see registry_updated_at); this marker covers the filings read
+# before the readers knew the registry at all, whenever the registry itself was seeded.
 SWEEP_RULES_UPDATED = datetime.fromisoformat(
-    os.environ.get("HEPHAESTUS_SWEEP_RULES_UPDATED", "2026-10-08T12:00:00+00:00")
+    os.environ.get("HEPHAESTUS_SWEEP_RULES_UPDATED", "2026-10-23T00:00:00+00:00")
 )
 # Discovery starts at $250M: it had researched the whole $1B+ universe within its
 # cooldown by Sep 13, and below ~$100M the tail is mostly shells with thin filings. The
@@ -78,6 +90,11 @@ SWEEP_RULES_UPDATED = datetime.fromisoformat(
 DISCOVERY_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_MIN_MARKET_CAP", "250000000"))
 SWEEP_MIN_MARKET_CAP = float(os.environ.get("HEPHAESTUS_SWEEP_MIN_MARKET_CAP", "0"))
 IGNORED_SECTORS = ["Financial Services", "Real Estate", "Financial", "Asset Management", "Insurance", "Banks", "Shell Companies"]
+# A company without a stock listing (OpenAI, Anthropic, Stripe) is a node too, so the filing readers
+# can link it where a public filer names it. It has no CIK and no annual report of its own, so it is
+# never a filer or a subject of LLM research; it is only a counterparty.
+def not_private():
+    return or_(Node.entity_type.is_(None), Node.entity_type != PRIVATE_ENTITY_TYPE)
 
 
 # A warrant, a preferred line or a right has no annual report of its own: the sweep read
@@ -108,19 +125,37 @@ def is_due(checked_at, every_days, now=None):
     return checked_at < now - timedelta(days=every_days)
 
 
-def concentration_recheck_cutoff(now=None):
-    """Filings read before this are due again: the recheck interval, or a rules update."""
+def as_utc(moment):
+    """SQLite hands back naive datetimes; they are UTC."""
+    if moment is not None and moment.tzinfo is None:
+        return moment.replace(tzinfo=timezone.utc)
+    return moment
+
+
+def registry_updated_at(session):
+    """When the private-company registry last changed: the newest `last_updated` of a private node.
+
+    Seeding writes a private node only when its registry values change, so this moves only when a
+    company is added or edited. A filing read before it could not have named that company.
+    """
+    return as_utc(session.query(func.max(Node.last_updated)).filter(Node.entity_type == PRIVATE_ENTITY_TYPE).scalar())
+
+
+def concentration_recheck_cutoff(now=None, registry_updated=None):
+    """Filings read before this are due again: the recheck interval, a rules update, or a registry change."""
     now = now or utc_now()
     cutoff = now - timedelta(days=CONCENTRATION_RECHECK_DAYS)
-    return max(cutoff, SWEEP_RULES_UPDATED) if SWEEP_RULES_UPDATED <= now else cutoff
+    if SWEEP_RULES_UPDATED <= now:
+        cutoff = max(cutoff, SWEEP_RULES_UPDATED)
+    if registry_updated is not None:
+        cutoff = max(cutoff, min(as_utc(registry_updated), now))
+    return cutoff
 
 
-def filing_due(checked_at, now=None):
+def filing_due(checked_at, now=None, registry_updated=None):
     if checked_at is None:
         return True
-    if checked_at.tzinfo is None:
-        checked_at = checked_at.replace(tzinfo=timezone.utc)
-    return checked_at < concentration_recheck_cutoff(now)
+    return as_utc(checked_at) < concentration_recheck_cutoff(now, registry_updated)
 
 
 def budget_exhausted(started, max_seconds, now=None):
@@ -277,19 +312,39 @@ def normalize_dependency(dep):
     return dep
 
 def known_company_names(session):
-    """Display name -> cleaned name for every listed company, for concentration matching."""
-    names = {}
+    """Display name -> cleaned name for every company a filing may name, for the filing readers.
+
+    Listed companies and private ones alike (a private node has a ticker too: its registry id), the
+    private ones carrying their registry aliases. This is the one place the readers' name list is
+    built, for discovery, the nightly re-read of stored sentences and the audit, so they cannot
+    disagree about what a sentence names.
+    """
+    names, aliases, private = {}, {}, set()
     for name, in session.query(Node.name).filter(Node.ticker.is_not(None)).all():
         cleaned = clean_company_name(str(name or ""))
         if cleaned:
             names[name] = cleaned
-    return names
+    for node in session.query(Node).filter(Node.ticker.is_not(None), Node.entity_type == PRIVATE_ENTITY_TYPE).all():
+        if node.name not in names:
+            continue
+        private.add(node.name)
+        extra = node_aliases(node)
+        if extra:
+            aliases[node.name] = tuple(dict.fromkeys([*extra, *(clean_company_name(alias) for alias in extra)]))
+    return KnownNames(names, aliases=aliases, private=private)
 
 
 def known_company_caps(session):
     """Display name -> market cap: a short all-caps name ("AT&T", "IQVIA") counts only for a
-    company big enough to own the acronym ("CSP" and "IDT" are also a process and a private firm)."""
+    company big enough to own the acronym ("CSP" and "IDT" are also a process and a private firm).
+    A private company has no market cap (0 here) and is not judged by one: see NameIndex."""
     return {name: cap or 0 for name, cap in session.query(Node.name, Node.market_cap).filter(Node.ticker.is_not(None)).all()}
+
+
+def build_supplier_index(session, known_names=None):
+    """The supplier reader's name index. Discovery, the nightly re-read of stored statements and the
+    audit all call this, so a statement that survives one survives all three."""
+    return NameIndex(known_names if known_names is not None else known_company_names(session), known_company_caps(session))
 
 
 def discover_customer_concentration(session, company, known_names, supplier_index=None):
@@ -302,6 +357,8 @@ def discover_customer_concentration(session, company, known_names, supplier_inde
     """
     if not USE_CUSTOMER_CONCENTRATION:
         return 0
+    if is_private(company):
+        return 0  # no CIK, no annual report; and writing the row would move the registry's timestamp
     if is_non_common_security(company.name):
         company.concentration_checked_at = utc_now()  # no annual report of its own
         return 0
@@ -327,7 +384,7 @@ def discover_customer_concentration(session, company, known_names, supplier_inde
     label = f"{filing['form']} filed {filing.get('filing_date') or 'unknown date'}"
     for disclosure in extract_disclosures(text, known_names, filer_aliases):
         customer = resolve_counterparty(session, None, disclosure.customer_name)
-        if not customer or customer.id == company.id or is_non_common_security(customer.name):
+        if not customer or customer.id == company.id or (not is_private(customer) and is_non_common_security(customer.name)):
             continue
         dep = {
             "dependency_type": "Revenue Concentration",
@@ -350,20 +407,23 @@ def discover_customer_concentration(session, company, known_names, supplier_inde
 
 
 def node_named(session, display_name):
-    """The listed company a NameIndex match stands for (its exact display name)."""
+    """The company a NameIndex match stands for (its exact display name, listed or private)."""
     node = session.query(Node).filter(Node.name == display_name, Node.ticker.is_not(None)).first()
     return node or resolve_counterparty(session, None, display_name)
 
 
 def company_node_ids(session, node):
-    """Ids of every listing of this company: GOOG and GOOGL, a stock and its warrants."""
+    """Ids of every listing of this company: GOOG and GOOGL, a stock and its warrants.
+
+    A private company is never grouped with a listed one that happens to share its cleaned name.
+    """
     groups = session.info.get("company_groups")
     if groups is None:
         groups = {}
-        for node_id, name in session.query(Node.id, Node.name).filter(Node.ticker.is_not(None)).all():
-            groups.setdefault(company_key(name), set()).add(node_id)
+        for node_id, name, entity_type in session.query(Node.id, Node.name, Node.entity_type).filter(Node.ticker.is_not(None)).all():
+            groups.setdefault((company_key(name), entity_type == PRIVATE_ENTITY_TYPE), set()).add(node_id)
         session.info["company_groups"] = groups
-    return groups.get(company_key(node.name)) or {node.id}
+    return groups.get((company_key(node.name), is_private(node))) or {node.id}
 
 
 def is_human_verdict(edge):
@@ -417,7 +477,7 @@ def discover_supplier_statements(session, company, filing, text, supplier_index)
             not supplier
             or supplier.id == company.id
             or same_company(supplier.name, company.name)
-            or is_non_common_security(supplier.name)
+            or (not is_private(supplier) and is_non_common_security(supplier.name))
         ):
             continue
         state, weaker = supplier_link_state(session, supplier, company)
@@ -467,14 +527,20 @@ def discover_supplier_statements(session, company, filing, text, supplier_index)
 def sweep_customer_concentration(
     session, known_names, limit=CONCENTRATION_SWEEP_LIMIT, max_seconds=CONCENTRATION_SWEEP_MAX_SECONDS, supplier_index=None
 ):
-    """Read the annual filings of the largest companies not read recently (or since a rules update)."""
+    """Read the annual filings of the largest companies not read recently (or since a rules update).
+
+    A private company has no annual report, so it is never read; but a filing read before the
+    private-company registry last changed could not have named the new company, so the registry's
+    newest change makes every filing due again, a day's limit at a time, largest first.
+    """
     if limit <= 0 or not known_names:
         return {"checked": 0, "created": 0}
-    query = session.query(Node).filter(Node.ticker.is_not(None), not_in_ignored_sector(), is_common_security())
+    query = session.query(Node).filter(Node.ticker.is_not(None), not_private(), not_in_ignored_sector(), is_common_security())
     if SWEEP_MIN_MARKET_CAP > 0:
         query = query.filter(Node.market_cap > SWEEP_MIN_MARKET_CAP)
+    cutoff = concentration_recheck_cutoff(registry_updated=registry_updated_at(session))
     companies = (
-        query.filter(or_(Node.concentration_checked_at.is_(None), Node.concentration_checked_at < concentration_recheck_cutoff()))
+        query.filter(or_(Node.concentration_checked_at.is_(None), Node.concentration_checked_at < cutoff))
         .order_by(Node.market_cap.desc())
         .limit(limit)
         .all()
@@ -650,9 +716,35 @@ def split_trailing_ticker(company_name):
     return match.group(1), match.group(2)
 
 
+def exact_private_node(session, company_name):
+    """The private company this name spells exactly (its name or a registry alias), or None.
+
+    Exact means every word equal, ignoring case, punctuation and a legal form ("OpenAI, Inc." is
+    OpenAI); nothing fuzzy, so a public company never turns into a private one or the reverse. A
+    name a listed company also carries belongs to the listed company and resolves nowhere here.
+    """
+    key = without_legal_suffix(tuple(normalize(company_name).split()))
+    if not key:
+        return None
+    matches = []
+    for node in session.query(Node).filter(Node.entity_type == PRIVATE_ENTITY_TYPE).all():
+        spellings = [node.name, clean_company_name(node.name or ""), *node_aliases(node)]
+        if any(key == without_legal_suffix(tuple(normalize(spelling).split())) for spelling in spellings):
+            matches.append(node)
+    if len(matches) != 1:
+        return None
+    listed = session.query(Node).filter(not_private(), Node.name.ilike(f"{key[0]}%")).all()
+    if any(without_legal_suffix(tuple(normalize(clean_company_name(node.name or "")).split())) == key for node in listed):
+        return None
+    return matches[0]
+
+
 def resolve_counterparty(session, ticker, company_name):
     """Resolve a model-supplied (ticker, name) pair without trusting a hallucinated ticker."""
     company_name, suffix_ticker = split_trailing_ticker(company_name)
+    private = exact_private_node(session, company_name) if company_name else None
+    if private is not None:
+        return private  # an exact name outranks any ticker the model attached to it
     ticker = ticker or suffix_ticker
     if ticker:
         node = EntityResolver.resolve_ticker(session, ticker)
@@ -728,7 +820,8 @@ class EntityResolver:
             if candidates:
                 discovered_ticker = candidates[0].get('symbol')
                 if discovered_ticker:
-                    node = session.query(Node).filter(Node.ticker == discovered_ticker.upper()).first()
+                    # A search hit is a listed company; a private node is only ever found by an exact name.
+                    node = session.query(Node).filter(Node.ticker == discovered_ticker.upper(), not_private()).first()
                     if node:
                         return node
         except Exception as e:
@@ -872,7 +965,7 @@ def research_quota(session):
         return RESEARCH_DAILY_QUOTA
     if RESEARCH_COOLDOWN_DAYS <= 0:
         return None
-    eligible = session.query(Node).filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP, not_in_ignored_sector()).count()
+    eligible = session.query(Node).filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP, not_private(), not_in_ignored_sector()).count()
     return max(MIN_RESEARCH_DAILY_QUOTA, math.ceil(eligible / RESEARCH_COOLDOWN_DAYS))
 
 
@@ -884,9 +977,11 @@ def select_research_queue(session, limit, target_sectors=None, deep_dive=False, 
     discovery market-cap floor, the sector filter, and the cooldown.
     """
     now = now or utc_now()
+    # A private company has no market data and no filings to research: it is a counterparty only
+    # (its NULL market cap already keeps it out of every query below; the filter says why).
     query = session.query(Node).outerjoin(
         Edge, or_(Node.id == Edge.source_id, Node.id == Edge.target_id)
-    ).filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP)
+    ).filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP, not_private())
 
     if not deep_dive:
         query = query.filter(Edge.id.is_(None))
@@ -912,7 +1007,7 @@ def select_research_queue(session, limit, target_sectors=None, deep_dive=False, 
         chosen = {node.id for node in lonely_nodes}
         top_up = (
             session.query(Node)
-            .filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP, not_in_ignored_sector())
+            .filter(Node.market_cap > DISCOVERY_MIN_MARKET_CAP, not_private(), not_in_ignored_sector())
             .filter(or_(Node.last_researched_at.is_(None), Node.last_researched_at < cooldown_cutoff))
             .filter(Node.id.notin_(chosen) if chosen else True)
         )
@@ -942,7 +1037,8 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
         lonely_nodes = select_research_queue(session, limit, target_sectors, deep_dive)
 
         known_names = known_company_names(session) if USE_CUSTOMER_CONCENTRATION and USE_SEC_SOURCE else {}
-        supplier_index = NameIndex(known_names, known_company_caps(session)) if known_names and USE_SUPPLIER_STATEMENTS else None
+        supplier_index = build_supplier_index(session, known_names) if known_names and USE_SUPPLIER_STATEMENTS else None
+        registry_updated = registry_updated_at(session)
         # The discovery budget covers the whole step, sweep included, so a long sweep
         # shortens the LLM queue (the rest is deferred) instead of the job's timeout.
         started = time.monotonic()
@@ -980,7 +1076,7 @@ def auto_discover_supply_chain(limit=5, target_sectors=None, deep_dive=False):
                 break
             print(f"\n[->] Researching: {company.name} ({company.ticker}) | Sector: {company.sector}")
 
-            if known_names and filing_due(company.concentration_checked_at):
+            if known_names and filing_due(company.concentration_checked_at, registry_updated=registry_updated):
                 concentration_edges = discover_customer_concentration(session, company, known_names, supplier_index)
                 if concentration_edges:
                     session.commit()
