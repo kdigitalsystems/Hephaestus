@@ -136,6 +136,26 @@ def fetch_batch(tickers, refresh=False):
     return ticker_client(tickers, refresh=refresh).get_modules(MODULES)
 
 
+# A request that dies on a 30-second connection timeout used to cost the whole batch: its 100
+# companies kept yesterday's price (2026-10-16 and 10-17 each lost one batch this way, a
+# different one each day, so the cause is the network and not a bad ticker). Three tries with
+# growing pauses and a rebuilt client turn that into a short delay.
+FETCH_ATTEMPTS = max(1, int(os.environ.get("HEPHAESTUS_YAHOO_FETCH_ATTEMPTS", "3")))
+
+
+def fetch_batch_resilient(tickers, refresh=False):
+    for attempt in range(1, FETCH_ATTEMPTS + 1):
+        try:
+            # Every retry builds a fresh client: a connection that timed out may be poisoned.
+            return fetch_batch(tickers, refresh=True) if refresh or attempt > 1 else fetch_batch(tickers)
+        except Exception as exc:
+            if attempt == FETCH_ATTEMPTS:
+                raise
+            pause = THROTTLE_PAUSE_SECONDS * attempt
+            print(f"  [!] Batch request failed ({type(exc).__name__}: {str(exc)[:90]}); pausing {pause:.0f}s, then attempt {attempt + 1} of {FETCH_ATTEMPTS}.")
+            time.sleep(pause)
+
+
 def looks_throttled(dict_data, tickers):
     if not tickers:
         return False
@@ -197,11 +217,11 @@ def update_financial_metrics(limit=None):
             print(f"Processing batch {i} to {i + len(batch)}...")
 
             try:
-                dict_data = fetch_batch(tickers)
+                dict_data = fetch_batch_resilient(tickers)
                 if looks_throttled(dict_data, tickers):
                     print(f"  [!] Most of this batch returned no data; pausing {THROTTLE_PAUSE_SECONDS:.0f}s and retrying once.")
                     time.sleep(THROTTLE_PAUSE_SECONDS)
-                    dict_data = fetch_batch(tickers, refresh=True)
+                    dict_data = fetch_batch_resilient(tickers, refresh=True)
 
                 # Counted per batch and added only once the batch is committed, so a batch
                 # that fails at the commit does not report companies it never saved.
