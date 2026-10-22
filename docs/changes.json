@@ -1,8 +1,31 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-21T08:58:09+00:00",
-  "unique_links": 758,
+  "generated_at": "2026-10-22T08:40:15+00:00",
+  "unique_links": 759,
   "days": [
+    {
+      "date": "2026-10-22",
+      "generated_at": "2026-10-22T08:40:15+00:00",
+      "previous_date": "2026-10-21",
+      "unique_links": 759,
+      "net_change": 1,
+      "new_count": 1,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "ITRI->CNP:SUPPLY RELATIONSHIP",
+          "source_ticker": "ITRI",
+          "target_ticker": "CNP",
+          "type": "Supply Relationship",
+          "product": "Smart Meters and Advanced Communications Technology",
+          "review_status": "approved",
+          "confidence": 0.9333
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-21",
       "generated_at": "2026-10-21T08:58:09+00:00",
@@ -1142,38 +1165,6 @@
           "product": "ZTlido",
           "review_status": "approved",
           "confidence": 1.0
-        }
-      ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-07",
-      "generated_at": "2026-10-07T09:07:39+00:00",
-      "previous_date": "2026-10-06",
-      "unique_links": 824,
-      "net_change": 2,
-      "new_count": 2,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "AVGO->GENVR:SUPPLY RELATIONSHIP",
-          "source_ticker": "AVGO",
-          "target_ticker": "GENVR",
-          "type": "Supply Relationship",
-          "product": "engineering and threat response services",
-          "review_status": "approved",
-          "confidence": 0.975
-        },
-        {
-          "relationship_key": "MSFT->SVREW:SUPPLY RELATIONSHIP",
-          "source_ticker": "MSFT",
-          "target_ticker": "SVREW",
-          "type": "Supply Relationship",
-          "product": "Microsoft 365 security platform",
-          "review_status": "approved",
-          "confidence": 0.975
         }
       ],
       "removed_links": [],

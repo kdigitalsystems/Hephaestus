@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-21T08:55:54.558755+00:00",
+  "exported_at": "2026-10-22T08:38:04.331801+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -60214,6 +60214,74 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
       "reviewed_at": "2026-10-21T08:52:19.767355"
+    },
+    {
+      "edge_id": 4015,
+      "source_ticker": "MSI",
+      "target_ticker": "IRDM",
+      "source_name": "Motorola Solutions, Inc. New",
+      "target_name": "Iridium Communications Inc Common Stock",
+      "dependency_type": "Technology and Financial Partner",
+      "product": "Satellite technology",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "The Iridium communications service was launched on November 1, 1998, formerly known as Iridium SSC. The first Iridium call was made from Vice President of the United States Al Gore to Gilbert M. Grosvenor, the great-grandson of Alexander Graham Bell and chairman of the National Geographic Society. Motorola provided the technology and major financial backing.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
+      "reviewed_at": "2026-10-22T08:33:52.806789"
+    },
+    {
+      "edge_id": 4017,
+      "source_ticker": "ITRI",
+      "target_ticker": "CNP",
+      "source_name": "Itron, Inc. Common Stock",
+      "target_name": "CenterPoint Energy, Inc.",
+      "dependency_type": "Supply Relationship",
+      "product": "Smart Meters and Advanced Communications Technology",
+      "confidence_score": 0.9333,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "Various utilities have worked with Itron to deploy smart meters, advanced communications technology, analytics software and other resource management. Among them is CenterPoint Energy.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.93; votes approve:3). Lead rationale from mistral:7b-instruct: Various utilities have worked with Itron to deploy smart meters, advanced communications technology, analytics software and other resource management. Among them is CenterPoint Energy.",
+      "reviewed_at": "2026-10-22T08:34:28.621158"
+    },
+    {
+      "edge_id": 4019,
+      "source_ticker": "ASH",
+      "target_ticker": "VVV",
+      "source_name": "Ashland Inc.",
+      "target_name": "Valvoline Inc.",
+      "dependency_type": "Parent Company",
+      "product": "None",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In 1949, Ashland Inc. purchased the Freedom-Valvoline Company. By 2016, Ashland's Valvoline subsidiary accounted for about 37% of the parent company's annual revenue.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a sale, spin-off, fine, hire or similar event, not supply (\"purchased the Freedom-Valvoline Company. By 2016, Ashland's \").",
+      "reviewed_at": "2026-10-22T08:34:28.638288"
+    },
+    {
+      "edge_id": 4020,
+      "source_ticker": "FISV",
+      "target_ticker": "SRAD",
+      "source_name": "Fiserv, Inc. Common Stock",
+      "target_name": "Sportradar Group AG Class A Ordinary Shares",
+      "dependency_type": "Services",
+      "product": "Financial Services",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In January 2021, the company announced that former Fiserv CEO Jeff Yabuki as Sportradar's new chairman.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
+      "reviewed_at": "2026-10-22T08:34:28.646069"
     }
   ]
 }
