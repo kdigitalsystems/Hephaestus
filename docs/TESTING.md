@@ -6,7 +6,7 @@ Hephaestus uses a small set of deterministic checks so source expansion and dash
 
 ### End-to-end publish chain
 
-`tests/test_pipeline_end_to_end.py` copies `backend/` into a temporary directory with its own SQLite file, seeds a five-company fixture graph, and runs the real commands the scheduled job runs, in order: apply decisions, consensus review (with a stub `ollama` module on `PYTHONPATH` whose every vote approves), cleanup, decisions export, audit, export, repair, validate, change feed, static pages, dashboard split and run status. It asserts the published links, that a held edge is never persisted or published, and that every artifact the workflow commits exists. It runs in a few seconds and is part of the normal `pytest` run.
+`tests/test_pipeline_end_to_end.py` copies `backend/` into a temporary directory with its own SQLite file, seeds a five-company fixture graph, and runs the real commands the scheduled job runs, in order: apply decisions, consensus review (with a stub `ollama` module on `PYTHONPATH` whose every vote approves), cleanup, decisions export, audit, export, repair, validate, change feed, static pages, dashboard split and run status. It asserts the published links, that a held edge is never persisted or published, and that every artifact the workflow commits exists. It runs in a few seconds and is part of the normal `pytest` run. `tests/test_private_end_to_end.py` runs the same chain with a private company: a registry file and curated seed edges are seeded (twice, to show the second run changes nothing), reviewed, audited, exported and rendered, and the published entry, its page, the lite file, its shard and the run status are checked.
 
 Run these before committing frontend, source, or data-quality changes:
 
@@ -20,6 +20,7 @@ node tests/check_sanitize_review_decisions.js
 node scripts/sanitize_review_decisions.js --check data/edge_review_decisions.json
 python backend/validate_dashboard_data.py
 python backend/validate_predictions.py
+python backend/private_companies.py validate
 git diff --check
 ```
 

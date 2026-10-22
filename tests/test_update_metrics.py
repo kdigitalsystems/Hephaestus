@@ -350,3 +350,39 @@ def test_a_batch_whose_first_request_times_out_recovers_too(monkeypatch, capsys)
     monkeypatch.setattr(update_metrics, "fetch_batch", scripted)
     update_metrics.update_financial_metrics()
     assert "0 lost in 0 failed batches" in capsys.readouterr().out
+
+
+def test_private_companies_are_never_looked_up_and_never_counted_as_missing_data(monkeypatch, capsys):
+    """A registry company has no listing: no Yahoo call, no "returned no data", and --limit is not spent on it."""
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine, autoflush=False)
+    session = Session()
+    session.add_all([
+        Node(name="Alpha Inc.", ticker="ALPH", current_price=10.0, market_cap=1e9),
+        Node(name="Beta Inc.", ticker="BETA", current_price=10.0, market_cap=1e9),
+        *[Node(name=f"Private Lab {number}", ticker=f"PRIVLAB{number}", entity_type="Private Company", sector="Technology") for number in range(5)],
+    ])
+    session.commit()
+    session.close()
+    asked = []
+
+    def fetch(tickers, refresh=False):
+        asked.extend(tickers)
+        # Yahoo knows nothing of a registry id; had it been asked, five of seven answers would be errors.
+        return {ticker: ("Quote not found" if ticker.startswith("PRIVLAB") else {"price": {"regularMarketPrice": 5.0, "regularMarketPreviousClose": 4.0, "marketCap": 1e9}}) for ticker in tickers}
+
+    monkeypatch.setattr(update_metrics, "SessionLocal", Session)
+    monkeypatch.setattr(update_metrics, "fetch_batch", fetch)
+    monkeypatch.setattr(update_metrics.time, "sleep", lambda _seconds: None)
+
+    update_metrics.update_financial_metrics()
+
+    out = capsys.readouterr().out
+    assert sorted(asked) == ["ALPH", "BETA"]
+    assert "Found 2 companies to update" in out and "2 updated, 0 returned no data, 0 lost in 0 failed batches" in out
+    assert "Most companies received no market data" not in out
+    session = Session()
+    assert all(node.current_price is None and node.market_cap is None for node in session.query(Node).filter(Node.entity_type == "Private Company"))
+    assert [node.ticker for node in update_metrics.prioritized_nodes(session, limit=1)] == ["ALPH"]
+    session.close()

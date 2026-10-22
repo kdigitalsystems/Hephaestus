@@ -12,12 +12,16 @@ import os
 import sys
 import tempfile
 
+from private_companies import PRIVATE_ONLY_KEYS, is_private_entry
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS_DIR = os.path.join(BASE_DIR, "docs")
 DEFAULT_DASHBOARD_PATH = os.path.join(DOCS_DIR, "dashboard_data.json")
 DEFAULT_LITE_PATH = os.path.join(DOCS_DIR, "dashboard_lite.json")
 DEFAULT_SHARD_DIR = os.path.join(DOCS_DIR, "company-data")
 DETAIL_FIELDS = ("summary", "investor_metrics")
+# A private company's profile stays in the lite file (the homepage lists and searches it by
+# these) and is repeated in its shard, so a brief can be drawn from the shard alone.
 
 
 def has_links(company):
@@ -46,6 +50,8 @@ def split_dashboard(dashboard):
             moving = detail_fields_for(company)
             slim = {key: value for key, value in company.items() if key not in moving}
             detail = {key: company[key] for key in moving if key in company}
+            if is_private_entry(company):
+                detail.update({key: company[key] for key in PRIVATE_ONLY_KEYS if key in company})
             ticker = company.get("ticker")
             if ticker and detail:
                 shards.setdefault(shard_key(ticker), {})[ticker] = detail

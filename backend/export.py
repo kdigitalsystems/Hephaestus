@@ -7,6 +7,14 @@ from datetime import datetime, timezone
 from database import SessionLocal
 from evidence_quality import requires_source_evidence
 from models import Node, Edge
+from private_companies import (
+    PRIVATE_LISTING,
+    PRIVATE_MARKET_FIELDS,
+    PRIVATE_PLACEHOLDER_FIELDS,
+    is_private,
+    node_aliases,
+    parse_metadata,
+)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS_DIR = os.path.join(BASE_DIR, "docs")
@@ -698,11 +706,30 @@ def is_ignored_sector(node):
 def should_export_node(node, require_market_data=True):
     if not node or not node.ticker or is_ignored_sector(node):
         return False
+    if is_private(node):
+        # Curated by the registry and never priced, so it is published with or without links.
+        return True
     if require_market_data and (not node.market_cap or not node.current_price):
         return False
     if node.market_cap is not None and node.market_cap < MIN_MARKET_CAP:
         return False
     return True
+
+
+def private_company_fields(node):
+    """The extra keys of a private company's entry; public companies get none of them."""
+    metadata = parse_metadata(node)
+    fields = {
+        "listing": PRIVATE_LISTING,
+        "website": metadata.get("website") or None,
+        "hq": metadata.get("hq") or None,
+        "founded": metadata.get("founded") if isinstance(metadata.get("founded"), int) else None,
+    }
+    aliases = node_aliases(node)
+    if aliases:
+        fields["aliases"] = aliases
+    return fields
+
 
 def export_sector(node):
     sector = node.sector if node.sector else "Uncategorized"
@@ -811,7 +838,7 @@ def export_to_json():
             downstream = merge_relationships(downstream)
             # ------------------------
 
-            dashboard_data["industries"][sector].append({
+            company = {
                 "id": node.id,
                 "name": node.name,
                 "ticker": node.ticker,
@@ -836,7 +863,13 @@ def export_to_json():
                 "last_updated": node.last_updated.strftime('%Y-%m-%d') if node.last_updated else "N/A",
                 "upstream": upstream,       # Added to JSON
                 "downstream": downstream    # Added to JSON
-            })
+            }
+            if is_private(node):
+                # Whatever the row holds, a private company is published without market data.
+                company.update({field: None for field in PRIVATE_MARKET_FIELDS})
+                company.update({field: "N/A" for field in PRIVATE_PLACEHOLDER_FIELDS})
+                company.update(private_company_fields(node))
+            dashboard_data["industries"][sector].append(company)
             
         os.makedirs(DOCS_DIR, exist_ok=True)
         annotate_dashboard_data(dashboard_data, HISTORY_PATH)

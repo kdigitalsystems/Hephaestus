@@ -17,6 +17,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
+from private_companies import is_private_entry
 from supplier_dependence import company_key
 
 
@@ -136,8 +137,10 @@ def iter_companies(dashboard_data: dict[str, Any]) -> Iterable[dict[str, Any]]:
 
 def select_top_companies(companies: Iterable[dict[str, Any]], limit: int = TOP_COMPANY_LIMIT) -> list[dict[str, Any]]:
     """Select a stable, liquid-enough research universe by published market cap."""
+    # A private company has no market cap, hence no signal; it is excluded by name as well so
+    # that an entry wrongly carrying one could never be ranked.
     ranked = sorted(
-        (company for company in companies if as_number(company.get("market_cap")) > 0),
+        (company for company in companies if as_number(company.get("market_cap")) > 0 and not is_private_entry(company)),
         key=lambda company: (-as_number(company.get("market_cap")), str(company.get("ticker"))),
     )
     return ranked[:limit]
@@ -303,6 +306,10 @@ def build_prediction(company: dict[str, Any], company_by_ticker: dict[str, dict[
         connected_ticker = str(relationship.get("ticker") or "").upper()
         connected = company_by_ticker.get(connected_ticker)
         if not connected or connected_ticker == str(company["ticker"]).upper():
+            continue
+        if is_private_entry(connected):
+            # No price move to transfer. Counting it would add a zero-strength path, which
+            # raises the prediction's confidence and can name the private company as its driver.
             continue
         connected_score, _ = direct_signal(connected)
         weight = relationship_weight(relationship, side, calibration)
@@ -796,7 +803,7 @@ def generate_predictions(dashboard_data: dict[str, Any], history: list[dict[str,
     missing_market_cap = [
         str(company["ticker"]).upper()
         for company in all_companies
-        if as_number(company.get("market_cap")) <= 0
+        if as_number(company.get("market_cap")) <= 0 and not is_private_entry(company)
     ]
     payload = {
         "generated_at": now.isoformat(),

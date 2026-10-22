@@ -1,0 +1,175 @@
+{
+ "version": 1,
+ "edges": [
+  {
+   "source": "AKAM",
+   "target": "ANTHROPIC",
+   "dependency_type": "Cloud Infrastructure Provider",
+   "product": "Akamai Cloud distributed AI infrastructure and software",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1086222/000119312526401048/d288154dex991.htm",
+   "source_title": "Akamai Announces $11.6 Billion Multi-year Agreement with Anthropic to Support Growing Demand (Form 8-K Exhibit 99.1, September 24, 2026)",
+   "evidence_excerpt": "Akamai Technologies, Inc. (NASDAQ: AKAM), today announced a significantly expanded relationship with Anthropic for $11.6 billion of contractual commitment over seven years. The multi-year commitment will support Anthropic’s accelerating CPU workload demands by leveraging Akamai Cloud’s distributed AI infrastructure and software.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "AMD",
+   "target": "ANTHROPIC",
+   "dependency_type": "Supply Relationship",
+   "product": "AMD Instinct MI450 Series GPUs in AMD Helios racks",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000121/q22026991.htm",
+   "source_title": "AMD Reports Second Quarter 2026 Financial Results (Form 8-K Exhibit 99.1, August 4, 2026)",
+   "evidence_excerpt": "Announced a strategic partnership with Anthropic to deploy up to 2 gigawatts of MI450 Series GPUs in AMD Helios racks and a multiyear collaboration to optimize AMD Instinct GPUs and ROCm software development using Claude.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "AMD",
+   "target": "OPENAI",
+   "dependency_type": "Supply Relationship",
+   "product": "AMD Instinct GPUs",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/2488/000119312525230895/d28189dex991.htm",
+   "source_title": "AMD and OpenAI Announce Strategic Partnership to Deploy 6 Gigawatts of AMD GPUs (Form 8-K Exhibit 99.1, October 6, 2025)",
+   "evidence_excerpt": "Under this definitive agreement, OpenAI will work with AMD as a core strategic compute partner to drive large-scale deployments of AMD technology starting with the AMD Instinct MI450 series and rack-scale AI solutions and extending to future generations.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "AMZN",
+   "target": "ANTHROPIC",
+   "dependency_type": "Cloud Infrastructure Provider",
+   "product": "AWS cloud services and AWS chips",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/amzn-20260630.htm",
+   "source_title": "Amazon.com, Inc. Form 10-Q for the quarter ended June 30, 2026",
+   "evidence_excerpt": "In Q2 2026, AWS and Anthropic announced an expansion of the strategic collaboration and existing multi-year commitment by more than $100.0 billion over 10.0 years, which includes contractual obligations related to the performance of AWS chips.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "AMZN",
+   "target": "OPENAI",
+   "dependency_type": "Cloud Infrastructure Provider",
+   "product": "AWS cloud services and AWS chips",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/amzn-20260630.htm",
+   "source_title": "Amazon.com, Inc. Form 10-Q for the quarter ended June 30, 2026",
+   "evidence_excerpt": "In Q1 2026, we and OpenAI entered into (i) a commercial arrangement primarily for the provision of AWS cloud services, which includes the use and performance of AWS chips",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "AVGO",
+   "target": "ANTHROPIC",
+   "dependency_type": "Supply Relationship",
+   "product": "TPU-based AI compute capacity (accessed through Broadcom)",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1730168/000119312526144028/d87999d8k.htm",
+   "source_title": "Broadcom Inc. Form 8-K (April 6, 2026)",
+   "evidence_excerpt": "Separately, Broadcom, Google and Anthropic PBC (“Anthropic”) have expanded their current strategic collaboration under which Anthropic, beginning in 2027, will access through Broadcom approximately 3.5 gigawatts as part of the multiple gigawatts of next generation TPU-based AI compute capacity committed by Anthropic.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "CBRS",
+   "target": "OPENAI",
+   "dependency_type": "Cloud Infrastructure Provider",
+   "product": "AI inference compute capacity",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/2021728/000162828026044941/cbrsannouncesfinancialresu.htm",
+   "source_title": "Cerebras Systems Announces Strong First Quarter 2026 Results (Form 8-K Exhibit 99.1, June 23, 2026)",
+   "evidence_excerpt": "Cerebras Systems Announces Strong First Quarter 2026 Results •GAAP quarterly revenue of $193.4 million; record core revenue of $191.3 million, up 92% from a year ago •Announced a multi-year deal with OpenAI for 750MW valued at more than $20 billion",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "CIFR",
+   "target": "FLUIDSTACK",
+   "dependency_type": "Supply Relationship",
+   "product": "Data center lease (Barber Lake facility, Texas)",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1819989/000181998926000043/barberlakeleaseamendmentpr.htm",
+   "source_title": "Cipher Digital Expands Barber Lake Lease Term to 20 Years (press release, Form 8-K Exhibit 99.1, September 25, 2026)",
+   "evidence_excerpt": "Cipher Digital Inc. (NASDAQ: CIFR) (“Cipher” or the “Company”), a leading developer, owner, and operator of industrial-scale data centers, today announced a series of agreements that extend the contracted lease duration of its Barber Lake data center in Colorado City, Texas from 10 years to 20 years and increase total contracted revenue at the facility from $3.8 billion to over $9 billion. Cipher has executed an amendment to its existing lease with Fluidstack (the “Barber Lake Lease”) that is coupled with a binding commitment with a leading AI lab to lease the facility for an additional 10-year term following the conclusion of the Barber Lake Lease.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "CRWV",
+   "target": "COHERE",
+   "dependency_type": "Cloud Infrastructure Provider",
+   "product": "GPU cloud platform",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525052207/d899798ds1a.htm",
+   "source_title": "CoreWeave, Inc. Registration Statement on Form S-1/A (March 12, 2025)",
+   "evidence_excerpt": "Our CoreWeave Cloud Platform consists of our proprietary software and cloud services that deliver the software and software intelligence needed to manage complex AI infrastructure at scale. Our platform supports the development and use of ground-breaking models and the delivery of the next generation of AI applications that are changing the way we live and work across the globe—our platform is trusted by some of the world’s leading AI labs and AI enterprises, including Cohere Inc. (“Cohere”), International Business Machines Corporation (“IBM”), Meta Platforms, Inc. (“Meta”), Microsoft Corporation (“Microsoft”), Mistral AI SAS (“Mistral”), NVIDIA Corporation (“NVIDIA”), and OpenAI OpCo, LLC (“OpenAI”).",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "CRWV",
+   "target": "MISTRALAI",
+   "dependency_type": "Cloud Infrastructure Provider",
+   "product": "GPU cloud platform",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525052207/d899798ds1a.htm",
+   "source_title": "CoreWeave, Inc. Registration Statement on Form S-1/A (March 12, 2025)",
+   "evidence_excerpt": "Our CoreWeave Cloud Platform consists of our proprietary software and cloud services that deliver the software and software intelligence needed to manage complex AI infrastructure at scale. Our platform supports the development and use of ground-breaking models and the delivery of the next generation of AI applications that are changing the way we live and work across the globe—our platform is trusted by some of the world’s leading AI labs and AI enterprises, including Cohere Inc. (“Cohere”), International Business Machines Corporation (“IBM”), Meta Platforms, Inc. (“Meta”), Microsoft Corporation (“Microsoft”), Mistral AI SAS (“Mistral”), NVIDIA Corporation (“NVIDIA”), and OpenAI OpCo, LLC (“OpenAI”).",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "CRWV",
+   "target": "OPENAI",
+   "dependency_type": "Cloud Infrastructure Provider",
+   "product": "GPU cloud platform (master services agreement)",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525052207/d899798ds1a.htm",
+   "source_title": "CoreWeave, Inc. Registration Statement on Form S-1/A (March 12, 2025)",
+   "evidence_excerpt": "Our CoreWeave Cloud Platform consists of our proprietary software and cloud services that deliver the software and software intelligence needed to manage complex AI infrastructure at scale. Our platform supports the development and use of ground-breaking models and the delivery of the next generation of AI applications that are changing the way we live and work across the globe—our platform is trusted by some of the world’s leading AI labs and AI enterprises, including Cohere Inc. (“Cohere”), International Business Machines Corporation (“IBM”), Meta Platforms, Inc. (“Meta”), Microsoft Corporation (“Microsoft”), Mistral AI SAS (“Mistral”), NVIDIA Corporation (“NVIDIA”), and OpenAI OpCo, LLC (“OpenAI”).",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "GETY",
+   "target": "OPENAI",
+   "dependency_type": "Content Provider",
+   "product": "Licensed visual content displayed in ChatGPT search and discovery",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1898496/000121390026070706/ea029548101ex99-1.htm",
+   "source_title": "Getty Images Announces Display Partnership with OpenAI (Form 8-K Exhibit 99.1, June 22, 2026)",
+   "evidence_excerpt": "Under the partnership Getty Images’ licensed content libraries will appear across OpenAI search and discovery experiences within ChatGPT.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "JBL",
+   "target": "APPTRONIK",
+   "dependency_type": "Contract Manufacturing",
+   "product": "Manufacturing of Apollo humanoid robots",
+   "source_url": "https://s27.q4cdn.com/276975351/files/doc_news/Apptronik-and-Jabil-Collaborate-to-Scale-Production-of-Apollo-Humanoid-Robots-and-Deploy-in-Manufacturing-Operations-2025.pdf",
+   "source_title": "Apptronik and Jabil Collaborate to Scale Production of Apollo Humanoid Robots and Deploy in Manufacturing Operations (press release, February 25, 2025)",
+   "evidence_excerpt": "As the worldwide manufacturing partner for Apollo humanoid robots, Jabil can provide Apptronik the flexibility and agility to scale production around the world as needed.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "MSFT",
+   "target": "OPENAI",
+   "dependency_type": "Cloud Infrastructure Provider",
+   "product": "Azure cloud services",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312525256321/msft-20250930.htm",
+   "source_title": "Microsoft Corporation Form 10-Q for the quarter ended September 30, 2025",
+   "evidence_excerpt": "Under the new agreement, OpenAI has contracted to purchase an incremental $250 billion of Azure services, and Microsoft will no longer have a right of first refusal to be OpenAI's compute provider.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "NVDA",
+   "target": "ANTHROPIC",
+   "dependency_type": "Supply Relationship",
+   "product": "NVIDIA Grace Blackwell and Vera Rubin systems",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000228/q3fy26pr.htm",
+   "source_title": "NVIDIA Announces Financial Results for Third Quarter Fiscal 2026 (Form 8-K Exhibit 99.1, November 19, 2025)",
+   "evidence_excerpt": "Announced that, for the first time, Anthropic will run and scale on NVIDIA infrastructure, initially adopting 1 gigawatt of compute capacity with NVIDIA Grace Blackwell and Vera Rubin systems.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "NVDA",
+   "target": "OPENAI",
+   "dependency_type": "Supply Relationship",
+   "product": "NVIDIA systems (data center GPUs and AI infrastructure)",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000228/q3fy26pr.htm",
+   "source_title": "NVIDIA Announces Financial Results for Third Quarter Fiscal 2026 (Form 8-K Exhibit 99.1, November 19, 2025)",
+   "evidence_excerpt": "Announced a strategic partnership with OpenAI to deploy at least 10 gigawatts of NVIDIA systems for OpenAI’s next-generation AI infrastructure.",
+   "checked": "2026-10-22"
+  },
+  {
+   "source": "VASTDATA",
+   "target": "SHAZ",
+   "dependency_type": "Supply Relationship",
+   "product": "VAST DataEnclave / VAST AI Operating System data platform",
+   "source_url": "https://www.sec.gov/Archives/edgar/data/2068385/000149315226043802/ex99-1.htm",
+   "source_title": "Sharon AI Collaborates with VAST Data on the Launch of DataEnclave (Form 8-K Exhibit 99.1, September 23, 2026)",
+   "evidence_excerpt": "SharonAI Holdings Inc. (NASDAQ: SHAZ) (“Sharon AI” or the “Company”), a leading Australian Neocloud delivering trusted AI infrastructure, today announced a collaboration with VAST Data, the AI Operating System company, to bring VAST DataEnclave, the new confidential AI capability of the VAST DataEngine, to Sharon AI’s AI Factory platform across Australia and Asia-Pacific. Under the collaboration, Sharon AI will offer VAST DataEnclave as part of its AI Factory platform, giving customers a hardware-isolated secure runtime and cryptographic attestation service for running leading AI models onshore which is not expected to expose data or model weights.",
+   "checked": "2026-10-22"
+  }
+ ]
+}
