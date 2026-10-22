@@ -1,0 +1,839 @@
+{
+ "version": 1,
+ "companies": [
+  {
+   "id": "ALIGNEDDC",
+   "name": "Aligned Data Centers",
+   "aliases": [],
+   "sector": "Technology",
+   "industry": "Data Center Operator",
+   "description": "Develops and operates data center campuses for hyperscale, cloud and enterprise customers.",
+   "website": "https://aligneddc.com",
+   "hq": "Dallas, Texas, USA",
+   "founded": 2013,
+   "sources": [
+    "https://aligneddc.com/",
+    "https://aligneddc.com/press-release/aip-mgx-and-blackrocks-gip-close-acquisition-of-aligned-data-centers/",
+    "https://aligneddc.com/legal/",
+    "https://whbl.com/?p=880019"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "ANDURIL",
+   "name": "Anduril Industries",
+   "aliases": [
+    "Anduril Industries, Inc."
+   ],
+   "sector": "Industrials",
+   "industry": "Aerospace & Defense",
+   "description": "Defense technology company that builds autonomous systems, including underwater vehicles, and the Lattice software platform for military customers.",
+   "website": "https://www.anduril.com",
+   "hq": "Costa Mesa, California, USA",
+   "founded": 2017,
+   "sources": [
+    "https://www.anduril.com/",
+    "https://news.bloomberglaw.com/private-equity/anduril-headquarters-for-sale-as-california-defense-tech-booms",
+    "https://techcrunch.com/2026/05/13/anduril-raises-5b-doubles-valuation-to-61b/",
+    "https://www.sec.gov/Archives/edgar/data/716314/000119312526260688/ghm-20260331.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "ANTHROPIC",
+   "name": "Anthropic",
+   "aliases": [
+    "Anthropic PBC",
+    "Anthropic, PBC"
+   ],
+   "sector": "Technology",
+   "industry": "Artificial Intelligence",
+   "description": "Public benefit corporation that builds AI systems, including the Claude family of AI models.",
+   "website": "https://www.anthropic.com",
+   "hq": "San Francisco, California, USA",
+   "founded": 2021,
+   "sources": [
+    "https://www.anthropic.com/company",
+    "https://www.anthropic.com/legal/privacy",
+    "https://www.anthropic.com/legal/consumer-terms",
+    "https://techcrunch.com/2026/06/01/anthropic-files-to-go-public/",
+    "https://sfstandard.com/2025/09/23/anthropic-san-francisco-office-lease/",
+    "https://www.sec.gov/Archives/edgar/data/1730168/000119312526144028/d87999d8k.htm",
+    "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "APPTRONIK",
+   "name": "Apptronik",
+   "aliases": [
+    "Apptronik, Inc."
+   ],
+   "sector": "Industrials",
+   "industry": "Robotics",
+   "description": "Develops the Apollo humanoid robot for physically demanding work in industries such as manufacturing and warehousing.",
+   "website": "https://www.apptronik.com",
+   "hq": "Austin, Texas, USA",
+   "founded": 2016,
+   "sources": [
+    "https://www.apptronik.com/",
+    "https://www.apptronik.com/privacy-policy",
+    "https://news.mccombs.utexas.edu/?p=3676",
+    "https://startupintros.com/news/2026-02-11-apptronik-series-a",
+    "https://news.bgov.com/private-equity/apptronik-raises-520-million-in-new-funding-to-build-more-humanoids"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "BECHTEL",
+   "name": "Bechtel",
+   "aliases": [
+    "Bechtel Corporation"
+   ],
+   "sector": "Industrials",
+   "industry": "Engineering & Construction",
+   "description": "Engineering, procurement, construction and project management company.",
+   "website": "https://www.bechtel.com",
+   "hq": "Reston, Virginia, USA",
+   "founded": 1898,
+   "sources": [
+    "https://www.bechtel.com/about/",
+    "https://www.bechtel.com/about/history/",
+    "https://www.bechtel.com/contact/",
+    "https://virginiabusiness.com/real-estate-2026-brendan-bechtel/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "BLUEORIGIN",
+   "name": "Blue Origin",
+   "aliases": [
+    "Blue Origin, LLC"
+   ],
+   "sector": "Industrials",
+   "industry": "Aerospace & Defense",
+   "description": "Aerospace company that develops and launches rockets, including New Glenn and New Shepard.",
+   "website": "https://www.blueorigin.com",
+   "hq": "Kent, Washington, USA",
+   "founded": 2000,
+   "sources": [
+    "https://www.blueorigin.com/",
+    "https://www.blueorigin.com/new-glenn",
+    "https://www.thestar.com.my/tech/tech-news/2026/10/08/bezos-says-blue-origin-likely-to-pursue-ipo-in-coming-years",
+    "https://www.kentreporter.com/business/u-s-space-force-awards-78m-contract-to-kent-based-blue-origin/",
+    "https://spaceflightnow.com/tag/lc-36a/",
+    "https://www.sec.gov/Archives/edgar/data/716314/000119312526260688/ghm-20260331.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "BYTEDANCE",
+   "name": "ByteDance",
+   "aliases": [
+    "ByteDance Ltd."
+   ],
+   "sector": "Communication Services",
+   "industry": "Internet Content & Information",
+   "description": "Chinese technology company that builds content and communication platforms including TikTok, CapCut and Lark.",
+   "website": "https://www.bytedance.com/en/",
+   "hq": "Beijing, China",
+   "founded": 2012,
+   "sources": [
+    "https://www.bytedance.com/en/",
+    "https://www.bytedance.com/en/about",
+    "https://www2.yicaiglobal.com/news/tiktok-sets-up-us-jv-with-chinas-bytedance-owning-largest-single-stake",
+    "https://www.sec.gov/Archives/edgar/data/1109116/000119312526093993/evc-20251231.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "CANVADESIGN",
+   "name": "Canva",
+   "aliases": [
+    "Canva Pty Ltd"
+   ],
+   "sector": "Technology",
+   "industry": "Software - Application",
+   "description": "Develops an online visual design platform used to create presentations, websites and other digital content.",
+   "website": "https://www.canva.com",
+   "hq": "Sydney, New South Wales, Australia",
+   "founded": 2013,
+   "sources": [
+    "https://www.canva.com/policies/privacy-policy/",
+    "https://www.startupdaily.net/?p=136012",
+    "https://www.cmcmarkets.com/en-gb/ipo-trading/canva-ipo"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "CARGILL",
+   "name": "Cargill",
+   "aliases": [
+    "Cargill, Incorporated"
+   ],
+   "sector": "Consumer Defensive",
+   "industry": "Farm Products",
+   "description": "Privately held food and agriculture company.",
+   "website": "https://www.cargill.com",
+   "hq": "Minnesota, USA",
+   "founded": 1865,
+   "sources": [
+    "https://www.cargill.com/about/cargill-history-timeline",
+    "https://www.dtnpf.com/agriculture/web/ag/news/article/2026/02/13/cargill-closes-milwaukee-ground-beef"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "COHERE",
+   "name": "Cohere",
+   "aliases": [
+    "Cohere Inc."
+   ],
+   "sector": "Technology",
+   "industry": "Artificial Intelligence",
+   "description": "Builds foundation models and AI solutions for businesses.",
+   "website": "https://cohere.com",
+   "hq": "Toronto, Ontario, Canada",
+   "founded": 2019,
+   "sources": [
+    "https://cohere.com/about",
+    "https://cohere.com/privacy",
+    "https://www.sec.gov/Archives/edgar/data/1769628/000119312525052207/d899798ds1a.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "CRUSOE",
+   "name": "Crusoe",
+   "aliases": [
+    "Crusoe Energy Systems Inc."
+   ],
+   "sector": "Technology",
+   "industry": "AI Cloud Infrastructure",
+   "description": "Designs, builds and operates AI data centers and a cloud platform that combines energy sourcing, data center development and GPU cloud services.",
+   "website": "https://www.crusoe.ai",
+   "hq": "Denver, Colorado, USA",
+   "founded": 2018,
+   "sources": [
+    "https://www.crusoe.ai/about/company",
+    "https://www.crusoe.ai/resources/newsroom/crusoe-announces-series-f-funding",
+    "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1924674"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "CYRUSONE",
+   "name": "CyrusOne",
+   "aliases": [],
+   "sector": "Technology",
+   "industry": "Data Center Operator",
+   "description": "Designs, builds and operates data centers for large enterprises and cloud customers, offering colocation, build-to-suit and hyperscale capacity.",
+   "website": "https://www.cyrusone.com",
+   "hq": "Dallas, Texas, USA",
+   "founded": null,
+   "sources": [
+    "https://www.cyrusone.com/",
+    "https://dallasinnovates.com/cyrusone-promotes-longtime-executive-john-hatem-to-ceo/",
+    "https://www.sec.gov/Archives/edgar/data/1868275/000186827526000029/ceg-20260224991.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "DATABRICKS",
+   "name": "Databricks",
+   "aliases": [
+    "Databricks, Inc."
+   ],
+   "sector": "Technology",
+   "industry": "Software - Infrastructure",
+   "description": "Data and AI company offering a platform for organizations to analyze data and build AI applications.",
+   "website": "https://www.databricks.com",
+   "hq": "San Francisco, California, USA",
+   "founded": 2013,
+   "sources": [
+    "https://www.databricks.com/company/about-us",
+    "https://www.databricks.com/legal/privacynotice"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "DISCORD",
+   "name": "Discord",
+   "aliases": [
+    "Discord Inc."
+   ],
+   "sector": "Communication Services",
+   "industry": "Internet Content & Information",
+   "description": "Operates a communications platform offering voice, video and text chat, built around gaming communities.",
+   "website": "https://discord.com",
+   "hq": "San Francisco, California, USA",
+   "founded": null,
+   "sources": [
+    "https://discord.com/terms",
+    "https://discord.com/company",
+    "https://discord.com/press-releases"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "EPICGAMES",
+   "name": "Epic Games",
+   "aliases": [
+    "Epic Games, Inc."
+   ],
+   "sector": "Communication Services",
+   "industry": "Electronic Gaming & Multimedia",
+   "description": "Develops and publishes video games including Fortnite, operates the Epic Games Store, and makes the Unreal Engine.",
+   "website": "https://www.epicgames.com",
+   "hq": "Cary, North Carolina, USA",
+   "founded": 1991,
+   "sources": [
+    "https://www.epicgames.com/site/about",
+    "https://www.wbtv.com/2026/03/25/north-carolina-based-video-game-company-behind-fortnite-laying-off-1000-workers/",
+    "https://www.bgr.com/2210439/who-owns-epic-games/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "FANATICS",
+   "name": "Fanatics",
+   "aliases": [
+    "Fanatics Holdings, Inc."
+   ],
+   "sector": "Consumer Cyclical",
+   "industry": "Specialty Retail",
+   "description": "Operates a sports platform spanning licensed merchandise e-commerce, collectibles, betting and gaming, and live events.",
+   "website": "https://www.fanaticsinc.com",
+   "hq": null,
+   "founded": null,
+   "sources": [
+    "https://www.fanaticsinc.com",
+    "https://investor.fanatics.com",
+    "https://www.revenuememo.com/p/who-owns-fanatics",
+    "https://www.sec.gov/Archives/edgar/data/1634117/000163411726000070/bned-20260502.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "FIGUREAI",
+   "name": "Figure AI",
+   "aliases": [
+    "Figure AI Inc."
+   ],
+   "sector": "Industrials",
+   "industry": "Robotics",
+   "description": "Develops general-purpose humanoid robots and the Helix AI system that controls them.",
+   "website": "https://www.figure.ai",
+   "hq": "San Jose, California, USA",
+   "founded": null,
+   "sources": [
+    "https://www.figure.ai/",
+    "https://forbes.pe/tecnologia/2026-10-05/brett-adcock-de-figure-les-vendio-a-los-inversores-un-futuro-con-humanoides-ahora-tiene-que-construirlo/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "FLUIDSTACK",
+   "name": "Fluidstack",
+   "aliases": [
+    "Fluidstack Ltd",
+    "Fluidstack USA II Inc."
+   ],
+   "sector": "Technology",
+   "industry": "AI Cloud Infrastructure",
+   "description": "Builds and operates data center and compute infrastructure for AI labs, governments and enterprises.",
+   "website": "https://www.fluidstack.io",
+   "hq": "New York, New York, USA",
+   "founded": 2017,
+   "sources": [
+    "https://www.fluidstack.io/",
+    "https://fluidstack.io/blog/fluidstack-expands-u-s-investment-by-relocating-global-headquarters-to-new-york-city",
+    "https://fluidstack.io/blog/series-a-announcement",
+    "https://www.sec.gov/Archives/edgar/data/1819989/000095010325015073/dp237633_8k.htm",
+    "https://find-and-update.company-information.service.gov.uk/search/companies?q=fluidstack"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "G42GROUP",
+   "name": "G42",
+   "aliases": [
+    "Group 42 Holding Ltd"
+   ],
+   "sector": "Technology",
+   "industry": "Information Technology Services",
+   "description": "Abu Dhabi-based technology holding group whose companies work in artificial intelligence, cloud computing, data centers and cybersecurity.",
+   "website": "https://www.g42.ai",
+   "hq": "Abu Dhabi, United Arab Emirates",
+   "founded": 2018,
+   "sources": [
+    "https://www.g42.ai/",
+    "https://www.mubadala.com/en/what-we-do/g42",
+    "https://www.sec.gov/Archives/edgar/data/2021728/000162828026035214/cerebras-424b4.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "GROQAI",
+   "name": "Groq",
+   "aliases": [
+    "Groq LLC",
+    "Groq, Inc."
+   ],
+   "sector": "Technology",
+   "industry": "Semiconductors",
+   "description": "Operates GroqCloud, an AI inference cloud service that runs models on its LPU (language processing unit) hardware.",
+   "website": "https://groq.com",
+   "hq": null,
+   "founded": 2016,
+   "sources": [
+    "https://groq.com/newsroom",
+    "https://groq.com/newsroom/groq-raises-usd650m-to-scale-its-ai-inference-cloud-business",
+    "https://groq.com/newsroom/groq-and-nvidia-enter-non-exclusive-inference-technology-licensing-agreement-to-accelerate-ai-inference-at-global-scale",
+    "https://groq.com/privacy-policy"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "KOCHINC",
+   "name": "Koch, Inc.",
+   "aliases": [
+    "Koch Industries, Inc.",
+    "Koch Industries"
+   ],
+   "sector": "Industrials",
+   "industry": "Conglomerates",
+   "description": "Holding company that acquires, creates, develops and invests in a group of companies spanning industries from paper goods to software.",
+   "website": "https://www.kochinc.com",
+   "hq": "Wichita, Kansas, USA",
+   "founded": 1940,
+   "sources": [
+    "https://www.kochinc.com/",
+    "https://www.kochinc.com/about",
+    "https://privacypolicy.kochinc.com/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "LAMBDA",
+   "name": "Lambda",
+   "aliases": [
+    "Lambda, Inc."
+   ],
+   "sector": "Technology",
+   "industry": "AI Cloud Infrastructure",
+   "description": "Operates a cloud platform offering GPU compute, from on-demand instances to dedicated clusters, for training and running AI models.",
+   "website": "https://lambda.ai",
+   "hq": null,
+   "founded": 2012,
+   "sources": [
+    "https://lambda.ai/about",
+    "https://lambda.ai/legal/terms-of-service",
+    "https://lambda.ai/legal/privacy-policy"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "MISTRALAI",
+   "name": "Mistral AI",
+   "aliases": [
+    "Mistral AI SAS"
+   ],
+   "sector": "Technology",
+   "industry": "Artificial Intelligence",
+   "description": "French company that develops AI models, developer tools, applications and compute infrastructure for enterprises and the public sector.",
+   "website": "https://mistral.ai",
+   "hq": "Paris, France",
+   "founded": 2023,
+   "sources": [
+    "https://mistral.ai/about",
+    "https://legal.mistral.ai/terms/commercial-terms-of-service",
+    "https://www.sec.gov/Archives/edgar/data/1769628/000119312525052207/d899798ds1a.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "OPENAI",
+   "name": "OpenAI",
+   "aliases": [
+    "OpenAI Group PBC",
+    "OpenAI OpCo, LLC",
+    "OpenAI Global, LLC"
+   ],
+   "sector": "Technology",
+   "industry": "Artificial Intelligence",
+   "description": "Develops artificial intelligence models and products, including ChatGPT and the GPT model family.",
+   "website": "https://openai.com",
+   "hq": "San Francisco, California, USA",
+   "founded": null,
+   "sources": [
+    "https://openai.com/about/",
+    "https://www.sec.gov/Archives/edgar/data/1769628/000119312525052207/d899798dex1024.htm",
+    "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/amzn-20260630.htm",
+    "https://www.sec.gov/Archives/edgar/data/789019/000119312525256321/msft-20250930.htm",
+    "https://www.sec.gov/Archives/edgar/data/2488/000119312525230895/d28189dex991.htm",
+    "https://www.foxbusiness.com/markets/openai-signals-potential-stock-market-debut-while-weighing-private-company-advantages"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "PERPLEXITY",
+   "name": "Perplexity AI",
+   "aliases": [
+    "Perplexity AI, Inc."
+   ],
+   "sector": "Technology",
+   "industry": "Artificial Intelligence",
+   "description": "Develops an AI-powered answer engine and search products.",
+   "website": "https://www.perplexity.ai",
+   "hq": "San Francisco, California, USA",
+   "founded": null,
+   "sources": [
+    "https://www.perplexity.ai/hub/legal/terms-of-service",
+    "https://www.perplexity.ai/hub/legal/privacy-policy",
+    "https://www.sec.gov/Archives/edgar/data/1564408/000156440825000063/q32025investorletter.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "PLAIDINC",
+   "name": "Plaid",
+   "aliases": [
+    "Plaid Inc."
+   ],
+   "sector": "Technology",
+   "industry": "Financial Data Connectivity",
+   "description": "Operates a data network and software that lets people connect their financial accounts to apps and lets companies build financial products that use that connectivity.",
+   "website": "https://plaid.com",
+   "hq": "San Francisco, California, USA",
+   "founded": null,
+   "sources": [
+    "https://plaid.com/legal/",
+    "https://plaid.com/company/",
+    "https://plaid.com/careers/",
+    "https://financer.com/invest/plaid-ipo/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "QTSDATA",
+   "name": "QTS Data Centers",
+   "aliases": [
+    "QTS Realty Trust, LLC"
+   ],
+   "sector": "Technology",
+   "industry": "Data Center Operator",
+   "description": "Designs, builds and operates data centers in North America and Europe.",
+   "website": "https://q.com",
+   "hq": null,
+   "founded": null,
+   "sources": [
+    "https://q.com/",
+    "https://q.com/privacy-policy",
+    "https://www.ffxnow.com/2026/08/04/qts-data-centers-takes-office-lease-at-reston-row/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "RAMPBUSINESS",
+   "name": "Ramp Business Corporation",
+   "aliases": [
+    "Ramp Business Corp"
+   ],
+   "sector": "Technology",
+   "industry": "Spend Management Software",
+   "description": "Provides corporate cards, expense management, bill payment and business banking software for companies.",
+   "website": "https://ramp.com",
+   "hq": "New York, New York, USA",
+   "founded": null,
+   "sources": [
+    "https://ramp.com",
+    "https://ramp.com/careers",
+    "https://otpp.com/en-ca/about-us/news-and-insights/2026/ramp-raises-series-f-at-44-billion-valuation/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "RELATIVITY",
+   "name": "Relativity Space",
+   "aliases": [
+    "Relativity Space, Inc."
+   ],
+   "sector": "Industrials",
+   "industry": "Aerospace & Defense",
+   "description": "Aerospace company that builds reusable rockets, including the Terran R launch vehicle.",
+   "website": "https://www.relativityspace.com",
+   "hq": null,
+   "founded": null,
+   "sources": [
+    "https://www.relativityspace.com/",
+    "https://www.relativityspace.com/about",
+    "https://www.scientificamerican.com/article/ex-google-ceo-eric-schmidts-relativity-space-selected-for-upcoming-nasa-mars-orbiter-mission/",
+    "https://www.sec.gov/Archives/edgar/data/716314/000119312526260688/ghm-20260331.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "SAFESUPERINT",
+   "name": "Safe Superintelligence",
+   "aliases": [
+    "Safe Superintelligence Inc."
+   ],
+   "sector": "Technology",
+   "industry": "Artificial Intelligence",
+   "description": "AI research company focused on building safe superintelligence.",
+   "website": "https://ssi.inc",
+   "hq": "Palo Alto, California, USA",
+   "founded": null,
+   "sources": [
+    "https://ssi.inc/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "SAMBANOVA",
+   "name": "SambaNova",
+   "aliases": [
+    "SambaNova Systems, Inc."
+   ],
+   "sector": "Technology",
+   "industry": "Semiconductors",
+   "description": "Designs AI accelerator chips and the systems and software to run AI inference, offered as hardware and cloud services.",
+   "website": "https://sambanova.ai",
+   "hq": "San Jose, California, USA",
+   "founded": 2017,
+   "sources": [
+    "https://sambanova.ai/about-us",
+    "https://pulse2.com/sambanova-raises-1-billion-series-f-first-close-at-11-billion-valuation/",
+    "https://news.bgov.com/mergers-and-acquisitions/sambanova-said-to-seek-funding-after-intel-takeover-talks-stall"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "SARONIC",
+   "name": "Saronic Technologies",
+   "aliases": [
+    "Saronic Technologies, Inc."
+   ],
+   "sector": "Industrials",
+   "industry": "Aerospace & Defense",
+   "description": "Builds autonomous maritime vessels and systems for defense and commercial customers.",
+   "website": "https://www.saronic.com",
+   "hq": "Austin, Texas, USA",
+   "founded": 2022,
+   "sources": [
+    "https://www.saronic.com/",
+    "https://gov.texas.gov/news/post/saronicbrownsville"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "SCALEAI",
+   "name": "Scale AI",
+   "aliases": [
+    "Scale AI, Inc."
+   ],
+   "sector": "Technology",
+   "industry": "Artificial Intelligence",
+   "description": "Provides AI infrastructure and software, including training data and tools for building and deploying AI systems.",
+   "website": "https://scale.com",
+   "hq": "San Francisco, California, USA",
+   "founded": 2016,
+   "sources": [
+    "https://scale.com",
+    "https://scale.com/legal/privacy"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "SHIELDAI",
+   "name": "Shield AI",
+   "aliases": [],
+   "sector": "Industrials",
+   "industry": "Aerospace & Defense",
+   "description": "Defense technology company that builds the Hivemind AI pilot software and the V-BAT and X-BAT autonomous aircraft.",
+   "website": "https://shield.ai",
+   "hq": "San Diego, California, USA",
+   "founded": 2015,
+   "sources": [
+    "https://shield.ai/",
+    "https://shield.ai/about/",
+    "https://shield.ai/privacy-policy/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "SIERRASPACE",
+   "name": "Sierra Space",
+   "aliases": [
+    "Sierra Space Corporation"
+   ],
+   "sector": "Industrials",
+   "industry": "Aerospace & Defense",
+   "description": "Space company that develops satellites, spacecraft, propulsion systems and reusable spaceplanes.",
+   "website": "https://www.sierraspace.com",
+   "hq": "Colorado, USA",
+   "founded": null,
+   "sources": [
+    "https://www.sierraspace.com/",
+    "https://pulse2.com/sierra-space-550-million-series-c-raised-at-8-billion-valuation-for-defense-technology",
+    "https://www.sec.gov/Archives/edgar/data/716314/000119312526260688/ghm-20260331.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "SKYDIO",
+   "name": "Skydio",
+   "aliases": [
+    "Skydio, Inc."
+   ],
+   "sector": "Industrials",
+   "industry": "Aerospace & Defense",
+   "description": "Manufacturer of autonomous drones for public safety, infrastructure inspection, mapping and national security uses.",
+   "website": "https://www.skydio.com",
+   "hq": "San Mateo, California, USA",
+   "founded": 2014,
+   "sources": [
+    "https://www.skydio.com/about",
+    "https://www.skydio.com/terms-of-use"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "STRIPE",
+   "name": "Stripe",
+   "aliases": [
+    "Stripe, Inc.",
+    "Stripe, LLC"
+   ],
+   "sector": "Technology",
+   "industry": "Payments Infrastructure",
+   "description": "Builds payments and financial infrastructure software that businesses use to accept online payments and manage their operations.",
+   "website": "https://stripe.com",
+   "hq": "San Francisco, California, USA and Dublin, Ireland",
+   "founded": 2010,
+   "sources": [
+    "https://stripe.com/newsroom/information",
+    "https://stripe.com/about",
+    "https://stripe.com/legal/service-providers",
+    "https://stripe.com/sessions/2026/a-conversation-with-sam-altman",
+    "https://www.sec.gov/Archives/edgar/data/1517413/000151741326000193/fsly-20260603.htm",
+    "https://www.sec.gov/Archives/edgar/data/1594805/000159480526000007/shop-20251231.htm",
+    "https://www.sec.gov/Archives/edgar/data/1609151/000160915126000016/weav-20251231.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "THINKINGMACH",
+   "name": "Thinking Machines Lab",
+   "aliases": [],
+   "sector": "Technology",
+   "industry": "Artificial Intelligence",
+   "description": "Artificial intelligence research and product company.",
+   "website": "https://thinkingmachines.ai",
+   "hq": null,
+   "founded": null,
+   "sources": [
+    "https://thinkingmachines.ai/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "TOGETHERAI",
+   "name": "Together AI",
+   "aliases": [
+    "Together Computer, Inc."
+   ],
+   "sector": "Technology",
+   "industry": "AI Cloud Infrastructure",
+   "description": "Provides a cloud platform and infrastructure for building and running AI models in production.",
+   "website": "https://www.together.ai",
+   "hq": "San Francisco, California, USA",
+   "founded": 2022,
+   "sources": [
+    "https://www.together.ai/about",
+    "https://www.together.ai/terms-of-service",
+    "https://www.verdict.co.uk/together-ai-secures-800m-series-c/"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "VANTAGEDC",
+   "name": "Vantage Data Centers",
+   "aliases": [],
+   "sector": "Technology",
+   "industry": "Data Center Operator",
+   "description": "Develops and operates hyperscale data center campuses for cloud, AI, technology and enterprise customers.",
+   "website": "https://vantage-dc.com",
+   "hq": "Denver, Colorado, USA",
+   "founded": 2010,
+   "sources": [
+    "https://vantage-dc.com/",
+    "https://vantage-dc.com/contact/",
+    "https://www.digitalbridge.com/portfolio/vantage-data-centers-north-america",
+    "https://www.thestar.com.my/tech/tech-news/2026/08/13/exclusive-vantage-data-centers-explores-ipo-at-100-billion-valuation-or-sale-sources-say"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  },
+  {
+   "id": "VASTDATA",
+   "name": "VAST Data",
+   "aliases": [
+    "Vast Data Inc."
+   ],
+   "sector": "Technology",
+   "industry": "Software - Infrastructure",
+   "description": "Develops the VAST AI Operating System, a data platform that unifies data storage, database and compute for AI and data-intensive workloads.",
+   "website": "https://www.vastdata.com",
+   "hq": null,
+   "founded": 2016,
+   "sources": [
+    "https://www.vastdata.com/about",
+    "https://www.vastdata.com/terms-of-use",
+    "https://www.sec.gov/Archives/edgar/data/2068385/000149315226043802/ex99-1.htm"
+   ],
+   "checked": "2026-10-22",
+   "listed_as": null
+  }
+ ]
+}
