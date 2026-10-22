@@ -511,3 +511,39 @@ def test_the_gate_asks_only_about_what_cleanup_may_change(pipeline_db):
     disclosure_edge(session, n["DTIL"], n["TGTX"], CUT_OFF_SENTENCE, 77.0)
     session.commit()
     audit_database(fail_on_warnings=True)
+
+
+def test_a_share_corrected_by_hand_in_the_decisions_file_survives_the_nightly_run(pipeline_db):
+    """DTIL -> TGTX was published at 77% (Prevail's share): the stored sentence starts mid-sentence, so
+    no automatic step can judge it. The decisions file is replayed into the database every night
+    (apply_decision copies revenue_share), so a hand edit there is the fix; cleanup leaves it alone
+    and the gate stays clean."""
+    from audit_data_quality import audit_database
+    from cleanup_reviewed_edges import cleanup_reviewed_edges
+    from edge_review_decisions import apply_decision
+
+    session = pipeline_db()
+    companies(session, ("DTIL", "Precision BioSciences, Inc.", 1e8), ("TGTX", "TG Therapeutics, Inc. Common Stock", 8e9))
+    decision = {
+        "source_ticker": "DTIL", "target_ticker": "TGTX", "dependency_type": "Revenue Concentration",
+        "product": "12% of DTIL revenue", "confidence_score": 0.9667, "revenue_share": 12.0,
+        "source_url": URL, "source_title": TITLE,
+        "evidence_excerpt": f"Precision BioSciences (DTIL) 10-K filed 2026-03-12: {CUT_OFF_SENTENCE}",
+        "review_status": "approved", "review_note": CONSENSUS + " Share corrected by hand to 12%.",
+        "reviewed_at": "2026-10-02T09:44:33.554141",
+    }
+    assert apply_decision(session, decision) == "applied"
+    session.commit()
+    for _ in range(2):  # twice: the second night changes nothing
+        cleanup_reviewed_edges()
+        audit_database(fail_on_warnings=True)
+        edge = pipeline_db().query(Edge).one()
+        assert (edge.revenue_share, edge.review_status) == (12.0, "approved")
+
+
+def test_the_decisions_file_carries_the_hand_correction():
+    """The one published row the automatic re-check cannot judge (its excerpt starts mid-sentence) is fixed in
+    the file the pipeline replays every night; this fails if an export or a merge puts the 77% back."""
+    decisions = json.loads((ROOT / "data" / "edge_review_decisions.json").read_text(encoding="utf-8"))["decisions"]
+    rows = [d for d in decisions if (d["source_ticker"], d["target_ticker"], d["review_status"]) == ("DTIL", "TGTX", "approved")]
+    assert rows and all(d["revenue_share"] == 12.0 and "corrected by hand" in d["review_note"] for d in rows)
