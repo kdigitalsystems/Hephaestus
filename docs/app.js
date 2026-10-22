@@ -47,6 +47,15 @@ const setText = (id, value) => {
     if (element) element.textContent = value;
 };
 
+// A heading with the company's name and, for a private company, the Private badge after it.
+function setCompanyHeading(id, company, text) {
+    const heading = document.getElementById(id);
+    if (!heading) return;
+    clearElement(heading);
+    heading.textContent = text;
+    withPrivateBadge(heading, company);
+}
+
 const formatNum = (num, type = 'currency') => {
     if (num === null || num === undefined || isNaN(num)) return "N/A";
     const value = Number(num);
@@ -60,6 +69,20 @@ const formatNum = (num, type = 'currency') => {
     return `${sign}$${magnitude.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
+// A private company has no share price, so every market field in its entry is null (the
+// export marks it `listing: "private"`); the badge is what tells a visitor why.
+const isPrivate = (company) => Boolean(company) && company.listing === 'private';
+const PRIVATE_NOTE = 'Private company: no public share price';
+// The one component for "this name is a private company", used wherever a name is shown.
+const makePrivateBadge = () => {
+    const badge = makeElement('span', 'private-badge', 'Private');
+    badge.title = PRIVATE_NOTE;
+    return badge;
+};
+const withPrivateBadge = (parent, company) => {
+    if (isPrivate(company)) parent.appendChild(makePrivateBadge());
+    return parent;
+};
 const hasPrice = (company) => company.price !== null && company.price !== undefined && !isNaN(company.price);
 const formatPrice = (company) => hasPrice(company) ? formatNum(company.price, 'currency') : 'N/A';
 const formatChange = (company) => {
@@ -116,6 +139,18 @@ const pluralize = (count, singular, pluralForm = `${singular}s`) => {
     const number = Number(count) || 0;
     return `${number.toLocaleString()} ${number === 1 ? singular : pluralForm}`;
 };
+const listingCounts = (companies) => {
+    const privateCount = companies.filter(isPrivate).length;
+    return { public: companies.length - privateCount, private: privateCount };
+};
+// "3,973 public companies and 30 private": private companies are counted beside the listed
+// ones, never folded into one number, and a group with none reads as before.
+const companyCountLabel = (companies) => {
+    const counts = listingCounts(companies);
+    if (!counts.private) return pluralize(counts.public, 'company', 'companies');
+    if (!counts.public) return pluralize(counts.private, 'private company', 'private companies');
+    return `${pluralize(counts.public, 'public company', 'public companies')} and ${counts.private.toLocaleString()} private`;
+};
 // One fixed format, in UTC. toLocaleDateString() with no options rendered 9/11/2026 or
 // 11/9/2026 depending on the visitor, and a run that finished at 00:16 UTC showed the
 // previous day to anyone west of Greenwich.
@@ -169,28 +204,19 @@ const companyMetrics = (company) => company.investor_metrics || {
     web_source_count: 0,
     ai_research_count: 0,
     average_confidence: null,
-    concentration_score: 0,
     top_upstream: [],
     top_downstream: [],
     last_verified: 'N/A',
-    risk_score: 0,
-    supplier_risk: 0,
-    customer_risk: 0,
     confidence_score: 0,
     review_score: 0,
     freshness_score: 0
 };
 
-// `concentration_score` is the share of a company's links on its larger side (suppliers
-// or customers), and `risk_score` blends that with unapproved and low-confidence links.
-// Neither says how dependent the company is on one counterparty, and both are 0 when it
-// has no links, which is "not scored" rather than "no risk".
-const SCORE_HELP = {
-    gap: 'Higher when this company\'s tracked links are one-sided, not yet approved, or low-confidence. It scores how complete and verified the tracked links look, not the company\'s business risk.',
-};
+// The export still carries concentration_score, risk_score, supplier_risk and customer_risk,
+// but the site does not show them: the first is the share of links on a company's larger
+// side (most read 100%, because the graph usually holds one side of a supply chain) and the
+// rest are built from it, so none says how dependent a company is on one counterparty.
 const isScored = (metrics) => Number(metrics.total_links || 0) > 0;
-const formatLargerSide = (metrics) => (isScored(metrics) ? `${Math.round(Number(metrics.concentration_score || 0) * 100)}%` : 'N/A');
-const formatDataGap = (metrics) => (isScored(metrics) ? `${Number(metrics.risk_score || 0)}/100` : 'N/A');
 
 const relationshipStatus = (relationship) => {
     const tokens = String(relationship.review_status || 'pending')
@@ -470,7 +496,9 @@ fetch('predictions.json')
     .catch(error => console.warn('Prediction data load failed:', error));
 
 function getLastUpdatedLabel() {
+    // A private company's date is when the registry last changed, not when market data synced.
     const dates = allCompanies
+        .filter(company => !isPrivate(company))
         .map(company => company.last_updated)
         .filter(value => value && value !== 'N/A')
         .sort()
@@ -483,6 +511,7 @@ function resetDashboard() {
     document.getElementById('search-input').value = '';
     document.getElementById('sector-filter').value = '';
     document.getElementById('dependency-filter').value = '';
+    document.getElementById('listing-filter').value = '';
     document.getElementById('connected-filter').checked = false;
     currentCompaniesList = [];
     renderLevel1();
@@ -643,6 +672,7 @@ function renderRoute(route) {
         document.getElementById('search-input').value = route.query || '';
         document.getElementById('sector-filter').value = route.sector || '';
         document.getElementById('dependency-filter').value = route.dependency || '';
+        document.getElementById('listing-filter').value = listingFilterValue(route.listing);
         document.getElementById('connected-filter').checked = route.connected === '1';
         applyFilters(false, true);
         return;
@@ -760,8 +790,13 @@ function renderOverviewStats() {
             links: distinctLinkCount(companies)
         }))
         .sort((a, b) => b.links - a.links)[0];
+    const counts = listingCounts(allCompanies);
     [
-        ['Companies', allCompanies.length.toLocaleString()],
+        // Counted apart: a private company has no listing, and the first number is what
+        // the screener's Public filter shows.
+        ...(counts.private
+            ? [['Public companies', counts.public.toLocaleString()], ['Private companies', counts.private.toLocaleString()]]
+            : [['Companies', allCompanies.length.toLocaleString()]]),
         ['Supply links', supplyLinks.toLocaleString()],
         ['Linked names', linkedCompanies.toLocaleString()],
         ['Top sector', topSector ? topSector.sector : `${sectors} sectors`],
@@ -784,6 +819,7 @@ function renderTickerChip(ticker) {
     const chip = makeElement('button', 'changes-ticker', ticker || '?');
     chip.type = 'button';
     const company = getCompanyByTicker(ticker);
+    withPrivateBadge(chip, company);
     chip.title = company ? displayCompanyName(company.name) : `Search ${ticker}`;
     chip.onclick = () => company ? navigateCompany(company.ticker) : navigateCompanies({ query: ticker });
     return chip;
@@ -879,6 +915,7 @@ function renderQuickActions() {
     container.appendChild(label);
     topTickers.forEach(ticker => {
         const button = makeElement('button', 'quick-action-chip', ticker);
+        withPrivateBadge(button, getCompanyByTicker(ticker));
         button.type = 'button';
         button.title = `Open ${ticker} company brief`;
         button.onclick = () => navigateCompany(ticker);
@@ -937,7 +974,7 @@ function renderLevel1() {
             navigateSector(sector);
         };
         card.appendChild(makeElement('span', 'sector-name', sector));
-        card.appendChild(makeElement('span', 'sector-meta', `${pluralize(companies.length, 'company', 'companies')} · ${pluralize(links, 'link')}`));
+        card.appendChild(makeElement('span', 'sector-meta', `${companyCountLabel(companies)} · ${pluralize(links, 'link')}`));
         grid.appendChild(card);
     });
 }
@@ -964,6 +1001,7 @@ function clearFilters() {
     document.getElementById('search-input').value = '';
     document.getElementById('sector-filter').value = '';
     document.getElementById('dependency-filter').value = '';
+    document.getElementById('listing-filter').value = '';
     document.getElementById('connected-filter').checked = false;
     // From the overview this opens the screener, so it is a new history entry; replacing the
     // overview's would make Back leave the site.
@@ -984,12 +1022,14 @@ function updateSearchHelper(searchPending = false) {
     if (!helper || !input) return;
     const rawQuery = input.value.trim();
     if (!rawQuery) {
-        helper.textContent = 'Search ticker, company, supplier, customer, product, or sector.';
+        helper.textContent = 'Search ticker, company (private companies included), supplier, customer, product, or sector.';
         return;
     }
     const exactTicker = findExactTicker(rawQuery);
     if (exactTicker) {
-        helper.textContent = `Exact ticker match: ${exactTicker.ticker}. Press Enter or Search to open the company brief.`;
+        helper.textContent = isPrivate(exactTicker)
+            ? `Exact match: ${displayCompanyName(exactTicker.name)}, a private company. Press Enter or Search to open the company brief.`
+            : `Exact ticker match: ${exactTicker.ticker}. Press Enter or Search to open the company brief.`;
         return;
     }
     if (rawQuery.length < LIVE_SEARCH_MIN_CHARS) {
@@ -1004,13 +1044,18 @@ function updateSearchHelper(searchPending = false) {
     helper.textContent = `${count} result${count === 1 ? '' : 's'} match "${rawQuery}".`;
 }
 
+// The Listing filter's values; anything else in a link (#companies?listing=x) means "all".
+const LISTING_FILTERS = ['public', 'private'];
+const listingFilterValue = (value) => (LISTING_FILTERS.includes(value) ? value : '');
+
 function applyFilters(updateRoute = true, committedSearch = false, openExactTicker = false) {
     const query = document.getElementById('search-input').value.toLowerCase().trim();
     const sector = document.getElementById('sector-filter').value;
     const dependency = document.getElementById('dependency-filter').value;
+    const listing = listingFilterValue(document.getElementById('listing-filter').value);
     const onlyConnected = document.getElementById('connected-filter').checked;
-    const hasStructuredFilter = Boolean(sector || dependency || onlyConnected);
-    const exactTicker = !sector && !dependency && !onlyConnected ? findExactTicker(query) : null;
+    const hasStructuredFilter = Boolean(sector || dependency || listing || onlyConnected);
+    const exactTicker = !hasStructuredFilter ? findExactTicker(query) : null;
     const tickerPrefixSearch = !hasStructuredFilter && committedSearch && query.length >= PREFIX_SEARCH_MIN_CHARS &&
         allCompanies.some(company => (company.ticker || '').toLowerCase().startsWith(query));
 
@@ -1041,15 +1086,19 @@ function applyFilters(updateRoute = true, committedSearch = false, openExactTick
             (company.ticker || '').toLowerCase().includes(query) ||
             (company.sector || '').toLowerCase().includes(query) ||
             (company.industry || '').toLowerCase().includes(query) ||
+            // Filings name a private company by its legal name ("OpenAI, Inc."), not the short one.
+            (Array.isArray(company.aliases) && company.aliases.some(alias => String(alias).toLowerCase().includes(query))) ||
             counterpartyText.includes(query);
         const matchesSector = !sector || company.sector === sector;
         const matchesDependency = !dependency || deps.some(dep => dep.type === dependency);
+        const matchesListing = !listing || (listing === 'private') === isPrivate(company);
         const matchesConnected = !onlyConnected || company.connection_count > 0;
-        return matchesQuery && matchesSector && matchesDependency && matchesConnected;
+        return matchesQuery && matchesSector && matchesDependency && matchesListing && matchesConnected;
     });
 
     currentCompaniesList = results;
-    setText('current-industry-title', query ? `Search Results (${results.length})` : sector || 'All Companies');
+    const listingTitle = { public: 'Public companies', private: 'Private companies' }[listing];
+    setText('current-industry-title', query ? `Search Results (${results.length})` : sector || listingTitle || 'All Companies');
     renderLevel2();
 
     if (updateRoute) {
@@ -1059,6 +1108,7 @@ function applyFilters(updateRoute = true, committedSearch = false, openExactTick
             query,
             sector,
             dependency,
+            listing,
             connected: onlyConnected ? '1' : ''
         }, shouldPush);
     }
@@ -1131,6 +1181,7 @@ function renderCompanyTableRow(company) {
     const nameLink = makeElement('a', 'company-link');
     nameLink.href = routeToHash({ view: 'company', ticker: company.ticker });
     nameLink.appendChild(makeElement('strong', '', displayCompanyName(company.name)));
+    withPrivateBadge(nameLink, company);
     nameLink.onclick = (event) => {
         // The row navigates on any click that reaches it; a modified click belongs to the
         // browser (new tab or window), so it must not bubble up and navigate this tab too.
@@ -1176,13 +1227,18 @@ function renderLevel3(company, previousRoute = null) {
     hideAllViews();
     document.getElementById('view-details').classList.remove('hidden');
 
-    setText('detail-name', displayCompanyName(company.name));
-    setText('detail-heading', `${displayCompanyName(company.name)} (${company.ticker}) suppliers and customers`);
-    setPageTitle(`${displayCompanyName(company.name)} (${company.ticker}) suppliers and customers`);
+    // A private company's id is not a market symbol, so the heading says what it is instead.
+    const headingName = isPrivate(company)
+        ? `${displayCompanyName(company.name)} (private company)`
+        : `${displayCompanyName(company.name)} (${company.ticker})`;
+    setCompanyHeading('detail-name', company, displayCompanyName(company.name));
+    setText('detail-heading', `${headingName} suppliers and customers`);
+    setPageTitle(`${headingName} suppliers and customers`);
     setText('detail-ticker', company.ticker || 'N/A');
     setText('detail-industry', company.industry || company.sector || 'Uncategorized');
     updateDetailBackLabel(currentRoute.previous);
 
+    renderListingLayout(company);
     renderStory(company);
     renderDecisionBrief(company);
     renderMetrics(company);
@@ -1250,6 +1306,13 @@ function renderChart(company) {
     const renderToken = ++chartRenderToken;
     if (!chartContainer) return;
     clearElement(chartContainer);
+    // The token above already retired any readiness check still polling for the last company.
+    chartContainer.classList.toggle('chart-private', isPrivate(company));
+    if (isPrivate(company)) {
+        chartContainer.classList.remove('chart-loading');
+        chartContainer.appendChild(makeElement('div', 'chart-unavailable', PRIVATE_NOTE));
+        return;
+    }
     chartContainer.classList.add('chart-loading');
     const fallback = makeElement('div', 'chart-unavailable', 'Loading market chart...');
     chartContainer.appendChild(fallback);
@@ -1312,8 +1375,6 @@ function renderDecisionBrief(company) {
     watchButton.classList.toggle('active', watchlist.has(company.ticker));
     setText('brief-confidence', Number(metrics.upstream_count || 0).toLocaleString());
     setText('brief-approved', Number(metrics.downstream_count || 0).toLocaleString());
-    setText('brief-concentration', formatLargerSide(metrics));
-    setText('brief-verified', formatDataGap(metrics));
 
     const badges = document.getElementById('detail-risk-badges');
     clearElement(badges);
@@ -1334,6 +1395,7 @@ function renderDecisionBrief(company) {
     relationships.forEach(dep => {
         const chip = makeElement('button', 'related-chip', dep.ticker);
         const linkedCompany = getCompanyByTicker(dep.ticker);
+        withPrivateBadge(chip, linkedCompany);
         chip.type = 'button';
         chip.title = dep.name ? displayCompanyName(dep.name) : dep.ticker;
         chip.onclick = () => linkedCompany ? navigateCompany(linkedCompany.ticker) : navigateCompanies({ query: dep.ticker });
@@ -1359,6 +1421,43 @@ function navigateCompareFromCurrent() {
         .map(dep => dep.ticker)
         .find(depTicker => getCompanyByTicker(depTicker));
     navigateCompare({ a: ticker, b: nextPeer || '' });
+}
+
+// Everything on a brief that is about a share price: three metric sections and the CEO and
+// headcount lines. A private company shows its profile facts in their place.
+const MARKET_ONLY_IDS = ['detail-market', 'detail-valuation', 'detail-sentiment', 'detail-ceo-row', 'detail-emp-row'];
+
+function renderListingLayout(company) {
+    const privateCompany = isPrivate(company);
+    MARKET_ONLY_IDS.forEach(id => {
+        const node = document.getElementById(id);
+        if (node) node.classList.toggle('hidden', privateCompany);
+    });
+    const facts = document.getElementById('detail-private-facts');
+    if (!facts) return;
+    clearElement(facts);
+    facts.classList.toggle('hidden', !privateCompany);
+    if (!privateCompany) return;
+    const addFact = (label, value) => {
+        const row = makeElement('p', '');
+        row.appendChild(makeElement('span', '', `${label}: `));
+        row.appendChild(value);
+        facts.appendChild(row);
+    };
+    addFact('Sector', makeElement('strong', '', company.sector || 'Uncategorized'));
+    if (company.industry && company.industry !== 'N/A') addFact('Industry', makeElement('strong', '', company.industry));
+    if (company.hq) addFact('Headquarters', makeElement('strong', '', String(company.hq)));
+    if (company.founded !== null && company.founded !== undefined && company.founded !== '') addFact('Founded', makeElement('strong', '', String(company.founded)));
+    // The same http(s)-only gate as relationship sources: a stored value can be anything.
+    if (isHttpUrl(company.website)) {
+        const link = makeElement('a', 'source-link', websiteLabel(company.website));
+        link.href = company.website;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        addFact('Website', link);
+    }
+    const aliases = Array.isArray(company.aliases) ? company.aliases.filter(Boolean) : [];
+    if (aliases.length) addFact('Also named', makeElement('strong', '', aliases.join('; ')));
 }
 
 function renderMetrics(company) {
@@ -1425,6 +1524,7 @@ function renderSupplyGraph(company) {
             const node = makeElement('button', `graph-node ${direction} status-${relationshipStatus(dep)}`);
             node.type = 'button';
             node.appendChild(makeElement('strong', '', dep.ticker || displayCompanyName(dep.name)));
+            withPrivateBadge(node, getCompanyByTicker(dep.ticker));
             node.appendChild(makeElement('span', '', dep.product || dep.type || 'Supply Link'));
             node.onclick = () => getCompanyByTicker(dep.ticker) ? navigateCompany(dep.ticker) : openEvidenceModal(dep, company, direction);
             list.appendChild(node);
@@ -1438,13 +1538,24 @@ function renderSupplyGraph(company) {
     const center = makeElement('button', 'graph-node graph-center');
     center.type = 'button';
     center.appendChild(makeElement('strong', '', company.ticker || 'N/A'));
+    withPrivateBadge(center, company);
     center.appendChild(makeElement('span', '', pluralize(relationshipCount(company), 'link')));
     graph.appendChild(center);
 
     graph.appendChild(makeGraphColumn('downstream', 'Downstream', downstream));
 }
 
-const hasSourceUrl = (dep) => Boolean(dep.source && /^https?:\/\//i.test(dep.source));
+// Every URL that comes from data is linked only if it is http(s); "javascript:" and the like
+// would run on click.
+const isHttpUrl = (value) => typeof value === 'string' && /^https?:\/\//i.test(value);
+const hasSourceUrl = (dep) => isHttpUrl(dep.source);
+const websiteLabel = (url) => {
+    try {
+        return new URL(url).hostname.replace(/^www\./, '') || url;
+    } catch (_error) {
+        return url;
+    }
+};
 
 // What a relationship's evidence actually is, stated honestly: a cited document, a
 // curated seed, or model research with no direct citation.
@@ -1480,6 +1591,7 @@ function renderXRay(company) {
         const companyLine = makeElement('div', 'xray-company-line');
         companyLine.appendChild(makeElement('span', 'xray-name', displayCompanyName(dep.name)));
         companyLine.appendChild(makeElement('span', 'xray-ticker', dep.ticker ? `(${dep.ticker})` : ''));
+        withPrivateBadge(companyLine, linkedCompany);
 
         if (linkedCompany && hasPrice(linkedCompany)) {
             companyLine.appendChild(makeElement('span', `mini-metric ${changeClassName(linkedCompany)}`, formatChange(linkedCompany)));
@@ -1571,8 +1683,9 @@ function openEvidenceModal(dep, company = {}, direction = '') {
     clearElement(body);
     setText('modal-title', `${company.ticker || 'Company'} ${direction === 'upstream' ? '<-' : '->'} ${dep.ticker || dep.name || 'Counterparty'}`);
     const summary = dep.review_summary || {};
+    const counterparty = getCompanyByTicker(dep.ticker);
     [
-        ['Counterparty', `${displayCompanyName(dep.name)} ${dep.ticker ? `(${dep.ticker})` : ''}`],
+        ['Counterparty', `${displayCompanyName(dep.name)} ${dep.ticker ? `(${dep.ticker})` : ''}`, counterparty],
         ['Relationship', dep.type || 'Supply Link'],
         ['Product / service', dep.product || 'N/A'],
         ['Share of supplier revenue', revenueShareLabel(dep, 'downstream') || 'Not disclosed'],
@@ -1581,10 +1694,10 @@ function openEvidenceModal(dep, company = {}, direction = '') {
         ['Source type', dep.source_type || 'N/A'],
         ['Verification', reviewLabel(dep)],
         ['Last verified', dep.last_verified ? formatDisplayDate(dep.last_verified) : 'N/A'],
-    ].forEach(([label, value]) => {
+    ].forEach(([label, value, company]) => {
         const row = makeElement('div', 'modal-row');
         row.appendChild(makeElement('span', '', label));
-        row.appendChild(makeElement('strong', '', value));
+        row.appendChild(withPrivateBadge(makeElement('strong', '', value), company));
         body.appendChild(row);
     });
     if (dep.evidence_excerpt) {
@@ -1785,7 +1898,7 @@ function renderExposureView(updateRoute = true) {
     // answers for it, so require the ticker to be known to either, not to both.
     const known = Boolean(company) || index.dependents.has(ticker) || index.suppliers.has(ticker);
     if (!ticker || !known) {
-        setText('exposure-title', 'Who is exposed to a company');
+        setCompanyHeading('exposure-title', null, 'Who is exposed to a company');
         setText('exposure-count', ticker ? `No tracked company for ${ticker}` : 'Enter a ticker');
         results.appendChild(makeElement('span', 'empty-state', ticker
             ? `${ticker} is not in the tracked universe. Try a ticker from the screener.`
@@ -1798,7 +1911,7 @@ function renderExposureView(updateRoute = true) {
     const direct = downstream.filter(entry => entry.hop === 1);
     const secondOrder = downstream.filter(entry => entry.hop === 2);
     const singleSource = downstream.filter(entry => entry.singleSource);
-    setText('exposure-title', `Who is exposed to ${company ? displayCompanyName(company.name) : ticker}`);
+    setCompanyHeading('exposure-title', company, `Who is exposed to ${company ? displayCompanyName(company.name) : ticker}`);
     setText('exposure-count', `${downstream.length} exposed · ${upstream.length} upstream`);
 
     [
@@ -1858,16 +1971,16 @@ function renderWatchlistView() {
     const grid = document.getElementById('watchlist-grid');
     clearElement(grid);
     const companies = [...watchlist].map(getCompanyByTicker).filter(Boolean);
-    setText('watchlist-count', `${companies.length} saved${companies.length > 1 ? ' · largest data gap first' : ''}`);
+    setText('watchlist-count', `${companies.length} saved${companies.length > 1 ? ' · sorted by name' : ''}`);
     setPageTitle('Watchlist');
     if (!companies.length) {
         grid.appendChild(makeElement('span', 'empty-state', 'Track companies from a Decision Brief to build a local research queue.'));
         return;
     }
-    // A linked company's gap is never below ~22, so companies without links (no score, 0
-    // here) come last; most linked companies score within a few points, hence the ticker tie-break.
+    // By name, A to Z: a private company has no market cap to rank by, and nothing else on the
+    // card says one tracked company comes before another.
     companies
-        .sort((a, b) => Number(companyMetrics(b).risk_score || 0) - Number(companyMetrics(a).risk_score || 0)
+        .sort((a, b) => displayCompanyName(a.name).localeCompare(displayCompanyName(b.name))
             || String(a.ticker).localeCompare(String(b.ticker)))
         .forEach(company => grid.appendChild(renderCompanySignalCard(company)));
 }
@@ -1981,6 +2094,9 @@ function renderPredictionsView() {
     const generatedAt = predictionData.generated_at ? new Date(predictionData.generated_at) : null;
     setText('prediction-updated', generatedAt && !Number.isNaN(generatedAt.valueOf()) ? `Updated ${formatDisplayDate(predictionData.generated_at)}` : 'Awaiting signal run');
     setText('prediction-disclaimer', predictionData.disclaimer || 'Research signals only. They are not investment advice or trading instructions.');
+    // Signals start from a market cap and price moves, which a private company does not have.
+    const scopeNote = document.getElementById('prediction-scope-note');
+    if (scopeNote) scopeNote.hidden = !allCompanies.some(isPrivate);
 
     const calibrationEl = document.getElementById('prediction-calibration');
     clearElement(calibrationEl);
@@ -2046,10 +2162,7 @@ function renderCompanySignalCard(company) {
     const metrics = companyMetrics(company);
     const card = makeElement('article', 'signal-card');
     const header = makeElement('div', 'signal-card-header');
-    header.appendChild(makeElement('strong', '', `${company.ticker} - ${displayCompanyName(company.name)}`));
-    const gap = makeElement('span', 'source-badge pending', `Data gap ${formatDataGap(metrics)}`);
-    gap.title = SCORE_HELP.gap;
-    header.appendChild(gap);
+    header.appendChild(withPrivateBadge(makeElement('strong', '', `${company.ticker} - ${displayCompanyName(company.name)}`), company));
     card.appendChild(header);
     card.appendChild(makeElement('p', '', isScored(metrics)
         ? `${pluralize(metrics.total_links, 'tracked link')}: ${pluralize(metrics.upstream_count, 'supplier')}, ${pluralize(metrics.downstream_count, 'customer')}.`
@@ -2075,20 +2188,20 @@ function renderSectorView(sector) {
     setText('sector-title', sector || 'Unknown sector');
     setText('sector-heading', `${sector || 'Unknown'} sector`);
     setPageTitle(sector ? `${sector} sector` : 'Sector');
-    setText('sector-count', pluralize(companies.length, 'company', 'companies'));
+    setText('sector-count', companyCountLabel(companies));
     const summary = document.getElementById('sector-summary');
     clearElement(summary);
     const sectorLinks = distinctLinkCount(linked);
+    const counts = listingCounts(companies);
     [
-        ['Companies', companies.length],
+        [counts.private ? 'Public companies' : 'Companies', counts.public],
+        ...(counts.private ? [['Private companies', counts.private]] : []),
         ['Linked companies', linked.length],
         ['Supply links', sectorLinks],
-        ['Avg data gap', linked.length ? Math.round(linked.reduce((sum, company) => sum + companyMetrics(company).risk_score, 0) / linked.length) : 'N/A', SCORE_HELP.gap],
-    ].forEach(([label, value, help]) => {
+    ].forEach(([label, value]) => {
         const card = makeElement('article', 'radar-card');
         card.appendChild(makeElement('div', 'radar-card-title', label));
         card.appendChild(makeElement('span', 'stat-value', value.toLocaleString()));
-        if (help) card.title = help;
         summary.appendChild(card);
     });
     const tbody = document.getElementById('sector-company-table-body');
@@ -2097,7 +2210,9 @@ function renderSectorView(sector) {
         .sort((a, b) => {
             const capA = Number(a.market_cap || 0);
             const capB = Number(b.market_cap || 0);
-            return capB - capA;
+            // No market cap reads as 0, so private companies would sit among the listed
+            // companies that lack one; they come after them instead.
+            return capB - capA || Number(isPrivate(a)) - Number(isPrivate(b));
         })
         .forEach(company => tbody.appendChild(renderCompanyTableRow(company)));
 }
@@ -2123,14 +2238,12 @@ function renderCompareView(updateRoute = true) {
     companies.forEach(company => {
         const metrics = companyMetrics(company);
         const card = makeElement('article', 'compare-card');
-        card.appendChild(makeElement('h3', '', `${company.ticker} - ${displayCompanyName(company.name)}`));
+        card.appendChild(withPrivateBadge(makeElement('h3', '', `${company.ticker} - ${displayCompanyName(company.name)}`), company));
         const rows = [
             ['Market cap', formatNum(company.market_cap)],
-            ['Tracked links', metrics.total_links],
+            ['Tracked links', Number(metrics.total_links || 0).toLocaleString()],
             ['Suppliers', Number(metrics.upstream_count || 0).toLocaleString()],
             ['Customers', Number(metrics.downstream_count || 0).toLocaleString()],
-            ['Larger-side share', formatLargerSide(metrics)],
-            ['Data gap', formatDataGap(metrics)],
             ['Top supplier', metrics.top_upstream?.[0]?.ticker || 'N/A'],
             ['Top customer', metrics.top_downstream?.[0]?.ticker || 'N/A'],
         ];

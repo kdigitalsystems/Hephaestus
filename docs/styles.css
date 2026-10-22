@@ -61,6 +61,9 @@
     --chip-muted-bg: rgba(145, 168, 168, 0.13);
     --modal-backdrop-bg: rgba(0, 0, 0, 0.62);
     --focus-ring: rgba(69, 208, 189, 0.18);
+    --private: #c4bbff;
+    --private-bg: rgba(157, 140, 255, 0.16);
+    --private-border: rgba(157, 140, 255, 0.5);
 }
 
 [data-theme="light"] {
@@ -125,6 +128,9 @@
     --chip-muted-bg: #eef2f0;
     --modal-backdrop-bg: rgba(22, 32, 30, 0.48);
     --focus-ring: rgba(8, 127, 115, 0.13);
+    --private: #5a49c2;
+    --private-bg: #efecff;
+    --private-border: #b9b0f0;
 }
 
 * {
@@ -846,7 +852,7 @@ h3 {
 
 .control-panel {
     display: grid;
-    grid-template-columns: minmax(320px, 1fr) minmax(180px, 230px) minmax(210px, 280px) minmax(190px, auto) auto;
+    grid-template-columns: minmax(280px, 1fr) minmax(150px, 220px) minmax(170px, 260px) minmax(110px, 130px) minmax(170px, auto) auto;
     gap: 12px;
     align-items: end;
     margin: 18px 0 34px;
@@ -1060,6 +1066,7 @@ select:focus {
 .clear-filters {
     padding: 0 13px;
     align-self: end;
+    white-space: nowrap;
 }
 
 .quick-action-chip:hover,
@@ -2978,8 +2985,6 @@ td.muted {
     font-size: 0.9rem;
 }
 
-.brief-note { margin: 10px 0 0; }
-
 /* Keyboard users reach the page behind a navigation bar of a dozen controls; the link is
    off screen until it takes focus. #main-content is only a focus target, so no ring. */
 .skip-link {
@@ -3035,12 +3040,51 @@ td.muted {
     #theme-toggle-label { display: none; }
 }
 
-@media (max-width: 1120px) {
-    /* The five-column filter bar needs ~1,080px; just above the 1050px breakpoint its
-       last button ran 23px off the page. Switch to two columns with headroom. */
+@media (max-width: 1160px) {
+    /* The six-column filter bar (with Listing) needs ~1,150px; at 1,121px its last button
+       ran 6px off the page. Switch to two columns with headroom. */
     .control-panel { grid-template-columns: 1fr 1fr; }
     .control-panel > .primary-search { grid-column: 1 / -1; }
 }
+
+/* --- Private companies ------------------------------------------------------------------ */
+
+/* The one badge for a private company, after its name in rows, cards, chips and headings.
+   span.private-badge is as specific as the `.xyz span` rules of the places it sits in
+   (company cell, graph node, profile box) and comes after them. */
+span.private-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    padding: 1px 8px;
+    border: 1px solid var(--private-border);
+    border-radius: 999px;
+    background: var(--private-bg);
+    color: var(--private);
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.graph-node span.private-badge { margin-left: 0; justify-self: center; }
+
+/* A private company has no chart to draw: the box shrinks to the one-line explanation. */
+.chart-wrapper.chart-private { height: auto; }
+.chart-private .chart-unavailable { height: auto; padding: 18px; }
+
+/* An odd last stat or summary card spans the row instead of leaving a hole beside it. */
+.overview-stats > :last-child:nth-child(odd),
+#sector-summary > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+/* Underlined: next to its plain-text label the link would otherwise be told apart by colour alone. */
+.summary-box a.source-link { text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+
+/* "751 public companies and 3 private" is wider than a 320px screen on one line. */
+.table-header .result-count { max-width: 100%; white-space: normal; }
 
 /* --- Review queue (review.html) ------------------------------------------------------ */
 
