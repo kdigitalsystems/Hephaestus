@@ -1,6 +1,7 @@
 """The private-company registry: what a valid entry is, and how every rule rejects a bad one."""
 import copy
 import json
+import warnings
 import sys
 from datetime import date
 from pathlib import Path
@@ -83,8 +84,21 @@ def assert_rejected(entry, fragment):
 # --- the files that ship ----------------------------------------------------------------------
 
 def test_the_shipped_registry_and_seed_edges_are_valid():
-    """The same check the nightly seeder relies on, against the published public universe."""
-    assert private.validate_files() == []
+    """Structure, aliases, descriptions, collisions between private entries, seed-edge shape.
+
+    Deliberately NOT compared with the published public universe: the nightly export changes that
+    file, so a private company that lists (or a public one that delists) would turn this red for
+    every unrelated pull request. That comparison runs where it belongs: in CI only when a pull
+    request changes the registry files (see ci.yml), and every night in the seeder, which warns."""
+    assert private.validate_files(dashboard_path=None) == []
+
+
+def test_the_shipped_registry_against_the_public_universe_warns_but_does_not_block():
+    """A company that has listed since the registry was written should be marked `listed_as`, but the
+    day it lists is not the day to fail unrelated work; say so loudly instead."""
+    problems = private.validate_files()
+    if problems:
+        warnings.warn("registry vs the published public universe: " + "; ".join(problems[:5]), stacklevel=1)
 
 
 def test_the_shipped_files_load():

@@ -49,6 +49,18 @@ jobs:
       - name: Check backend Python syntax
         run: python -m compileall backend tests
 
+      - name: Check the private-company registry against the published public companies
+        # Only when the registry changes: a private company that lists later must not turn every
+        # unrelated pull request red (the nightly seeder warns about it instead).
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags --depth=1 origin "${{ github.event.pull_request.base.sha }}"
+          if git diff --quiet "${{ github.event.pull_request.base.sha }}" HEAD -- data/private_companies.json data/private_seed_edges.json; then
+            echo "The registry files are unchanged; nothing to compare."
+          else
+            python backend/private_companies.py validate --dashboard docs/dashboard_data.json
+          fi
+
       - name: Run Python unit tests
         run: python -m pytest -q
 
