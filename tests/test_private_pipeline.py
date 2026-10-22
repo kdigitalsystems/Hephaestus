@@ -1,6 +1,7 @@
 """Private companies from the database to the site: export, split, validation, status, repair, signals and pages."""
 import copy
 import json
+import re
 import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
@@ -525,13 +526,19 @@ def test_a_private_page_without_a_profile_still_renders(tmp_path):
 GOLDEN = ROOT / "tests" / "data" / "static_pages_public_golden"
 
 
+def unversioned(data):
+    """The cache-busting `?v=` of the stylesheet and scripts changes with every front-end release (and the golden
+    files carry the one they were rendered with); everything else must stay byte for byte."""
+    return re.sub(rb"(\?v=)[0-9A-Za-z.\-]+", rb"\1VERSION", data)
+
+
 def test_public_pages_are_byte_identical_to_what_they_were_before_private_companies(tmp_path):
     """The golden files were rendered by the generator as it was before this feature, from a graph with no private company."""
     _, out, sitemap = render_site_from(tmp_path, ROOT / "tests" / "data" / "static_pages_public_dashboard.json")
     expected = sorted(path.name for path in GOLDEN.iterdir() if path.name != "sitemap.xml")
     assert sorted(path.name for path in out.iterdir()) == expected
     for name in expected:
-        assert (out / name).read_bytes() == (GOLDEN / name).read_bytes(), name
+        assert unversioned((out / name).read_bytes()) == unversioned((GOLDEN / name).read_bytes()), name
     assert sitemap.read_bytes() == (GOLDEN / "sitemap.xml").read_bytes()
     assert b"private" not in (out / "index.html").read_bytes().lower() and b"public companies" in (out / "index.html").read_bytes()
 
@@ -554,7 +561,7 @@ def test_adding_a_private_company_to_the_graph_changes_only_the_pages_it_touches
                          "source": "https://s.example/x", "review_status": "approved", "evidence_excerpt": "Apple sells devices to Labs."}]
     dashboard["industries"]["Technology"].append(labs)
     _, out, _ = render_site(tmp_path, dashboard)
-    changed = [path.name for path in GOLDEN.iterdir() if path.name not in ("sitemap.xml",) and (out / path.name).read_bytes() != path.read_bytes()]
+    changed = [path.name for path in GOLDEN.iterdir() if path.name not in ("sitemap.xml",) and unversioned((out / path.name).read_bytes()) != unversioned(path.read_bytes())]
     assert sorted(changed) == ["AAPL.html", "index.html"], "pages of companies with no private counterparty must not move"
     assert (out / "LABSINC.html").exists()
 
