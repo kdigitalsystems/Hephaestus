@@ -540,7 +540,8 @@ def test_public_pages_are_byte_identical_to_what_they_were_before_private_compan
     for name in expected:
         assert unversioned((out / name).read_bytes()) == unversioned((GOLDEN / name).read_bytes()), name
     assert sitemap.read_bytes() == (GOLDEN / "sitemap.xml").read_bytes()
-    assert b"private" not in (out / "index.html").read_bytes().lower() and b"public companies" in (out / "index.html").read_bytes()
+    index = unversioned((out / "index.html").read_bytes())  # a release name such as "...-private1" is not page content
+    assert b"private" not in index.lower() and b"public companies" in index
 
 
 def render_site_from(tmp_path, source):
