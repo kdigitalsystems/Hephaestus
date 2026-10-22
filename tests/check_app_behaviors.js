@@ -172,6 +172,7 @@ function collectText(node) {
 
 const context = {
   console,
+  URL,
   URLSearchParams,
   setTimeout,
   clearTimeout,
@@ -762,7 +763,7 @@ vm.runInContext(`
   resetDashboard();
   globalThis.__helperAfterReset = document.getElementById('search-helper').textContent;
 `, context);
-if (context.__helperAfterReset !== "Search ticker, company, supplier, customer, product, or sector.") {
+if (context.__helperAfterReset !== "Search ticker, company (private companies included), supplier, customer, product, or sector.") {
   throw new Error(`resetting should clear the search helper, got ${context.__helperAfterReset}`);
 }
 
@@ -859,47 +860,53 @@ const legacyStrip = collectText(element("prediction-calibration"));
 check(legacyStrip.includes("Experimental: 50% hit rate so far") && legacyStrip.includes("4 resolved signals"), `a payload without track_record falls back to calibration: ${legacyStrip}`);
 vm.runInContext("predictionData = { predictions: [], calibration: {} };", context);
 
-// --- "Concentration" and "Risk" say what they measure ------------------------------------
-check(!htmlSource.includes("<small>Concentration</small>") && !htmlSource.includes("<small>Risk</small>"), "the brief must not label link-balance numbers Concentration and Risk");
-check(htmlSource.includes("<small>Larger-side share</small>") && htmlSource.includes("<small>Data gap</small>"), "the brief names what the two numbers are");
-check(htmlSource.includes("Neither measures how dependent the company is on any one supplier or customer"), "the brief explains the numbers in plain text, not only a tooltip");
+// --- The two weak scores are gone from the interface ------------------------------------------
+// "Larger-side share" (most companies read 100%) and "Data gap" (most read within a few points of
+// each other) did not say what a reader took them to say, so the brief shows counts only.
+["Larger-side share", "Data gap", "Concentration", "Risk", "brief-concentration", "brief-verified", "methodology.html#scores"].forEach((label) => {
+  check(!htmlSource.includes(label), `the brief must not carry ${label}`);
+});
+["Larger-side share", "Data gap", "formatLargerSide", "formatDataGap", "SCORE_HELP", "brief-concentration", "brief-verified", "largest data gap first"].forEach((label) => {
+  check(!appSource.includes(label), `app.js must not carry ${label}`);
+});
+check(htmlSource.includes("<small>Suppliers</small>") && htmlSource.includes("<small>Customers</small>"), "the brief shows supplier and customer counts");
 
 vm.runInContext(`
   renderDecisionBrief({ ticker: "AMD", name: "AMD", upstream: [{ ticker: "TSM" }], downstream: [],
     investor_metrics: { total_links: 1, upstream_count: 1, downstream_count: 0, concentration_score: 1, risk_score: 46 } });
 `, context);
-check(element("brief-concentration").textContent === "100%" && element("brief-verified").textContent === "46/100", "a company with links shows its numbers");
+check(element("brief-confidence").textContent === "1" && element("brief-approved").textContent === "0", "a company with links shows its supplier and customer counts");
 vm.runInContext(`renderDecisionBrief({ ticker: "AMAT", name: "Applied Materials", upstream: [], downstream: [] });`, context);
-check(element("brief-concentration").textContent === "N/A" && element("brief-verified").textContent === "N/A", `no links is N/A, not 0%: ${element("brief-concentration").textContent} ${element("brief-verified").textContent}`);
+check(element("brief-confidence").textContent === "0" && element("brief-approved").textContent === "0", "no links is 0 and 0");
 check(collectText(element("detail-risk-badges")).includes("Discovery candidate"), "an unlinked company is still a discovery candidate");
 
-// The watchlist is a research queue sorted by the data gap, with unscored companies after the scored ones.
+// The watchlist is a research queue sorted by name; the scores that used to order it are not shown.
 vm.runInContext(`
-  const withMetrics = (company, risk) => Object.assign(company, { investor_metrics: { total_links: 1, upstream_count: 1, downstream_count: 0, concentration_score: 1, risk_score: risk } });
-  withMetrics(allCompanies[0], 31);
-  withMetrics(allCompanies[1], 47);
+  const withMetrics = (company) => Object.assign(company, { investor_metrics: { total_links: 1, upstream_count: 1, downstream_count: 0, concentration_score: 1, risk_score: 47 } });
+  withMetrics(allCompanies[0]);
+  withMetrics(allCompanies[1]);
   watchlist = new Set(["AMAT", "AMD", "ACME"]);
   renderWatchlistView();
 `, context);
 const queueCards = element("watchlist-grid").children.map(collectText);
-check(queueCards.map((text) => text.split(" - ")[0]).join() === "ACME,AMD,AMAT", `watchlist order: ${queueCards.join(" | ")}`);
-check(queueCards[0].includes("Data gap 47/100") && queueCards[2].includes("Data gap N/A") && queueCards[2].includes("No tracked links yet"), `watchlist cards: ${queueCards.join(" | ")}`);
-check(element("watchlist-count").textContent.includes("largest data gap first"), "the watchlist says how it is sorted");
-check(!queueCards.join(" ").includes("supplier risk") && !queueCards.join(" ").includes("customer risk"), "the watchlist no longer shows supplier/customer risk");
+check(queueCards.map((text) => text.split(" - ")[0]).join() === "ACME,AMD,AMAT", `watchlist order (Acme Retail, Advanced Micro Devices, Applied Materials: by name, not by ticker or links): ${queueCards.join(" | ")}`);
+check(queueCards[0].includes("1 tracked link: 1 supplier, 0 customers.") && queueCards[2].includes("No tracked links yet"), `watchlist cards: ${queueCards.join(" | ")}`);
+check(element("watchlist-count").textContent === "3 saved · sorted by name", `the watchlist says how it is sorted: ${element("watchlist-count").textContent}`);
+check(!/Data gap|Larger-side|supplier risk|customer risk/i.test(queueCards.join(" ")), "the watchlist shows none of the removed scores");
 
 vm.runInContext(`renderSectorView("Consumer");`, context);
-check(collectText(element("sector-summary")).includes("Avg data gap47"), `sector average: ${collectText(element("sector-summary"))}`);
+check(collectText(element("sector-summary")) === "Companies1Linked companies1Supply links1", `sector summary: ${collectText(element("sector-summary"))}`);
 vm.runInContext(`globalData.Bare = [allCompanies[2]]; renderSectorView("Bare"); delete globalData.Bare;`, context);
-check(collectText(element("sector-summary")).includes("Avg data gapN/A"), `a sector with no linked companies has no average: ${collectText(element("sector-summary"))}`);
+check(collectText(element("sector-summary")) === "Companies1Linked companies0Supply links0", `a sector with no linked companies: ${collectText(element("sector-summary"))}`);
 
 element("compare-a").value = "ACME";
 element("compare-b").value = "AMAT";
 vm.runInContext("renderCompareView(false);", context);
 const compareText = collectText(element("compare-grid"));
-["Larger-side share100%", "Data gap47/100", "Data gapN/A", "Suppliers1", "Customers0"].forEach((expected) => {
+["Tracked links1", "Tracked links0", "Suppliers1", "Customers0"].forEach((expected) => {
   check(compareText.includes(expected), `compare card missing ${expected}; got ${compareText}`);
 });
-check(!/Risk score|Supplier risk|Customer risk/.test(compareText), "compare no longer calls these numbers risk");
+check(!/Larger-side|Data gap|Risk score|Supplier risk|Customer risk/.test(compareText), "compare no longer shows the removed scores");
 vm.runInContext("watchlist = new Set();", context);
 
 // --- Keyboard and screen-reader structure --------------------------------------------------
@@ -1067,3 +1074,266 @@ context.renderPipelineStatus({ ...freshStatus, data_as_of: new Date().toISOStrin
 check(statusLine.classList.contains("stale"), "an unfinished discovery is highlighted");
 context.renderPipelineStatus(null);
 check(statusLine.hidden === true && !statusLine.classList.contains("stale"), "no status hides the line and clears the highlight");
+
+// --- Private companies ---------------------------------------------------------------------------
+// Entries marked listing: "private" have no share price: every market field is null. They carry a
+// badge wherever a name appears, a Listing filter, a profile instead of a chart, and no valuation.
+const walkTree = (node, visit) => { visit(node); (node.children || []).forEach((child) => walkTree(child, visit)); };
+const findAll = (node, predicate) => { const found = []; walkTree(node, (n) => { if (predicate(n)) found.push(n); }); return found; };
+const badgesIn = (node) => findAll(node, (n) => n.className === "private-badge");
+const BAD_TEXT = /NaN|undefined|\bnull\b|\$0\.00(?!\d)/;
+const noBadText = (label, text) => check(!BAD_TEXT.test(text), `${label} must not render NaN / null / undefined / $0.00: ${text}`);
+
+check(/<select id="listing-filter" onchange="applyFilters\(\)">\s*<option value="">All<\/option>\s*<option value="public">Public<\/option>\s*<option value="private">Private<\/option>\s*<\/select>/.test(htmlSource), "the search panel has a Listing filter (All / Public / Private)");
+check(/<label for="listing-filter">Listing<\/label>/.test(htmlSource), "the Listing filter is labelled");
+check(/id="search-helper"[^>]*>[^<]*private companies/i.test(htmlSource), "the search helper mentions private companies");
+check(vm.runInContext("MARKET_ONLY_IDS", context).every((id) => htmlIds.has(id)), "every market-only element of the brief exists in the page");
+check(htmlIds.has("detail-private-facts") && htmlIds.has("prediction-scope-note"), "the private profile and the predictions note exist in the page");
+check(context.routeToHash({ view: "companies", listing: "private" }) === "#companies?listing=private" && context.hashToRoute("#companies?listing=private").listing === "private", "the listing filter rides in the route hash");
+
+const marketFields = { price: null, change: null, market_cap: null, enterprise_value: null, trailing_pe: null, forward_pe: null, price_to_book: null, high_52w: null, low_52w: null, revenue: null, margin: null, target_price: null, employees: null, dividend: "N/A", recommendation: "N/A", ceo: "N/A" };
+const link = (ticker, name, extra = {}) => ({ ticker, name, type: "Supply Link", product: "AI compute capacity", confidence: 0.9, review_status: "approved", source: "https://www.sec.gov/x", evidence_excerpt: "Both companies are named here.", last_verified: "2026-10-20", ...extra });
+const listed = (name, ticker, cap, extra = {}) => ({ name, ticker, industry: "Semiconductors", price: 10, change: 1.5, market_cap: cap, trailing_pe: 20, last_updated: "2026-10-22", upstream: [], downstream: [], ...extra });
+const privateCompany = (name, ticker, extra = {}) => ({ name, ticker, listing: "private", industry: "Artificial Intelligence", last_updated: "2026-12-31", upstream: [], downstream: [], ...marketFields, ...extra });
+context.__fixture = {
+  Technology: [
+    listed("Advanced Micro Devices, Inc. Common Stock", "AMD", 9e11, { downstream: [link("OPENAI", "OpenAI", { relationship_key: "AMD->OPENAI:SUPPLY" })] }),
+    listed("Microsoft Corporation", "MSFT", 3e12),
+    privateCompany("OpenAI", "OPENAI", {
+      website: "https://www.openai.com/", hq: "San Francisco, California, USA", founded: 2015, aliases: ["OpenAI, Inc.", "OpenAI Global, LLC"],
+      summary: "AI research and products company; maker of ChatGPT.",
+      upstream: [link("AMD", "Advanced Micro Devices", { relationship_key: "AMD->OPENAI:SUPPLY" }), link("ORCL", "Oracle Corp", { relationship_key: "ORCL->OPENAI:SUPPLY" })],
+    }),
+    privateCompany("Bad Site Co", "BADSITE", { industry: "Biotechnology", website: "javascript:alert(1)", hq: null, founded: null, summary: "A private company with an unsafe website value.", investor_metrics: {} }),
+    listed("Oracle Corp", "ORCL", 5e11, { downstream: [link("OPENAI", "OpenAI", { relationship_key: "ORCL->OPENAI:SUPPLY" })] }),
+  ],
+  Healthcare: [listed("Zeta Pharma", "ZETA", 1e9, { industry: "Drugs" }), privateCompany("Apex Private Labs", "APEXLABS", { industry: "Biotechnology", summary: "Private lab." })],
+  Industrials: [privateCompany("Koch Industries", "KOCHIND", { industry: "Conglomerates", summary: "Private conglomerate." })],
+  Energy: [listed("Exxon Mobil", "XOM", 4e11, { industry: "Oil", change: -2.1 })],
+};
+vm.runInContext(`
+  globalData = globalThis.__fixture;
+  hydrateCompanies(globalData);
+  dashboardMeta = { investor_metrics: { unique_links: 2 } };
+  watchlist = new Set();
+  predictionData = { predictions: [], calibration: {} };
+`, context);
+
+// One badge component: a "Private" pill that says why there is no price.
+vm.runInContext("globalThis.__badge = makePrivateBadge();", context);
+check(context.__badge.className === "private-badge" && context.__badge.textContent === "Private" && context.__badge.title === "Private company: no public share price", "the Private badge is one component with an explanation");
+check(vm.runInContext("isPrivate(getCompanyByTicker('openai')) && !isPrivate(getCompanyByTicker('AMD')) && !isPrivate(null) && !isPrivate({ listing: 'public' })", context), "only listing: private marks a private company");
+
+// Screener rows: badge after the name, N/A in every market cell, no badge on a listed company.
+vm.runInContext("globalThis.__privateRow = renderCompanyTableRow(getCompanyByTicker('OPENAI')); globalThis.__publicRow = renderCompanyTableRow(getCompanyByTicker('AMD'));", context);
+check(badgesIn(context.__privateRow.children[0]).length === 1 && badgesIn(context.__publicRow).length === 0, "a private row carries the badge, a listed row does not");
+check(context.__privateRow.children[0].children[0].children[0].children[0].textContent === "OpenAI", "the badge sits beside the company link");
+const privateCells = context.__privateRow.children.map(collectText);
+check(privateCells[2] === "N/A" && privateCells[3] === "N/A" && privateCells[4] === "N/A" && privateCells[6] === "N/A", `price, change, market cap and P/E are N/A for a private company: ${privateCells.join(" | ")}`);
+noBadText("a private screener row", privateCells.join(" | "));
+
+// The Listing filter: honoured by the filter, written to the hash, read back from it.
+const setFilters = (values) => {
+  element("search-input").value = values.query || "";
+  element("sector-filter").value = values.sector || "";
+  element("dependency-filter").value = values.dependency || "";
+  element("listing-filter").value = values.listing || "";
+  element("connected-filter").checked = Boolean(values.connected);
+};
+const screenerTickers = () => vm.runInContext("currentCompaniesList.map(company => company.ticker).sort().join()", context);
+setFilters({});
+vm.runInContext("currentRoute = { view: 'overview' }; window.location.hash = '#overview'; applyFilters(true);", context);
+check(screenerTickers() === "AMD,APEXLABS,BADSITE,KOCHIND,MSFT,OPENAI,ORCL,XOM,ZETA", `All lists listed and private companies together: ${screenerTickers()}`);
+setFilters({ listing: "private" });
+vm.runInContext("applyFilters(true);", context);
+check(screenerTickers() === "APEXLABS,BADSITE,KOCHIND,OPENAI", `Private lists only private companies: ${screenerTickers()}`);
+check(context.window.location.hash === "#companies?listing=private" && vm.runInContext("currentRoute.listing", context) === "private", `the listing is written to the hash: ${context.window.location.hash}`);
+check(element("current-industry-title").textContent === "Private companies" && element("result-count").textContent === "4 results", "the screener says what it lists");
+setFilters({ listing: "public" });
+vm.runInContext("applyFilters(true);", context);
+check(screenerTickers() === "AMD,MSFT,ORCL,XOM,ZETA" && context.window.location.hash === "#companies?listing=public", `Public lists only listed companies: ${screenerTickers()} ${context.window.location.hash}`);
+setFilters({ listing: "private", sector: "Technology" });
+vm.runInContext("applyFilters(true);", context);
+check(screenerTickers() === "BADSITE,OPENAI" && element("current-industry-title").textContent === "Technology" && context.window.location.hash === "#companies?sector=Technology&listing=private", `the listing combines with the sector filter: ${screenerTickers()} ${context.window.location.hash}`);
+
+// A link restores the filter on load and on Back/Forward; an unknown value means all.
+vm.runInContext("window.location.hash = '#companies?listing=private'; applyRouteFromHash(false);", context);
+check(element("listing-filter").value === "private" && screenerTickers() === "APEXLABS,BADSITE,KOCHIND,OPENAI", "#companies?listing=private is honoured on load");
+vm.runInContext("window.location.hash = '#companies?listing=public'; handleLocationChange();", context);
+check(element("listing-filter").value === "public" && screenerTickers() === "AMD,MSFT,ORCL,XOM,ZETA", "Back/Forward re-applies the listing in the hash");
+vm.runInContext("window.location.hash = '#companies?listing=bogus'; handleLocationChange();", context);
+check(element("listing-filter").value === "" && screenerTickers().split(",").length === 9, "an unknown listing value in a link means all companies");
+
+// Reset filters clears it (in the screener and from any other view).
+setFilters({ listing: "private" });
+vm.runInContext("currentRoute = { view: 'companies', listing: 'private' }; window.location.hash = '#companies?listing=private'; clearFilters();", context);
+check(element("listing-filter").value === "" && context.window.location.hash === "#companies" && screenerTickers().split(",").length === 9, `Reset filters clears the listing: ${context.window.location.hash}`);
+setFilters({ listing: "private" });
+vm.runInContext("resetDashboard();", context);
+check(element("listing-filter").value === "", "resetting the dashboard clears the listing");
+
+// With a listing chosen, an exact ticker does not jump past the filter.
+setFilters({ query: "OPENAI", listing: "public" });
+vm.runInContext("currentRoute = { view: 'companies' }; applyFilters(true, true, true);", context);
+check(vm.runInContext("currentRoute.view", context) === "companies" && screenerTickers() === "AMD,ORCL", `Public + OPENAI lists the listed companies that name it, and does not open the private company: ${screenerTickers()}`);
+setFilters({ query: "OPENAI" });
+vm.runInContext("applyFilters(true, true, true);", context);
+check(vm.runInContext("currentRoute.view + ':' + currentRoute.ticker", context) === "company:OPENAI", "an exact private id still opens its brief");
+element("search-input").value = "";
+vm.runInContext("updateSearchHelper();", context);
+check(/private companies/.test(element("search-helper").textContent), `search helper: ${element("search-helper").textContent}`);
+element("search-input").value = "OPENAI";
+vm.runInContext("updateSearchHelper();", context);
+check(element("search-helper").textContent.startsWith("Exact match: OpenAI, a private company."), `an exact private match is not called a ticker: ${element("search-helper").textContent}`);
+
+// Search finds private companies by name and by alias.
+setFilters({ query: "apex private" });
+vm.runInContext("applyFilters(false);", context);
+check(screenerTickers() === "APEXLABS", "search finds a private company by name");
+setFilters({ query: "openai global" });
+vm.runInContext("applyFilters(false);", context);
+check(screenerTickers() === "OPENAI", `search finds a private company by an alias: ${screenerTickers()}`);
+setFilters({ query: "OpenAI, Inc." });
+vm.runInContext("applyFilters(false);", context);
+check(screenerTickers() === "OPENAI", `an alias match ignores case: ${screenerTickers()}`);
+vm.runInContext("getCompanyByTicker('AMD').aliases = 'not a list'; getCompanyByTicker('ORCL').aliases = [null, 7];", context);
+setFilters({ query: "oracle" });
+vm.runInContext("applyFilters(false);", context);
+check(screenerTickers().includes("ORCL"), "a malformed aliases value does not break the search");
+vm.runInContext("delete getCompanyByTicker('AMD').aliases; delete getCompanyByTicker('ORCL').aliases;", context);
+
+// Sorting keeps the N/A cells last in both directions, for every market column.
+setFilters({});
+vm.runInContext("applyFilters(false);", context);
+["market_cap", "price", "change", "trailing_pe"].forEach((column) => {
+  [true, false].forEach((asc) => {
+    vm.runInContext(`sortCol = '${column}'; sortAsc = ${asc}; renderLevel2();`, context);
+    const order = element("company-table-body").children.map((row) => collectText(row.children[1]));
+    const privateIds = ["APEXLABS", "BADSITE", "KOCHIND", "OPENAI"];
+    check(order.length === 9 && order.slice(order.length - 4).every((ticker) => privateIds.includes(ticker)), `private companies sort last by ${column} (${asc ? "ascending" : "descending"}): ${order.join()}`);
+  });
+});
+vm.runInContext("sortCol = 'market_cap'; sortAsc = false;", context);
+
+// The brief of a private company: a profile, not a chart or valuation.
+let widgetCalls = 0;
+context.window.TradingView = { widget: class { constructor() { widgetCalls += 1; } } };
+context.window.setInterval = () => 1;
+context.window.clearInterval = () => {};
+vm.runInContext("currentRoute = { view: 'companies' }; navigateCompany('OPENAI');", context);
+check(widgetCalls === 0, "no TradingView chart is created for a private company");
+check(collectText(element("tv_chart_container")) === "Private company: no public share price" && element("tv_chart_container").classes.has("chart-private") && !element("tv_chart_container").classes.has("chart-loading"), `the chart area says why there is no chart: ${collectText(element("tv_chart_container"))}`);
+check(vm.runInContext("MARKET_ONLY_IDS", context).every((id) => element(id).classes.has("hidden")), "the price, valuation, sentiment, CEO and headcount blocks are hidden");
+check(!element("detail-private-facts").classes.has("hidden"), "the profile facts are shown");
+const facts = collectText(element("detail-private-facts"));
+["Sector: Technology", "Industry: Artificial Intelligence", "Headquarters: San Francisco, California, USA", "Founded: 2015", "Website: openai.com", "Also named: OpenAI, Inc.; OpenAI Global, LLC"].forEach((expected) => {
+  check(facts.includes(expected), `private profile missing ${expected}; got ${facts}`);
+});
+const anchors = findAll(element("detail-private-facts"), (n) => n.tagName === "a");
+check(anchors.length === 1 && anchors[0].href === "https://www.openai.com/" && anchors[0].rel === "noopener noreferrer" && anchors[0].target === "_blank", `the website is a safe external link: ${JSON.stringify(anchors.map((a) => [a.href, a.rel, a.target]))}`);
+check(element("detail-summary").textContent === "AI research and products company; maker of ChatGPT.", "the registry description is the summary");
+check(element("detail-name").textContent === "OpenAI" && badgesIn(element("detail-name")).length === 1, "the detail header carries the badge");
+check(element("detail-heading").textContent === "OpenAI (private company) suppliers and customers" && context.document.title === "OpenAI (private company) suppliers and customers | Hephaestus", `the heading names it a private company: ${element("detail-heading").textContent} / ${context.document.title}`);
+check(element("brief-confidence").textContent === "2" && element("brief-approved").textContent === "0", "the decision brief shows supplier and customer counts");
+const briefText = ["brief-confidence", "brief-approved", "detail-risk-badges", "detail-related", "detail-story"].map((id) => collectText(element(id))).join(" | ");
+check(!/valuation|market cap|price|worth|\bP\/E\b/i.test(briefText) && !/%/.test(briefText), `the brief has no valuation language: ${briefText}`);
+check(findAll(element("detail-upstream"), (n) => n.className === "xray-card upstream").length === 2 && findAll(element("supply-graph"), (n) => (n.className || "").startsWith("graph-node")).length >= 3 && badgesIn(findAll(element("supply-graph"), (n) => n.className === "graph-node graph-center")[0]).length === 1, "the supplier X-Ray and graph are there, and the centre node is badged");
+["detail-name", "detail-heading", "detail-industry", "detail-ticker", "detail-story", "detail-private-facts", "detail-summary", "tv_chart_container", "detail-related", "supply-graph", "detail-upstream", "detail-downstream", "detail-risk-badges", "detail-price", "detail-change", "detail-high", "detail-mcap", "detail-ev", "detail-tpe", "detail-fpe", "detail-rev", "detail-margin", "detail-target", "detail-pb", "detail-ceo", "detail-emp"].forEach((id) => noBadText(`private brief ${id}`, collectText(element(id))));
+
+// Track, Compare and Exposure work on it.
+vm.runInContext("toggleCurrentWatchlist();", context);
+check(vm.runInContext("watchlist.has('OPENAI')", context) && element("watchlist-toggle").textContent === "Tracking", "a private company can be tracked");
+vm.runInContext("navigateCompareFromCurrent(); globalThis.__cmpRoute = currentRoute;", context);
+check(context.__cmpRoute.view === "compare" && context.__cmpRoute.a === "OPENAI" && context.__cmpRoute.b === "AMD", `Compare starts from the private company: ${JSON.stringify(context.__cmpRoute)}`);
+vm.runInContext("navigateCompany('OPENAI'); navigateExposureFromCurrent(); globalThis.__expRoute = currentRoute;", context);
+check(context.__expRoute.view === "exposure" && context.__expRoute.ticker === "OPENAI", "Exposure starts from the private company");
+
+// A website value that is not http(s) is never linked or shown; empty profile fields are left out.
+vm.runInContext("navigateCompany('BADSITE');", context);
+const badSiteFacts = collectText(element("detail-private-facts"));
+check(findAll(element("detail-private-facts"), (n) => n.tagName === "a").length === 0 && !/javascript|Website|Headquarters|Founded|Also named/.test(badSiteFacts) && badSiteFacts.includes("Sector: Technology"), `an unsafe website is dropped: ${badSiteFacts}`);
+check(collectText(element("detail-risk-badges")).includes("Discovery candidate"), "a private company with no links is a discovery candidate like any other");
+noBadText("a private brief with no profile fields", badSiteFacts + collectText(element("detail-story")));
+
+// ...and the brief of a listed company is whole again (and the chart is drawn).
+vm.runInContext("navigateCompany('AMD');", context);
+check(widgetCalls === 1, "a listed company still gets its TradingView chart");
+check(!element("tv_chart_container").classes.has("chart-private") && vm.runInContext("MARKET_ONLY_IDS", context).every((id) => !element(id).classes.has("hidden")) && element("detail-private-facts").classes.has("hidden"), "opening a listed company after a private one restores the market blocks");
+check(badgesIn(element("detail-name")).length === 0 && element("detail-price").textContent === "$10.00" && element("detail-mcap").textContent === "$900.00B", "the listed company's header has no badge and its metrics are filled");
+const listedRelated = findAll(element("detail-related"), (n) => n.className === "related-chip");
+check(listedRelated.length === 1 && listedRelated[0].textContent === "OPENAI" && badgesIn(listedRelated[0]).length === 1, "a related-company chip for a private company carries the badge");
+check(findAll(element("detail-downstream"), (n) => n.className === "xray-company-line").filter((line) => badgesIn(line).length).length === 1, "the X-Ray card of a private counterparty carries the badge");
+check(findAll(element("supply-graph"), (n) => (n.className || "").startsWith("graph-node ") && badgesIn(n).length).length === 1, "the graph node of a private counterparty carries the badge");
+vm.runInContext("openEvidenceModal(getCompanyByTicker('AMD').downstream[0], getCompanyByTicker('AMD'), 'downstream');", context);
+check(badgesIn(element("modal-body")).length === 1 && collectText(element("modal-body")).includes("OpenAI (OPENAI)"), "the evidence dialog marks a private counterparty");
+vm.runInContext("closeEvidenceModal(); watchlist = new Set();", context);
+
+// Chips elsewhere (change feed, exposure rows, top briefs) use the same component.
+vm.runInContext("globalThis.__chips = [renderTickerChip('OPENAI'), renderTickerChip('AMD'), renderTickerChip('NOSUCH')];", context);
+check(badgesIn(context.__chips[0]).length === 1 && badgesIn(context.__chips[1]).length === 0 && badgesIn(context.__chips[2]).length === 0, "ticker chips badge private companies only");
+vm.runInContext("dashboardMeta = { investor_metrics: { unique_links: 2, most_connected: [{ ticker: 'OPENAI' }, { ticker: 'AMD' }] } }; renderQuickActions();", context);
+check(element("quick-actions").children.filter((chip) => badgesIn(chip).length).map((chip) => chip.textContent).join() === "OPENAI", "the top-brief chips badge private companies only");
+vm.runInContext("dashboardMeta = { investor_metrics: { unique_links: 2 } };", context);
+
+// Overview: the counts are kept apart.
+vm.runInContext("renderOverviewStats();", context);
+const privateOverview = collectText(element("overview-stats"));
+check(privateOverview.includes("5Public companies") && privateOverview.includes("4Private companies") && !privateOverview.includes("9Companies"), `overview counts public and private apart: ${privateOverview}`);
+vm.runInContext("renderLevel1();", context);
+const sectorCards = Object.fromEntries(element("industry-grid").children.map((card) => [collectText(card.children[0]), collectText(card.children[1])]));
+check(sectorCards.Technology === "3 public companies and 2 private · 2 links" && sectorCards.Healthcare === "1 public company and 1 private · 0 links" && sectorCards.Industrials === "1 private company · 0 links" && sectorCards.Energy === "1 company · 0 links", `sector cards count each kind: ${JSON.stringify(sectorCards)}`);
+vm.runInContext("globalThis.__saved = allCompanies.slice(); allCompanies = allCompanies.filter(company => company.listing !== 'private'); renderOverviewStats(); allCompanies = globalThis.__saved;", context);
+check(collectText(element("overview-stats")).includes("5Companies") && !collectText(element("overview-stats")).includes("Private"), "with no private company the overview reads as before");
+check(vm.runInContext("getLastUpdatedLabel()", context) === "Data synced Oct 22, 2026", `a private company's registry date does not set "Data synced": ${vm.runInContext("getLastUpdatedLabel()", context)}`);
+
+// Sector page: counts, a private card only where there are private companies, private rows after listed ones.
+vm.runInContext("renderSectorView('Technology');", context);
+check(collectText(element("sector-summary")) === "Public companies3Private companies2Linked companies3Supply links2" && element("sector-count").textContent === "3 public companies and 2 private", `sector summary: ${collectText(element("sector-summary"))} / ${element("sector-count").textContent}`);
+// Oracle has no market cap here (it comes after the private companies in the data): it still sorts before them.
+vm.runInContext("globalData.Technology.find(company => company.ticker === 'ORCL').market_cap = null; renderSectorView('Technology'); globalData.Technology.find(company => company.ticker === 'ORCL').market_cap = 5e11;", context);
+const sectorOrder = element("sector-company-table-body").children.map((row) => collectText(row.children[1]));
+check(sectorOrder.slice(0, 3).join() === "MSFT,AMD,ORCL" && sectorOrder.slice(3).sort().join() === "BADSITE,OPENAI", `sector rows: listed by market cap, then private: ${sectorOrder.join()}`);
+vm.runInContext("renderSectorView('Technology');", context);
+check(element("sector-company-table-body").children.filter((row) => badgesIn(row).length).length === 2, "private sector rows are badged");
+vm.runInContext("renderSectorView('Energy');", context);
+check(collectText(element("sector-summary")) === "Companies1Linked companies0Supply links0", "a sector without private companies has no private card");
+vm.runInContext("renderSectorView('Industrials');", context);
+check(collectText(element("sector-summary")).startsWith("Public companies0Private companies1") && element("sector-count").textContent === "1 private company", "a sector with only private companies counts them honestly");
+["sector-summary", "sector-count", "sector-company-table-body"].forEach((id) => noBadText(`sector view ${id}`, collectText(element(id))));
+
+// Watchlist, compare and exposure.
+vm.runInContext("watchlist = new Set(['OPENAI', 'AMD', 'BADSITE']); renderWatchlistView();", context);
+const savedCards = element("watchlist-grid").children;
+check(savedCards.map((card) => collectText(card.children[0].children[0]).split(" - ")[0]).join() === "AMD,BADSITE,OPENAI", `watchlist is sorted by name: ${savedCards.map(collectText).join(" | ")}`);
+check(savedCards.map((card) => badgesIn(card).length).join() === "0,1,1", "watchlist cards badge private companies");
+noBadText("the watchlist", collectText(element("watchlist-grid")));
+vm.runInContext("watchlist = new Set();", context);
+element("compare-a").value = "OPENAI";
+element("compare-b").value = "AMD";
+vm.runInContext("renderCompareView(false);", context);
+const compareCards = element("compare-grid").children;
+check(badgesIn(compareCards[0]).length === 1 && badgesIn(compareCards[1]).length === 0, "compare badges the private company only");
+check(collectText(compareCards[0]).includes("Market capN/A") && collectText(compareCards[1]).includes("Market cap$900.00B") && collectText(compareCards[0]).includes("Suppliers2"), `compare shows N/A for a private market cap: ${collectText(compareCards[0])}`);
+noBadText("compare", collectText(element("compare-grid")));
+element("compare-a").value = "BADSITE";
+element("compare-b").value = "KOCHIND";
+vm.runInContext("renderCompareView(false);", context);
+noBadText("compare of two private companies", collectText(element("compare-grid")));
+check(badgesIn(element("compare-grid")).length === 2, "both private cards are badged");
+element("exposure-input").value = "OPENAI";
+vm.runInContext("renderExposureView(false);", context);
+check(badgesIn(element("exposure-title")).length === 1 && element("exposure-title").textContent === "Who is exposed to OpenAI", "the exposure heading carries the badge");
+element("exposure-input").value = "AMD";
+vm.runInContext("renderExposureView(false);", context);
+check(badgesIn(element("exposure-title")).length === 0 && badgesIn(element("exposure-results")).length === 1, "exposure rows badge the private dependent only");
+["exposure-title", "exposure-count", "exposure-summary", "exposure-results", "exposure-sectors"].forEach((id) => noBadText(`exposure ${id}`, collectText(element(id))));
+
+// Predictions: private companies are not scored, and the page says so only when there are any.
+vm.runInContext("renderPredictionsView();", context);
+check(element("prediction-scope-note").hidden === false, "the predictions page notes that private companies are not scored");
+vm.runInContext("globalThis.__saved = allCompanies.slice(); allCompanies = allCompanies.filter(company => company.listing !== 'private'); renderPredictionsView(); globalThis.__noteHidden = document.getElementById('prediction-scope-note').hidden; allCompanies = globalThis.__saved;", context);
+check(context.__noteHidden === true, "the note stays hidden while there are no private companies");
+check(/not scored/.test(htmlSource.slice(htmlSource.indexOf('id="prediction-scope-note"'), htmlSource.indexOf('id="prediction-scope-note"') + 300)), "the note's text says private companies are not scored");
+// The badge and the chart note are styled: the class names the script emits exist in the stylesheet.
+const cssSource = fs.readFileSync("docs/styles.css", "utf8");
+check(/\nspan\.private-badge \{[^}]*color: var\(--private\)[^}]*\}/.test(cssSource) && cssSource.includes(".chart-wrapper.chart-private") && cssSource.includes("--private-bg"), "styles.css styles the Private badge and the private chart note");

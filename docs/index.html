@@ -34,9 +34,9 @@
         }
     </script>
     <link rel="alternate" type="application/rss+xml" title="Hephaestus supply-chain changes" href="feed.xml">
-    <link rel="stylesheet" href="styles.css?v=20261017-ui11">
+    <link rel="stylesheet" href="styles.css?v=20261022-private1">
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js" defer></script>
-    <script src="analytics.js?v=20261017-ui11" defer></script>
+    <script src="analytics.js?v=20261022-private1" defer></script>
 </head>
 <body>
     <a class="skip-link" href="#main-content" onclick="skipToContent(event)">Skip to main content</a>
@@ -93,7 +93,7 @@
                     <button class="search-submit" type="button" onclick="commitSearch()" aria-label="Search">Search</button>
                     <button class="search-clear" type="button" onclick="clearSearchInput()" aria-label="Clear search" title="Clear search">Clear</button>
                 </div>
-                <div id="search-helper" class="field-helper" aria-live="polite">Search ticker, company, supplier, customer, product, or sector.</div>
+                <div id="search-helper" class="field-helper" aria-live="polite">Search ticker, company (private companies included), supplier, customer, product, or sector.</div>
             </div>
             <div class="filter-group">
                 <label for="sector-filter">Sector</label>
@@ -105,6 +105,14 @@
                 <label for="dependency-filter">Dependency</label>
                 <select id="dependency-filter" onchange="applyFilters()">
                     <option value="">All dependency types</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="listing-filter">Listing</label>
+                <select id="listing-filter" onchange="applyFilters()">
+                    <option value="">All</option>
+                    <option value="public">Public</option>
+                    <option value="private">Private</option>
                 </select>
             </div>
             <label class="toggle-filter">
@@ -194,6 +202,7 @@
                 <span id="prediction-updated" class="result-count">Loading...</span>
             </div>
             <p id="prediction-disclaimer" class="prediction-disclaimer"></p>
+            <p id="prediction-scope-note" class="prediction-disclaimer" hidden>Private companies are not scored: signals start from a market cap and share price moves, and a private company has neither.</p>
             <div id="prediction-track-record" class="prediction-track-record"></div>
             <div id="prediction-calibration" class="prediction-calibration"></div>
             <div id="prediction-grid" class="prediction-grid"></div>
@@ -307,15 +316,12 @@
                     <div class="brief-grid">
                         <div><span id="brief-confidence">-</span><small>Suppliers</small></div>
                         <div><span id="brief-approved">-</span><small>Customers</small></div>
-                        <div title="The share of this company's tracked links that sit on its larger side, suppliers or customers."><span id="brief-concentration">-</span><small>Larger-side share</small></div>
-                        <div title="Higher when this company's tracked links are one-sided, not yet approved, or low-confidence."><span id="brief-verified">-</span><small>Data gap</small></div>
                     </div>
-                    <p class="field-helper brief-note">Larger-side share is the part of a company's tracked links that sit on its larger side, suppliers or customers; 100% means they are all on one side. Data gap is higher when links are one-sided, not yet approved, or low-confidence. Neither measures how dependent the company is on any one supplier or customer. <a href="methodology.html#scores" target="_blank" rel="noopener">How they are calculated</a></p>
                     <div id="detail-risk-badges" class="badge-row"></div>
                     <div id="detail-related" class="related-links"></div>
                 </section>
 
-                <section class="metrics-section">
+                <section class="metrics-section" id="detail-market">
                     <h3>Market Performance</h3>
                     <div class="metrics-grid four-col">
                         <div><div class="metric-label">Current Price</div><div class="metric-value" id="detail-price">-</div></div>
@@ -325,7 +331,7 @@
                     </div>
                 </section>
 
-                <section class="metrics-section">
+                <section class="metrics-section" id="detail-valuation">
                     <h3>Valuation & Health</h3>
                     <div class="metrics-grid">
                         <div><div class="metric-label">Market Cap</div><div class="metric-value" id="detail-mcap">-</div></div>
@@ -337,7 +343,7 @@
                     </div>
                 </section>
 
-                <section class="metrics-section">
+                <section class="metrics-section" id="detail-sentiment">
                     <h3>Sentiment & Yield</h3>
                     <div class="metrics-grid">
                         <div><div class="metric-label">Analyst Rec</div><div class="metric-value" id="detail-rec">-</div></div>
@@ -349,8 +355,9 @@
 
                 <section class="summary-box">
                     <h3>Corporate Profile</h3>
-                    <p><span>CEO:</span> <strong id="detail-ceo">-</strong></p>
-                    <p><span>Employees:</span> <strong id="detail-emp">-</strong></p>
+                    <p id="detail-ceo-row"><span>CEO:</span> <strong id="detail-ceo">-</strong></p>
+                    <p id="detail-emp-row"><span>Employees:</span> <strong id="detail-emp">-</strong></p>
+                    <div id="detail-private-facts" class="hidden"></div>
                     <div id="detail-summary" class="profile-summary" tabindex="0" role="region" aria-label="Company profile">Summary...</div>
                 </section>
 
@@ -388,6 +395,6 @@
         </section>
     </div>
 
-    <script src="app.js?v=20261017-ui11"></script>
+    <script src="app.js?v=20261022-private1"></script>
 </body>
 </html>
