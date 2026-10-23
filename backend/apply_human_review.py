@@ -5,6 +5,12 @@ Each decision names an edge and one of approve / reject / reverse. They are appl
 as human verdicts, which every automated rule leaves alone, and then persisted in
 data/edge_review_decisions.json by the normal decisions export.
 
+An approval may also carry "set_type", the label to publish the link under. The review
+models sometimes relabel a real supply link "strategic partnership" or "collaboration", and
+cleanup rejects a link under such a label however it was decided, so a person who approves one
+must be able to correct the label in the same decision. The new label is checked the way
+cleanup checks it (not a non-supply or role label), and one edge per label is kept.
+
 Re-running is safe: a decision that is already in effect changes nothing, and a
 reversal is applied once (an edge already running the other way is left as it is).
 Files are applied in name order, so a later session overrides an earlier one.
@@ -44,10 +50,33 @@ def validate_payload(payload):
         for field in ("source_ticker", "target_ticker", "type"):
             if not isinstance(decision.get(field), str) or not decision.get(field):
                 errors.append(f"{where}: \"{field}\" must be a non-empty string")
+        if "set_type" in decision:
+            problem = set_type_problem(decision)
+            if problem:
+                errors.append(f"{where}: {problem}")
         note = decision.get("note", "")
         if not isinstance(note, str) or len(note) > MAX_NOTE_LENGTH:
             errors.append(f"{where}: \"note\" must be text of at most {MAX_NOTE_LENGTH} characters")
     return errors
+
+
+MAX_LABEL_LENGTH = 80
+UNUSABLE_LABELS = {"news", "unknown", "n/a", "none"}
+
+
+def set_type_problem(decision):
+    """Why "set_type" cannot be used on this decision (None when it can)."""
+    label = decision.get("set_type")
+    if decision.get("action") != "approve":
+        return '"set_type" can only be used with "approve"'
+    if not isinstance(label, str) or not label or len(label) > MAX_LABEL_LENGTH or label != label.strip():
+        return f'"set_type" must be a label of 1-{MAX_LABEL_LENGTH} characters without surrounding spaces'
+    # evidence_quality imports only the standard library, so `--check` stays runnable in CI without dependencies.
+    from evidence_quality import has_non_supply_relationship, is_role_label
+
+    if label.lower() in UNUSABLE_LABELS or has_non_supply_relationship(label) or is_role_label(label):
+        return f'"set_type" {label!r} is not a supply-chain label (cleanup would reject the link again)'
+    return None
 
 
 def decision_files(directory=HUMAN_REVIEW_DIR):
@@ -66,14 +95,19 @@ def check_files(directory=HUMAN_REVIEW_DIR):
     return problems
 
 
-def runs(edge, source_ticker, target_ticker, dependency_type):
+def labels_of(decision):
+    """The label the edge carries before the decision and, once relabelled, after it (so a re-run still finds it)."""
+    return {decision["type"], decision.get("set_type")} - {None}
+
+
+def runs(edge, source_ticker, target_ticker, dependency_types):
     return (
         edge is not None
         and edge.source_node is not None
         and edge.target_node is not None
         and edge.source_node.ticker == source_ticker
         and edge.target_node.ticker == target_ticker
-        and edge.dependency_type == dependency_type
+        and edge.dependency_type in dependency_types
     )
 
 
@@ -85,17 +119,17 @@ def find_edge(session, decision):
     """
     from models import Edge, Node
 
-    source, target, label = decision["source_ticker"], decision["target_ticker"], decision["type"]
+    source, target, labels = decision["source_ticker"], decision["target_ticker"], labels_of(decision)
     edge = session.get(Edge, decision["edge_id"])
-    if runs(edge, source, target, label):
+    if runs(edge, source, target, labels):
         return edge, "original"
-    if runs(edge, target, source, label):
+    if runs(edge, target, source, labels):
         return edge, "reversed"
     for first, second, orientation in ((source, target, "original"), (target, source, "reversed")):
         match = (
             session.query(Edge)
             .join(Node, Edge.source_id == Node.id)
-            .filter(Node.ticker == first, Edge.dependency_type == label)
+            .filter(Node.ticker == first, Edge.dependency_type.in_(labels))
             .filter(Edge.target_node.has(Node.ticker == second))
             .first()
         )
@@ -130,7 +164,21 @@ def apply_decision(session, decision, reviewed_on, now):
     if action == "approve":
         if orientation == "reversed":
             return "skipped_direction_changed"
-        return "approved" if set_verdict(edge, "approved", human_note("approved", reviewed_on, note), now) else "unchanged"
+        relabelled = False
+        new_label = decision.get("set_type")
+        if new_label and edge.dependency_type != new_label:
+            taken = (
+                session.query(Edge)
+                .filter(Edge.source_id == edge.source_id, Edge.target_id == edge.target_id,
+                        Edge.dependency_type == new_label, Edge.id != edge.id)
+                .first()
+            )
+            if taken is not None:
+                return "skipped_label_taken"  # one edge per label: the person decides which copy to keep
+            edge.dependency_type = new_label
+            relabelled = True
+        approved = set_verdict(edge, "approved", human_note("approved", reviewed_on, note), now)
+        return "approved" if (approved or relabelled) else "unchanged"
     if action == "reject":
         if orientation == "reversed":
             return "skipped_direction_changed"
