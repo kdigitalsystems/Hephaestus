@@ -1,8 +1,175 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-22T08:40:15+00:00",
-  "unique_links": 759,
+  "generated_at": "2026-10-23T09:31:10+00:00",
+  "unique_links": 776,
   "days": [
+    {
+      "date": "2026-10-23",
+      "generated_at": "2026-10-23T09:31:10+00:00",
+      "previous_date": "2026-10-22",
+      "unique_links": 776,
+      "net_change": 17,
+      "new_count": 17,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "ANTHROPIC->ROP:SUPPLY RELATIONSHIP",
+          "source_ticker": "ANTHROPIC",
+          "target_ticker": "ROP",
+          "type": "Supply Relationship",
+          "product": "AI platforms and services, including proprietary and open-source large language models and other AI technologies",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "AVGO->ANTHROPIC:SUPPLY RELATIONSHIP",
+          "source_ticker": "AVGO",
+          "target_ticker": "ANTHROPIC",
+          "type": "Supply Relationship",
+          "product": "TPU-based AI compute capacity (accessed through Broadcom)",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "BHE->OUST:MANUFACTURING PARTNER",
+          "source_ticker": "BHE",
+          "target_ticker": "OUST",
+          "type": "Manufacturing Partner",
+          "product": "REV8 Lidar Systems",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "DATABRICKS->PICS:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "DATABRICKS",
+          "target_ticker": "PICS",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Services provided by Databricks",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "KO->COKE:SUPPLY RELATIONSHIP",
+          "source_ticker": "KO",
+          "target_ticker": "COKE",
+          "type": "Supply Relationship",
+          "product": "plastic bottles, aluminum cans",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "NKTR->PFE:REVENUE CONCENTRATION",
+          "source_ticker": "NKTR",
+          "target_ticker": "PFE",
+          "type": "Revenue Concentration",
+          "product": "Revenue from Pfizer Inc.",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "ONC->COR:REVENUE CONCENTRATION",
+          "source_ticker": "ONC",
+          "target_ticker": "COR",
+          "type": "Revenue Concentration",
+          "product": "18.5% of ONC revenue",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "ONC->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "ONC",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "pharmaceutical products",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "OPENAI->ROP:SUPPLY RELATIONSHIP",
+          "source_ticker": "OPENAI",
+          "target_ticker": "ROP",
+          "type": "Supply Relationship",
+          "product": "AI platforms and services, including proprietary and open-source large language models and other AI technologies",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "OPENAI->TTAN:SUPPLY RELATIONSHIP",
+          "source_ticker": "OPENAI",
+          "target_ticker": "TTAN",
+          "type": "Supply Relationship",
+          "product": "proprietary machine learning algorithms and LLMs provided by third parties",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "PAA->BP:REVENUE CONCENTRATION",
+          "source_ticker": "PAA",
+          "target_ticker": "BP",
+          "type": "Revenue Concentration",
+          "product": "10% of PAA revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "PFE->BNTX:SUPPLY RELATIONSHIP",
+          "source_ticker": "PFE",
+          "target_ticker": "BNTX",
+          "type": "Supply Relationship",
+          "product": "Information and data for vaccine development",
+          "review_status": "approved",
+          "confidence": 0.925
+        },
+        {
+          "relationship_key": "PLXS->TER:CONTRACT MANUFACTURING",
+          "source_ticker": "PLXS",
+          "target_ticker": "TER",
+          "type": "Contract Manufacturing",
+          "product": "FLEX and Magnum products, ETS family of products, storage test family of products",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "PNR->WSO:SUPPLY RELATIONSHIP",
+          "source_ticker": "PNR",
+          "target_ticker": "WSO",
+          "type": "Supply Relationship",
+          "product": "Products manufactured by Pentair, Inc.",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "STRIPE->DASH:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "STRIPE",
+          "target_ticker": "DASH",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Supplier named in DASH's 10-K",
+          "review_status": "approved",
+          "confidence": 0.9167
+        },
+        {
+          "relationship_key": "WMS->CNM:REVENUE CONCENTRATION",
+          "source_ticker": "WMS",
+          "target_ticker": "CNM",
+          "type": "Revenue Concentration",
+          "product": "12.8% of WMS revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "WMS->FERG:REVENUE CONCENTRATION",
+          "source_ticker": "WMS",
+          "target_ticker": "FERG",
+          "type": "Revenue Concentration",
+          "product": "13.1% of WMS revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-22",
       "generated_at": "2026-10-22T08:40:15+00:00",
@@ -1127,47 +1294,6 @@
           "confidence": 0.95
         }
       ],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-08",
-      "generated_at": "2026-10-08T09:54:31+00:00",
-      "previous_date": "2026-10-07",
-      "unique_links": 827,
-      "net_change": 3,
-      "new_count": 3,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "CAH->SCLXW:SUPPLY RELATIONSHIP",
-          "source_ticker": "CAH",
-          "target_ticker": "SCLXW",
-          "type": "Supply Relationship",
-          "product": "title model services",
-          "review_status": "approved",
-          "confidence": 0.975
-        },
-        {
-          "relationship_key": "PLXS->BZAIW:FOUNDRY SERVICES",
-          "source_ticker": "PLXS",
-          "target_ticker": "BZAIW",
-          "type": "foundry services",
-          "product": "AI chips",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "ULCC->SCLXW:LICENSE AND SUPPLY AGREEMENT",
-          "source_ticker": "ULCC",
-          "target_ticker": "SCLXW",
-          "type": "license and supply agreement",
-          "product": "ZTlido",
-          "review_status": "approved",
-          "confidence": 1.0
-        }
-      ],
-      "removed_links": [],
       "changed_links": []
     }
   ]
