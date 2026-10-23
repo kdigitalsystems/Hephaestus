@@ -1,0 +1,136 @@
+{
+  "reviewed_on": "2026-10-23",
+  "decisions": [
+    {
+      "edge_id": 4021,
+      "source_ticker": "AKAM",
+      "target_ticker": "ANTHROPIC",
+      "type": "Cloud Infrastructure Provider",
+      "action": "approve",
+      "note": "Curated source, read by hand: Akamai Announces $11.6 Billion Multi-year Agreement with Anthropic to Support Growing Demand (Form 8-K Exhibit 99.1, September 24, 2026). The quoted sentence is verbatim on that page and states that AKAM supplies ANTHROPIC."
+    },
+    {
+      "edge_id": 4022,
+      "source_ticker": "AMD",
+      "target_ticker": "ANTHROPIC",
+      "type": "collaboration",
+      "action": "approve",
+      "note": "Curated source, read by hand: AMD Reports Second Quarter 2026 Financial Results (Form 8-K Exhibit 99.1, August 4, 2026). The quoted sentence is verbatim on that page and states that AMD supplies ANTHROPIC.",
+      "set_type": "Supply Relationship"
+    },
+    {
+      "edge_id": 4023,
+      "source_ticker": "AMD",
+      "target_ticker": "OPENAI",
+      "type": "strategic partnership",
+      "action": "approve",
+      "note": "Curated source, read by hand: AMD and OpenAI Announce Strategic Partnership to Deploy 6 Gigawatts of AMD GPUs (Form 8-K Exhibit 99.1, October 6, 2025). The quoted sentence is verbatim on that page and states that AMD supplies OPENAI.",
+      "set_type": "Supply Relationship"
+    },
+    {
+      "edge_id": 4024,
+      "source_ticker": "AMZN",
+      "target_ticker": "ANTHROPIC",
+      "type": "Cloud Infrastructure Provider",
+      "action": "approve",
+      "note": "Curated source, read by hand: Amazon.com, Inc. Form 10-Q for the quarter ended June 30, 2026. The quoted sentence is verbatim on that page and states that AMZN supplies ANTHROPIC."
+    },
+    {
+      "edge_id": 4025,
+      "source_ticker": "AMZN",
+      "target_ticker": "OPENAI",
+      "type": "Cloud Infrastructure Provider",
+      "action": "approve",
+      "note": "Curated source, read by hand: Amazon.com, Inc. Form 10-Q for the quarter ended June 30, 2026. The quoted sentence is verbatim on that page and states that AMZN supplies OPENAI."
+    },
+    {
+      "edge_id": 4027,
+      "source_ticker": "CBRS",
+      "target_ticker": "OPENAI",
+      "type": "Cloud Infrastructure Provider",
+      "action": "approve",
+      "note": "Curated source, read by hand: Cerebras Systems Announces Strong First Quarter 2026 Results (Form 8-K Exhibit 99.1, June 23, 2026). The quoted sentence is verbatim on that page and states that CBRS supplies OPENAI."
+    },
+    {
+      "edge_id": 4028,
+      "source_ticker": "CIFR",
+      "target_ticker": "FLUIDSTACK",
+      "type": "Supply Relationship",
+      "action": "approve",
+      "note": "Curated source, read by hand: Cipher Digital Expands Barber Lake Lease Term to 20 Years (press release, Form 8-K Exhibit 99.1, September 25, 2026). The quoted sentence is verbatim on that page and states that CIFR supplies FLUIDSTACK."
+    },
+    {
+      "edge_id": 4029,
+      "source_ticker": "CRWV",
+      "target_ticker": "COHERE",
+      "type": "Cloud Infrastructure Provider",
+      "action": "approve",
+      "note": "Curated source, read by hand: CoreWeave, Inc. Registration Statement on Form S-1/A (March 12, 2025). The quoted sentence is verbatim on that page and states that CRWV supplies COHERE."
+    },
+    {
+      "edge_id": 4030,
+      "source_ticker": "CRWV",
+      "target_ticker": "MISTRALAI",
+      "type": "Cloud Infrastructure Provider",
+      "action": "approve",
+      "note": "Curated source, read by hand: CoreWeave, Inc. Registration Statement on Form S-1/A (March 12, 2025). The quoted sentence is verbatim on that page and states that CRWV supplies MISTRALAI."
+    },
+    {
+      "edge_id": 4031,
+      "source_ticker": "CRWV",
+      "target_ticker": "OPENAI",
+      "type": "Cloud Infrastructure Provider",
+      "action": "approve",
+      "note": "Curated source, read by hand: CoreWeave, Inc. Registration Statement on Form S-1/A (March 12, 2025). The quoted sentence is verbatim on that page and states that CRWV supplies OPENAI."
+    },
+    {
+      "edge_id": 4032,
+      "source_ticker": "GETY",
+      "target_ticker": "OPENAI",
+      "type": "Content Provider",
+      "action": "approve",
+      "note": "Curated source, read by hand: Getty Images Announces Display Partnership with OpenAI (Form 8-K Exhibit 99.1, June 22, 2026). The quoted sentence is verbatim on that page and states that GETY supplies OPENAI."
+    },
+    {
+      "edge_id": 4033,
+      "source_ticker": "JBL",
+      "target_ticker": "APPTRONIK",
+      "type": "Contract Manufacturing",
+      "action": "approve",
+      "note": "Curated source, read by hand: Apptronik and Jabil Collaborate to Scale Production of Apollo Humanoid Robots and Deploy in Manufacturing Operations (press release, February 25, 2025). The quoted sentence is verbatim on that page and states that JBL supplies APPTRONIK."
+    },
+    {
+      "edge_id": 4034,
+      "source_ticker": "MSFT",
+      "target_ticker": "OPENAI",
+      "type": "Cloud Infrastructure Provider",
+      "action": "approve",
+      "note": "Curated source, read by hand: Microsoft Corporation Form 10-Q for the quarter ended September 30, 2025. The quoted sentence is verbatim on that page and states that MSFT supplies OPENAI."
+    },
+    {
+      "edge_id": 4035,
+      "source_ticker": "NVDA",
+      "target_ticker": "ANTHROPIC",
+      "type": "Supply Relationship",
+      "action": "approve",
+      "note": "Curated source, read by hand: NVIDIA Announces Financial Results for Third Quarter Fiscal 2026 (Form 8-K Exhibit 99.1, November 19, 2025). The quoted sentence is verbatim on that page and states that NVDA supplies ANTHROPIC."
+    },
+    {
+      "edge_id": 4036,
+      "source_ticker": "NVDA",
+      "target_ticker": "OPENAI",
+      "type": "strategic partnership",
+      "action": "approve",
+      "note": "Curated source, read by hand: NVIDIA Announces Financial Results for Third Quarter Fiscal 2026 (Form 8-K Exhibit 99.1, November 19, 2025). The quoted sentence is verbatim on that page and states that NVDA supplies OPENAI.",
+      "set_type": "Supply Relationship"
+    },
+    {
+      "edge_id": 4037,
+      "source_ticker": "VASTDATA",
+      "target_ticker": "SHAZ",
+      "type": "Supply Relationship",
+      "action": "approve",
+      "note": "Curated source, read by hand: Sharon AI Collaborates with VAST Data on the Launch of DataEnclave (Form 8-K Exhibit 99.1, September 23, 2026). The quoted sentence is verbatim on that page and states that VASTDATA supplies SHAZ."
+    }
+  ]
+}

@@ -162,3 +162,146 @@ def test_the_queue_puts_the_largest_companies_first(db):
     # A truncated queue keeps the largest links, not the oldest.
     truncated = build_review_queue(session, limit=1)
     assert truncated["truncated"] and [item["edge_id"] for item in truncated["items"]] == [apple.id]
+
+
+# --- a person's approval can correct the label (the review models relabel real supply links) ---
+
+CURATED_EXCERPT = (
+    "Under this definitive agreement, OpenAI will work with AMD as a core strategic compute partner to drive "
+    "large-scale deployments of AMD technology starting with the AMD Instinct MI450 series."
+)
+
+
+def relabelled_edge(session, nodes, source, target, label="strategic partnership", status="rejected"):
+    row = Edge(source_id=nodes[source].id, target_id=nodes[target].id, dependency_type=label, review_status=status,
+               review_note="Ollama consensus review: Consensus 2/3 for reject (votes reject:2, approve:1).",
+               evidence_excerpt=CURATED_EXCERPT, source_url="https://www.sec.gov/Archives/edgar/data/2488/x.htm",
+               source_title="AMD and OpenAI Announce Strategic Partnership (Form 8-K Exhibit 99.1)", product="AMD Instinct GPUs")
+    session.add(row)
+    session.commit()
+    return row
+
+
+def with_type(row, source, target, set_type, note="Checked the source page."):
+    return {**decision(row, source, target, "approve", note), "set_type": set_type}
+
+
+def test_an_approval_can_correct_the_label_and_a_rerun_changes_nothing(db, tmp_path):
+    from apply_human_review import apply_human_review
+
+    session, nodes = db
+    row = relabelled_edge(session, nodes, "SNX", "AAPL")
+    write(tmp_path, "review-20261023-100000.json", [with_type(row, "SNX", "AAPL", "Supply Relationship")])
+
+    assert apply_human_review(tmp_path, session=session) == {"approved": 1}
+    assert (row.dependency_type, row.review_status) == ("Supply Relationship", "approved")
+    assert row.review_note == "Human review (2026-09-29): approved. Checked the source page."
+    # Re-running finds the edge under its NEW label and changes nothing (a missing edge would count as "missing").
+    assert apply_human_review(tmp_path, session=session) == {"unchanged": 1}
+    assert row.dependency_type == "Supply Relationship"
+
+
+def test_without_the_correction_cleanup_rejects_the_link_again_even_though_a_person_approved_it(db, tmp_path, monkeypatch):
+    """The reason set_type exists: cleanup judges the label, not who decided."""
+    import cleanup_reviewed_edges
+    from apply_human_review import apply_human_review
+
+    session, nodes = db
+    plain = relabelled_edge(session, nodes, "SNX", "AAPL")
+    fixed = relabelled_edge(session, nodes, "VALE", "BHP")
+    write(tmp_path, "review-20261023-100000.json", [
+        decision(plain, "SNX", "AAPL", "approve"),
+        with_type(fixed, "VALE", "BHP", "Supply Relationship"),
+    ])
+    apply_human_review(tmp_path, session=session)
+    assert plain.review_status == fixed.review_status == "approved"
+
+    engine = session.get_bind()
+    monkeypatch.setattr(cleanup_reviewed_edges, "SessionLocal", sessionmaker(bind=engine, autoflush=False))
+    cleanup_reviewed_edges.cleanup_reviewed_edges()
+    session.expire_all()
+    assert plain.review_status == "rejected" and "not an operational supply-chain relationship" in plain.review_note
+    assert (fixed.review_status, fixed.dependency_type) == ("approved", "Supply Relationship")
+    assert fixed.review_note.startswith("Human review")
+
+
+def test_the_relabel_is_refused_when_the_pair_already_has_an_edge_under_that_label(db, tmp_path):
+    from apply_human_review import apply_human_review
+
+    session, nodes = db
+    existing = relabelled_edge(session, nodes, "SNX", "AAPL", label="Supply Relationship", status="pending")
+    row = relabelled_edge(session, nodes, "SNX", "AAPL")
+    write(tmp_path, "review-20261023-100000.json", [with_type(row, "SNX", "AAPL", "Supply Relationship")])
+
+    assert apply_human_review(tmp_path, session=session) == {"skipped_label_taken": 1}
+    assert (row.dependency_type, row.review_status) == ("strategic partnership", "rejected")
+    assert existing.review_status == "pending"
+
+
+def test_set_type_equal_to_the_current_label_is_a_plain_approval(db, tmp_path):
+    from apply_human_review import apply_human_review
+
+    session, nodes = db
+    row = relabelled_edge(session, nodes, "SNX", "AAPL", label="Supply Relationship", status="pending")
+    write(tmp_path, "review-20261023-100000.json", [with_type(row, "SNX", "AAPL", "Supply Relationship")])
+    assert apply_human_review(tmp_path, session=session) == {"approved": 1}
+    assert row.dependency_type == "Supply Relationship"
+
+
+def test_the_edge_is_found_by_its_companies_after_a_rebuild_changed_the_ids(db, tmp_path):
+    from apply_human_review import apply_human_review
+
+    session, nodes = db
+    row = relabelled_edge(session, nodes, "SNX", "AAPL")
+    stale = {**with_type(row, "SNX", "AAPL", "Supply Relationship"), "edge_id": 99999}
+    write(tmp_path, "review-20261023-100000.json", [stale])
+    assert apply_human_review(tmp_path, session=session) == {"approved": 1}
+    assert apply_human_review(tmp_path, session=session) == {"unchanged": 1}  # now found under the new label
+    assert row.dependency_type == "Supply Relationship"
+
+
+@pytest.mark.parametrize(
+    ("overrides", "fragment"),
+    [
+        ({"action": "reject"}, "can only be used with"),
+        ({"action": "reverse"}, "can only be used with"),
+        ({"set_type": ""}, "1-80 characters"),
+        ({"set_type": " Supply Relationship"}, "surrounding spaces"),
+        ({"set_type": "x" * 81}, "1-80 characters"),
+        ({"set_type": 7}, "1-80 characters"),
+        ({"set_type": "strategic partnership"}, "not a supply-chain label"),
+        ({"set_type": "Collaboration"}, "not a supply-chain label"),
+        ({"set_type": "Supplier"}, "not a supply-chain label"),
+        ({"set_type": "unknown"}, "not a supply-chain label"),
+        ({"set_type": "n/a"}, "not a supply-chain label"),
+        ({"set_type": "None"}, "not a supply-chain label"),
+    ],
+)
+def test_set_type_is_validated_the_way_cleanup_will_judge_it(overrides, fragment):
+    from apply_human_review import validate_payload
+
+    entry = {"edge_id": 1, "source_ticker": "AMD", "target_ticker": "OPENAI", "type": "collaboration",
+             "action": "approve", "set_type": "Supply Relationship", **overrides}
+    errors = validate_payload({"decisions": [entry]})
+    assert any(fragment in error for error in errors), errors
+    assert validate_payload({"decisions": [{**entry, "action": "approve", "set_type": "Supply Relationship"}]}) == []
+
+
+def test_ordinary_supply_labels_pass_validation():
+    from apply_human_review import validate_payload
+
+    for label in ("Supply Relationship", "Cloud Infrastructure Provider", "Content Provider", "Contract Manufacturing"):
+        entry = {"edge_id": 1, "source_ticker": "A", "target_ticker": "B", "type": "x", "action": "approve", "set_type": label}
+        assert validate_payload({"decisions": [entry]}) == [], label
+
+
+def test_a_relabel_alone_is_reported_even_when_the_verdict_was_already_recorded(db, tmp_path):
+    from apply_human_review import apply_human_review
+
+    session, nodes = db
+    row = relabelled_edge(session, nodes, "SNX", "AAPL", status="approved")
+    row.review_note = "Human review (2026-09-29): approved. Checked the source page."
+    session.commit()
+    write(tmp_path, "review-20261023-100000.json", [with_type(row, "SNX", "AAPL", "Supply Relationship")])
+    assert apply_human_review(tmp_path, session=session) == {"approved": 1}
+    assert row.dependency_type == "Supply Relationship"
