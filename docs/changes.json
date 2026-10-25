@@ -1,8 +1,85 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-24T09:16:43+00:00",
-  "unique_links": 802,
+  "generated_at": "2026-10-25T09:17:46+00:00",
+  "unique_links": 809,
   "days": [
+    {
+      "date": "2026-10-25",
+      "generated_at": "2026-10-25T09:17:46+00:00",
+      "previous_date": "2026-10-24",
+      "unique_links": 809,
+      "net_change": 7,
+      "new_count": 7,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "ANET->CCOI:SUPPLY RELATIONSHIP",
+          "source_ticker": "ANET",
+          "target_ticker": "CCOI",
+          "type": "supply relationship",
+          "product": "routers",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "ANTHROPIC->EXFY:SUPPLY RELATIONSHIP",
+          "source_ticker": "ANTHROPIC",
+          "target_ticker": "EXFY",
+          "type": "Supply Relationship",
+          "product": "AI Technologies licensed from third parties",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "LGND->CRMD:SUPPLY RELATIONSHIP",
+          "source_ticker": "LGND",
+          "target_ticker": "CRMD",
+          "type": "Supply Relationship",
+          "product": "Captisol, a sulfobutylether beta-cyclodextrin excipient",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "STRIPE->BLZE:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "STRIPE",
+          "target_ticker": "BLZE",
+          "type": "operational supply chain dependency",
+          "product": "payment processing services",
+          "review_status": "approved",
+          "confidence": 0.9833
+        },
+        {
+          "relationship_key": "STRIPE->WEAV:SUPPLY RELATIONSHIP",
+          "source_ticker": "STRIPE",
+          "target_ticker": "WEAV",
+          "type": "Supply Relationship",
+          "product": "point-of-sale devices and payment processing services",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "STRT->F:REVENUE CONCENTRATION",
+          "source_ticker": "STRT",
+          "target_ticker": "F",
+          "type": "Revenue Concentration",
+          "product": "21% of STRT revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "STRT->GM:REVENUE CONCENTRATION",
+          "source_ticker": "STRT",
+          "target_ticker": "GM",
+          "type": "Revenue Concentration",
+          "product": "Auto Parts (specifically for General Motors Company)",
+          "review_status": "approved",
+          "confidence": 1.0
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-24",
       "generated_at": "2026-10-24T09:16:43+00:00",
@@ -774,83 +851,6 @@
       "removed_count": 0,
       "changed_count": 0,
       "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-11",
-      "generated_at": "2026-10-11T10:30:46+00:00",
-      "previous_date": "2026-10-10",
-      "unique_links": 764,
-      "net_change": 7,
-      "new_count": 7,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "ACM->SHIM:SUPPLY RELATIONSHIP",
-          "source_ticker": "ACM",
-          "target_ticker": "SHIM",
-          "type": "Supply Relationship",
-          "product": "Services in Engineering & Construction",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "ADI->FCUV:SUPPLY RELATIONSHIP",
-          "source_ticker": "ADI",
-          "target_ticker": "FCUV",
-          "type": "Supply Relationship",
-          "product": "Supplier named in FCUV's 10-K",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "AMZN->HPAI:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "HPAI",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Cloud Computing Platform Services",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "MDU->KNF:RAW MATERIALS",
-          "source_ticker": "MDU",
-          "target_ticker": "KNF",
-          "type": "Raw Materials",
-          "product": "Stone, sand, gravel",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "NXPI->FCUV:SUPPLY RELATIONSHIP",
-          "source_ticker": "NXPI",
-          "target_ticker": "FCUV",
-          "type": "Supply Relationship",
-          "product": "Supplier named in FCUV's 10-K",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "ON->FCUV:SUPPLY RELATIONSHIP",
-          "source_ticker": "ON",
-          "target_ticker": "FCUV",
-          "type": "Supply Relationship",
-          "product": "Supplier named in FCUV's 10-K",
-          "review_status": "approved",
-          "confidence": 0.9167
-        },
-        {
-          "relationship_key": "SWKS->FCUV:SUPPLY RELATIONSHIP",
-          "source_ticker": "SWKS",
-          "target_ticker": "FCUV",
-          "type": "Supply Relationship",
-          "product": "Supplier named in FCUV's 10-K",
-          "review_status": "approved",
-          "confidence": 0.95
-        }
-      ],
       "removed_links": [],
       "changed_links": []
     }
