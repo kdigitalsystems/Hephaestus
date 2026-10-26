@@ -1,8 +1,76 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-25T09:17:46+00:00",
-  "unique_links": 809,
+  "generated_at": "2026-10-26T09:50:47+00:00",
+  "unique_links": 815,
   "days": [
+    {
+      "date": "2026-10-26",
+      "generated_at": "2026-10-26T09:50:47+00:00",
+      "previous_date": "2026-10-25",
+      "unique_links": 815,
+      "net_change": 6,
+      "new_count": 6,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "EYPT->ANIP:REVENUE CONCENTRATION",
+          "source_ticker": "EYPT",
+          "target_ticker": "ANIP",
+          "type": "Revenue Concentration",
+          "product": "Revenue from ANI Pharmaceuticals, Inc.",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "OPENAI->EGAN:SUPPLY RELATIONSHIP",
+          "source_ticker": "OPENAI",
+          "target_ticker": "EGAN",
+          "type": "Supply Relationship",
+          "product": "Third-party AI technologies",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "ORKT->MSFT:PURCHASES AND ACCOUNTS PAYABLE",
+          "source_ticker": "ORKT",
+          "target_ticker": "MSFT",
+          "type": "purchases and accounts payable",
+          "product": "software application products/services",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "STRIPE->BMR:CLOUD INFRASTRUCTURE PROVIDER",
+          "source_ticker": "STRIPE",
+          "target_ticker": "BMR",
+          "type": "Cloud Infrastructure Provider",
+          "product": "Data storage and processing services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "STRIPE->LITB:SUPPLY RELATIONSHIP",
+          "source_ticker": "STRIPE",
+          "target_ticker": "LITB",
+          "type": "Supply Relationship",
+          "product": "Payment processing services",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "STRIPE->RCT:SUPPLY RELATIONSHIP",
+          "source_ticker": "STRIPE",
+          "target_ticker": "RCT",
+          "type": "Supply Relationship",
+          "product": "Payment processing infrastructure",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-25",
       "generated_at": "2026-10-25T09:17:46+00:00",
@@ -838,19 +906,6 @@
           "confidence": 0.925
         }
       ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-12",
-      "generated_at": "2026-10-12T11:53:45+00:00",
-      "previous_date": "2026-10-11",
-      "unique_links": 764,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
       "removed_links": [],
       "changed_links": []
     }
