@@ -1,8 +1,31 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-27T09:02:19+00:00",
-  "unique_links": 816,
+  "generated_at": "2026-10-28T09:53:06+00:00",
+  "unique_links": 817,
   "days": [
+    {
+      "date": "2026-10-28",
+      "generated_at": "2026-10-28T09:53:06+00:00",
+      "previous_date": "2026-10-27",
+      "unique_links": 817,
+      "net_change": 1,
+      "new_count": 1,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "CARGILL->KOF:SUPPLY RELATIONSHIP",
+          "source_ticker": "CARGILL",
+          "target_ticker": "KOF",
+          "type": "Supply Relationship",
+          "product": "High Fructose Corn Syrup (HFCS)",
+          "review_status": "approved",
+          "confidence": 1.0
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-27",
       "generated_at": "2026-10-27T09:02:19+00:00",
@@ -878,19 +901,6 @@
       "date": "2026-10-15",
       "generated_at": "2026-10-15T11:03:25+00:00",
       "previous_date": "2026-10-14",
-      "unique_links": 766,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-14",
-      "generated_at": "2026-10-14T09:02:12+00:00",
-      "previous_date": "2026-10-13",
       "unique_links": 766,
       "net_change": 0,
       "new_count": 0,
