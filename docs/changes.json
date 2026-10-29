@@ -1,8 +1,42 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-28T09:53:06+00:00",
-  "unique_links": 817,
+  "generated_at": "2026-10-29T09:31:59+00:00",
+  "unique_links": 818,
   "days": [
+    {
+      "date": "2026-10-29",
+      "generated_at": "2026-10-29T09:31:59+00:00",
+      "previous_date": "2026-10-28",
+      "unique_links": 818,
+      "net_change": 1,
+      "new_count": 1,
+      "removed_count": 0,
+      "changed_count": 1,
+      "new_links": [
+        {
+          "relationship_key": "SBSW->GFI:RAW MATERIALS",
+          "source_ticker": "SBSW",
+          "target_ticker": "GFI",
+          "type": "Raw Materials",
+          "product": "Mine (KDC and Beatrix mines)",
+          "review_status": "approved",
+          "confidence": 0.925
+        }
+      ],
+      "removed_links": [],
+      "changed_links": [
+        {
+          "relationship_key": "PODD->DXCM:DEVICE INTEGRATION PARTNERSHIP",
+          "source_ticker": "PODD",
+          "target_ticker": "DXCM",
+          "type": "Device Integration Partnership / Manufacturing Partnership",
+          "product": "Continuous Glucose Monitoring System (CGM) and Automated Insulin Delivery Pod / OmniPod Horizon System for automated insulin delivery",
+          "review_status": "approved",
+          "confidence": 0.95,
+          "previous_type": "Manufacturing Partnership"
+        }
+      ]
+    },
     {
       "date": "2026-10-28",
       "generated_at": "2026-10-28T09:53:06+00:00",
@@ -896,19 +930,6 @@
           "previous_type": "retail supply chain / Revenue Concentration"
         }
       ]
-    },
-    {
-      "date": "2026-10-15",
-      "generated_at": "2026-10-15T11:03:25+00:00",
-      "previous_date": "2026-10-14",
-      "unique_links": 766,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
     }
   ]
 }
