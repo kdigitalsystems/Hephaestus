@@ -1,8 +1,32 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-29T09:31:59+00:00",
+  "generated_at": "2026-10-30T09:34:03+00:00",
   "unique_links": 818,
   "days": [
+    {
+      "date": "2026-10-30",
+      "generated_at": "2026-10-30T09:34:03+00:00",
+      "previous_date": "2026-10-29",
+      "unique_links": 818,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 1,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": [
+        {
+          "relationship_key": "BA->RYAAY:AEROSPACE & DEFENSE PRODUCT SUPPLY CHAIN",
+          "source_ticker": "BA",
+          "target_ticker": "RYAAY",
+          "type": "Aerospace & Defense product supply chain / Aircraft and Aircraft Parts supply chain relationship / Aerospace & Defense Products and Services Supply Chain / Operational Supply Chain Dependency / Aircraft Maintenance Support",
+          "product": "Airplanes and aircraft parts / Aircraft and aircraft parts / Boeing 737 fleet and related aircraft parts / Aircraft and spare parts / Spare parts and maintenance services for Boeing aircraft",
+          "review_status": "approved",
+          "confidence": 1.0,
+          "previous_type": "Aircraft and Aircraft Parts supply chain relationship / Aerospace & Defense Products and Services Supply Chain / Operational Supply Chain Dependency / Aircraft Maintenance Support"
+        }
+      ]
+    },
     {
       "date": "2026-10-29",
       "generated_at": "2026-10-29T09:31:59+00:00",
@@ -768,168 +792,6 @@
       ],
       "removed_links": [],
       "changed_links": []
-    },
-    {
-      "date": "2026-10-16",
-      "generated_at": "2026-10-16T08:07:08+00:00",
-      "previous_date": "2026-10-15",
-      "unique_links": 754,
-      "net_change": -12,
-      "new_count": 1,
-      "removed_count": 13,
-      "changed_count": 2,
-      "new_links": [
-        {
-          "relationship_key": "AMZN->EDN:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "EDN",
-          "type": "Cloud Infrastructure Provider",
-          "product": "AWS Cloud Services",
-          "review_status": "approved",
-          "confidence": 0.9333
-        }
-      ],
-      "removed_links": [
-        {
-          "relationship_key": "AIRT->FDX:REVENUE CONCENTRATION",
-          "source_ticker": "AIRT",
-          "target_ticker": "FDX",
-          "type": "Revenue Concentration",
-          "product": "Dry-lease agreements for aircraft",
-          "review_status": "approved",
-          "confidence": 0.975
-        },
-        {
-          "relationship_key": "BKYI->MSFT:SUPPLY CHAIN",
-          "source_ticker": "BKYI",
-          "target_ticker": "MSFT",
-          "type": "supply chain / Revenue Concentration",
-          "product": "compact fingerprint scanners",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "EVO->MSTR:REVENUE CONCENTRATION",
-          "source_ticker": "EVO",
-          "target_ticker": "MSTR",
-          "type": "Revenue Concentration",
-          "product": "Drug Manufacturing Services",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "HZO->BC:OPERATIONAL SUPPLY CHAIN",
-          "source_ticker": "HZO",
-          "target_ticker": "BC",
-          "type": "operational supply chain / Revenue Concentration",
-          "product": "new Brunswick boats and yachts",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "IA->TXT:REVENUE CONCENTRATION",
-          "source_ticker": "IA",
-          "target_ticker": "TXT",
-          "type": "Revenue Concentration",
-          "product": "Services for Aerospace & Defense Industry",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "KMDA->MCK:REVENUE CONCENTRATION",
-          "source_ticker": "KMDA",
-          "target_ticker": "MCK",
-          "type": "Revenue Concentration",
-          "product": "Not specified in the provided context, but likely related to medical products or services given the industry.",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "LPG->POOL:REVENUE CONCENTRATION",
-          "source_ticker": "LPG",
-          "target_ticker": "POOL",
-          "type": "Revenue Concentration",
-          "product": "LPG (liquefied petroleum gas)",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "NEON->CVGI:REVENUE CONCENTRATION",
-          "source_ticker": "NEON",
-          "target_ticker": "CVGI",
-          "type": "Revenue Concentration",
-          "product": "Neonode's products",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "PNR->POOL:REVENUE CONCENTRATION",
-          "source_ticker": "PNR",
-          "target_ticker": "POOL",
-          "type": "Revenue Concentration",
-          "product": "Water treatment and filtration systems, pumps, and related products/services for the pool industry.",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "TBPH->VTRS:REVENUE CONCENTRATION",
-          "source_ticker": "TBPH",
-          "target_ticker": "VTRS",
-          "type": "Revenue Concentration",
-          "product": "R&D services, revenue from collaboration agreement",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "TX->SO:REVENUE CONCENTRATION",
-          "source_ticker": "TX",
-          "target_ticker": "SO",
-          "type": "Revenue Concentration",
-          "product": "16% of TX revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "WKEY->LAES:REVENUE CONCENTRATION",
-          "source_ticker": "WKEY",
-          "target_ticker": "LAES",
-          "type": "Revenue Concentration",
-          "product": "60% of WKEY revenue",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "WLY->RSSS:REVENUE CONCENTRATION",
-          "source_ticker": "WLY",
-          "target_ticker": "RSSS",
-          "type": "Revenue Concentration",
-          "product": "Research Solutions products and services",
-          "review_status": "approved",
-          "confidence": 0.95
-        }
-      ],
-      "changed_links": [
-        {
-          "relationship_key": "CWEN->PCG:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
-          "source_ticker": "CWEN",
-          "target_ticker": "PCG",
-          "type": "operational supply-chain dependency / Revenue Concentration",
-          "product": "16% of CWEN revenue",
-          "review_status": "approved",
-          "confidence": 1.0,
-          "previous_type": "Revenue Concentration / operational supply-chain dependency"
-        },
-        {
-          "relationship_key": "MBC->HD:REVENUE CONCENTRATION",
-          "source_ticker": "MBC",
-          "target_ticker": "HD",
-          "type": "Revenue Concentration / retail supply chain",
-          "product": "Revenue Concentration / retail supply chain",
-          "review_status": "approved",
-          "confidence": 0.9667,
-          "previous_type": "retail supply chain / Revenue Concentration"
-        }
-      ]
     }
   ]
 }
