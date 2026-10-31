@@ -27,7 +27,7 @@ import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
-from sqlalchemy import or_
+from sqlalchemy import and_, or_
 
 from database import SessionLocal
 from edge_review_decisions import DEFAULT_PATH as DECISIONS_PATH
@@ -230,8 +230,21 @@ def seed_edges(session, entries, companies=(), report=None):
             if problems:
                 report.edges_skipped.append((label, "rejected: " + "; ".join(problems)))
                 continue
+            # The same edge under the same label, or any edge between the two (in either direction) that
+            # already rests on this source page: the review models relabel ("strategic partnership") and
+            # sometimes reverse a curated edge, and on 2026-10-24 the seeder answered by creating a second
+            # copy of three of them, which the panel then rejected again.
             existing = session.query(Edge).filter(
-                Edge.source_id == source.id, Edge.target_id == target.id, Edge.dependency_type == entry["dependency_type"]
+                or_(
+                    and_(Edge.source_id == source.id, Edge.target_id == target.id, Edge.dependency_type == entry["dependency_type"]),
+                    and_(
+                        Edge.source_url == entry["source_url"],
+                        or_(
+                            and_(Edge.source_id == source.id, Edge.target_id == target.id),
+                            and_(Edge.source_id == target.id, Edge.target_id == source.id),
+                        ),
+                    ),
+                )
             ).first()
             if existing is not None:
                 report.edges_existing += 1

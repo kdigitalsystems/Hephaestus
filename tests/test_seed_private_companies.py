@@ -654,3 +654,49 @@ def test_the_seeded_nodes_use_the_production_session_settings(graph):
 
     assert SessionLocal().autoflush is False
     assert datetime.now(timezone.utc).year >= 2026
+
+
+# --- an edge the review models relabelled or reversed is still the same curated edge ----------
+
+def test_a_relabelled_curated_edge_is_not_created_again(graph):
+    """2026-10-24: the panel had relabelled three curated edges 'strategic partnership'; the seeder looked for the
+    curated label, found nothing and created a second copy of each, which the panel rejected again."""
+    graph.write_registry(company())
+    graph.write_edges(seed_edge(source_url="https://www.sec.gov/Archives/edgar/data/2488/amd-openai.htm"))
+    graph.run()
+    session = graph.Session()
+    edge = session.query(Edge).one()
+    edge.dependency_type, edge.review_status = "strategic partnership", "rejected"
+    session.commit()
+    session.close()
+
+    report = graph.run()
+
+    assert report.edges_created == [] and report.edges_existing == 1
+    assert [row[2] for row in graph.edges()] == ["strategic partnership"]
+
+
+def test_a_reversed_curated_edge_is_not_created_again(graph):
+    graph.write_registry(company())
+    graph.write_edges(seed_edge())
+    graph.run()
+    session = graph.Session()
+    edge = session.query(Edge).one()
+    edge.source_id, edge.target_id = edge.target_id, edge.source_id
+    session.commit()
+    session.close()
+
+    assert graph.run().edges_created == []
+    assert len(graph.edges()) == 1
+
+
+def test_another_statement_about_the_same_pair_is_still_seeded(graph):
+    """Only the same source page counts as the same edge: a second document about the pair is new evidence."""
+    graph.write_registry(company())
+    graph.write_edges(seed_edge())
+    graph.run()
+    graph.write_edges(seed_edge(), seed_edge(dependency_type="Supply Relationship", product="GPUs",
+                                              source_url="https://www.sec.gov/Archives/edgar/data/1045810/another.htm",
+                                              evidence_excerpt=ORACLE_ON_OPENAI))
+    report = graph.run()
+    assert len(report.edges_created) == 1 and len(graph.edges()) == 2
