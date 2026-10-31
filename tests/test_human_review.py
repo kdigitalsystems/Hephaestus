@@ -225,17 +225,47 @@ def test_without_the_correction_cleanup_rejects_the_link_again_even_though_a_per
     assert fixed.review_note.startswith("Human review")
 
 
-def test_the_relabel_is_refused_when_the_pair_already_has_an_edge_under_that_label(db, tmp_path):
+def test_a_relabel_into_a_label_the_pair_already_has_approves_that_edge_and_retires_the_copy(db, tmp_path):
+    """The real 2026-10-24 state: the panel had relabelled the curated edge 'strategic partnership' and rejected it,
+    and the seeder then created a fresh 'Supply Relationship' edge, which the panel rejected too (or left pending).
+    The person's verdict goes to the edge that already carries the right label; the relabelled copy is retired."""
     from apply_human_review import apply_human_review
 
     session, nodes = db
-    existing = relabelled_edge(session, nodes, "SNX", "AAPL", label="Supply Relationship", status="pending")
     row = relabelled_edge(session, nodes, "SNX", "AAPL")
-    write(tmp_path, "review-20261023-100000.json", [with_type(row, "SNX", "AAPL", "Supply Relationship")])
+    fresh_rejected = relabelled_edge(session, nodes, "SNX", "AAPL", label="Supply Relationship", status="rejected")
+    other = relabelled_edge(session, nodes, "VALE", "BHP")
+    fresh_pending = relabelled_edge(session, nodes, "VALE", "BHP", label="Supply Relationship", status="pending")
+    write(tmp_path, "review-20261023-100000.json", [
+        with_type(row, "SNX", "AAPL", "Supply Relationship"), with_type(other, "VALE", "BHP", "Supply Relationship"),
+    ])
 
-    assert apply_human_review(tmp_path, session=session) == {"skipped_label_taken": 1}
-    assert (row.dependency_type, row.review_status) == ("strategic partnership", "rejected")
-    assert existing.review_status == "pending"
+    assert apply_human_review(tmp_path, session=session) == {"relabelled_into_existing": 2}
+
+    for kept, retired in ((fresh_rejected, row), (fresh_pending, other)):
+        assert (kept.review_status, kept.dependency_type) == ("approved", "Supply Relationship")
+        assert kept.review_note.startswith("Human review (2026-09-29): approved (the relabelled copy of #")
+        assert (retired.review_status, retired.dependency_type) == ("rejected", "strategic partnership")
+        assert f"relabelled; kept as #{kept.id}" in retired.review_note
+    # A second night finds both again by id and changes nothing.
+    assert apply_human_review(tmp_path, session=session) == {"unchanged": 2}
+
+
+def test_the_merged_pair_survives_cleanup_and_publishes_one_edge(db, tmp_path, monkeypatch):
+    import cleanup_reviewed_edges
+    from apply_human_review import apply_human_review
+
+    session, nodes = db
+    row = relabelled_edge(session, nodes, "SNX", "AAPL")
+    fresh = relabelled_edge(session, nodes, "SNX", "AAPL", label="Supply Relationship", status="rejected")
+    write(tmp_path, "review-20261023-100000.json", [with_type(row, "SNX", "AAPL", "Supply Relationship")])
+    apply_human_review(tmp_path, session=session)
+
+    monkeypatch.setattr(cleanup_reviewed_edges, "SessionLocal", sessionmaker(bind=session.get_bind(), autoflush=False))
+    cleanup_reviewed_edges.cleanup_reviewed_edges()
+    cleanup_reviewed_edges.cleanup_reviewed_edges()
+    session.expire_all()
+    assert [(e.id == fresh.id, e.review_status) for e in session.query(Edge).order_by(Edge.id)] == [(False, "rejected"), (True, "approved")]
 
 
 def test_set_type_equal_to_the_current_label_is_a_plain_approval(db, tmp_path):

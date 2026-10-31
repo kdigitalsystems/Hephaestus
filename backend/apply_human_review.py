@@ -9,7 +9,8 @@ An approval may also carry "set_type", the label to publish the link under. The 
 models sometimes relabel a real supply link "strategic partnership" or "collaboration", and
 cleanup rejects a link under such a label however it was decided, so a person who approves one
 must be able to correct the label in the same decision. The new label is checked the way
-cleanup checks it (not a non-supply or role label), and one edge per label is kept.
+cleanup checks it (not a non-supply or role label), and one edge per label is kept: when the pair
+already has an edge under that label the verdict goes to it and the relabelled copy is retired.
 
 Re-running is safe: a decision that is already in effect changes nothing, and a
 reversal is applied once (an edge already running the other way is left as it is).
@@ -174,7 +175,12 @@ def apply_decision(session, decision, reviewed_on, now):
                 .first()
             )
             if taken is not None:
-                return "skipped_label_taken"  # one edge per label: the person decides which copy to keep
+                # The pair already has an edge under the label the person chose (the seeder re-created a curated
+                # edge after the review models relabelled the first copy): the verdict goes to that edge and this
+                # copy is retired, as a reversal into an existing edge does, so exactly one edge is published.
+                kept = set_verdict(taken, "approved", human_note(f"approved (the relabelled copy of #{edge.id})", reviewed_on, note), now)
+                retired = set_verdict(edge, "rejected", human_note(f"relabelled; kept as #{taken.id}", reviewed_on, note), now)
+                return "relabelled_into_existing" if (kept or retired) else "unchanged"
             edge.dependency_type = new_label
             relabelled = True
         approved = set_verdict(edge, "approved", human_note("approved", reviewed_on, note), now)
