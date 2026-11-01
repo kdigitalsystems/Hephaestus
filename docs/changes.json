@@ -1,8 +1,139 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-10-31T20:24:30+00:00",
-  "unique_links": 806,
+  "generated_at": "2026-11-01T11:12:32+00:00",
+  "unique_links": 819,
   "days": [
+    {
+      "date": "2026-11-01",
+      "generated_at": "2026-11-01T11:12:32+00:00",
+      "previous_date": "2026-10-31",
+      "unique_links": 819,
+      "net_change": 13,
+      "new_count": 13,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "ATRO->BA:SUPPLY CHAIN DEPENDENCY",
+          "source_ticker": "ATRO",
+          "target_ticker": "BA",
+          "type": "supply chain dependency",
+          "product": "specific products/services used by Boeing",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "CTS->TM:REVENUE CONCENTRATION",
+          "source_ticker": "CTS",
+          "target_ticker": "TM",
+          "type": "Revenue Concentration",
+          "product": "11.2% of CTS revenue",
+          "review_status": "approved",
+          "confidence": 0.975
+        },
+        {
+          "relationship_key": "CTS->TMH:REVENUE CONCENTRATION",
+          "source_ticker": "CTS",
+          "target_ticker": "TMH",
+          "type": "Revenue Concentration",
+          "product": "11.2% of CTS revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ELF->TGT:REVENUE CONCENTRATION",
+          "source_ticker": "ELF",
+          "target_ticker": "TGT",
+          "type": "Revenue Concentration",
+          "product": "beauty products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "ELF->WMT:REVENUE CONCENTRATION",
+          "source_ticker": "ELF",
+          "target_ticker": "WMT",
+          "type": "Revenue Concentration",
+          "product": "beauty products",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "IPAR->M:REVENUE CONCENTRATION",
+          "source_ticker": "IPAR",
+          "target_ticker": "M",
+          "type": "Revenue Concentration",
+          "product": "Interparfums' fragrance products",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "LB->COP:REVENUE CONCENTRATION",
+          "source_ticker": "LB",
+          "target_ticker": "COP",
+          "type": "Revenue Concentration",
+          "product": "Oil & Gas Exploration and Production services",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "NKTR->AZN:REVENUE CONCENTRATION",
+          "source_ticker": "NKTR",
+          "target_ticker": "AZN",
+          "type": "Revenue Concentration",
+          "product": "Revenue from Baxalta (a subsidiary of Takeda Pharmaceutical Company Limited), AstraZeneca, and UCB",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "PAGP->BPH:REVENUE CONCENTRATION",
+          "source_ticker": "PAGP",
+          "target_ticker": "BPH",
+          "type": "Revenue Concentration",
+          "product": "10% of PAGP revenue",
+          "review_status": "approved",
+          "confidence": 1.0
+        },
+        {
+          "relationship_key": "PCRX->CAH:REVENUE CONCENTRATION",
+          "source_ticker": "PCRX",
+          "target_ticker": "CAH",
+          "type": "Revenue Concentration",
+          "product": "BioSciences products",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "PCRX->MCK:REVENUE CONCENTRATION",
+          "source_ticker": "PCRX",
+          "target_ticker": "MCK",
+          "type": "Revenue Concentration",
+          "product": "BioSciences products (specifically mentioning medical devices or pharmaceuticals)",
+          "review_status": "approved",
+          "confidence": 0.9667
+        },
+        {
+          "relationship_key": "PSO->MSFT:CO-DEVELOPMENT",
+          "source_ticker": "PSO",
+          "target_ticker": "MSFT",
+          "type": "co-development",
+          "product": "Communication Coach",
+          "review_status": "approved",
+          "confidence": 0.95
+        },
+        {
+          "relationship_key": "UFPT->SYK:REVENUE CONCENTRATION",
+          "source_ticker": "UFPT",
+          "target_ticker": "SYK",
+          "type": "Revenue Concentration",
+          "product": "21.5% of UFPT revenue",
+          "review_status": "approved",
+          "confidence": 0.9667
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-10-31",
       "generated_at": "2026-10-31T20:24:30+00:00",
@@ -1046,19 +1177,6 @@
       "date": "2026-10-19",
       "generated_at": "2026-10-19T08:39:38+00:00",
       "previous_date": "2026-10-18",
-      "unique_links": 757,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-18",
-      "generated_at": "2026-10-18T08:20:54+00:00",
-      "previous_date": "2026-10-17",
       "unique_links": 757,
       "net_change": 0,
       "new_count": 0,
