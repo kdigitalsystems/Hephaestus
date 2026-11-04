@@ -1,8 +1,31 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-11-03T00:45:17+00:00",
-  "unique_links": 828,
+  "generated_at": "2026-11-04T12:28:17+00:00",
+  "unique_links": 829,
   "days": [
+    {
+      "date": "2026-11-04",
+      "generated_at": "2026-11-04T12:28:17+00:00",
+      "previous_date": "2026-11-03",
+      "unique_links": 829,
+      "net_change": 1,
+      "new_count": 1,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "AIRT->FDX:REVENUE CONCENTRATION",
+          "source_ticker": "AIRT",
+          "target_ticker": "FDX",
+          "type": "Revenue Concentration",
+          "product": "Air T (AIRT) services for FedEx",
+          "review_status": "approved",
+          "confidence": 0.9667
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-11-03",
       "generated_at": "2026-11-03T00:45:17+00:00",
@@ -1242,29 +1265,6 @@
       "removed_count": 0,
       "changed_count": 0,
       "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-20",
-      "generated_at": "2026-10-20T08:40:08+00:00",
-      "previous_date": "2026-10-19",
-      "unique_links": 758,
-      "net_change": 1,
-      "new_count": 1,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "RNGR->CVX:SERVICE CONTRACT",
-          "source_ticker": "RNGR",
-          "target_ticker": "CVX",
-          "type": "Service Contract",
-          "product": "Coiled Tubing Assets",
-          "review_status": "approved",
-          "confidence": 0.9667
-        }
-      ],
       "removed_links": [],
       "changed_links": []
     }
