@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-11-04T12:25:23.202076+00:00",
+  "exported_at": "2026-11-05T10:39:46.705483+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -62390,6 +62390,23 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a sale, spin-off, fine, hire or similar event, not supply (\"spin-off\").",
       "reviewed_at": "2026-11-04T12:21:12.752299"
+    },
+    {
+      "edge_id": 3752,
+      "source_ticker": "ORKT",
+      "target_ticker": "MSFT",
+      "source_name": "Orangekloud Technology Inc. Class A Ordinary Shares",
+      "target_name": "Microsoft Corporation Common Stock",
+      "dependency_type": "Revenue Concentration",
+      "product": "software application products/services",
+      "confidence_score": 0.9667,
+      "revenue_share": 40.0,
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1979407/000149315226019732/form20-f.htm",
+      "source_title": "SEC EDGAR (20-F filed 2026-04-30; customer-concentration disclosure)",
+      "evidence_excerpt": "Orangekloud Technology (ORKT) 20-F filed 2026-04-30: For the year ended December 31, 2024, Microsoft Regional Sales Pte Ltd. and Ingram Micro Asia Marketplace Pte Ltd. accounted for 40 % and 37 % of the Company\u2019s total purchases, and 47 % and 12 % of the accounts payable as of December 31, 2024, respectively.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.97; votes approve:3). Lead rationale from qwen2.5:7b-instruct: The relationship is a real operational supply-chain dependency, but the direction in the proposal is backwards.",
+      "reviewed_at": "2026-11-05T10:36:06.041577"
     },
     {
       "edge_id": 97,
