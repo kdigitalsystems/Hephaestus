@@ -1,4 +1,5 @@
 import sys
+import uuid
 from pathlib import Path
 
 import pytest
@@ -13,7 +14,8 @@ from models import Base, Node  # noqa: E402
 
 
 def asset(symbol, name, exchange="NASDAQ", marginable=True, tradable=True, **extra):
-    return {"id": f"id-{symbol}", "class": "us_equity", "symbol": symbol, "name": name, "exchange": exchange,
+    # A real UUID: alpaca-py validates the id, and a made-up one would fail the library check below for the wrong reason.
+    return {"id": str(uuid.uuid5(uuid.NAMESPACE_DNS, symbol)), "class": "us_equity", "symbol": symbol, "name": name, "exchange": exchange,
             "status": "active", "marginable": marginable, "tradable": tradable, "shortable": True, "easy_to_borrow": True,
             "fractionable": True, **extra}
 
