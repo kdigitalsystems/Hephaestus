@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-11-05T10:39:46.705483+00:00",
+  "exported_at": "2026-11-06T10:14:03.597284+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -62407,6 +62407,57 @@
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.97; votes approve:3). Lead rationale from qwen2.5:7b-instruct: The relationship is a real operational supply-chain dependency, but the direction in the proposal is backwards.",
       "reviewed_at": "2026-11-05T10:36:06.041577"
+    },
+    {
+      "edge_id": 3759,
+      "source_ticker": "ALRM",
+      "target_ticker": "EBS",
+      "source_name": "Alarm.com Holdings, Inc. Common Stock",
+      "target_name": "Emergent Biosolutions, Inc.",
+      "dependency_type": "Acquisition",
+      "product": "Smart communicators for alarm systems",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In 2023, Alarm.com acquired Warsaw, Poland\u2013based EBS, a manufacturer of smart communicators for alarm systems.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 1.00; votes reject:2, approve:1). Lead rationale from qwen2.5:7b-instruct: The relationship is an acquisition, not a supply chain dependency. Alarm.com acquired Emergent Biosolutions, Inc., making EBS the supplier and Alarm.com the customer.",
+      "reviewed_at": "2026-11-06T10:09:44.594048"
+    },
+    {
+      "edge_id": 3761,
+      "source_ticker": "SPWR",
+      "target_ticker": "KBH",
+      "source_name": "SunPower Inc. Common Stock",
+      "target_name": "KB Home",
+      "dependency_type": "partnership",
+      "product": "solar panels",
+      "confidence_score": 0.9167,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In March 2011, KB Home, in partnership with SunPower, introduced its first community with solar as a standard feature.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 3/3 for reject (avg confidence 0.92; votes reject:3). Lead rationale from mistral:7b-instruct: In March 2011, KB Home, in partnership with SunPower, introduced its first community with solar as a standard feature.",
+      "reviewed_at": "2026-11-06T10:10:01.384012"
+    },
+    {
+      "edge_id": 3763,
+      "source_ticker": "ACMR",
+      "target_ticker": "SKHY",
+      "source_name": "ACM Research, Inc. Class A Common Stock",
+      "target_name": "SK hynix Inc. American Depositary Shares",
+      "dependency_type": "Supply Relationship",
+      "product": "Single-Wafer Wet Cleaning Equipment",
+      "confidence_score": 0.95,
+      "revenue_share": null,
+      "source_url": "https://en.wikipedia.org/wiki/ACM_Research",
+      "source_title": "WIKIPEDIA (Page: ACM Research)",
+      "evidence_excerpt": "The first major customer for ACMR was SK Hynix who started placing orders for its cleaning tools in 2013.",
+      "review_status": "approved",
+      "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.95; votes approve:3). Lead rationale from mistral:7b-instruct: The first major customer for ACMR was SK Hynix who started placing orders for its cleaning tools in 2013. (evidence_excerpt)",
+      "reviewed_at": "2026-11-06T10:10:14.086580"
     },
     {
       "edge_id": 97,

@@ -1,8 +1,31 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-11-05T10:42:51+00:00",
-  "unique_links": 829,
+  "generated_at": "2026-11-06T10:16:53+00:00",
+  "unique_links": 830,
   "days": [
+    {
+      "date": "2026-11-06",
+      "generated_at": "2026-11-06T10:16:53+00:00",
+      "previous_date": "2026-11-05",
+      "unique_links": 830,
+      "net_change": 1,
+      "new_count": 1,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "ACMR->SKHY:SUPPLY RELATIONSHIP",
+          "source_ticker": "ACMR",
+          "target_ticker": "SKHY",
+          "type": "Supply Relationship",
+          "product": "Single-Wafer Wet Cleaning Equipment",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-11-05",
       "generated_at": "2026-11-05T10:42:51+00:00",
@@ -1240,29 +1263,6 @@
           "product": "13.1% of WMS revenue",
           "review_status": "approved",
           "confidence": 1.0
-        }
-      ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-22",
-      "generated_at": "2026-10-22T08:40:15+00:00",
-      "previous_date": "2026-10-21",
-      "unique_links": 759,
-      "net_change": 1,
-      "new_count": 1,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "ITRI->CNP:SUPPLY RELATIONSHIP",
-          "source_ticker": "ITRI",
-          "target_ticker": "CNP",
-          "type": "Supply Relationship",
-          "product": "Smart Meters and Advanced Communications Technology",
-          "review_status": "approved",
-          "confidence": 0.9333
         }
       ],
       "removed_links": [],
