@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-11-06T10:14:03.597284+00:00",
+  "exported_at": "2026-11-07T09:37:51.467579+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -62458,6 +62458,40 @@
       "review_status": "approved",
       "review_note": "Ollama consensus review: Consensus 3/3 for approve (avg confidence 0.95; votes approve:3). Lead rationale from mistral:7b-instruct: The first major customer for ACMR was SK Hynix who started placing orders for its cleaning tools in 2013. (evidence_excerpt)",
       "reviewed_at": "2026-11-06T10:10:14.086580"
+    },
+    {
+      "edge_id": 3772,
+      "source_ticker": "GIC",
+      "target_ticker": "KC",
+      "source_name": "Global Industrial Company",
+      "target_name": "Kingsoft Cloud Holdings Limited American Depositary Shares",
+      "dependency_type": "Private Investments in Greater China",
+      "product": "Capital",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "Tuck Lye Koh served as a director of Kingsoft and Vice President of GIC Special Investments (Beijing) Company Ltd., responsible for private investments in Greater China.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the companies are only listed side by side; nothing relates them.",
+      "reviewed_at": "2026-11-07T09:34:27.315309"
+    },
+    {
+      "edge_id": 3773,
+      "source_ticker": "ACN",
+      "target_ticker": "DXC",
+      "source_name": "Accenture PLC",
+      "target_name": "DXC Technology Company",
+      "dependency_type": "Management Services",
+      "product": "Former Accenture chief group executive, Mike Salvino was named president and CEO of DXC Technology in September 2019.",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "https://en.wikipedia.org/wiki/DXC_Technology",
+      "source_title": "WIKIPEDIA (Page: DXC Technology)",
+      "evidence_excerpt": "Mike Salvino, the former Accenture chief group executive, was named president and CEO of DXC Technology in September 2019.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
+      "reviewed_at": "2026-11-07T09:34:27.328366"
     },
     {
       "edge_id": 97,
