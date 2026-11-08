@@ -1,8 +1,21 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-11-07T09:40:43+00:00",
+  "generated_at": "2026-11-08T10:15:33+00:00",
   "unique_links": 830,
   "days": [
+    {
+      "date": "2026-11-08",
+      "generated_at": "2026-11-08T10:15:33+00:00",
+      "previous_date": "2026-11-07",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-11-07",
       "generated_at": "2026-11-07T09:40:43+00:00",
@@ -861,254 +874,6 @@
           "product": "Auto Parts (specifically for General Motors Company)",
           "review_status": "approved",
           "confidence": 1.0
-        }
-      ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-24",
-      "generated_at": "2026-10-24T09:16:43+00:00",
-      "previous_date": "2026-10-23",
-      "unique_links": 802,
-      "net_change": 26,
-      "new_count": 26,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "AKAM->ANTHROPIC:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AKAM",
-          "target_ticker": "ANTHROPIC",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Akamai Cloud distributed AI infrastructure and software",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "AMZN->ANTHROPIC:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "ANTHROPIC",
-          "type": "Cloud Infrastructure Provider",
-          "product": "AWS cloud services and AWS chips",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "AMZN->OPENAI:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "OPENAI",
-          "type": "Cloud Infrastructure Provider",
-          "product": "AWS cloud services and AWS chips",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "BIIB->ALKS:SUPPLY RELATIONSHIP",
-          "source_ticker": "BIIB",
-          "target_ticker": "ALKS",
-          "type": "Supply Relationship",
-          "product": "VUMERITY (drug)",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "CALM->WMT:REVENUE CONCENTRATION",
-          "source_ticker": "CALM",
-          "target_ticker": "WMT",
-          "type": "Revenue Concentration",
-          "product": "Eggs (implied from CALM's business)",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "CBRS->OPENAI:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "CBRS",
-          "target_ticker": "OPENAI",
-          "type": "Cloud Infrastructure Provider",
-          "product": "AI inference compute capacity",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "CIFR->FLUIDSTACK:SUPPLY RELATIONSHIP",
-          "source_ticker": "CIFR",
-          "target_ticker": "FLUIDSTACK",
-          "type": "Supply Relationship",
-          "product": "Data center lease (Barber Lake facility, Texas)",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "CRWV->COHERE:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "CRWV",
-          "target_ticker": "COHERE",
-          "type": "Cloud Infrastructure Provider",
-          "product": "GPU cloud platform",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "CRWV->MISTRALAI:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "CRWV",
-          "target_ticker": "MISTRALAI",
-          "type": "Cloud Infrastructure Provider",
-          "product": "GPU cloud platform",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "CRWV->OPENAI:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "CRWV",
-          "target_ticker": "OPENAI",
-          "type": "Cloud Infrastructure Provider",
-          "product": "GPU cloud platform (master services agreement)",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "FLEX->SEDG:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
-          "source_ticker": "FLEX",
-          "target_ticker": "SEDG",
-          "type": "operational supply chain dependency",
-          "product": "solar products manufacturing services",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "GETY->OPENAI:CONTENT PROVIDER",
-          "source_ticker": "GETY",
-          "target_ticker": "OPENAI",
-          "type": "Content Provider",
-          "product": "Licensed visual content displayed in ChatGPT search and discovery",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "GSK->ZYME:RAW MATERIALS",
-          "source_ticker": "GSK",
-          "target_ticker": "ZYME",
-          "type": "Raw Materials",
-          "product": "heavy-light chain pairing technology",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "ITGR->ABT:REVENUE CONCENTRATION",
-          "source_ticker": "ITGR",
-          "target_ticker": "ABT",
-          "type": "Revenue Concentration",
-          "product": "10% of ITGR revenue",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "ITGR->BSX:REVENUE CONCENTRATION",
-          "source_ticker": "ITGR",
-          "target_ticker": "BSX",
-          "type": "Revenue Concentration",
-          "product": "10% of ITGR revenue",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "ITGR->MDT:REVENUE CONCENTRATION",
-          "source_ticker": "ITGR",
-          "target_ticker": "MDT",
-          "type": "Revenue Concentration",
-          "product": "10% of ITGR revenue",
-          "review_status": "approved",
-          "confidence": 0.975
-        },
-        {
-          "relationship_key": "JBL->APPTRONIK:CONTRACT MANUFACTURING",
-          "source_ticker": "JBL",
-          "target_ticker": "APPTRONIK",
-          "type": "Contract Manufacturing",
-          "product": "Manufacturing of Apollo humanoid robots",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "MSFT->OPENAI:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "MSFT",
-          "target_ticker": "OPENAI",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Azure cloud services",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "NVDA->ANTHROPIC:SUPPLY RELATIONSHIP",
-          "source_ticker": "NVDA",
-          "target_ticker": "ANTHROPIC",
-          "type": "Supply Relationship",
-          "product": "NVIDIA Grace Blackwell and Vera Rubin systems",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "PAGP->BP:REVENUE CONCENTRATION",
-          "source_ticker": "PAGP",
-          "target_ticker": "BP",
-          "type": "Revenue Concentration",
-          "product": "10% of PAGP revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "STRIPE->WRBY:SUPPLY RELATIONSHIP",
-          "source_ticker": "STRIPE",
-          "target_ticker": "WRBY",
-          "type": "Supply Relationship",
-          "product": "Payment processing infrastructure",
-          "review_status": "approved",
-          "confidence": 0.975
-        },
-        {
-          "relationship_key": "STRIPE->XMTR:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
-          "source_ticker": "STRIPE",
-          "target_ticker": "XMTR",
-          "type": "operational supply chain dependency",
-          "product": "payment processing service",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "SUPN->CAH:REVENUE CONCENTRATION",
-          "source_ticker": "SUPN",
-          "target_ticker": "CAH",
-          "type": "Revenue Concentration",
-          "product": "Pharmaceutical products",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "SUPN->COR:REVENUE CONCENTRATION",
-          "source_ticker": "SUPN",
-          "target_ticker": "COR",
-          "type": "Revenue Concentration",
-          "product": "Pharmaceutical products",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "SUPN->MCK:REVENUE CONCENTRATION",
-          "source_ticker": "SUPN",
-          "target_ticker": "MCK",
-          "type": "Revenue Concentration",
-          "product": "Pharmaceutical products",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "VASTDATA->SHAZ:SUPPLY RELATIONSHIP",
-          "source_ticker": "VASTDATA",
-          "target_ticker": "SHAZ",
-          "type": "Supply Relationship",
-          "product": "VAST DataEnclave / VAST AI Operating System data platform",
-          "review_status": "approved",
-          "confidence": 0.9
         }
       ],
       "removed_links": [],

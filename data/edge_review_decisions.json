@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-11-07T09:37:51.467579+00:00",
+  "exported_at": "2026-11-08T10:12:45.933006+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -62492,6 +62492,57 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
       "reviewed_at": "2026-11-07T09:34:27.328366"
+    },
+    {
+      "edge_id": 3777,
+      "source_ticker": "APO",
+      "target_ticker": "BRSL",
+      "source_name": "Apollo Global Management, Inc.",
+      "target_name": "Brightstar Lottery PLC",
+      "dependency_type": "Funding Partner",
+      "product": "Gaming Technology",
+      "confidence_score": 0.96,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In 2025, the company spun-off its gaming division for a merger with Everi, with the new gaming entity majority-acquired by Apollo Global Management, while De Agostini Group retains a minority stake in the new company, which will also acquire the International Game Technology (IGT) name. IGT's remaining lottery business was renamed Brightstar Lottery following the transaction, continuing to trade on the NYSE under the new call letters NYSE: BRSL.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: APO Apollo Global Management, Inc..",
+      "reviewed_at": "2026-11-08T10:08:54.739182"
+    },
+    {
+      "edge_id": 3778,
+      "source_ticker": "LLY",
+      "target_ticker": "IMCR",
+      "source_name": "Eli Lilly & Co.",
+      "target_name": "Immunocore Holdings plc American Depositary Shares",
+      "dependency_type": "Investment Partnership",
+      "product": "ImmTAV and ImmTAB therapeutics development funding",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "https://en.wikipedia.org/wiki/Immunocore",
+      "source_title": "WIKIPEDIA (Page: Immunocore)",
+      "evidence_excerpt": "In July 2015, Immunocore announced the completion of an initial $320 million private financing round, Europe's largest ever financing round by a private life sciences company. Fidelity Management & Research Company, Woodford Investment Management, Malin Corporation, Eli Lilly and Company, and RTW Investments all participated in this fundraise along with other unnamed investors and existing shareholders.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes an integration, collaboration, availability or rivalry, not supply.",
+      "reviewed_at": "2026-11-08T10:08:54.747105"
+    },
+    {
+      "edge_id": 3779,
+      "source_ticker": "TWLO",
+      "target_ticker": "CXM",
+      "source_name": "Twilio Inc.",
+      "target_name": "Sprinklr, Inc.",
+      "dependency_type": "partnership",
+      "product": "CCaaS Platform",
+      "confidence_score": 0.9,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In 2022, Sprinklr announced partnerships with Amazon Connect and Twilio, integrating its customer care products.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.90; votes reject:2, pending:1). Lead rationale from mistral:7b-instruct: In 2022, Sprinklr announced partnerships with Amazon Connect and Twilio, integrating its customer care products. This indicates that Twilio provides CCaaS platform to Sprinklr.",
+      "reviewed_at": "2026-11-08T10:09:12.922806"
     },
     {
       "edge_id": 97,
