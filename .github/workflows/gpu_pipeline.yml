@@ -158,11 +158,19 @@ jobs:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
-          # Failsafe: rebuild when the DB is missing, empty, missing tables, or has no seeded nodes.
+          # Failsafe: when the DB is missing, empty, missing tables, or has no seeded nodes, first
+          # put back the newest snapshot (the review queue and the filing sweep's progress live only
+          # in the database, and a re-seed loses them: 2026-10-31); only then rebuild from scratch.
           if ! venv/bin/python backend/db_health.py --require-nodes; then
-            echo "Database is not ready. Bootstrapping from scratch..."
-            venv/bin/python backend/database.py
-            venv/bin/python backend/seed_db.py
+            if venv/bin/python backend/db_snapshot.py restore \
+                && venv/bin/python backend/database.py \
+                && venv/bin/python backend/db_health.py --require-nodes; then
+              echo "Database restored from a snapshot."
+            else
+              echo "Database is not ready. Bootstrapping from scratch..."
+              venv/bin/python backend/database.py
+              venv/bin/python backend/seed_db.py
+            fi
           fi
           
           # Private companies and their curated edges: after the universe exists, before
@@ -236,6 +244,13 @@ jobs:
       # Retry with growing waits (about 15 minutes in all) and publish with whichever
       # attempt works. Attempt N runs only when attempt N-1 failed: a skipped attempt
       # (an earlier one succeeded) has outcome 'skipped', which stops the chain.
+      - name: Snapshot the database
+        # After the run's work, before the publish: the copy is what a lost database is restored
+        # from (see the failsafe in "Update Market Metrics"). It is kept outside the checkout, never
+        # overwrites a copy with an unhealthy database, and a problem here must not cost the day's publish.
+        continue-on-error: true
+        run: venv/bin/python backend/db_snapshot.py snapshot
+
       - name: Mint fresh publish token
         # App installation tokens expire after one hour and this job runs for up to
         # four; the checkout token is stale by the time the results are pushed.
