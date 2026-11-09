@@ -10,7 +10,9 @@ permissions:
 
 jobs:
   cleanup:
-    runs-on: [self-hosted, terrascout-ci]
+    # GitHub-hosted: gh and jq come with the image. On the self-hosted runners it failed whenever
+    # server1 picked the job up ("gh: command not found", 2026-10-28, 11-04, 11-07).
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Delete artifacts older than four days
