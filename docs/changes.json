@@ -1,8 +1,21 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-11-08T10:15:33+00:00",
+  "generated_at": "2026-11-09T10:59:03+00:00",
   "unique_links": 830,
   "days": [
+    {
+      "date": "2026-11-09",
+      "generated_at": "2026-11-09T10:59:03+00:00",
+      "previous_date": "2026-11-08",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-11-08",
       "generated_at": "2026-11-08T10:15:33+00:00",
@@ -797,83 +810,6 @@
           "product": "Payment processing infrastructure",
           "review_status": "approved",
           "confidence": 0.95
-        }
-      ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-25",
-      "generated_at": "2026-10-25T09:17:46+00:00",
-      "previous_date": "2026-10-24",
-      "unique_links": 809,
-      "net_change": 7,
-      "new_count": 7,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "ANET->CCOI:SUPPLY RELATIONSHIP",
-          "source_ticker": "ANET",
-          "target_ticker": "CCOI",
-          "type": "supply relationship",
-          "product": "routers",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "ANTHROPIC->EXFY:SUPPLY RELATIONSHIP",
-          "source_ticker": "ANTHROPIC",
-          "target_ticker": "EXFY",
-          "type": "Supply Relationship",
-          "product": "AI Technologies licensed from third parties",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "LGND->CRMD:SUPPLY RELATIONSHIP",
-          "source_ticker": "LGND",
-          "target_ticker": "CRMD",
-          "type": "Supply Relationship",
-          "product": "Captisol, a sulfobutylether beta-cyclodextrin excipient",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "STRIPE->BLZE:OPERATIONAL SUPPLY CHAIN DEPENDENCY",
-          "source_ticker": "STRIPE",
-          "target_ticker": "BLZE",
-          "type": "operational supply chain dependency",
-          "product": "payment processing services",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "STRIPE->WEAV:SUPPLY RELATIONSHIP",
-          "source_ticker": "STRIPE",
-          "target_ticker": "WEAV",
-          "type": "Supply Relationship",
-          "product": "point-of-sale devices and payment processing services",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "STRT->F:REVENUE CONCENTRATION",
-          "source_ticker": "STRT",
-          "target_ticker": "F",
-          "type": "Revenue Concentration",
-          "product": "21% of STRT revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "STRT->GM:REVENUE CONCENTRATION",
-          "source_ticker": "STRT",
-          "target_ticker": "GM",
-          "type": "Revenue Concentration",
-          "product": "Auto Parts (specifically for General Motors Company)",
-          "review_status": "approved",
-          "confidence": 1.0
         }
       ],
       "removed_links": [],
