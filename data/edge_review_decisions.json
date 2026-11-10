@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-11-09T10:56:18.315443+00:00",
+  "exported_at": "2026-11-10T10:45:19.455625+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -62543,6 +62543,23 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.90; votes reject:2, pending:1). Lead rationale from mistral:7b-instruct: In 2022, Sprinklr announced partnerships with Amazon Connect and Twilio, integrating its customer care products. This indicates that Twilio provides CCaaS platform to Sprinklr.",
       "reviewed_at": "2026-11-08T10:09:12.922806"
+    },
+    {
+      "edge_id": 3782,
+      "source_ticker": "GLIBA",
+      "target_ticker": "GLIBK",
+      "source_name": "Liberty Capital Corporation Series A GCI Group Common Stock",
+      "target_name": "Liberty Capital Corporation Series C GCI Group Common Stock",
+      "dependency_type": "Wireless Services",
+      "product": "None",
+      "confidence_score": 0.9,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "More About Liberty Capital GCI is Alaska\u2019s largest communications provider, providing data, mobile, voice and managed services to consumer and business customers throughout Alaska, serving more than 200 communities.",
+      "review_status": "rejected",
+      "review_note": "Automated cleanup: a warrant, preferred or rights line, or a second listing of the same company, is not a company to link (GLIBA and GLIBK are two listings of one company).",
+      "reviewed_at": "2026-11-10T10:41:33.240920"
     },
     {
       "edge_id": 97,
