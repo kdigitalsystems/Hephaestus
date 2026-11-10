@@ -16,6 +16,7 @@ backend/
   auto_discover_edges.py  LLM-assisted supply-chain discovery
   database.py             SQLAlchemy engine/session setup
   db_health.py            SQLite readiness check for local and scheduled runs
+  db_snapshot.py          snapshot the SQLite graph outside the checkout and restore it when the file is lost
   export.py               SQLite to docs/dashboard_data.json export
   generate_predictions.py Top-50 graph-aware research signal exporter
   main.py                 URL scrape -> LLM parse -> database workflow
@@ -104,6 +105,16 @@ Require a seeded company universe before a scheduled run:
 
 ```bash
 python3 backend/db_health.py --require-nodes
+```
+
+Keep a copy of the graph outside the checkout and put it back when the file is lost (the scheduled run does
+both: it snapshots after its work and restores before it would re-seed; the newest three copies are kept in
+`~/.hephaestus/snapshots`, or `HEPHAESTUS_SNAPSHOT_DIR`, `HEPHAESTUS_SNAPSHOT_KEEP`):
+
+```bash
+python3 backend/db_snapshot.py snapshot
+python3 backend/db_snapshot.py list
+python3 backend/db_snapshot.py restore
 ```
 
 Seed public companies from Alpaca:
