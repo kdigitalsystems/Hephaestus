@@ -1,8 +1,21 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-11-10T10:48:12+00:00",
+  "generated_at": "2026-11-11T10:20:05+00:00",
   "unique_links": 830,
   "days": [
+    {
+      "date": "2026-11-11",
+      "generated_at": "2026-11-11T10:20:05+00:00",
+      "previous_date": "2026-11-10",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-11-10",
       "generated_at": "2026-11-10T10:48:12+00:00",
@@ -732,29 +745,6 @@
           "product": "High Fructose Corn Syrup (HFCS)",
           "review_status": "approved",
           "confidence": 1.0
-        }
-      ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-27",
-      "generated_at": "2026-10-27T09:02:19+00:00",
-      "previous_date": "2026-10-26",
-      "unique_links": 816,
-      "net_change": 1,
-      "new_count": 1,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "NRP->AMR:REVENUE CONCENTRATION",
-          "source_ticker": "NRP",
-          "target_ticker": "AMR",
-          "type": "Revenue Concentration",
-          "product": "26% of NRP revenue",
-          "review_status": "approved",
-          "confidence": 0.95
         }
       ],
       "removed_links": [],
