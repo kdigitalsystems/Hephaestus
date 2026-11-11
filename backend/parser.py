@@ -20,6 +20,12 @@ DEFAULT_EXTRACTION_MODEL = os.environ.get("HEPHAESTUS_EXTRACTION_MODEL", "llama3
 # more than a few minutes of GPU time.
 EXTRACTION_MAX_TOKENS = int(os.environ.get("HEPHAESTUS_EXTRACTION_MAX_TOKENS", "2048"))
 EXTRACTION_TIMEOUT_SECONDS = float(os.environ.get("HEPHAESTUS_EXTRACTION_TIMEOUT_SECONDS", "300"))
+# Small models sometimes write one string that never ends (a 7,000-character
+# evidence_excerpt), so the token cap cuts the JSON off and nothing parses. Sampling is
+# random, so asking again usually works: two nights running the same company failed this
+# way, and a failed company stays in the queue. Only unreadable output is re-asked; a
+# broken server or a missing model fails at once.
+EXTRACTION_ATTEMPTS = max(1, int(os.environ.get("HEPHAESTUS_EXTRACTION_ATTEMPTS", "2")))
 
 
 def ollama_chat(**kwargs):
@@ -69,6 +75,42 @@ def clean_model_text(value):
     text = text.replace("\\'", "'").replace('\\"', '"').replace("\\n", " ").replace("\\t", " ")
     return " ".join(text.split())
 
+DEPENDENCIES_KEY = re.compile(r'"dependencies"\s*:\s*\[')
+
+
+def salvage_dependencies(raw) -> list:
+    """Complete dependency objects from model output that does not parse as a whole.
+
+    The token cap cuts a long answer off mid-string, and a small model sometimes drops a
+    comma. Either way the objects written before the damage are intact; discarding them
+    made one bad tail cost the whole company. The damaged object and everything after it
+    are left out, repeats are collapsed, and the survivors still go through the same
+    validation as a clean answer.
+    """
+    if not isinstance(raw, str):
+        return []
+    start = DEPENDENCIES_KEY.search(raw)
+    if not start:
+        return []
+    decoder = json.JSONDecoder()
+    position = start.end()
+    found, seen = [], set()
+    while position < len(raw):
+        while position < len(raw) and raw[position] in " \t\r\n,":
+            position += 1
+        if position >= len(raw) or raw[position] != "{":
+            break
+        try:
+            item, position = decoder.raw_decode(raw, position)
+        except ValueError:
+            break
+        fingerprint = json.dumps(item, sort_keys=True)
+        if fingerprint not in seen:
+            seen.add(fingerprint)
+            found.append(item)
+    return found
+
+
 def extract_dependencies(text: str, target_name: str = "the target company", target_ticker: str = "", model_name: str = None) -> dict:
     """
     Passes raw scraped text to the local Ollama model.
@@ -115,22 +157,42 @@ def extract_dependencies(text: str, target_name: str = "the target company", tar
     {text}
     """
 
-    try:
-        response = ollama_chat(
-            model=model_name,
-            messages=[
-                {'role': 'system', 'content': SYSTEM_PROMPT},
-                {'role': 'user', 'content': user_prompt}
-            ],
-            format=ExtractionResult.model_json_schema(),
-            options={"num_predict": EXTRACTION_MAX_TOKENS},
-        )
-        
-        raw_json = response['message']['content']
-        parsed_data = json.loads(raw_json)
-    except Exception as e:
-        print(f"Error during LLM extraction: {e}")
-        return {"dependencies": [], "error": str(e)}
+    parsed_data = None
+    problem = ""
+    for attempt in range(1, EXTRACTION_ATTEMPTS + 1):
+        try:
+            response = ollama_chat(
+                model=model_name,
+                messages=[
+                    {'role': 'system', 'content': SYSTEM_PROMPT},
+                    {'role': 'user', 'content': user_prompt}
+                ],
+                format=ExtractionResult.model_json_schema(),
+                options={"num_predict": EXTRACTION_MAX_TOKENS},
+            )
+            raw_output = response['message']['content']
+        except Exception as e:
+            print(f"Error during LLM extraction: {e}")
+            return {"dependencies": [], "error": str(e)}
+
+        try:
+            parsed_data = json.loads(raw_output)
+            break
+        except (TypeError, ValueError) as e:
+            recovered = salvage_dependencies(raw_output)
+            if recovered:
+                print(
+                    f"  [!] Model output was cut off or malformed ({e}); "
+                    f"kept the {len(recovered)} complete dependenc{'y' if len(recovered) == 1 else 'ies'} before the damage."
+                )
+                parsed_data = {"dependencies": recovered}
+                break
+            problem = str(e)
+            retry = f"; asking again (attempt {attempt} of {EXTRACTION_ATTEMPTS})" if attempt < EXTRACTION_ATTEMPTS else ""
+            print(f"Error during LLM extraction: {e}{retry}")
+
+    if parsed_data is None:
+        return {"dependencies": [], "error": problem}
 
     items = parsed_data.get("dependencies") if isinstance(parsed_data, dict) else None
     if not isinstance(items, list):
