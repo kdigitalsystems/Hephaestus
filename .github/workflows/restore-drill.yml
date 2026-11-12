@@ -1,0 +1,43 @@
+name: Database restore drill
+
+# Run by hand. The GPU pipeline snapshots its SQLite graph after every run and restores the
+# newest snapshot when the file is lost, but that restore only ever runs on the day of a loss
+# (the last one was 2026-10-31). This rehearses it on the same machine, against the real
+# snapshots, in a scratch folder: the live database is read, never written.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# The publisher's group: this job shares server1's workspace with the pipeline, so it must
+# never run beside it. Start it while no pipeline run is waiting; a group holds one waiting
+# job, and a newer one replaces it.
+concurrency:
+  group: hephaestus-main-publisher
+  cancel-in-progress: false
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  restore-drill:
+    name: Rehearse restoring the newest snapshot
+    # The pinned pipeline runner (custom label on server1): the snapshots live in its home folder.
+    runs-on: [self-hosted, nvidia-gpu, hephaestus]
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          # Same as the pipeline: the default `git clean -ffdx` would delete the git-ignored
+          # SQLite graph (backend/supply_chain.db), which is the very loss this guards against.
+          clean: false
+
+      - name: List the snapshots
+        run: python3 backend/db_snapshot.py list
+
+      - name: Restore the newest snapshot into a scratch folder and check it
+        run: python3 backend/db_snapshot.py drill

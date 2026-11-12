@@ -115,7 +115,14 @@ both: it snapshots after its work and restores before it would re-seed; the newe
 python3 backend/db_snapshot.py snapshot
 python3 backend/db_snapshot.py list
 python3 backend/db_snapshot.py restore
+python3 backend/db_snapshot.py drill
 ```
+
+`drill` rehearses a restore without touching the live database: it puts the newest usable snapshot into a
+scratch folder with the same code the failsafe uses, checks the result, prints what came back (companies,
+links, links pending review, filing read-dates) next to the live figures, and deletes the scratch copy. It
+exits 0 only when the rehearsal worked. The "Database restore drill" workflow runs it by hand on the
+pipeline's runner, where the snapshots are.
 
 Seed public companies from Alpaca:
 

@@ -1,8 +1,10 @@
 """The database snapshot: a lost database is restored instead of re-seeded (it was, on 2026-10-31)."""
 import hashlib
 import os
+import shutil
 import sqlite3
 import sys
+import tempfile
 from collections import namedtuple
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -16,7 +18,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 
 import db_snapshot  # noqa: E402
 from db_health import database_status  # noqa: E402
-from models import Base, Node  # noqa: E402
+from models import Base, Edge, Node  # noqa: E402
 
 NOW = datetime(2026, 11, 8, 12, 0, tzinfo=timezone.utc)
 
@@ -248,3 +250,139 @@ class TestPipelineWiring:
         assert names.index("Execute AI Review Pipeline & Export") < position < names.index("Mint fresh publish token")
         step = self.step("Snapshot the database")
         assert "continue-on-error: true" in step and "db_snapshot.py snapshot" in step
+
+
+def add_review_state(path, pending=2, approved=1, filings_read=2):
+    """What only the database holds: links awaiting review and which filings have been read."""
+    engine = create_engine(f"sqlite:///{path}")
+    with sessionmaker(bind=engine)() as session:
+        nodes = session.query(Node).order_by(Node.id).all()
+        for index in range(pending + approved):
+            session.add(Edge(
+                source_id=nodes[0].id, target_id=nodes[index + 1].id, dependency_type="Components",
+                review_status="pending" if index < pending else "approved",
+            ))
+        for node in nodes[:filings_read]:
+            node.concentration_checked_at = NOW
+        session.commit()
+    engine.dispose()
+
+
+@pytest.fixture
+def scratch(tmp_path, monkeypatch):
+    """Where the drill makes its scratch folder, so a test can see that nothing is left in it."""
+    root = tmp_path / "scratch"
+    root.mkdir()
+    monkeypatch.setattr(tempfile, "tempdir", str(root))
+    return root
+
+
+def test_a_drill_restores_into_a_scratch_folder_and_reports_what_came_back(live, folder, scratch):
+    add_review_state(live)
+    db_snapshot.take_snapshot(live, folder, now=hours_ago(6))
+    before, snapshots = digest(live), sorted(os.listdir(folder))
+
+    passed, report = db_snapshot.restore_drill(live, folder, now=NOW)
+
+    assert passed, report
+    assert "restored supply_chain-20261108T060000Z.db (6.0 hours old) into a scratch folder" in report
+    held = "holds 5 companies, 3 links (2 pending review) and 2 filing read-dates"
+    assert f"the restored copy {held}" in report and f"the live database {held}" in report
+    assert report.splitlines()[-1].startswith("drill passed")
+    assert digest(live) == before and sorted(os.listdir(folder)) == snapshots
+    assert os.listdir(scratch) == []
+    assert sorted(os.listdir(Path(live).parent)) == ["scratch", "snapshots", "supply_chain.db"]
+
+
+def test_a_drill_reads_the_snapshot_and_not_the_live_database(live, folder, scratch):
+    db_snapshot.take_snapshot(live, folder, now=hours_ago(6))
+    with sqlite3.connect(live) as connection:
+        connection.execute("DELETE FROM nodes WHERE ticker = 'T0'")
+
+    passed, report = db_snapshot.restore_drill(live, folder, now=NOW)
+
+    assert passed
+    assert "the restored copy holds 5 companies" in report and "the live database holds 4 companies" in report
+
+
+def test_a_drill_passes_without_a_live_database_and_does_not_put_one_back(live, folder, scratch):
+    db_snapshot.take_snapshot(live, folder, now=hours_ago(6))
+    os.remove(live)
+
+    passed, report = db_snapshot.restore_drill(live, folder, now=NOW)
+
+    assert passed and "the live database is not usable right now (database file is missing)" in report
+    assert not os.path.exists(live) and os.listdir(scratch) == []
+
+
+def test_a_drill_fails_when_there_is_nothing_usable_to_restore(live, folder, scratch):
+    passed, report = db_snapshot.restore_drill(live, folder, now=NOW)
+    assert not passed and report.startswith("drill failed: no snapshot in")
+
+    only, _ = db_snapshot.take_snapshot(live, folder, now=hours_ago(6))
+    corrupt(only)
+    passed, report = db_snapshot.restore_drill(live, folder, now=NOW)
+    assert not passed and report.startswith("drill failed: no usable snapshot")
+    assert os.listdir(scratch) == []
+
+
+def test_a_drill_falls_back_to_an_older_snapshot_and_says_so(live, folder, scratch):
+    old, _ = db_snapshot.take_snapshot(live, folder, now=hours_ago(30))
+    newest, _ = db_snapshot.take_snapshot(live, folder, now=hours_ago(6))
+    corrupt(newest)
+
+    passed, report = db_snapshot.restore_drill(live, folder, now=NOW)
+
+    assert passed and os.path.basename(old) in report and "skipped 1 unusable newer snapshot" in report
+
+
+def test_a_drill_fails_when_the_copy_it_restored_is_damaged(live, folder, scratch, monkeypatch):
+    """The snapshot passes its check but the copy does not arrive intact (a full or failing disk)."""
+    db_snapshot.take_snapshot(live, folder, now=hours_ago(6))
+    real_copy = shutil.copyfile
+
+    def damaged_copy(source, target):
+        real_copy(source, target)
+        corrupt(target)
+
+    monkeypatch.setattr(db_snapshot.shutil, "copyfile", damaged_copy)
+
+    passed, report = db_snapshot.restore_drill(live, folder, now=NOW)
+
+    assert not passed and "drill failed: the restored copy is not usable" in report
+    assert os.listdir(scratch) == []
+
+
+def test_the_drill_command_exits_zero_only_when_the_rehearsal_worked(live, tmp_path, folder, scratch, capsys):
+    assert db_snapshot.main(["drill", "--db", live, "--dir", folder]) == 1
+    assert "drill failed" in capsys.readouterr().out
+    db_snapshot.take_snapshot(live, folder, now=hours_ago(6))
+    assert db_snapshot.main(["drill", "--db", live, "--dir", folder]) == 0
+    assert "drill passed" in capsys.readouterr().out
+
+
+class TestDrillWiring:
+    workflow = (ROOT / ".github" / "workflows" / "restore-drill.yml").read_text(encoding="utf-8")
+    pipeline = (ROOT / ".github" / "workflows" / "gpu_pipeline.yml").read_text(encoding="utf-8")
+
+    def test_it_only_ever_runs_by_hand(self):
+        triggers = self.workflow.split("\non:\n", 1)[1].split("\npermissions:", 1)[0]
+        assert triggers.strip() == "workflow_dispatch:"
+
+    def test_it_runs_where_the_snapshots_are_and_never_beside_the_pipeline(self):
+        runner = "runs-on: [self-hosted, nvidia-gpu, hephaestus]"
+        assert runner in self.workflow and runner in self.pipeline
+        group = "concurrency:\n  group: hephaestus-main-publisher\n  cancel-in-progress: false"
+        assert group in self.workflow and group in self.pipeline
+
+    def test_its_checkout_cannot_delete_the_live_database(self):
+        checkout = self.workflow.split("uses: actions/checkout@", 1)[1].split("\n      - name:", 1)[0]
+        assert "clean: false" in checkout
+
+    def test_it_rehearses_and_never_restores_or_rebuilds_for_real(self):
+        commands = [line.strip() for line in self.workflow.splitlines() if line.strip().startswith("run:")]
+        assert commands == ["run: python3 backend/db_snapshot.py list", "run: python3 backend/db_snapshot.py drill"]
+
+    def test_it_holds_no_secret_and_no_write_access(self):
+        assert "permissions:\n  contents: read" in self.workflow
+        assert "secrets." not in self.workflow and "write" not in self.workflow.split("permissions:", 1)[1].split("concurrency:", 1)[0]
