@@ -14,6 +14,7 @@ and a database that is not healthy is never snapshotted, so a bad night cannot o
     python3 backend/db_snapshot.py snapshot    # after a run; exit 1 when nothing was written
     python3 backend/db_snapshot.py restore     # before a re-seed; exit 0 only when a copy was put back
     python3 backend/db_snapshot.py list
+    python3 backend/db_snapshot.py drill       # rehearse a restore in a scratch folder; exit 0 only when it works
 """
 import argparse
 import os
@@ -192,9 +193,67 @@ def restore_latest(db_path=DEFAULT_DB_PATH, directory=None, now=None):
     return False, f"no usable snapshot in {directory} ({'; '.join(skipped)})"
 
 
+def contents(path):
+    """What a database holds that a re-seed would lose, read without writing to the file."""
+    connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True, timeout=SQLITE_TIMEOUT_SECONDS)
+    try:
+        def one(sql):
+            return connection.execute(sql).fetchone()[0]
+
+        return {
+            "companies": one("SELECT COUNT(*) FROM nodes"),
+            "links": one("SELECT COUNT(*) FROM edges"),
+            "pending": one("SELECT COUNT(*) FROM edges WHERE review_status = 'pending'"),
+            "filings_read": one("SELECT COUNT(*) FROM nodes WHERE concentration_checked_at IS NOT NULL"),
+        }
+    finally:
+        connection.close()
+
+
+def describe(label, held):
+    return (
+        f"drill: {label} holds {held['companies']:,} companies, {held['links']:,} links "
+        f"({held['pending']:,} pending review) and {held['filings_read']:,} filing read-dates"
+    )
+
+
+def restore_drill(db_path=DEFAULT_DB_PATH, directory=None, now=None):
+    """Rehearse a restore without touching the live database. Returns (passed, report).
+
+    A snapshot nobody has ever restored is a hope, not a backup. This runs the same restore_latest()
+    the pipeline's failsafe calls, against an empty scratch folder standing in for a checkout that lost
+    its database, then checks the file it produced and counts what came back. The scratch folder is
+    deleted afterwards; the live database is only read.
+    """
+    lines = []
+    with tempfile.TemporaryDirectory(prefix="hephaestus-restore-drill-") as scratch:
+        copy = os.path.join(scratch, os.path.basename(db_path) or "supply_chain.db")
+        restored, message = restore_latest(copy, directory, now)
+        if not restored:
+            return False, f"drill failed: {message}"
+        lines.append(f"drill: {message} into a scratch folder")
+        problem = usable_problem(copy)
+        if problem:
+            return False, "\n".join(lines + [f"drill failed: the restored copy is not usable ({problem})"])
+        try:
+            lines.append(describe("the restored copy", contents(copy)))
+        except sqlite3.Error as exc:
+            return False, "\n".join(lines + [f"drill failed: the restored copy could not be read ({exc})"])
+        ready, status = database_status(db_path, require_nodes=True)
+        if ready:
+            try:
+                lines.append(describe("the live database", contents(db_path)))
+            except sqlite3.Error as exc:
+                lines.append(f"drill: the live database could not be read for comparison ({exc})")
+        else:
+            lines.append(f"drill: the live database is not usable right now ({status}); the next run would restore this copy")
+    lines.append("drill passed: the scratch copy is deleted and the live database was not changed")
+    return True, "\n".join(lines)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Snapshot and restore the local SQLite database.")
-    parser.add_argument("command", choices=("snapshot", "restore", "list"))
+    parser.add_argument("command", choices=("snapshot", "restore", "list", "drill"))
     parser.add_argument("--db", default=DEFAULT_DB_PATH)
     parser.add_argument("--dir", default=None, help="snapshot folder (default: HEPHAESTUS_SNAPSHOT_DIR or ~/.hephaestus/snapshots)")
     parser.add_argument("--keep", type=int, default=None, help=f"snapshots to keep (default: HEPHAESTUS_SNAPSHOT_KEEP or {DEFAULT_KEEP})")
@@ -211,6 +270,10 @@ def main(argv=None):
         path, message = take_snapshot(args.db, args.dir, args.keep)
         print(message)
         return 0 if path else 1
+    if args.command == "drill":
+        passed, report = restore_drill(args.db, args.dir)
+        print(report)
+        return 0 if passed else 1
     restored, message = restore_latest(args.db, args.dir)
     print(message)
     return 0 if restored else 1
