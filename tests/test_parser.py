@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
@@ -196,3 +198,158 @@ def test_a_response_without_a_dependencies_list_counts_as_a_failure(monkeypatch)
 
     assert result["dependencies"] == []
     assert "dependencies list" in result["error"]
+
+
+def dependency_json(supplier, customer="Customer Inc."):
+    return (
+        '{"source_company": "%s", "target_company": "%s", "dependency_type": "Components", '
+        '"product": "Control modules", '
+        '"evidence_excerpt": "%s provides control modules to %s.", "confidence_score": 0.9}'
+        % (supplier, customer, supplier, customer)
+    )
+
+
+def chat_returning(*answers):
+    """A fake model that gives the next canned answer on every call, and counts the calls."""
+    calls = []
+
+    def chat(**_kwargs):
+        calls.append(1)
+        return {"message": {"content": answers[min(len(calls), len(answers)) - 1]}}
+
+    chat.calls = calls
+    return chat
+
+
+# Output the way a 2,048-token cap leaves it: two objects complete, the third cut off
+# inside a string.
+CUT_OFF_ANSWER = (
+    '{"dependencies": [' + dependency_json("Alpha Corp") + ", " + dependency_json("Beta Corp")
+    + ', {"source_company": "Gamma Corp", "target_company": "Customer Inc.", "dependency_type": "Comp'
+)
+# One string that never ends: nothing complete to keep.
+RUNAWAY_ANSWER = '{"dependencies": [{"source_company": "Gamma Corp", "evidence_excerpt": "' + "the " * 400
+
+
+def test_salvage_keeps_the_objects_written_before_the_cut():
+    kept = parser.salvage_dependencies(CUT_OFF_ANSWER)
+
+    assert [item["source_company"] for item in kept] == ["Alpha Corp", "Beta Corp"]
+
+
+def test_salvage_keeps_intact_objects_even_when_a_comma_between_them_is_missing():
+    broken = '{"dependencies": [' + dependency_json("Alpha Corp") + " " + dependency_json("Beta Corp") + "]}"
+
+    assert [item["source_company"] for item in parser.salvage_dependencies(broken)] == ["Alpha Corp", "Beta Corp"]
+
+
+def test_salvage_stops_at_the_first_damaged_object():
+    # "Expecting ',' delimiter" inside the second object: it and what follows are dropped.
+    damaged = dependency_json("Beta Corp").replace('"Components", ', '"Components" ', 1)
+    broken = '{"dependencies": [' + dependency_json("Alpha Corp") + ", " + damaged + ", " + dependency_json("Gamma Corp") + "]}"
+
+    assert [item["source_company"] for item in parser.salvage_dependencies(broken)] == ["Alpha Corp"]
+
+
+def test_salvage_is_not_fooled_by_brackets_and_braces_inside_strings():
+    tricky = '{"dependencies": [{"source_company": "A] {B", "evidence_excerpt": "x }, { y ] z"}, {"source_company": "cut'
+
+    assert parser.salvage_dependencies(tricky) == [{"source_company": "A] {B", "evidence_excerpt": "x }, { y ] z"}]
+
+
+def test_salvage_collapses_repeats_from_a_looping_model():
+    looping = '{"dependencies": [' + ", ".join([dependency_json("Alpha Corp")] * 6) + ", " + dependency_json("Beta Corp") + ", {"
+
+    assert [item["source_company"] for item in parser.salvage_dependencies(looping)] == ["Alpha Corp", "Beta Corp"]
+
+
+@pytest.mark.parametrize("raw", [RUNAWAY_ANSWER, "", "not json at all", '{"results": [{"a": 1}]}', None, 42, '{"dependencies": ['])
+def test_salvage_finds_nothing_in_hopeless_output(raw):
+    assert parser.salvage_dependencies(raw) == []
+
+
+def test_a_cut_off_answer_keeps_its_complete_dependencies_and_is_not_a_failure(monkeypatch):
+    """The company was researched; before, one bad tail failed it and it came back every night."""
+    chat = chat_returning(CUT_OFF_ANSWER)
+    monkeypatch.setattr(parser, "ollama_chat", chat)
+
+    result = parser.extract_dependencies("source text")
+
+    assert [dep["source_company"] for dep in result["dependencies"]] == ["Alpha Corp", "Beta Corp"]
+    assert "error" not in result
+    assert len(chat.calls) == 1
+
+
+def test_salvaged_dependencies_are_still_validated(monkeypatch):
+    bad = '{"source_company": "Bad Corp", "target_company": "Customer Inc.", "dependency_type": "Components", "product": "Parts", "evidence_excerpt": "", "confidence_score": 0.9}'
+    answer = '{"dependencies": [' + bad + ", " + dependency_json("Alpha Corp") + ", {"
+    monkeypatch.setattr(parser, "ollama_chat", chat_returning(answer))
+
+    result = parser.extract_dependencies("source text")
+
+    assert [dep["source_company"] for dep in result["dependencies"]] == ["Alpha Corp"]
+
+
+def test_unreadable_output_is_asked_for_again_and_the_second_answer_is_used(monkeypatch):
+    chat = chat_returning(RUNAWAY_ANSWER, '{"dependencies": [' + dependency_json("Alpha Corp") + "]}")
+    monkeypatch.setattr(parser, "ollama_chat", chat)
+    monkeypatch.setattr(parser, "EXTRACTION_ATTEMPTS", 2)
+
+    result = parser.extract_dependencies("source text")
+
+    assert [dep["source_company"] for dep in result["dependencies"]] == ["Alpha Corp"]
+    assert "error" not in result
+    assert len(chat.calls) == 2
+
+
+def test_output_that_stays_unreadable_is_a_failure_after_the_attempts_run_out(monkeypatch):
+    chat = chat_returning(RUNAWAY_ANSWER)
+    monkeypatch.setattr(parser, "ollama_chat", chat)
+    monkeypatch.setattr(parser, "EXTRACTION_ATTEMPTS", 2)
+
+    result = parser.extract_dependencies("source text")
+
+    assert result["dependencies"] == []
+    assert "Unterminated string" in result["error"]
+    assert len(chat.calls) == 2
+
+
+def test_one_attempt_means_no_second_request(monkeypatch):
+    chat = chat_returning(RUNAWAY_ANSWER)
+    monkeypatch.setattr(parser, "ollama_chat", chat)
+    monkeypatch.setattr(parser, "EXTRACTION_ATTEMPTS", 1)
+
+    result = parser.extract_dependencies("source text")
+
+    assert "error" in result
+    assert len(chat.calls) == 1
+
+
+def test_a_failing_server_is_not_asked_again(monkeypatch):
+    """A missing model or a timeout would only fail again, and a timeout costs minutes."""
+    calls = []
+
+    def failing_chat(**_kwargs):
+        calls.append(1)
+        raise TimeoutError("timed out")
+
+    monkeypatch.setattr(parser, "ollama_chat", failing_chat)
+    monkeypatch.setattr(parser, "EXTRACTION_ATTEMPTS", 3)
+
+    result = parser.extract_dependencies("source text")
+
+    assert result == {"dependencies": [], "error": "timed out"}
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("configured, expected", [("3", 3), ("1", 1), ("0", 1), ("-4", 1)])
+def test_the_attempt_count_comes_from_the_environment_and_is_never_below_one(monkeypatch, configured, expected):
+    """With zero attempts the loop would never run and an empty error would read as success."""
+    import importlib
+
+    monkeypatch.setenv("HEPHAESTUS_EXTRACTION_ATTEMPTS", configured)
+    try:
+        assert importlib.reload(parser).EXTRACTION_ATTEMPTS == expected
+    finally:
+        monkeypatch.delenv("HEPHAESTUS_EXTRACTION_ATTEMPTS")
+        importlib.reload(parser)
