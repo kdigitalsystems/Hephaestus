@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-11-11T10:17:13.871163+00:00",
+  "exported_at": "2026-11-12T10:39:57.931395+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -62594,6 +62594,23 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: NASA Tema Space Innovators ETF.",
       "reviewed_at": "2026-11-11T10:13:37.065730"
+    },
+    {
+      "edge_id": 3793,
+      "source_ticker": "KMB",
+      "target_ticker": "MATV",
+      "source_name": "Kimberly-Clark Corporation Common Stock",
+      "target_name": "Mativ Holdings, Inc.",
+      "dependency_type": "Parent Company/Supplier",
+      "product": "Tobacco-related paper and other paper products businesses",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "On November 30, 1995, Kimberly-Clark transferred its tobacco-related paper and other paper products businesses conducted in the United States, France and Canada to Mativ and distributed all of the outstanding shares of common stock of the Company to its stockholders (the \u201cspin-off\u201d).",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a sale, spin-off, fine, hire or similar event, not supply (\"spin-off\").",
+      "reviewed_at": "2026-11-12T10:36:26.212176"
     },
     {
       "edge_id": 97,
