@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-11-12T10:39:57.931395+00:00",
+  "exported_at": "2026-11-13T10:37:30.822655+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -62611,6 +62611,23 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a sale, spin-off, fine, hire or similar event, not supply (\"spin-off\").",
       "reviewed_at": "2026-11-12T10:36:26.212176"
+    },
+    {
+      "edge_id": 3796,
+      "source_ticker": "GM",
+      "target_ticker": "LAC",
+      "source_name": "General Motors Company",
+      "target_name": "Lithium Americas Corp.",
+      "dependency_type": "investment",
+      "product": "Lithium",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "On January 31, 2023, General Motors announced a $650 million investment into Lithium Americas,",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 1.00; votes reject:2, approve:1). Lead rationale from qwen2.5:7b-instruct: The proposed edge represents an investment relationship rather than a supply chain dependency. General Motors is investing in Lithium Americas, making Lithium Americas the supplier and General Motors the customer.",
+      "reviewed_at": "2026-11-13T10:34:09.863194"
     },
     {
       "edge_id": 97,
