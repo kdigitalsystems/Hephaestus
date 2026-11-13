@@ -14,9 +14,9 @@ from thefuzz import fuzz
 from database import SessionLocal
 from models import Node, Edge
 from parser import extract_dependencies
-from yahooquery import search as yq_search, Ticker
+from yahooquery import search as yq_search
 from sec_sources import get_sec_exhibit_supply_chain_text, get_sec_supply_chain_text, latest_annual_filing
-from additional_sources import get_additional_supply_chain_text
+from additional_sources import get_additional_supply_chain_text, yahoo_headlines
 from customer_concentration import SUPPLIER_TITLE_MARKER, KnownNames, describe_share, extract_disclosures, filer_documented_direction
 from supplier_dependence import (
     NameIndex,
@@ -52,6 +52,7 @@ CONCENTRATION_CONFIDENCE = 0.9
 USE_SUPPLIER_STATEMENTS = os.environ.get("HEPHAESTUS_USE_SUPPLIER_STATEMENTS", "1") != "0"
 SUPPLIER_STATEMENT_CONFIDENCE = 0.85
 CONTEXT_MAX_CHARS = int(os.environ.get("HEPHAESTUS_CONTEXT_MAX_CHARS", "15000"))
+YAHOO_NEWS_MAX_FAILURES = int(os.environ.get("HEPHAESTUS_YAHOO_NEWS_MAX_FAILURES", "3"))
 # Wall-clock budget for the discovery loop (0 = unlimited). The scheduled job has
 # a fixed timeout, and a queue that does not fit in it starves the review, export,
 # and publish steps that follow: nothing reaches the site at all.
@@ -887,26 +888,31 @@ class IntelGatherer:
     # yahooquery's news endpoint now answers ['error'] for every ticker; iterating that
     # raised "'str' object has no attribute 'get'" once per company, every run, and the
     # source had been silently dead. After the first unusable answer the run stops asking.
+    # A ticker with no news is an empty feed, not a failure. Only errors count, and only in a row:
+    # a source that is down costs a few timeouts per run, not one per company.
     yahoo_news_disabled = False
+    yahoo_news_failures = 0
 
     @staticmethod
     def get_yahoo_news(ticker):
         if IntelGatherer.yahoo_news_disabled:
             return ""
         try:
-            news = Ticker(ticker).news(count=5)
+            articles = yahoo_headlines(ticker, count=5)
         except Exception as e:
-            print(f"  [-] Yahoo news unavailable for {ticker}: {e}")
+            IntelGatherer.yahoo_news_failures += 1
+            if IntelGatherer.yahoo_news_failures >= YAHOO_NEWS_MAX_FAILURES:
+                IntelGatherer.yahoo_news_disabled = True
+                print(f"  [-] Yahoo news unavailable for {ticker}: {e}; {YAHOO_NEWS_MAX_FAILURES} failures in a row, skipping it for the rest of this run.")
+            else:
+                print(f"  [-] Yahoo news unavailable for {ticker}: {e}")
             return ""
-        articles = [article for article in news if isinstance(article, dict)] if isinstance(news, list) else []
-        if not articles:
-            IntelGatherer.yahoo_news_disabled = True
-            print(f"  [-] Yahoo news returned no usable articles ({str(news)[:80]!r}); skipping it for the rest of this run.")
-            return ""
+        IntelGatherer.yahoo_news_failures = 0
         blob = ""
         for article in articles:
-            article_url = article.get('link') or article.get('url') or ''
-            blob += f"SOURCE: RECENT NEWS ({article.get('title')}; {article_url})\nDATA:\n{article.get('summary')}\n"
+            summary = article["summary"] or article["title"]
+            published = f" ({article['published']})" if article["published"] else ""
+            blob += f"SOURCE: RECENT NEWS ({article['title']}; {article['link']})\nDATA:\n{summary}{published}\n"
         return blob
 
     @staticmethod
