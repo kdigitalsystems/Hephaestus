@@ -1,8 +1,21 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-11-13T10:40:21+00:00",
+  "generated_at": "2026-11-14T09:47:16+00:00",
   "unique_links": 830,
   "days": [
+    {
+      "date": "2026-11-14",
+      "generated_at": "2026-11-14T09:47:16+00:00",
+      "previous_date": "2026-11-13",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-11-13",
       "generated_at": "2026-11-13T10:40:21+00:00",
@@ -692,30 +705,6 @@
           "review_status": "approved",
           "confidence": 0.95,
           "previous_type": "Restaurant operation"
-        }
-      ]
-    },
-    {
-      "date": "2026-10-30",
-      "generated_at": "2026-10-30T09:34:03+00:00",
-      "previous_date": "2026-10-29",
-      "unique_links": 818,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 1,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": [
-        {
-          "relationship_key": "BA->RYAAY:AEROSPACE & DEFENSE PRODUCT SUPPLY CHAIN",
-          "source_ticker": "BA",
-          "target_ticker": "RYAAY",
-          "type": "Aerospace & Defense product supply chain / Aircraft and Aircraft Parts supply chain relationship / Aerospace & Defense Products and Services Supply Chain / Operational Supply Chain Dependency / Aircraft Maintenance Support",
-          "product": "Airplanes and aircraft parts / Aircraft and aircraft parts / Boeing 737 fleet and related aircraft parts / Aircraft and spare parts / Spare parts and maintenance services for Boeing aircraft",
-          "review_status": "approved",
-          "confidence": 1.0,
-          "previous_type": "Aircraft and Aircraft Parts supply chain relationship / Aerospace & Defense Products and Services Supply Chain / Operational Supply Chain Dependency / Aircraft Maintenance Support"
         }
       ]
     }
