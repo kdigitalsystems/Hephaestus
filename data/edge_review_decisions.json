@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-11-14T09:44:29.080902+00:00",
+  "exported_at": "2026-11-15T10:24:04.835172+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -62628,6 +62628,23 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 1.00; votes reject:2, approve:1). Lead rationale from qwen2.5:7b-instruct: The proposed edge represents an investment relationship rather than a supply chain dependency. General Motors is investing in Lithium Americas, making Lithium Americas the supplier and General Motors the customer.",
       "reviewed_at": "2026-11-13T10:34:09.863194"
+    },
+    {
+      "edge_id": 3800,
+      "source_ticker": "ELMT",
+      "target_ticker": "BMM",
+      "source_name": "The Elmet Group Co. Common Stock",
+      "target_name": "Blue Moon Metals Inc. Common Shares",
+      "dependency_type": "private placement funding",
+      "product": "C$35 Million Private Placement",
+      "confidence_score": 0.9,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "Blue Moon Metals Closes C$35 Million Private Placement with The Elmet Group and Board Appointment.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.90; votes reject:2, approve:1). Lead rationale from llama3.1:8b: The relationship described is a private placement funding, not an operational supply-chain dependency.",
+      "reviewed_at": "2026-11-15T10:20:46.061019"
     },
     {
       "edge_id": 97,
