@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-11-17T11:36:07.940389+00:00",
+  "exported_at": "2026-11-18T13:34:31.792509+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -62866,6 +62866,57 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
       "reviewed_at": "2026-11-17T11:32:49.832806"
+    },
+    {
+      "edge_id": 3825,
+      "source_ticker": "BKH",
+      "target_ticker": "XEL",
+      "source_name": "Black Hills Corporation",
+      "target_name": "Xcel Energy Inc. Common Stock",
+      "dependency_type": "Raw Materials",
+      "product": "None",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In 2005, Xcel sold Cheyenne Light, Fuel and Power to Black Hills Corporation.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
+      "reviewed_at": "2026-11-18T13:30:59.082063"
+    },
+    {
+      "edge_id": 3827,
+      "source_ticker": "AMP",
+      "target_ticker": "WCN",
+      "source_name": "Ameriprise Financial, Inc.",
+      "target_name": "Waste Connections, Inc.",
+      "dependency_type": "Advanced Recycling Technology",
+      "product": "AI-powered robots",
+      "confidence_score": 0.96,
+      "revenue_share": null,
+      "source_url": "https://en.wikipedia.org/wiki/Waste_Connections",
+      "source_title": "WIKIPEDIA (Page: Waste Connections)",
+      "evidence_excerpt": "Waste Connections is partnered with AMP to use AMP's AI powered robots which facilitate recycling.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: AMP Ameriprise Financial, Inc..",
+      "reviewed_at": "2026-11-18T13:30:59.129315"
+    },
+    {
+      "edge_id": 3828,
+      "source_ticker": "TROW",
+      "target_ticker": "WDAY",
+      "source_name": "T. Rowe Price Group, Inc. Common Stock",
+      "target_name": "Workday, Inc. Class A Common Stock",
+      "dependency_type": "Funding Provider",
+      "product": "Financial Support",
+      "confidence_score": 0.96,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In October 2011, Workday announced $85 million in new funding, bringing the total capital raised to $250 million. Investors in the latest round included T. Rowe Price, Morgan Stanley Investment Management, Janus, and Bezos Expeditions.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Non-operating financial vehicle or fund is not a useful operating supply-chain node: TROW T. Rowe Price Group, Inc. Common Stock.",
+      "reviewed_at": "2026-11-18T13:30:59.155144"
     },
     {
       "edge_id": 97,
