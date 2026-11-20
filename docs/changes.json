@@ -1,8 +1,50 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-11-19T11:12:17+00:00",
-  "unique_links": 830,
+  "generated_at": "2026-11-20T10:57:27+00:00",
+  "unique_links": 831,
   "days": [
+    {
+      "date": "2026-11-20",
+      "generated_at": "2026-11-20T10:57:27+00:00",
+      "previous_date": "2026-11-19",
+      "unique_links": 831,
+      "net_change": 1,
+      "new_count": 2,
+      "removed_count": 1,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "IOT->NJR:SUPPLY RELATIONSHIP",
+          "source_ticker": "IOT",
+          "target_ticker": "NJR",
+          "type": "Supply Relationship",
+          "product": "Fleet Telematics System",
+          "review_status": "approved",
+          "confidence": 0.9333
+        },
+        {
+          "relationship_key": "IOT->SYY:SUPPLY RELATIONSHIP",
+          "source_ticker": "IOT",
+          "target_ticker": "SYY",
+          "type": "Supply Relationship",
+          "product": "Fleet Telematics System",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "NICE->RNG:SUPPLY RELATIONSHIP",
+          "source_ticker": "NICE",
+          "target_ticker": "RNG",
+          "type": "Supply Relationship",
+          "product": "Hardware and software licensed from third parties, in particular, NICE",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "changed_links": []
+    },
     {
       "date": "2026-11-19",
       "generated_at": "2026-11-19T11:12:17+00:00",
@@ -169,29 +211,6 @@
       "removed_count": 0,
       "changed_count": 0,
       "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-11-06",
-      "generated_at": "2026-11-06T10:16:53+00:00",
-      "previous_date": "2026-11-05",
-      "unique_links": 830,
-      "net_change": 1,
-      "new_count": 1,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "ACMR->SKHY:SUPPLY RELATIONSHIP",
-          "source_ticker": "ACMR",
-          "target_ticker": "SKHY",
-          "type": "Supply Relationship",
-          "product": "Single-Wafer Wet Cleaning Equipment",
-          "review_status": "approved",
-          "confidence": 0.95
-        }
-      ],
       "removed_links": [],
       "changed_links": []
     }
