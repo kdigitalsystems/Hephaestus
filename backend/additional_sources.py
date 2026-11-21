@@ -2,6 +2,8 @@ import json
 import os
 import re
 import socket
+import xml.etree.ElementTree as ElementTree
+from html import unescape
 from ipaddress import ip_address
 from pathlib import Path
 from datetime import date, timedelta
@@ -615,22 +617,72 @@ def nhtsa_manufacturer_text(ticker, company_name="", sector="", industry="", max
     return source_section("Regulatory Dataset - NHTSA", company_name, ticker, "\n".join(lines), url=url, max_chars=max_chars)
 
 
+# Yahoo Finance's per-ticker headline feed. yahooquery's Ticker news call answers ["error"] for
+# every ticker (in every pipeline log still kept, 2026-11-06 on, and locally with yahooquery 2.4.1),
+# so recent news reached no extraction at all; this feed carries the same headlines with a summary.
+YAHOO_HEADLINE_FEED = "https://feeds.finance.yahoo.com/rss/2.0/headline"
+MAX_FEED_BYTES = 1024 * 1024
+
+
+def yahoo_headlines(ticker, count=5, timeout=15):
+    """The newest headlines for a ticker: [{"title", "link", "summary", "published"}].
+
+    An unknown ticker or one with no recent news is a valid, empty feed and returns []. A failed
+    request or an answer that is not the feed raises, so the caller can tell "no news" from
+    "the source is down".
+    """
+    symbol = normalize_ticker(ticker)
+    if not symbol:
+        return []
+    response = requests.get(
+        YAHOO_HEADLINE_FEED,
+        params={"s": symbol, "region": "US", "lang": "en-US"},
+        headers={"User-Agent": DEFAULT_USER_AGENT, "Accept": "application/rss+xml, application/xml;q=0.9, */*;q=0.1"},
+        timeout=timeout,
+        stream=True,
+    )
+    try:
+        response.raise_for_status()
+        body = b""
+        for chunk in response.iter_content(64 * 1024):
+            body += chunk
+            if len(body) > MAX_FEED_BYTES:
+                raise ValueError(f"Yahoo headline feed for {symbol} is larger than {MAX_FEED_BYTES} bytes")
+    finally:
+        response.close()
+    # The feed never declares entities; refusing them keeps a hostile answer from expanding.
+    if b"<!DOCTYPE" in body or b"<!ENTITY" in body:
+        raise ValueError(f"Yahoo headline feed for {symbol} declares a DOCTYPE or entities")
+    channel = ElementTree.fromstring(body).find("channel")
+    if channel is None:
+        raise ValueError(f"Yahoo headline answer for {symbol} is not an RSS feed")
+
+    def text_of(item, tag):
+        return " ".join(unescape(re.sub(r"<[^>]+>", " ", item.findtext(tag) or "")).split())
+
+    headlines = []
+    for item in channel.findall("item"):
+        link, title = text_of(item, "link"), text_of(item, "title")
+        if not title or not re.match(r"^https?://\S+$", link):
+            continue
+        headlines.append({"title": title, "link": link, "summary": text_of(item, "description"), "published": text_of(item, "pubDate")})
+        if len(headlines) >= count:
+            break
+    return headlines
+
+
 def yahoo_news_article_text(ticker, company_name="", max_articles=2, max_chars=2600):
     if not bool_env("HEPHAESTUS_FETCH_NEWS_ARTICLES", default=False):
         return ""
     try:
-        from yahooquery import Ticker
-
-        articles = Ticker(ticker).news(count=max_articles)
+        articles = yahoo_headlines(ticker, count=max_articles)
     except Exception as exc:
         print(f"  [-] Yahoo article fetch unavailable for {ticker}: {exc}")
         return ""
 
     sections = []
     for article in articles[:max_articles]:
-        url = article.get("link") or article.get("url")
-        if not url:
-            continue
+        url = article["link"]
         try:
             text = fetch_url_text(url)
         except requests.RequestException:
@@ -642,7 +694,7 @@ def yahoo_news_article_text(ticker, company_name="", max_articles=2, max_chars=2
                 ticker,
                 text,
                 url=url,
-                title=article.get("title") or url,
+                title=article["title"],
                 max_chars=max_chars // max(1, max_articles),
             )
         )
