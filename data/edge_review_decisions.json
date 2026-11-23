@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-11-22T11:07:06.424140+00:00",
+  "exported_at": "2026-11-23T11:36:16.356812+00:00",
   "decisions": [
     {
       "edge_id": 1,
@@ -63461,6 +63461,57 @@
       "review_status": "rejected",
       "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a past relationship.",
       "reviewed_at": "2026-11-22T11:03:40.570994"
+    },
+    {
+      "edge_id": 3898,
+      "source_ticker": "HON",
+      "target_ticker": "SOLS",
+      "source_name": "Honeywell International Inc. Common Stock",
+      "target_name": "Solstice Advanced Materials Inc. Common Stock",
+      "dependency_type": "Raw Materials",
+      "product": "Advanced Silicon Fabrication",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "Solstice Advanced Materials was formed on October 30, 2025, as a spin-off of Honeywell's specialty materials business.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: The evidence excerpt does not support this link: the excerpt describes a sale, spin-off, fine, hire or similar event, not supply (\"spin-off\").",
+      "reviewed_at": "2026-11-23T11:31:46.675205"
+    },
+    {
+      "edge_id": 3899,
+      "source_ticker": "ESI",
+      "target_ticker": "SOLS",
+      "source_name": "Element Solutions Inc.",
+      "target_name": "Solstice Advanced Materials Inc. Common Stock",
+      "dependency_type": "Raw Materials",
+      "product": "Advanced Silicon Fabrication",
+      "confidence_score": 1.0,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "On July 6, 2026, Solstice Advanced Materials announced a definitive agreement to acquire Element Solutions in a cash-and-stock transaction valued at approximately $14.5 billion, including debt.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 3/3 for reject (avg confidence 1.00; votes reject:3). Lead rationale from qwen2.5:7b-instruct: The proposed edge represents an acquisition where Element Solutions Inc. is being acquired by Solstice Advanced Materials Inc., which does not fit the supplier/customer relationship in a supply chain context.",
+      "reviewed_at": "2026-11-23T11:31:58.554347"
+    },
+    {
+      "edge_id": 3900,
+      "source_ticker": "GOOG",
+      "target_ticker": "HUBS",
+      "source_name": "Alphabet Inc. Class C Capital Stock",
+      "target_name": "HUBSPOT, INC.",
+      "dependency_type": "acquisition news",
+      "product": "Marketing, sales and service software",
+      "confidence_score": 0.9,
+      "revenue_share": null,
+      "source_url": "AI Multi-Source Research",
+      "source_title": "AI Multi-Source Research",
+      "evidence_excerpt": "In April 2024, Reuters reported that Google was considering a bid to acquire HubSpot.",
+      "review_status": "rejected",
+      "review_note": "Ollama consensus review: Consensus 2/3 for reject (avg confidence 0.90; votes reject:2, pending:1). Lead rationale from llama3.1:8b: The relationship is based on acquisition news, not an operational supply-chain dependency.",
+      "reviewed_at": "2026-11-23T11:32:58.779299"
     },
     {
       "edge_id": 97,
