@@ -279,24 +279,23 @@ def test_the_researched_company_resolves_with_its_ticker_suffix(monkeypatch):
     assert auto_discover_edges.split_trailing_ticker("Apple Inc.") == ("Apple Inc.", None)
 
 
-def test_a_dead_news_endpoint_is_asked_once_per_run(monkeypatch, capsys):
+def test_a_dead_news_endpoint_is_given_up_after_a_few_failures_per_run(monkeypatch, capsys):
     import auto_discover_edges
 
     calls = []
 
-    class DeadTicker:
-        def __init__(self, ticker):
-            calls.append(ticker)
+    def dead_feed(ticker, count=5):
+        calls.append(ticker)
+        raise ConnectionError("feed is down")
 
-        def news(self, count=5):
-            return ["error"]
-
-    monkeypatch.setattr(auto_discover_edges, "Ticker", DeadTicker)
+    monkeypatch.setattr(auto_discover_edges, "yahoo_headlines", dead_feed)
+    monkeypatch.setattr(auto_discover_edges, "YAHOO_NEWS_MAX_FAILURES", 3)
     monkeypatch.setattr(auto_discover_edges.IntelGatherer, "yahoo_news_disabled", False)
+    monkeypatch.setattr(auto_discover_edges.IntelGatherer, "yahoo_news_failures", 0)
 
-    assert auto_discover_edges.IntelGatherer.get_yahoo_news("SNX") == ""
-    assert auto_discover_edges.IntelGatherer.get_yahoo_news("AAPL") == ""
-    assert calls == ["SNX"]
+    for ticker in ("SNX", "AAPL", "MSFT", "NVDA", "AMD"):
+        assert auto_discover_edges.IntelGatherer.get_yahoo_news(ticker) == ""
+    assert calls == ["SNX", "AAPL", "MSFT"]
     assert "skipping it for the rest of this run" in capsys.readouterr().out
 
 
