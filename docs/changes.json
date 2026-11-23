@@ -1,8 +1,180 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-11-12T10:43:01+00:00",
-  "unique_links": 830,
+  "generated_at": "2026-11-23T11:39:10+00:00",
+  "unique_links": 831,
   "days": [
+    {
+      "date": "2026-11-23",
+      "generated_at": "2026-11-23T11:39:10+00:00",
+      "previous_date": "2026-11-22",
+      "unique_links": 831,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
+    {
+      "date": "2026-11-22",
+      "generated_at": "2026-11-22T11:09:53+00:00",
+      "previous_date": "2026-11-21",
+      "unique_links": 831,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
+    {
+      "date": "2026-11-21",
+      "generated_at": "2026-11-21T10:42:56+00:00",
+      "previous_date": "2026-11-20",
+      "unique_links": 831,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
+    {
+      "date": "2026-11-20",
+      "generated_at": "2026-11-20T10:57:27+00:00",
+      "previous_date": "2026-11-19",
+      "unique_links": 831,
+      "net_change": 1,
+      "new_count": 2,
+      "removed_count": 1,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "IOT->NJR:SUPPLY RELATIONSHIP",
+          "source_ticker": "IOT",
+          "target_ticker": "NJR",
+          "type": "Supply Relationship",
+          "product": "Fleet Telematics System",
+          "review_status": "approved",
+          "confidence": 0.9333
+        },
+        {
+          "relationship_key": "IOT->SYY:SUPPLY RELATIONSHIP",
+          "source_ticker": "IOT",
+          "target_ticker": "SYY",
+          "type": "Supply Relationship",
+          "product": "Fleet Telematics System",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "removed_links": [
+        {
+          "relationship_key": "NICE->RNG:SUPPLY RELATIONSHIP",
+          "source_ticker": "NICE",
+          "target_ticker": "RNG",
+          "type": "Supply Relationship",
+          "product": "Hardware and software licensed from third parties, in particular, NICE",
+          "review_status": "approved",
+          "confidence": 0.95
+        }
+      ],
+      "changed_links": []
+    },
+    {
+      "date": "2026-11-19",
+      "generated_at": "2026-11-19T11:12:17+00:00",
+      "previous_date": "2026-11-18",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
+    {
+      "date": "2026-11-18",
+      "generated_at": "2026-11-18T13:37:25+00:00",
+      "previous_date": "2026-11-17",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
+    {
+      "date": "2026-11-17",
+      "generated_at": "2026-11-17T11:38:53+00:00",
+      "previous_date": "2026-11-16",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
+    {
+      "date": "2026-11-16",
+      "generated_at": "2026-11-16T10:40:31+00:00",
+      "previous_date": "2026-11-15",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
+    {
+      "date": "2026-11-15",
+      "generated_at": "2026-11-15T10:26:52+00:00",
+      "previous_date": "2026-11-14",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
+    {
+      "date": "2026-11-14",
+      "generated_at": "2026-11-14T09:47:16+00:00",
+      "previous_date": "2026-11-13",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
+    {
+      "date": "2026-11-13",
+      "generated_at": "2026-11-13T10:40:21+00:00",
+      "previous_date": "2026-11-12",
+      "unique_links": 830,
+      "net_change": 0,
+      "new_count": 0,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-11-12",
       "generated_at": "2026-11-12T10:43:01+00:00",
@@ -41,704 +213,6 @@
       "new_links": [],
       "removed_links": [],
       "changed_links": []
-    },
-    {
-      "date": "2026-11-09",
-      "generated_at": "2026-11-09T10:59:03+00:00",
-      "previous_date": "2026-11-08",
-      "unique_links": 830,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-11-08",
-      "generated_at": "2026-11-08T10:15:33+00:00",
-      "previous_date": "2026-11-07",
-      "unique_links": 830,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-11-07",
-      "generated_at": "2026-11-07T09:40:43+00:00",
-      "previous_date": "2026-11-06",
-      "unique_links": 830,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-11-06",
-      "generated_at": "2026-11-06T10:16:53+00:00",
-      "previous_date": "2026-11-05",
-      "unique_links": 830,
-      "net_change": 1,
-      "new_count": 1,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "ACMR->SKHY:SUPPLY RELATIONSHIP",
-          "source_ticker": "ACMR",
-          "target_ticker": "SKHY",
-          "type": "Supply Relationship",
-          "product": "Single-Wafer Wet Cleaning Equipment",
-          "review_status": "approved",
-          "confidence": 0.95
-        }
-      ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-11-05",
-      "generated_at": "2026-11-05T10:42:51+00:00",
-      "previous_date": "2026-11-04",
-      "unique_links": 829,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-11-04",
-      "generated_at": "2026-11-04T12:28:17+00:00",
-      "previous_date": "2026-11-03",
-      "unique_links": 829,
-      "net_change": 1,
-      "new_count": 1,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "AIRT->FDX:REVENUE CONCENTRATION",
-          "source_ticker": "AIRT",
-          "target_ticker": "FDX",
-          "type": "Revenue Concentration",
-          "product": "Air T (AIRT) services for FedEx",
-          "review_status": "approved",
-          "confidence": 0.9667
-        }
-      ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-11-03",
-      "generated_at": "2026-11-03T00:45:17+00:00",
-      "previous_date": "2026-11-01",
-      "unique_links": 828,
-      "net_change": 9,
-      "new_count": 9,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "BC->HZO:SUPPLY CHAIN DEPENDENCY",
-          "source_ticker": "BC",
-          "target_ticker": "HZO",
-          "type": "supply chain dependency",
-          "product": "recreational boats (Sea Ray and Boston Whaler)",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "EVH->CNC:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
-          "source_ticker": "EVH",
-          "target_ticker": "CNC",
-          "type": "operational supply-chain dependency",
-          "product": "12.2% of EVH revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "EVH->MOH:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
-          "source_ticker": "EVH",
-          "target_ticker": "MOH",
-          "type": "operational supply-chain dependency",
-          "product": "25.7% of EVH revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "IA->LMT:REVENUE CONCENTRATION",
-          "source_ticker": "IA",
-          "target_ticker": "LMT",
-          "type": "Revenue Concentration",
-          "product": "Aerospace & Defense products and services",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "JAKK->TGT:REVENUE CONCENTRATION",
-          "source_ticker": "JAKK",
-          "target_ticker": "TGT",
-          "type": "Revenue Concentration",
-          "product": "Toys and Games (implied from JAKKS Pacific's business)",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "MBUU->ONEW:REVENUE CONCENTRATION",
-          "source_ticker": "MBUU",
-          "target_ticker": "ONEW",
-          "type": "Revenue Concentration",
-          "product": "Recreational Vehicles (Malibu Boats products)",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "NPK->AMZN:REVENUE CONCENTRATION",
-          "source_ticker": "NPK",
-          "target_ticker": "AMZN",
-          "type": "Revenue Concentration",
-          "product": "various products and services",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "NVDA->SUPX:SUPPLY RELATIONSHIP",
-          "source_ticker": "NVDA",
-          "target_ticker": "SUPX",
-          "type": "supply relationship",
-          "product": "GPUs and other specialized hardware",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "UVV->PM:REVENUE CONCENTRATION",
-          "source_ticker": "UVV",
-          "target_ticker": "PM",
-          "type": "Revenue Concentration",
-          "product": "10% of UVV revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        }
-      ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-11-01",
-      "generated_at": "2026-11-01T11:12:32+00:00",
-      "previous_date": "2026-10-31",
-      "unique_links": 819,
-      "net_change": 13,
-      "new_count": 13,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [
-        {
-          "relationship_key": "ATRO->BA:SUPPLY CHAIN DEPENDENCY",
-          "source_ticker": "ATRO",
-          "target_ticker": "BA",
-          "type": "supply chain dependency",
-          "product": "specific products/services used by Boeing",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "CTS->TM:REVENUE CONCENTRATION",
-          "source_ticker": "CTS",
-          "target_ticker": "TM",
-          "type": "Revenue Concentration",
-          "product": "11.2% of CTS revenue",
-          "review_status": "approved",
-          "confidence": 0.975
-        },
-        {
-          "relationship_key": "CTS->TMH:REVENUE CONCENTRATION",
-          "source_ticker": "CTS",
-          "target_ticker": "TMH",
-          "type": "Revenue Concentration",
-          "product": "11.2% of CTS revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "ELF->TGT:REVENUE CONCENTRATION",
-          "source_ticker": "ELF",
-          "target_ticker": "TGT",
-          "type": "Revenue Concentration",
-          "product": "beauty products",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "ELF->WMT:REVENUE CONCENTRATION",
-          "source_ticker": "ELF",
-          "target_ticker": "WMT",
-          "type": "Revenue Concentration",
-          "product": "beauty products",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "IPAR->M:REVENUE CONCENTRATION",
-          "source_ticker": "IPAR",
-          "target_ticker": "M",
-          "type": "Revenue Concentration",
-          "product": "Interparfums' fragrance products",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "LB->COP:REVENUE CONCENTRATION",
-          "source_ticker": "LB",
-          "target_ticker": "COP",
-          "type": "Revenue Concentration",
-          "product": "Oil & Gas Exploration and Production services",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "NKTR->AZN:REVENUE CONCENTRATION",
-          "source_ticker": "NKTR",
-          "target_ticker": "AZN",
-          "type": "Revenue Concentration",
-          "product": "Revenue from Baxalta (a subsidiary of Takeda Pharmaceutical Company Limited), AstraZeneca, and UCB",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "PAGP->BPH:REVENUE CONCENTRATION",
-          "source_ticker": "PAGP",
-          "target_ticker": "BPH",
-          "type": "Revenue Concentration",
-          "product": "10% of PAGP revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "PCRX->CAH:REVENUE CONCENTRATION",
-          "source_ticker": "PCRX",
-          "target_ticker": "CAH",
-          "type": "Revenue Concentration",
-          "product": "BioSciences products",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "PCRX->MCK:REVENUE CONCENTRATION",
-          "source_ticker": "PCRX",
-          "target_ticker": "MCK",
-          "type": "Revenue Concentration",
-          "product": "BioSciences products (specifically mentioning medical devices or pharmaceuticals)",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "PSO->MSFT:CO-DEVELOPMENT",
-          "source_ticker": "PSO",
-          "target_ticker": "MSFT",
-          "type": "co-development",
-          "product": "Communication Coach",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "UFPT->SYK:REVENUE CONCENTRATION",
-          "source_ticker": "UFPT",
-          "target_ticker": "SYK",
-          "type": "Revenue Concentration",
-          "product": "21.5% of UFPT revenue",
-          "review_status": "approved",
-          "confidence": 0.9667
-        }
-      ],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-10-31",
-      "generated_at": "2026-10-31T20:24:30+00:00",
-      "previous_date": "2026-10-30",
-      "unique_links": 806,
-      "net_change": -12,
-      "new_count": 9,
-      "removed_count": 21,
-      "changed_count": 3,
-      "new_links": [
-        {
-          "relationship_key": "AMD->ANTHROPIC:SUPPLY RELATIONSHIP",
-          "source_ticker": "AMD",
-          "target_ticker": "ANTHROPIC",
-          "type": "Supply Relationship",
-          "product": "AMD Instinct MI450 Series GPUs in AMD Helios racks, ROCm software development optimization",
-          "review_status": "approved",
-          "confidence": 0.925
-        },
-        {
-          "relationship_key": "AMD->OPENAI:SUPPLY RELATIONSHIP",
-          "source_ticker": "AMD",
-          "target_ticker": "OPENAI",
-          "type": "Supply Relationship",
-          "product": "AMD Instinct GPUs",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "CL->WMT:REVENUE CONCENTRATION",
-          "source_ticker": "CL",
-          "target_ticker": "WMT",
-          "type": "Revenue Concentration",
-          "product": "11% of CL revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "HAS->AMZN:REVENUE CONCENTRATION",
-          "source_ticker": "HAS",
-          "target_ticker": "AMZN",
-          "type": "Revenue Concentration",
-          "product": "Not specified in the given context, but likely includes various toys and games sold to Amazon for resale.",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "MNST->CCEP:REVENUE CONCENTRATION",
-          "source_ticker": "MNST",
-          "target_ticker": "CCEP",
-          "type": "Revenue Concentration",
-          "product": "15% of MNST revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "MTZ->T:REVENUE CONCENTRATION",
-          "source_ticker": "MTZ",
-          "target_ticker": "T",
-          "type": "Revenue Concentration",
-          "product": "various services and products",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "NVDA->OPENAI:SUPPLY RELATIONSHIP",
-          "source_ticker": "NVDA",
-          "target_ticker": "OPENAI",
-          "type": "Supply Relationship",
-          "product": "NVIDIA systems (data center GPUs and AI infrastructure)",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "PAA->BPH:REVENUE CONCENTRATION",
-          "source_ticker": "PAA",
-          "target_ticker": "BPH",
-          "type": "Revenue Concentration",
-          "product": "10% of PAA revenue",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "UPS->AMZN:REVENUE CONCENTRATION",
-          "source_ticker": "UPS",
-          "target_ticker": "AMZN",
-          "type": "Revenue Concentration",
-          "product": "package delivery services",
-          "review_status": "approved",
-          "confidence": 1.0
-        }
-      ],
-      "removed_links": [
-        {
-          "relationship_key": "ACA->GEV:REVENUE CONCENTRATION",
-          "source_ticker": "ACA",
-          "target_ticker": "GEV",
-          "type": "Revenue Concentration",
-          "product": "Engineered Structures",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "ALKS->CAH:REVENUE CONCENTRATION",
-          "source_ticker": "ALKS",
-          "target_ticker": "CAH",
-          "type": "Revenue Concentration",
-          "product": "ARISTADA and ARISTADA INITIO",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "ALKS->COR:SALES REVENUE CONCENTRATION",
-          "source_ticker": "ALKS",
-          "target_ticker": "COR",
-          "type": "sales revenue concentration / Revenue Concentration",
-          "product": "ARISTADA and ARISTADA INITIO",
-          "review_status": "approved",
-          "confidence": 0.9667
-        },
-        {
-          "relationship_key": "AMZN->PERF:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "PERF",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Amazon Web Services (AWS)",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "AMZN->SLP:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "AMZN",
-          "target_ticker": "SLP",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Amazon Web Services (AWS)",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "CAT->USAC:SUPPLY RELATIONSHIP",
-          "source_ticker": "CAT",
-          "target_ticker": "USAC",
-          "type": "Supply Relationship",
-          "product": "Engines manufactured by Caterpillar Inc.",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "CLF->ATKR:STEEL SUPPLIER RELATIONSHIP",
-          "source_ticker": "CLF",
-          "target_ticker": "ATKR",
-          "type": "Steel Supplier Relationship",
-          "product": "Supplier named in ATKR's 10-K",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "CMI->USAC:SUPPLY RELATIONSHIP",
-          "source_ticker": "CMI",
-          "target_ticker": "USAC",
-          "type": "Supply Relationship",
-          "product": "Supplier named in USAC's 10-K",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "CYCN->AKBA:SUPPLY RELATIONSHIP",
-          "source_ticker": "CYCN",
-          "target_ticker": "AKBA",
-          "type": "supply relationship",
-          "product": "praliciguat",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "ET->BP:RAW MATERIALS",
-          "source_ticker": "ET",
-          "target_ticker": "BP",
-          "type": "Raw Materials",
-          "product": "Natural Gas",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "FDX->ACVA:OPERATIONAL SUPPLY-CHAIN DEPENDENCY",
-          "source_ticker": "FDX",
-          "target_ticker": "ACVA",
-          "type": "operational supply-chain dependency",
-          "product": "shipping and delivery services for vehicle sales through marketplace",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "GETY->OPENAI:CONTENT PROVIDER",
-          "source_ticker": "GETY",
-          "target_ticker": "OPENAI",
-          "type": "Content Provider",
-          "product": "Licensed visual content displayed in ChatGPT search and discovery",
-          "review_status": "approved",
-          "confidence": 0.9
-        },
-        {
-          "relationship_key": "GOOGL->PERF:CLOUD INFRASTRUCTURE PROVIDER",
-          "source_ticker": "GOOGL",
-          "target_ticker": "PERF",
-          "type": "Cloud Infrastructure Provider",
-          "product": "Google Cloud",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "LW->NATH:SUPPLY RELATIONSHIP",
-          "source_ticker": "LW",
-          "target_ticker": "NATH",
-          "type": "Supply Relationship",
-          "product": "frozen crinkle-cut French fries",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "NATH->TGT:RAW MATERIALS",
-          "source_ticker": "NATH",
-          "target_ticker": "TGT",
-          "type": "Raw Materials",
-          "product": "Packaged Nathan\u2019s World Famous Beef Hot Dogs",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "NATH->WMT:RAW MATERIALS",
-          "source_ticker": "NATH",
-          "target_ticker": "WMT",
-          "type": "Raw Materials",
-          "product": "Packaged Nathan\u2019s World Famous Beef Hot Dogs",
-          "review_status": "approved",
-          "confidence": 0.95
-        },
-        {
-          "relationship_key": "NUE->ATKR:SUPPLY RELATIONSHIP",
-          "source_ticker": "NUE",
-          "target_ticker": "ATKR",
-          "type": "Supply Relationship",
-          "product": "steel, copper, PVC resin, HDPE resin",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "PSKY->NFLX:CONTENT PROVIDER",
-          "source_ticker": "PSKY",
-          "target_ticker": "NFLX",
-          "type": "Content Provider",
-          "product": "Films",
-          "review_status": "approved",
-          "confidence": 0.85
-        },
-        {
-          "relationship_key": "SFD->NATH:SUPPLY RELATIONSHIP",
-          "source_ticker": "SFD",
-          "target_ticker": "NATH",
-          "type": "Supply Relationship",
-          "product": "World Famous Beef Hot Dogs",
-          "review_status": "approved",
-          "confidence": 1.0
-        },
-        {
-          "relationship_key": "STLD->ATKR:SUPPLY RELATIONSHIP",
-          "source_ticker": "STLD",
-          "target_ticker": "ATKR",
-          "type": "supply relationship",
-          "product": "Supplier named in ATKR's 10-K",
-          "review_status": "approved",
-          "confidence": 0.9833
-        },
-        {
-          "relationship_key": "STRIPE->WEAV:SUPPLY RELATIONSHIP",
-          "source_ticker": "STRIPE",
-          "target_ticker": "WEAV",
-          "type": "Supply Relationship",
-          "product": "point-of-sale devices and payment processing services",
-          "review_status": "approved",
-          "confidence": 0.9667
-        }
-      ],
-      "changed_links": [
-        {
-          "relationship_key": "FLEX->TER:CONTRACT MANUFACTURING",
-          "source_ticker": "FLEX",
-          "target_ticker": "TER",
-          "type": "Contract Manufacturing / Supply Relationship",
-          "product": "FLEX and J750 family of products, FLEX and Magnum products, ETS family of products, storage test family of products / Supplier named in TER's 10-K",
-          "review_status": "approved",
-          "confidence": 1.0,
-          "previous_type": "Supply Relationship"
-        },
-        {
-          "relationship_key": "TSM->INTC:FOUNDRY SERVICES",
-          "source_ticker": "TSM",
-          "target_ticker": "INTC",
-          "type": "foundry services / outsourced production / Contract Manufacturing / Supply Relationship",
-          "product": "semiconductor components and products / semiconductor fabrication services / Integrated circuits / Supply Relationship",
-          "review_status": "approved",
-          "confidence": 0.9833,
-          "previous_type": "outsourced production / Contract Manufacturing / Supply Relationship"
-        },
-        {
-          "relationship_key": "YUMC->YUM:SUPPLY RELATIONSHIP",
-          "source_ticker": "YUMC",
-          "target_ticker": "YUM",
-          "type": "Supply Relationship / Restaurant operation",
-          "product": "Services provided by Yum China Holdings, Inc. / Restaurant brands in China",
-          "review_status": "approved",
-          "confidence": 0.95,
-          "previous_type": "Restaurant operation"
-        }
-      ]
-    },
-    {
-      "date": "2026-10-30",
-      "generated_at": "2026-10-30T09:34:03+00:00",
-      "previous_date": "2026-10-29",
-      "unique_links": 818,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 1,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": [
-        {
-          "relationship_key": "BA->RYAAY:AEROSPACE & DEFENSE PRODUCT SUPPLY CHAIN",
-          "source_ticker": "BA",
-          "target_ticker": "RYAAY",
-          "type": "Aerospace & Defense product supply chain / Aircraft and Aircraft Parts supply chain relationship / Aerospace & Defense Products and Services Supply Chain / Operational Supply Chain Dependency / Aircraft Maintenance Support",
-          "product": "Airplanes and aircraft parts / Aircraft and aircraft parts / Boeing 737 fleet and related aircraft parts / Aircraft and spare parts / Spare parts and maintenance services for Boeing aircraft",
-          "review_status": "approved",
-          "confidence": 1.0,
-          "previous_type": "Aircraft and Aircraft Parts supply chain relationship / Aerospace & Defense Products and Services Supply Chain / Operational Supply Chain Dependency / Aircraft Maintenance Support"
-        }
-      ]
-    },
-    {
-      "date": "2026-10-29",
-      "generated_at": "2026-10-29T09:31:59+00:00",
-      "previous_date": "2026-10-28",
-      "unique_links": 818,
-      "net_change": 1,
-      "new_count": 1,
-      "removed_count": 0,
-      "changed_count": 1,
-      "new_links": [
-        {
-          "relationship_key": "SBSW->GFI:RAW MATERIALS",
-          "source_ticker": "SBSW",
-          "target_ticker": "GFI",
-          "type": "Raw Materials",
-          "product": "Mine (KDC and Beatrix mines)",
-          "review_status": "approved",
-          "confidence": 0.925
-        }
-      ],
-      "removed_links": [],
-      "changed_links": [
-        {
-          "relationship_key": "PODD->DXCM:DEVICE INTEGRATION PARTNERSHIP",
-          "source_ticker": "PODD",
-          "target_ticker": "DXCM",
-          "type": "Device Integration Partnership / Manufacturing Partnership",
-          "product": "Continuous Glucose Monitoring System (CGM) and Automated Insulin Delivery Pod / OmniPod Horizon System for automated insulin delivery",
-          "review_status": "approved",
-          "confidence": 0.95,
-          "previous_type": "Manufacturing Partnership"
-        }
-      ]
     }
   ]
 }
