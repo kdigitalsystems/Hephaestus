@@ -1,8 +1,31 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-11-23T11:39:10+00:00",
-  "unique_links": 831,
+  "generated_at": "2026-11-24T02:30:49+00:00",
+  "unique_links": 832,
   "days": [
+    {
+      "date": "2026-11-24",
+      "generated_at": "2026-11-24T02:30:49+00:00",
+      "previous_date": "2026-11-23",
+      "unique_links": 832,
+      "net_change": 1,
+      "new_count": 1,
+      "removed_count": 0,
+      "changed_count": 0,
+      "new_links": [
+        {
+          "relationship_key": "KEX->USLM:GOVERNMENT CONTRACT AWARD (MARINE TRANSPORTATION AND DISTRIBUTION SERVICES)",
+          "source_ticker": "KEX",
+          "target_ticker": "USLM",
+          "type": "Government contract award (marine transportation and distribution services)",
+          "product": "Bulk liquid products",
+          "review_status": "approved",
+          "confidence": 0.875
+        }
+      ],
+      "removed_links": [],
+      "changed_links": []
+    },
     {
       "date": "2026-11-23",
       "generated_at": "2026-11-23T11:39:10+00:00",
@@ -192,19 +215,6 @@
       "date": "2026-11-11",
       "generated_at": "2026-11-11T10:20:05+00:00",
       "previous_date": "2026-11-10",
-      "unique_links": 830,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-11-10",
-      "generated_at": "2026-11-10T10:48:12+00:00",
-      "previous_date": "2026-11-09",
       "unique_links": 830,
       "net_change": 0,
       "new_count": 0,
