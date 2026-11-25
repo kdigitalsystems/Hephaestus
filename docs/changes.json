@@ -1,8 +1,42 @@
 {
   "site": "https://kdigitalsystems.github.io/Hephaestus/",
-  "generated_at": "2026-11-24T02:30:49+00:00",
-  "unique_links": 832,
+  "generated_at": "2026-11-25T12:13:02+00:00",
+  "unique_links": 833,
   "days": [
+    {
+      "date": "2026-11-25",
+      "generated_at": "2026-11-25T12:13:02+00:00",
+      "previous_date": "2026-11-24",
+      "unique_links": 833,
+      "net_change": 1,
+      "new_count": 1,
+      "removed_count": 0,
+      "changed_count": 1,
+      "new_links": [
+        {
+          "relationship_key": "AQST->SUPN:MANUFACTURING PARTNER",
+          "source_ticker": "AQST",
+          "target_ticker": "SUPN",
+          "type": "Manufacturing Partner",
+          "product": "SUBOXONE Film",
+          "review_status": "approved",
+          "confidence": 1.0
+        }
+      ],
+      "removed_links": [],
+      "changed_links": [
+        {
+          "relationship_key": "BA->CPA:AEROSPACE MANUFACTURING AND SUPPLY CHAIN",
+          "source_ticker": "BA",
+          "target_ticker": "CPA",
+          "type": "Aerospace Manufacturing and Supply Chain / Aircraft Manufacturer",
+          "product": "737 MAX aircraft",
+          "review_status": "approved",
+          "confidence": 1.0,
+          "previous_type": "Aircraft Manufacturer"
+        }
+      ]
+    },
     {
       "date": "2026-11-24",
       "generated_at": "2026-11-24T02:30:49+00:00",
@@ -202,19 +236,6 @@
       "date": "2026-11-12",
       "generated_at": "2026-11-12T10:43:01+00:00",
       "previous_date": "2026-11-11",
-      "unique_links": 830,
-      "net_change": 0,
-      "new_count": 0,
-      "removed_count": 0,
-      "changed_count": 0,
-      "new_links": [],
-      "removed_links": [],
-      "changed_links": []
-    },
-    {
-      "date": "2026-11-11",
-      "generated_at": "2026-11-11T10:20:05+00:00",
-      "previous_date": "2026-11-10",
       "unique_links": 830,
       "net_change": 0,
       "new_count": 0,
